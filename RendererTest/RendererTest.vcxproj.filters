@@ -14,6 +14,12 @@
     <Filter Include="Engine\External">
       <UniqueIdentifier>{b6a08147-9c1d-46cd-b926-2c99d5603a7d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Input">
+      <UniqueIdentifier>{1d65630a-870b-41a2-ae2d-b8c77647a62e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Cameras">
+      <UniqueIdentifier>{00ec51db-2cc8-4173-93b3-97070b065ba3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
@@ -23,15 +29,29 @@
     <ClCompile Include="Application.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="Input.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="Gizmos.cpp">
       <Filter>Engine\External</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Input.cpp">
+      <Filter>Game\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyAxis.cpp">
+      <Filter>Game\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Keybind.cpp">
+      <Filter>Game\Input</Filter>
+    </ClCompile>
     <ClCompile Include="Time.cpp">
-      <Filter>Engine</Filter>
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Game\Cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="FreeCamera.cpp">
+      <Filter>Game\Cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="OrbitalCamera.cpp">
+      <Filter>Game\Cameras</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -47,17 +67,23 @@
     <ClInclude Include="Application.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Input.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Time.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="Gizmos.h">
       <Filter>Engine\External</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
+    <ClInclude Include="Input.h">
+      <Filter>Game\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Time.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Game\Cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="FreeCamera.h">
+      <Filter>Game\Cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="OrbitalCamera.h">
+      <Filter>Game\Cameras</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

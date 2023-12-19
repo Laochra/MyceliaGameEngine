@@ -25,7 +25,7 @@ bool Input::GetKeyPressed(KeyCode keyCode) const noexcept
 }
 bool Input::GetKeyReleased(KeyCode keyCode) const noexcept
 {
-    return pressedKeys->count(keyCode) > 0;
+    return releasedKeys->count(keyCode) > 0;
 }
 
 void Input::Update()

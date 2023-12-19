@@ -135,10 +135,14 @@
   <ItemGroup>
     <ClCompile Include="..\glad.c" />
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="FreeCamera.cpp" />
+    <ClCompile Include="KeyAxis.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Gizmos.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="Keybind.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="OrbitalCamera.cpp" />
     <ClCompile Include="Time.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -147,8 +151,10 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="FileLoading.h" />
+    <ClInclude Include="FreeCamera.h" />
     <ClInclude Include="Gizmos.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="OrbitalCamera.h" />
     <ClInclude Include="Time.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

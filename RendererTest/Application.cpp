@@ -33,6 +33,17 @@ void Application::FixedUpdate()
 
 void Application::Update()
 {
+	Keybind cursorToggle(LAlt);
+
+	if (cursorToggle.pressed())
+	{
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	}
+	else if (cursorToggle.released())
+	{
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	}
+
 	camera.Update();
 }
 
@@ -93,6 +104,8 @@ int Application::Setup()
 
 	glClearColor(0.9f, 0.7f, 0.9f, 1);
 	glEnable(GL_DEPTH_TEST);
+
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	return 0;
 }

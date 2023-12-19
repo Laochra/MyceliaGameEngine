@@ -3,6 +3,7 @@
 #include "glm.hpp"
 #include "glfw3.h"
 #include <set>
+#include <vector>
 
 using glm::vec2;
 
@@ -145,8 +146,6 @@ enum KeyCode
 	Z				= GLFW_KEY_Z,
 };
 
-// TO-DO: Add Key and Axis classes for keybinds
-
 class Input
 {
 public:
@@ -174,3 +173,55 @@ extern Input* input;
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 void CursorPosCallback(GLFWwindow* window, double x, double y);
+
+
+class Keybind
+{
+public:
+	Keybind() noexcept;
+	Keybind(KeyCode keyCode) noexcept;
+	~Keybind() noexcept;
+	Keybind(const Keybind& other) = delete;
+	Keybind& operator=(const Keybind& other) = delete;
+
+	bool down() const noexcept;
+	bool pressed() const noexcept;
+	bool released() const noexcept;
+	bool operator==(bool other) const noexcept { return down() == other; }
+	bool operator!=(bool other) const noexcept { return down() != other; }
+	operator bool() const { return down(); }
+
+	void Bind(KeyCode keyCode) noexcept;
+	void Unbind(KeyCode keyCode) noexcept;
+	void ClearBinds() noexcept;
+private:
+	std::vector<KeyCode>* keys;
+};
+
+class KeyAxis
+{
+public:
+	KeyAxis() noexcept;
+	KeyAxis(KeyCode negative, KeyCode positive) noexcept;
+	~KeyAxis() noexcept;
+	KeyAxis(const KeyAxis& other) = delete;
+	KeyAxis& operator=(const KeyAxis& other) = delete;
+
+	float value() const noexcept;
+	operator float() const { return value(); }
+
+	void BindPositive(KeyCode keyCode) noexcept;
+	void BindNegative(KeyCode keyCode) noexcept;
+	void BindPair(KeyCode negative, KeyCode positive) noexcept;
+
+	void UnbindPositive(KeyCode keyCode) noexcept;
+	void UnbindNegative(KeyCode keyCode) noexcept;
+
+	void ClearPositiveBinds() noexcept;
+	void ClearNegativeBinds() noexcept;
+	void ClearAllBinds() noexcept;
+
+private:
+	std::vector<KeyCode>* positiveKeys;
+	std::vector<KeyCode>* negativeKeys;
+};

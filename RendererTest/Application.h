@@ -16,17 +16,20 @@ using glm::mat4;
 #include "glad.h"
 
 #include "Camera.h"
+#include "FreeCamera.h"
+#include "OrbitalCamera.h"
 
 class Application
 {
 public:
 	bool isRunning = false;
-	Camera camera = Camera();
+	OrbitalCamera camera;
 
 	int Run();
 
 	Application() noexcept
 	{
+
 	}
 
 protected:
