@@ -23,7 +23,7 @@ class Application
 {
 public:
 	bool isRunning = false;
-	OrbitalCamera camera;
+	FreeCamera camera;
 
 	int Run();
 

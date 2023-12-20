@@ -52,6 +52,20 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     }
 }
 
+void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
+{
+    if (action == GLFW_PRESS)
+    {
+        input->pressedKeys->insert((KeyCode)button);
+        input->downKeys->insert((KeyCode)button);
+    }
+    else
+    {
+        input->releasedKeys->insert((KeyCode)button);
+        input->downKeys->erase((KeyCode)button);
+    }
+}
+
 void CursorPosCallback(GLFWwindow* window, double x, double y)
 {
     vec2 newPos = vec2(x, y);

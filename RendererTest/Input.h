@@ -9,6 +9,16 @@ using glm::vec2;
 
 enum KeyCode
 {
+	// Mouse
+	MouseLeft		= GLFW_MOUSE_BUTTON_LEFT,
+	MouseRight		= GLFW_MOUSE_BUTTON_RIGHT,
+	MouseMiddle		= GLFW_MOUSE_BUTTON_MIDDLE,
+	Mouse3			= 3,
+	Mouse4			= 4,
+	Mouse5			= 5,
+	Mouse6			= 6,
+	Mouse7			= 7,
+
 	// Special
 	Escape			= GLFW_KEY_ESCAPE,
 	Tab				= GLFW_KEY_TAB,
@@ -171,6 +181,7 @@ public:
 extern Input* input;
 
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 
 void CursorPosCallback(GLFWwindow* window, double x, double y);
 
@@ -187,8 +198,6 @@ public:
 	bool down() const noexcept;
 	bool pressed() const noexcept;
 	bool released() const noexcept;
-	bool operator==(bool other) const noexcept { return down() == other; }
-	bool operator!=(bool other) const noexcept { return down() != other; }
 	operator bool() const { return down(); }
 
 	void Bind(KeyCode keyCode) noexcept;

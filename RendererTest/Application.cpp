@@ -33,15 +33,15 @@ void Application::FixedUpdate()
 
 void Application::Update()
 {
-	Keybind cursorToggle(LAlt);
+	Keybind freeCameraToggle(MouseRight);
 
-	if (cursorToggle.pressed())
-	{
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-	}
-	else if (cursorToggle.released())
+	if (freeCameraToggle.pressed())
 	{
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	}
+	else if (freeCameraToggle.released())
+	{
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
 
 	camera.Update();
@@ -91,7 +91,7 @@ int Application::Setup()
 
 	glfwSetKeyCallback(window, KeyCallback);
 	glfwSetCursorPosCallback(window, CursorPosCallback);
-	//glfwSetMouseButtonCallback(window, FUNCTION);
+	glfwSetMouseButtonCallback(window, MouseButtonCallback);
 	//glfwSetScrollCallback(window, FUNCTION);
 
 	glfwMakeContextCurrent(window);
@@ -104,8 +104,6 @@ int Application::Setup()
 
 	glClearColor(0.9f, 0.7f, 0.9f, 1);
 	glEnable(GL_DEPTH_TEST);
-
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	return 0;
 }
