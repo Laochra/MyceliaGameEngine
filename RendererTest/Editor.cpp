@@ -57,16 +57,67 @@ void Editor::Update()
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
 
-	ImGui::Begin("Window 01");
+	ImGui::Begin("Camera Settings");
+	{
+		ImGui::BeginTabBar("Camera Settings Tab Bar");
+		{
+			if (ImGui::BeginTabItem("Display"))
+			{
+				ImGui::Text("Clipping Planes");
+				ImGui::InputFloat("Near", &camera->nearClip);
+				ImGui::InputFloat("Far", &camera->farClip);
 
-	ImGui::End();
+				ImGui::Separator();
 
-	ImGui::Begin("Window 02");
+				ImGui::Text("FOV");
+				ImGui::InputFloat("(radians)", &camera->fov);
 
-	ImGui::End();
+				ImGui::EndTabItem();
+			}
+			if (ImGui::BeginTabItem("Movement"))
+			{
+				ImGui::Text("Position");
+				ImGui::InputFloat("x", &camera->position.x);
+				ImGui::InputFloat("y", &camera->position.y);
+				ImGui::InputFloat("z", &camera->position.z);
 
-	ImGui::Begin("Window 03");
+				ImGui::Separator();
 
+				ImGui::Text("Rotation");
+				ImGui::InputFloat("x ", &((EditorCamera*)camera)->xRotation);
+				ImGui::InputFloat("y ", &((EditorCamera*)camera)->yRotation);
+
+				ImGui::Separator();
+
+				ImGui::Text("Fly Speed");
+				ImGui::InputFloat("Regular", &((EditorCamera*)camera)->flySpeed);
+				ImGui::InputFloat("Quick", &((EditorCamera*)camera)->quickFlySpeed);
+
+				ImGui::EndTabItem();
+			}
+			if (ImGui::BeginTabItem("Controls"))
+			{
+				ImGui::SeparatorText("Movement");
+
+				ConfigureKeyAxis("Back", "Forward", &((EditorCamera*)camera)->zInput);
+				ImGui::Spacing(); ImGui::Spacing();
+				ConfigureKeyAxis("Left", "Right", &((EditorCamera*)camera)->xInput);
+				ImGui::Spacing(); ImGui::Spacing();
+				ConfigureKeyAxis("Down", "Up", &((EditorCamera*)camera)->yInput);
+
+				ImGui::SeparatorText("Other");
+
+				ConfigureKeybind("Quick Fly", &((EditorCamera*)camera)->quickMode);
+
+				ImGui::Separator();
+
+				ConfigureKeybind("Free Camera", &((EditorCamera*)camera)->freeCameraToggle);
+
+				ImGui::EndTabItem();
+			}
+		}
+		ImGui::EndTabBar();
+	}
 	ImGui::End();
 }
 

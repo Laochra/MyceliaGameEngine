@@ -1,12 +1,11 @@
 #include "EditorCamera.h"
 
 #include "Time.h"
-#include "Input.h"
 
 glm::mat4 EditorCamera::GetViewMatrix()
 {
-    float thetaR = glm::radians(theta);
-    float phiR = glm::radians(phi);
+    float thetaR = glm::radians(xRotation);
+    float phiR = glm::radians(yRotation);
 
     vec3 forward(cos(phiR) * cos(thetaR), sin(phiR), cos(phiR) * sin(thetaR));
     vec3 up(0, 1, 0);
@@ -16,19 +15,12 @@ glm::mat4 EditorCamera::GetViewMatrix()
 
 void EditorCamera::Update()
 {
-	float thetaR = glm::radians(theta);
-	float phiR = glm::radians(phi);
+	float thetaR = glm::radians(xRotation);
+	float phiR = glm::radians(yRotation);
 
 	vec3 forward = glm::normalize(vec3(cos(phiR) * cos(thetaR), 0, cos(phiR) * sin(thetaR)));
 	vec3 right(-sin(thetaR), 0, cos(thetaR));
 	vec3 up(0, 1, 0);
-
-	KeyAxis xInput(A, D);
-	KeyAxis yInput(LControl, Space);
-	KeyAxis zInput(S, W);
-
-	Keybind freeCameraToggle(MouseRight);
-	Keybind quickMode(LShift);
 
 	if (freeCameraToggle)
 	{
@@ -45,18 +37,18 @@ void EditorCamera::Update()
 		}
 		if (xzMovement != vec3(0, 0, 0))
 		{
-			position += glm::normalize(xzMovement) * flySpeed * (quickMode ? quickFlyMultiplier : 1.0f) * Time::delta;
+			position += glm::normalize(xzMovement) * (quickMode ? quickFlySpeed : flySpeed) * Time::delta;
 		}
 
 		if (yInput != 0.0f)
 		{
-			position += (float)yInput * up * flySpeed * (quickMode ? quickFlyMultiplier : 1.0f) * Time::delta;
+			position += (float)yInput * up * (quickMode ? quickFlySpeed : flySpeed) * Time::delta;
 		}
 
 		// Mouse Look
-		theta += input->cursorMovement.x * 20 * Time::delta;
-		phi += -input->cursorMovement.y * 20 * Time::delta;
-		if (phi > 80) phi = 80;
-		if (phi < -80) phi = -80;
+		xRotation += input->cursorMovement.x * 20 * Time::delta;
+		yRotation += -input->cursorMovement.y * 20 * Time::delta;
+		if (yRotation > 80) yRotation = 80;
+		if (yRotation < -80) yRotation = -80;
 	}
 }

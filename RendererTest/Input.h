@@ -3,6 +3,7 @@
 #include "glm.hpp"
 #include "glfw3.h"
 #include <set>
+#include <map>
 #include <vector>
 
 using glm::vec2;
@@ -54,7 +55,7 @@ enum KeyCode
 	LBracket		= GLFW_KEY_LEFT_BRACKET,
 	RBracket		= GLFW_KEY_RIGHT_BRACKET,
 
-	// Math
+	// Maths
 	Decimal			= GLFW_KEY_KP_DECIMAL,
 	Add				= GLFW_KEY_KP_ADD,
 	Subtract		= GLFW_KEY_KP_SUBTRACT,
@@ -163,6 +164,9 @@ public:
 	std::set<KeyCode>* pressedKeys;
 	std::set<KeyCode>* releasedKeys;
 
+	std::map<KeyCode, const char*>* keyCodeToName;
+	std::map<const char*, KeyCode>* keyNameToCode;
+
 	vec2 cursorPos = vec2(0, 0);
 	vec2 cursorMovement = vec2(0, 0);
 	vec2 scrollInput = vec2(0, 0);
@@ -181,11 +185,13 @@ public:
 
 extern Input* input;
 
+extern const int keyAmount;
+extern const char* keys[];
+
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 void ScrollCallback(GLFWwindow* window, double x, double y);
 void CursorPosCallback(GLFWwindow* window, double x, double y);
-
 
 class Keybind
 {
@@ -204,6 +210,9 @@ public:
 	void Bind(KeyCode keyCode) noexcept;
 	void Unbind(KeyCode keyCode) noexcept;
 	void ClearBinds() noexcept;
+
+	std::vector<KeyCode> GetBinds() { return *keys; }
+
 private:
 	std::vector<KeyCode>* keys;
 };
@@ -231,7 +240,14 @@ public:
 	void ClearNegativeBinds() noexcept;
 	void ClearAllBinds() noexcept;
 
+	std::vector<KeyCode> GetPositiveBinds() { return *positiveKeys; }
+	std::vector<KeyCode> GetNegativeBinds() { return *negativeKeys; }
+
 private:
 	std::vector<KeyCode>* positiveKeys;
 	std::vector<KeyCode>* negativeKeys;
 };
+
+void ConfigureKeybind(const char* label, Keybind* keybind);
+
+void ConfigureKeyAxis(const char* negativeLabel, const char* positiveLabel, KeyAxis* keyAxis);
