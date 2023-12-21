@@ -11,6 +11,7 @@ public:
 
 protected:
 	virtual void Initialise() override;
+	virtual void OnFrameStart() override;
 	virtual void FixedUpdate() override;
 	virtual void Update() override;
 	virtual void Draw() override;

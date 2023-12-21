@@ -30,7 +30,9 @@ int Application::Run()
 	return 0;
 }
 
-void Application::Initialise() { } 
+void Application::Initialise() { }
+void Application::OnFrameStart() { }
+
 void Application::FixedUpdate() { } 
 void Application::Update() { } 
 void Application::Draw() { } 
@@ -79,13 +81,13 @@ void Application::GameLoop()
 	float timeDebt = 0;
 	while (isRunning && !glfwWindowShouldClose(window))
 	{
-		Time::Tick(glfwGetTime());
-		timeDebt += Time::delta;
-
 		input->Update();
-
 		glfwPollEvents();
 
+		OnFrameStart();
+
+		Time::Tick(glfwGetTime());
+		timeDebt += Time::delta;
 		while (timeDebt > Time::fixedStep)
 		{
 			FixedUpdate();
