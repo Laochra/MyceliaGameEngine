@@ -34,6 +34,7 @@ void Input::Update()
     releasedKeys->clear();
 
     input->cursorMovement = vec2(0, 0);
+    input->scrollInput = vec2(0, 0);
 }
 
 
@@ -66,9 +67,14 @@ void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
     }
 }
 
+void ScrollCallback(GLFWwindow* window, double x, double y)
+{
+    input->scrollInput = vec2(x, y);
+}
+
 void CursorPosCallback(GLFWwindow* window, double x, double y)
 {
-    vec2 newPos = vec2(x, y);
+    vec2 newPos(x, y);
     input->cursorMovement = newPos - input->cursorPos;
     input->cursorPos = newPos;
 }

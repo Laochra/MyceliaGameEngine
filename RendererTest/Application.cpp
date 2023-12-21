@@ -64,7 +64,9 @@ void Application::Draw()
 	}
 
 	int w = 0, h = 0;
-	glfwGetWindowSize(window, &w, &h);
+	glfwGetFramebufferSize(window, &w, &h);
+
+	glViewport(0, 0, w, h);
 
 	Gizmos::draw(camera.GetProjectionMatrix(w, h) * camera.GetViewMatrix());
 }
@@ -92,7 +94,7 @@ int Application::Setup()
 	glfwSetKeyCallback(window, KeyCallback);
 	glfwSetCursorPosCallback(window, CursorPosCallback);
 	glfwSetMouseButtonCallback(window, MouseButtonCallback);
-	//glfwSetScrollCallback(window, FUNCTION);
+	glfwSetScrollCallback(window, ScrollCallback);
 
 	glfwMakeContextCurrent(window);
 
@@ -142,6 +144,8 @@ void Application::GameLoop()
 void Application::Close()
 {
 	Gizmos::destroy();
+
+	delete input;
 
 	glfwTerminate();
 }

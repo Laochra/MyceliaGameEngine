@@ -23,7 +23,7 @@ enum KeyCode
 	Escape			= GLFW_KEY_ESCAPE,
 	Tab				= GLFW_KEY_TAB,
 	Enter			= GLFW_KEY_ENTER,
-	keypadEnter		= GLFW_KEY_ENTER,
+	keypadEnter		= GLFW_KEY_KP_ENTER,
 	Backspace		= GLFW_KEY_BACKSPACE,
 	Delete			= GLFW_KEY_DELETE,
 	Insert			= GLFW_KEY_INSERT,
@@ -165,6 +165,7 @@ public:
 
 	vec2 cursorPos = vec2(0, 0);
 	vec2 cursorMovement = vec2(0, 0);
+	vec2 scrollInput = vec2(0, 0);
 
 	Input();
 	~Input();
@@ -182,7 +183,7 @@ extern Input* input;
 
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
-
+void ScrollCallback(GLFWwindow* window, double x, double y);
 void CursorPosCallback(GLFWwindow* window, double x, double y);
 
 

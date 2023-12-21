@@ -20,14 +20,17 @@
     <Filter Include="Game\Cameras">
       <UniqueIdentifier>{00ec51db-2cc8-4173-93b3-97070b065ba3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Applications">
+      <UniqueIdentifier>{600b10db-3245-43c1-93a4-b4b6cc861171}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Utility">
+      <UniqueIdentifier>{bc1ccc9a-8a6f-4e39-a9af-fe1ea9a76739}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="..\glad.c">
       <Filter>glad</Filter>
-    </ClCompile>
-    <ClCompile Include="Application.cpp">
-      <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Gizmos.cpp">
       <Filter>Engine\External</Filter>
@@ -41,9 +44,6 @@
     <ClCompile Include="Keybind.cpp">
       <Filter>Game\Input</Filter>
     </ClCompile>
-    <ClCompile Include="Time.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Game\Cameras</Filter>
     </ClCompile>
@@ -52,6 +52,12 @@
     </ClCompile>
     <ClCompile Include="OrbitalCamera.cpp">
       <Filter>Game\Cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="Application.cpp">
+      <Filter>Game\Applications</Filter>
+    </ClCompile>
+    <ClCompile Include="Time.cpp">
+      <Filter>Game\Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -64,17 +70,11 @@
     <ClInclude Include="FileLoading.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Application.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="Gizmos.h">
       <Filter>Engine\External</Filter>
     </ClInclude>
     <ClInclude Include="Input.h">
       <Filter>Game\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Time.h">
-      <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Game\Cameras</Filter>
@@ -84,6 +84,12 @@
     </ClInclude>
     <ClInclude Include="OrbitalCamera.h">
       <Filter>Game\Cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>Game\Applications</Filter>
+    </ClInclude>
+    <ClInclude Include="Time.h">
+      <Filter>Game\Utility</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -15,9 +15,7 @@ using glm::mat4;
 #include "glfw3.h"
 #include "glad.h"
 
-#include "Camera.h"
 #include "FreeCamera.h"
-#include "OrbitalCamera.h"
 
 class Application
 {
@@ -27,13 +25,10 @@ public:
 
 	int Run();
 
-	Application() noexcept
-	{
+	Application() noexcept { }
 
-	}
 
 protected:
-
 	GLFWwindow* window = nullptr;
 
 	virtual void Initialise();
