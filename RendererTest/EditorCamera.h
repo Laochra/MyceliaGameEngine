@@ -2,7 +2,7 @@
 
 #include "Camera.h"
 
-class FreeCamera : public Camera
+class EditorCamera : public Camera
 {
 public:
 	float theta = -90;

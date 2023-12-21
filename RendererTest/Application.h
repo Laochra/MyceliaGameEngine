@@ -3,25 +3,19 @@
 #include <iostream>
 #include <string>
 
-#include "Gizmos.h"
-#include <glm.hpp>
-#include <ext.hpp>
-
-using glm::vec3;
-using glm::vec4;
-using glm::mat4;
-
 #define GLFW_INCLUDE_NONE
 #include "glfw3.h"
 #include "glad.h"
+#include <glm.hpp>
 
-#include "FreeCamera.h"
+#include "Camera.h"
 
 class Application
 {
 public:
 	bool isRunning = false;
-	FreeCamera camera;
+
+	Camera* camera = nullptr;
 
 	int Run();
 
@@ -35,11 +29,10 @@ protected:
 	virtual void FixedUpdate();
 	virtual void Update();
 	virtual void Draw();
+	virtual void OnClose();
 
 private:
 	int Setup();
-
 	void GameLoop();
-
 	void Close();
 };

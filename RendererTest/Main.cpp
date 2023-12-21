@@ -1,10 +1,10 @@
 #include <iostream>
 
-#include "Application.h" // Replace with chosen application
+#include "Editor.h" // Replace with chosen application
 
 int main(char** args)
 {
-	Application application = Application();
+	Application* application = new Editor();
 
-	return application.Run(); // Run returns when the application has closed
+	return application->Run(); // Run returns when the application has closed
 }

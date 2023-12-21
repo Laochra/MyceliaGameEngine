@@ -4,16 +4,6 @@
     <Filter Include="Game">
       <UniqueIdentifier>{5cf65a99-a9fd-4241-a8ca-e1eeb35f4881}</UniqueIdentifier>
     </Filter>
-    <Filter Include="glad">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Engine">
-      <UniqueIdentifier>{068a1155-7c7e-48a5-8e24-c6aeca3a0859}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\External">
-      <UniqueIdentifier>{b6a08147-9c1d-46cd-b926-2c99d5603a7d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\Input">
       <UniqueIdentifier>{1d65630a-870b-41a2-ae2d-b8c77647a62e}</UniqueIdentifier>
     </Filter>
@@ -26,15 +16,22 @@
     <Filter Include="Game\Utility">
       <UniqueIdentifier>{bc1ccc9a-8a6f-4e39-a9af-fe1ea9a76739}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{068a1155-7c7e-48a5-8e24-c6aeca3a0859}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Libraries">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="External Libraries\Gizmos">
+      <UniqueIdentifier>{094ad3f6-a87e-497f-b0d0-1886a8a953f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Libraries\glad">
+      <UniqueIdentifier>{a82ee81f-24e7-4969-b8b9-06a958812dc7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="..\glad.c">
-      <Filter>glad</Filter>
-    </ClCompile>
-    <ClCompile Include="Gizmos.cpp">
-      <Filter>Engine\External</Filter>
-    </ClCompile>
     <ClCompile Include="Input.cpp">
       <Filter>Game\Input</Filter>
     </ClCompile>
@@ -59,19 +56,19 @@
     <ClCompile Include="Time.cpp">
       <Filter>Game\Utility</Filter>
     </ClCompile>
+    <ClCompile Include="Gizmos.cpp">
+      <Filter>External Libraries\Gizmos</Filter>
+    </ClCompile>
+    <ClCompile Include="..\glad.c">
+      <Filter>External Libraries\glad</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor.cpp">
+      <Filter>Game\Applications</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\khrplatform.h">
-      <Filter>glad</Filter>
-    </ClInclude>
-    <ClInclude Include="..\glad.h">
-      <Filter>glad</Filter>
-    </ClInclude>
     <ClInclude Include="FileLoading.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Gizmos.h">
-      <Filter>Engine\External</Filter>
+      <Filter>Editor</Filter>
     </ClInclude>
     <ClInclude Include="Input.h">
       <Filter>Game\Input</Filter>
@@ -90,6 +87,18 @@
     </ClInclude>
     <ClInclude Include="Time.h">
       <Filter>Game\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor.h">
+      <Filter>Game\Applications</Filter>
+    </ClInclude>
+    <ClInclude Include="Gizmos.h">
+      <Filter>External Libraries\Gizmos</Filter>
+    </ClInclude>
+    <ClInclude Include="..\glad.h">
+      <Filter>External Libraries\glad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\khrplatform.h">
+      <Filter>External Libraries\glad</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

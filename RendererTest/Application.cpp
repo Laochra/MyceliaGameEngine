@@ -14,63 +14,27 @@ int Application::Run()
 
 	Initialise();
 
+	if (camera == nullptr)
+	{
+		std::cout << std::endl <<
+			"No camera was set up in Initialise(), so a default camera was created." <<
+			"Application will not behave as expected." << std::endl;
+		camera = new Camera();
+	}
+
 	GameLoop();
 
+	OnClose();
 	Close();
 
 	return 0;
 }
 
-void Application::Initialise()
-{
-	Gizmos::create(100000, 10000, 0, 0);
-}
-
-void Application::FixedUpdate()
-{
-
-}
-
-void Application::Update()
-{
-	Keybind freeCameraToggle(MouseRight);
-
-	if (freeCameraToggle.pressed())
-	{
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	}
-	else if (freeCameraToggle.released())
-	{
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-	}
-
-	camera.Update();
-}
-
-void Application::Draw()
-{
-	Gizmos::clear();
-
-	Gizmos::addTransform(glm::mat4(1));
-
-	vec4 white(1);
-	vec4 black(0, 0, 0, 1);
-
-	for (int i = 0; i < 21; i++)
-	{
-		Gizmos::addLine(vec3(-10 + i, 0, 10), vec3(-10 + i, 0, -10), i == 10 ? white : black);
-
-		Gizmos::addLine(vec3(-10, 0, -10 + i), vec3(10, 0, -10 + i), i == 10 ? white : black);
-	}
-
-	int w = 0, h = 0;
-	glfwGetFramebufferSize(window, &w, &h);
-
-	glViewport(0, 0, w, h);
-
-	Gizmos::draw(camera.GetProjectionMatrix(w, h) * camera.GetViewMatrix());
-}
-
+void Application::Initialise() { } 
+void Application::FixedUpdate() { } 
+void Application::Update() { } 
+void Application::Draw() { } 
+void Application::OnClose() { }
 
 
 int Application::Setup()
@@ -104,7 +68,7 @@ int Application::Setup()
 		return -1;
 	}
 
-	glClearColor(0.9f, 0.7f, 0.9f, 1);
+	glClearColor(0.8f, 0.75f, 0.85f, 1);
 	glEnable(GL_DEPTH_TEST);
 
 	return 0;
@@ -130,6 +94,8 @@ void Application::GameLoop()
 
 		if (isRunning) Update();
 		
+		camera->Update();
+
 		if (isRunning)
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -143,8 +109,6 @@ void Application::GameLoop()
 
 void Application::Close()
 {
-	Gizmos::destroy();
-
 	delete input;
 
 	glfwTerminate();

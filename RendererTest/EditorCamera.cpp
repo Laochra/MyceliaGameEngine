@@ -1,9 +1,9 @@
-#include "FreeCamera.h"
+#include "EditorCamera.h"
 
 #include "Time.h"
 #include "Input.h"
 
-glm::mat4 FreeCamera::GetViewMatrix()
+glm::mat4 EditorCamera::GetViewMatrix()
 {
     float thetaR = glm::radians(theta);
     float phiR = glm::radians(phi);
@@ -14,7 +14,7 @@ glm::mat4 FreeCamera::GetViewMatrix()
     return glm::lookAt(position, position + forward, up);
 }
 
-void FreeCamera::Update()
+void EditorCamera::Update()
 {
 	float thetaR = glm::radians(theta);
 	float phiR = glm::radians(phi);
