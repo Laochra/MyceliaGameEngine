@@ -1,5 +1,7 @@
 #include "Input.h"
 
+#include "imgui/imgui.h"
+
 Input* input = nullptr;
 
 Input::Input()
@@ -55,6 +57,8 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 
 void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 {
+    if (ImGui::GetIO().WantCaptureMouse) return;
+
     if (action == GLFW_PRESS)
     {
         input->pressedKeys->insert((KeyCode)button);
@@ -69,11 +73,15 @@ void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 
 void ScrollCallback(GLFWwindow* window, double x, double y)
 {
+    if (ImGui::GetIO().WantCaptureMouse) return;
+
     input->scrollInput = vec2(x, y);
 }
 
 void CursorPosCallback(GLFWwindow* window, double x, double y)
 {
+    if (ImGui::GetIO().WantCaptureMouse) return;
+
     vec2 newPos(x, y);
     input->cursorMovement = newPos - input->cursorPos;
     input->cursorPos = newPos;

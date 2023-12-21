@@ -16,15 +16,13 @@ void Editor::Initialise()
 	// Begin Dear ImGui Setup
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
-		ImGuiIO& io = ImGui::GetIO(); (void)io;
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;	// Enable Keyboard Controls
-		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;	// Enable Gamepad Controls
-		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;		// Enable Docking
+		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;	// Enable Keyboard Controls
+		//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;	// Enable Gamepad Controls
+		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;		// Enable Docking
+		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;		// Enable Viewports
 	
 		ImGui_ImplGlfw_InitForOpenGL(window, /*install_callbacks:*/ true);
 		ImGui_ImplOpenGL3_Init();
-	//End Dear ImGui Setup
-
 
 	camera = new EditorCamera();
 
@@ -37,7 +35,8 @@ void Editor::OnFrameStart()
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
-	ImGui::ShowDemoWindow();
+	//ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+	//ImGui::ShowDemoWindow();
 }
 
 void Editor::FixedUpdate()
@@ -57,6 +56,18 @@ void Editor::Update()
 	{
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
+
+	ImGui::Begin("Window 01");
+
+	ImGui::End();
+
+	ImGui::Begin("Window 02");
+
+	ImGui::End();
+
+	ImGui::Begin("Window 03");
+
+	ImGui::End();
 }
 
 void Editor::Draw()
@@ -82,9 +93,17 @@ void Editor::Draw()
 
 	Gizmos::draw(camera->GetProjectionMatrix(w, h) * camera->GetViewMatrix());
 
+
 	// Draw ImGui UI
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+	if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+		glfwMakeContextCurrent(window);
+	}
 }
 
 void Editor::OnClose()
@@ -92,4 +111,8 @@ void Editor::OnClose()
 	delete camera;
 
 	Gizmos::destroy();
+
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 }
