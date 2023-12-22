@@ -7,7 +7,11 @@ glm::mat4 Camera::GetViewMatrix()
 
 glm::mat4 Camera::GetProjectionMatrix(float w, float h)
 {
-    return glm::perspective(fov, w / h, nearClip, farClip);
+	float aspect;
+	if (h == 0.0f || w == 0.0f) aspect = 0.0f;
+	else aspect = w / h;
+
+    return glm::perspective(fov, aspect, nearClip, farClip);
 }
 
 void Camera::Update()

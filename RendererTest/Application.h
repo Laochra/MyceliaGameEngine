@@ -23,7 +23,7 @@ public:
 
 protected:
 	GLFWwindow* window = nullptr;
-
+	
 	virtual void Initialise();
 	virtual void OnFrameStart();
 	virtual void FixedUpdate();
@@ -36,3 +36,6 @@ private:
 	void GameLoop();
 	void Close();
 };
+
+extern bool applicationFocused;
+void WindowFocusCallback(GLFWwindow* window, int focused);

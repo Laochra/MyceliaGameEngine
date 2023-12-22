@@ -3,6 +3,8 @@
 #include "Time.h"
 #include "Input.h"
 
+bool applicationFocused = true;
+
 int Application::Run()
 {
 	isRunning = true;
@@ -28,6 +30,11 @@ int Application::Run()
 	Close();
 
 	return 0;
+}
+
+void WindowFocusCallback(GLFWwindow* window, int focused)
+{
+	//applicationFocused = focused ? true : false;
 }
 
 void Application::Initialise() { }
@@ -61,6 +68,8 @@ int Application::Setup()
 	glfwSetCursorPosCallback(window, CursorPosCallback);
 	glfwSetMouseButtonCallback(window, MouseButtonCallback);
 	glfwSetScrollCallback(window, ScrollCallback);
+
+	glfwSetWindowFocusCallback(window, WindowFocusCallback);
 
 	glfwMakeContextCurrent(window);
 

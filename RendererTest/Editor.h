@@ -20,5 +20,5 @@ protected:
 	virtual void OnClose() override;
 
 private:
-
+	
 };

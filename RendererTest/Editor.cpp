@@ -34,11 +34,15 @@ void Editor::Initialise()
 void Editor::OnFrameStart()
 {
 	// Ready ImGui For Immediate Mode Rendering
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplGlfw_NewFrame();
-	ImGui::NewFrame();
-	//ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
-	//ImGui::ShowDemoWindow();
+	if (applicationFocused)
+	{
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
+		//ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+		//ImGui::ShowDemoWindow();
+	}
 }
 
 void Editor::FixedUpdate()
@@ -59,6 +63,7 @@ void Editor::Update()
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
 
+	if (!applicationFocused) return;
 	ImGui::Begin("Camera Settings");
 	{
 		ImGui::BeginTabBar("Camera Settings Tab Bar");
@@ -151,14 +156,17 @@ void Editor::Draw()
 
 
 	// Draw ImGui UI
-	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-	if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	if (applicationFocused)
 	{
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault();
-		glfwMakeContextCurrent(window);
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+		if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+			glfwMakeContextCurrent(window);
+		}
 	}
 }
 
@@ -172,31 +180,3 @@ void Editor::OnClose()
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
 }
-
-
-
-//void Editor::LoadCameraControls(std::string* controlNames, int controlCount)
-//{
-//	std::string str = LoadFileAsString("UserSettings/CameraSettings.config");
-//	
-//	std::string currentLine;
-//	char currentChar = ' ';
-//	int currentIndex = 0;
-//	
-//	while (currentIndex < str.size())
-//	{
-//		currentLine.clear();
-//
-//		currentChar = str[currentIndex];
-//		while (currentChar != '\n')
-//		{
-//			currentLine.push_back(currentChar);
-//			currentIndex++;
-//			currentChar = str[currentIndex];
-//		}
-//		currentIndex++;
-//		if (currentLine.size() == 0 || currentLine[0] == '#') continue;
-//
-//
-//	}
-//}
