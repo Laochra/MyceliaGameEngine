@@ -65,9 +65,6 @@
     <ClCompile Include="Gizmos.cpp">
       <Filter>External Libraries\Gizmos</Filter>
     </ClCompile>
-    <ClCompile Include="..\glad.c">
-      <Filter>External Libraries\glad</Filter>
-    </ClCompile>
     <ClCompile Include="Editor.cpp">
       <Filter>Game\Applications</Filter>
     </ClCompile>
@@ -98,6 +95,9 @@
     <ClCompile Include="EditorCamera.cpp">
       <Filter>Game\Cameras</Filter>
     </ClCompile>
+    <ClCompile Include="..\glad\glad.c">
+      <Filter>External Libraries\glad</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileLoading.h">
@@ -123,12 +123,6 @@
     </ClInclude>
     <ClInclude Include="Gizmos.h">
       <Filter>External Libraries\Gizmos</Filter>
-    </ClInclude>
-    <ClInclude Include="..\glad.h">
-      <Filter>External Libraries\glad</Filter>
-    </ClInclude>
-    <ClInclude Include="..\khrplatform.h">
-      <Filter>External Libraries\glad</Filter>
     </ClInclude>
     <ClInclude Include="..\imgui\imconfig.h">
       <Filter>External Libraries\imgui</Filter>
@@ -171,6 +165,12 @@
     </ClInclude>
     <ClInclude Include="EditorCameraConfig.h">
       <Filter>Editor\JSON Configs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\glad\glad.h">
+      <Filter>External Libraries\glad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\glad\khrplatform.h">
+      <Filter>External Libraries\glad</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
