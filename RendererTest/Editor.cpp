@@ -7,6 +7,7 @@
 #include "Time.h"
 #include "Input.h"
 #include "EditorCamera.h"
+#include "EditorCameraConfig.h"
 
 using glm::vec4;
 using glm::mat4;
@@ -25,6 +26,7 @@ void Editor::Initialise()
 		ImGui_ImplOpenGL3_Init();
 
 	camera = new EditorCamera();
+	EditorCameraConfig::Load((EditorCamera*)camera);
 
 	Gizmos::create(100000, 10000, 0, 0);
 }
@@ -46,13 +48,13 @@ void Editor::FixedUpdate()
 
 void Editor::Update()
 {
-	Keybind freeCameraToggle(MouseRight);
+	Keybind freeCamera(MouseRight);
 
-	if (freeCameraToggle.pressed())
+	if (freeCamera.pressed())
 	{
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
-	else if (freeCameraToggle.released())
+	else if (freeCamera.released())
 	{
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
@@ -63,33 +65,29 @@ void Editor::Update()
 		{
 			if (ImGui::BeginTabItem("Display"))
 			{
-				ImGui::Text("Clipping Planes");
+				ImGui::SeparatorText("Clipping Planes");
 				ImGui::InputFloat("Near", &camera->nearClip);
 				ImGui::InputFloat("Far", &camera->farClip);
 
-				ImGui::Separator();
-
-				ImGui::Text("FOV");
-				ImGui::InputFloat("(radians)", &camera->fov);
+				ImGui::SeparatorText("FOV");
+				float fovDegrees = glm::degrees(camera->fov);
+				ImGui::InputFloat("(degrees)", &fovDegrees);
+				camera->fov = glm::radians(fovDegrees);
 
 				ImGui::EndTabItem();
 			}
 			if (ImGui::BeginTabItem("Movement"))
 			{
-				ImGui::Text("Position");
+				ImGui::SeparatorText("Position");
 				ImGui::InputFloat("x", &camera->position.x);
 				ImGui::InputFloat("y", &camera->position.y);
 				ImGui::InputFloat("z", &camera->position.z);
 
-				ImGui::Separator();
-
-				ImGui::Text("Rotation");
+				ImGui::SeparatorText("Rotation");
 				ImGui::InputFloat("x ", &((EditorCamera*)camera)->xRotation);
 				ImGui::InputFloat("y ", &((EditorCamera*)camera)->yRotation);
 
-				ImGui::Separator();
-
-				ImGui::Text("Fly Speed");
+				ImGui::SeparatorText("Fly Speed");
 				ImGui::InputFloat("Regular", &((EditorCamera*)camera)->flySpeed);
 				ImGui::InputFloat("Quick", &((EditorCamera*)camera)->quickFlySpeed);
 
@@ -108,15 +106,22 @@ void Editor::Update()
 				ImGui::SeparatorText("Other");
 
 				ConfigureKeybind("Quick Fly", &((EditorCamera*)camera)->quickMode);
-
-				ImGui::Separator();
-
-				ConfigureKeybind("Free Camera", &((EditorCamera*)camera)->freeCameraToggle);
+				ImGui::Spacing(); ImGui::Spacing();
+				ConfigureKeybind("Free Camera", &((EditorCamera*)camera)->freeCamera);
 
 				ImGui::EndTabItem();
 			}
 		}
 		ImGui::EndTabBar();
+
+		ImGui::Spacing(); ImGui::Spacing();
+		ImGui::Separator();
+		ImGui::Spacing(); ImGui::Spacing();
+
+		if (ImGui::Button("Save Settings"))
+		{
+			EditorCameraConfig::Save((EditorCamera*)camera);
+		}
 	}
 	ImGui::End();
 }
@@ -167,3 +172,31 @@ void Editor::OnClose()
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
 }
+
+
+
+//void Editor::LoadCameraControls(std::string* controlNames, int controlCount)
+//{
+//	std::string str = LoadFileAsString("UserSettings/CameraSettings.config");
+//	
+//	std::string currentLine;
+//	char currentChar = ' ';
+//	int currentIndex = 0;
+//	
+//	while (currentIndex < str.size())
+//	{
+//		currentLine.clear();
+//
+//		currentChar = str[currentIndex];
+//		while (currentChar != '\n')
+//		{
+//			currentLine.push_back(currentChar);
+//			currentIndex++;
+//			currentChar = str[currentIndex];
+//		}
+//		currentIndex++;
+//		if (currentLine.size() == 0 || currentLine[0] == '#') continue;
+//
+//
+//	}
+//}

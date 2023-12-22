@@ -2,6 +2,8 @@
 
 #include "Application.h"
 
+#include <string>
+
 #include "Gizmos.h"
 
 class Editor : public Application

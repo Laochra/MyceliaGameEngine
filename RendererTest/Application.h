@@ -1,7 +1,6 @@
 #pragma once
 
 #include <iostream>
-#include <string>
 
 #define GLFW_INCLUDE_NONE
 #include "glfw3.h"

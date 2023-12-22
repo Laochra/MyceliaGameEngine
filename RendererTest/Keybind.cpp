@@ -57,6 +57,13 @@ void Keybind::Bind(KeyCode keyCode) noexcept
 {
     keys->push_back(keyCode);
 }
+void Keybind::Bind(std::vector<KeyCode> keyCodes) noexcept
+{
+    for (int i = 0; i < keyCodes.size(); i++)
+    {
+        Bind(keyCodes[i]);
+    }
+}
 void Keybind::Unbind(KeyCode keyCode) noexcept
 {
     for (int i = 0; i < keys->size(); i++)

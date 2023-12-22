@@ -48,9 +48,23 @@ void KeyAxis::BindPositive(KeyCode keyCode) noexcept
 {
     positiveKeys->push_back(keyCode);
 }
+void KeyAxis::BindPositive(std::vector<KeyCode> keyCodes) noexcept
+{
+    for (int i = 0; i < keyCodes.size(); i++)
+    {
+        BindPositive(keyCodes[i]);
+    }
+}
 void KeyAxis::BindNegative(KeyCode keyCode) noexcept
 {
     negativeKeys->push_back(keyCode);
+}
+void KeyAxis::BindNegative(std::vector<KeyCode> keyCodes) noexcept
+{
+    for (int i = 0; i < keyCodes.size(); i++)
+    {
+        BindNegative(keyCodes[i]);
+    }
 }
 void KeyAxis::BindPair(KeyCode negative, KeyCode positive) noexcept
 {

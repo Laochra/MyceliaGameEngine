@@ -22,7 +22,7 @@ void EditorCamera::Update()
 	vec3 right(-sin(thetaR), 0, cos(thetaR));
 	vec3 up(0, 1, 0);
 
-	if (freeCameraToggle)
+	if (freeCamera)
 	{
 		// Keyboard Movement
 		vec3 xzMovement(0, 0, 0);
@@ -48,7 +48,7 @@ void EditorCamera::Update()
 		// Mouse Look
 		xRotation += input->cursorMovement.x * 20 * Time::delta;
 		yRotation += -input->cursorMovement.y * 20 * Time::delta;
-		if (yRotation > 80) yRotation = 80;
-		if (yRotation < -80) yRotation = -80;
+		if (yRotation > 85) yRotation = 85;
+		if (yRotation < -85) yRotation = -85;
 	}
 }

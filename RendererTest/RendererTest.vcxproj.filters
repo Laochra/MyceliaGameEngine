@@ -32,6 +32,12 @@
     <Filter Include="External Libraries\imgui">
       <UniqueIdentifier>{a649e036-5fb9-49e0-abc8-8cb67aa5bd68}</UniqueIdentifier>
     </Filter>
+    <Filter Include="External Libraries\nlohmannjson">
+      <UniqueIdentifier>{f4ce0ab0-f06b-41b9-a533-4309e1b7222d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\JSON Configs">
+      <UniqueIdentifier>{8c1f8ce7-05e8-4dd1-88dd-6ee844ec7ff9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
@@ -156,6 +162,15 @@
     </ClInclude>
     <ClInclude Include="EditorCamera.h">
       <Filter>Game\Cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="..\nlohmannjson\json.hpp">
+      <Filter>External Libraries\nlohmannjson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\nlohmannjson\json_fwd.hpp">
+      <Filter>External Libraries\nlohmannjson</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorCameraConfig.h">
+      <Filter>Editor\JSON Configs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

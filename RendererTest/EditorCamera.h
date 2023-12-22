@@ -17,7 +17,7 @@ public:
 	KeyAxis yInput;
 	KeyAxis zInput;
 
-	Keybind freeCameraToggle;
+	Keybind freeCamera;
 	Keybind quickMode;
 
 	EditorCamera()
@@ -28,7 +28,7 @@ public:
 		yInput.BindPair(LControl, Space);
 		zInput.BindPair(S, W);
 
-		freeCameraToggle.Bind(MouseRight);
+		freeCamera.Bind(MouseRight);
 		quickMode.Bind(LShift);
 	}
 

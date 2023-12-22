@@ -208,6 +208,7 @@ public:
 	operator bool() const { return down(); }
 
 	void Bind(KeyCode keyCode) noexcept;
+	void Bind(std::vector<KeyCode> keyCodes) noexcept;
 	void Unbind(KeyCode keyCode) noexcept;
 	void ClearBinds() noexcept;
 
@@ -230,7 +231,9 @@ public:
 	operator float() const { return value(); }
 
 	void BindPositive(KeyCode keyCode) noexcept;
+	void BindPositive(std::vector<KeyCode> keyCodes) noexcept;
 	void BindNegative(KeyCode keyCode) noexcept;
+	void BindNegative(std::vector<KeyCode> keyCodes) noexcept;
 	void BindPair(KeyCode negative, KeyCode positive) noexcept;
 
 	void UnbindPositive(KeyCode keyCode) noexcept;

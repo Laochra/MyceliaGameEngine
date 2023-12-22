@@ -4,7 +4,7 @@
 #include <fstream>
 #include <sstream>
 
-std::string LoadFileAsString(std::string filename)
+inline std::string LoadFileAsString(std::string filename)
 {
 	std::stringstream fileContents;
 	std::ifstream inputFile(filename);
