@@ -22,7 +22,7 @@ public:
 
 	EditorCamera()
 	{
-		fov = glm::pi<float>() * 0.25f;
+		fov = glm::radians(80.0f);
 
 		xInput.BindPair(A, D);
 		yInput.BindPair(LControl, Space);
