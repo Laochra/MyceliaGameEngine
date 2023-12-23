@@ -23,9 +23,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="External Libraries\Gizmos">
-      <UniqueIdentifier>{094ad3f6-a87e-497f-b0d0-1886a8a953f8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="External Libraries\glad">
       <UniqueIdentifier>{a82ee81f-24e7-4969-b8b9-06a958812dc7}</UniqueIdentifier>
     </Filter>
@@ -37,6 +34,15 @@
     </Filter>
     <Filter Include="Editor\JSON Configs">
       <UniqueIdentifier>{8c1f8ce7-05e8-4dd1-88dd-6ee844ec7ff9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Libraries\aie">
+      <UniqueIdentifier>{094ad3f6-a87e-497f-b0d0-1886a8a953f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Rendering">
+      <UniqueIdentifier>{2da33dea-8583-43a9-9e05-ab2a19965f9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Rendering\Shaders">
+      <UniqueIdentifier>{1218d668-2cea-459a-98cb-0fc9a9fca26f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -63,7 +69,7 @@
       <Filter>Game\Utility</Filter>
     </ClCompile>
     <ClCompile Include="Gizmos.cpp">
-      <Filter>External Libraries\Gizmos</Filter>
+      <Filter>External Libraries\aie</Filter>
     </ClCompile>
     <ClCompile Include="Editor.cpp">
       <Filter>Game\Applications</Filter>
@@ -98,6 +104,12 @@
     <ClCompile Include="..\glad\glad.c">
       <Filter>External Libraries\glad</Filter>
     </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>External Libraries\aie</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Game\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileLoading.h">
@@ -122,7 +134,7 @@
       <Filter>Game\Applications</Filter>
     </ClInclude>
     <ClInclude Include="Gizmos.h">
-      <Filter>External Libraries\Gizmos</Filter>
+      <Filter>External Libraries\aie</Filter>
     </ClInclude>
     <ClInclude Include="..\imgui\imconfig.h">
       <Filter>External Libraries\imgui</Filter>
@@ -172,10 +184,22 @@
     <ClInclude Include="..\glad\khrplatform.h">
       <Filter>External Libraries\glad</Filter>
     </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>External Libraries\aie</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Game\Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\imgui\imgui.natstepfilter">
       <Filter>External Libraries\imgui</Filter>
+    </None>
+    <None Include="..\Assets\Simple.frag">
+      <Filter>Game\Rendering\Shaders</Filter>
+    </None>
+    <None Include="..\Assets\Simple.vert">
+      <Filter>Game\Rendering\Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

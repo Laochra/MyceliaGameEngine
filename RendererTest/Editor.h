@@ -6,6 +6,9 @@
 
 #include "Gizmos.h"
 
+#include "Shader.h"
+#include "Mesh.h"
+
 class Editor : public Application
 {
 public:
@@ -20,5 +23,7 @@ protected:
 	virtual void OnClose() override;
 
 private:
-	
+	ShaderProgram shader;
+	Mesh mesh;
+	glm::mat4 quadTransform;
 };

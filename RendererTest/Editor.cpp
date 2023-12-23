@@ -29,6 +29,26 @@ void Editor::Initialise()
 	EditorCameraConfig::Load((EditorCamera*)camera);
 
 	Gizmos::create(100000, 10000, 0, 0);
+
+	shader.loadShader(eShaderStage::VERTEX, "Simple.vert");
+	shader.loadShader(eShaderStage::FRAGMENT, "Simple.frag");
+
+	if (shader.link() == false)
+	{
+		std::cout << "Shader Error: " << shader.getLastError();
+		return;
+	}
+
+	mesh.InitialiseCube();
+
+	quadTransform =
+	{
+		2, 0, 0, 0,
+		0, 2, 0, 0,
+		0, 0, 2, 0,
+		0, 0, 0, 1
+	};
+
 }
 
 void Editor::OnFrameStart()
@@ -129,6 +149,8 @@ void Editor::Update()
 		}
 	}
 	ImGui::End();
+
+	quadTransform = glm::rotate(quadTransform, glm::radians(0.5f), vec3(0, 1, 0));
 }
 
 void Editor::Draw()
@@ -152,8 +174,18 @@ void Editor::Draw()
 
 	glViewport(0, 0, w, h);
 
-	Gizmos::draw(camera->GetProjectionMatrix(w, h) * camera->GetViewMatrix());
+	mat4 ProjectionViewMatrix = camera->GetProjectionMatrix(w, h) * camera->GetViewMatrix();
 
+	Gizmos::draw(ProjectionViewMatrix);
+
+	// Bind Shader
+	shader.bind();
+
+	// Bind Transform
+	shader.bindUniform("ProjectionViewModel", ProjectionViewMatrix * quadTransform);
+
+	// Draw Quad
+	mesh.Draw();
 
 	// Draw ImGui UI
 	if (applicationFocused)

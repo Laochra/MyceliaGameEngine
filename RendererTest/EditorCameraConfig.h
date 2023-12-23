@@ -1,7 +1,6 @@
 #pragma once
 
 #include "EditorCamera.h"
-#include <iostream>
 #include <fstream>
 #include "json.hpp"
 using json = nlohmann::json;
@@ -117,8 +116,6 @@ namespace EditorCameraConfig
 
 		std::ofstream output("UserSettings/EditorCameraConfig.json");
 		output << std::setw(4) << config << std::endl;
-
-		//std::cout << std::setw(4) << config << std::endl;
 	}
 
 	inline void Save(EditorCamera* camera)
