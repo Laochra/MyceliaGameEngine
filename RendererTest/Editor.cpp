@@ -41,7 +41,7 @@ void Editor::Initialise()
 
 	mesh.InitialiseCube();
 
-	quadTransform =
+	meshTransform =
 	{
 		2, 0, 0, 0,
 		0, 2, 0, 0,
@@ -49,6 +49,11 @@ void Editor::Initialise()
 		0, 0, 0, 1
 	};
 
+	light.colour = { 1, 0.9f, 0.8f };
+	light.direction = glm::normalize(vec3{ 0, -0.7, -0.7 });
+	ambientLight = { 0.25f, 0.25f, 0.25f };
+
+	meshTexture.load("shroom.png");
 }
 
 void Editor::OnFrameStart()
@@ -150,7 +155,17 @@ void Editor::Update()
 	}
 	ImGui::End();
 
-	quadTransform = glm::rotate(quadTransform, glm::radians(0.5f), vec3(0, 1, 0));
+	meshTransform = glm::rotate(meshTransform, glm::radians(0.5f), vec3(0, 1, 0));
+
+	//ImGui::Begin("Light Settings");
+	//	ImGui::SeparatorText("Direction");
+	//	ImGui::InputFloat("X Direction", &light.direction.x);
+	//	ImGui::InputFloat("Y Direction", &light.direction.y);
+	//	ImGui::InputFloat("Z Direction", &light.direction.z);
+	//	light.direction = glm::normalize(light.direction);
+	//ImGui::End();
+
+	//light.direction = glm::normalize(vec3(glm::cos(Time::time * 2), glm::sin(Time::time * 2), 0));
 }
 
 void Editor::Draw()
@@ -181,8 +196,19 @@ void Editor::Draw()
 	// Bind Shader
 	shader.bind();
 
+	// Bind Light
+	shader.bindUniform("AmbientColour", ambientLight);
+	shader.bindUniform("LightColour", light.colour);
+	shader.bindUniform("LightDirection", light.direction);
+
 	// Bind Transform
-	shader.bindUniform("ProjectionViewModel", ProjectionViewMatrix * quadTransform);
+	shader.bindUniform("ProjectionViewModel", ProjectionViewMatrix * meshTransform);
+
+	// Bind Transform for Lighting
+	shader.bindUniform("ModelMatrix", meshTransform);
+
+	meshTexture.bind(0);
+	shader.bindUniform("diffuseTex", 0);
 
 	// Draw Quad
 	mesh.Draw();

@@ -122,7 +122,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir); $(SolutionDir)GLFW; $(SolutionDir)glm; ${SolutionDir)imgui</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir); $(SolutionDir)GLFW; $(SolutionDir)glad; $(SolutionDir)glm; ${SolutionDir)imgui; $(SolutionDir)nlohmannjson; $(SolutionDir)stb</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -156,6 +156,7 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="OrbitalCamera.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Time.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -186,11 +187,16 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="OrbitalCamera.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="Time.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Assets\Simple.frag" />
-    <None Include="..\Assets\Simple.vert" />
+    <None Include="..\Assets\Simple.frag">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\Assets\Simple.vert">
+      <FileType>Document</FileType>
+    </None>
     <None Include="..\imgui\imgui.natstepfilter" />
   </ItemGroup>
   <ItemGroup>

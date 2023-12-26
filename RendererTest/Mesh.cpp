@@ -28,6 +28,14 @@ void Mesh::Initialise(unsigned int vertexCount, const Vertex* vertices, unsigned
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
 
+	// Enable Second Element as Normal
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_TRUE, sizeof(Vertex), 0);
+
+	// Enable Third Element as Texture Coords
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)32);
+
 	// Bind Indices if there Are Any
 	if (indexCount != 0)
 	{
@@ -62,13 +70,13 @@ void Mesh::InitialiseQuad()
 
 	for (int i = 0; i < 4; i++)
 	{
-		vertices[i].normal = { 0, 1, 0, 1 };
+		vertices[i].normal = { 0, 1, 0, 0 };
 	}
 
-	vertices[0].texCoord = { 0, 0 };
-	vertices[1].texCoord = { 1, 0 };
-	vertices[2].texCoord = { 0, 1 };
-	vertices[3].texCoord = { 1, 1 };
+	vertices[0].texCoord = { 0, 1 };
+	vertices[1].texCoord = { 1, 1 };
+	vertices[2].texCoord = { 0, 0 };
+	vertices[3].texCoord = { 1, 0 };
 
 	unsigned int indices[6] =
 	{
@@ -96,9 +104,9 @@ void Mesh::InitialiseCube()
 
 
 		vec4 normal;
-		if (i == 0) normal = { 0, 1, 0 , 1 };
-		else if (i == 1) normal = { 0, 0, 1, 1 };
-		else if (i == 2) normal = { 1, 0, 0, 1 };
+		if (i == 0) normal = { 0, 1, 0 , 0 };
+		else if (i == 1) normal = { 0, 0, 1, 0 };
+		else if (i == 2) normal = { 1, 0, 0, 0 };
 
 		vertices[0 + 8 * i].normal = -normal;
 		vertices[1 + 8 * i].normal = -normal;
@@ -116,10 +124,10 @@ void Mesh::InitialiseCube()
 		vertices[2 + 8 * i].texCoord = { 0, 1 };
 		vertices[3 + 8 * i].texCoord = { 1, 1 };
 
-		vertices[4 + 8 * i].texCoord = { 0, 0 };
-		vertices[5 + 8 * i].texCoord = { 1, 0 };
-		vertices[6 + 8 * i].texCoord = { 0, 1 };
-		vertices[7 + 8 * i].texCoord = { 1, 1 };
+		vertices[4 + 8 * i].texCoord = { 0, 1 };
+		vertices[5 + 8 * i].texCoord = { 1, 1 };
+		vertices[6 + 8 * i].texCoord = { 0, 0 };
+		vertices[7 + 8 * i].texCoord = { 1, 0 };
 	}
 
 	unsigned int indices[36] =

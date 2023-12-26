@@ -6,8 +6,11 @@
 
 #include "Gizmos.h"
 
+#include "Texture.h"
+
 #include "Shader.h"
 #include "Mesh.h"
+
 
 class Editor : public Application
 {
@@ -25,5 +28,15 @@ protected:
 private:
 	ShaderProgram shader;
 	Mesh mesh;
-	glm::mat4 quadTransform;
+	glm::mat4 meshTransform;
+	Texture meshTexture;
+
+	struct Light
+	{
+		glm::vec3 direction;
+		glm::vec3 colour;
+	};
+
+	Light light;
+	glm::vec3 ambientLight;
 };

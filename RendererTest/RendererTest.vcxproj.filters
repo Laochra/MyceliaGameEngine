@@ -113,6 +113,9 @@
     <ClCompile Include="Mesh.cpp">
       <Filter>Game\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>External Libraries\aie</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileLoading.h">
@@ -199,15 +202,18 @@
     <ClInclude Include="..\stb\stb_image_write.h">
       <Filter>External Libraries\stb</Filter>
     </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>External Libraries\aie</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\imgui\imgui.natstepfilter">
       <Filter>External Libraries\imgui</Filter>
     </None>
-    <None Include="..\Assets\Simple.frag">
+    <None Include="..\Assets\Simple.vert">
       <Filter>Game\Rendering\Shaders</Filter>
     </None>
-    <None Include="..\Assets\Simple.vert">
+    <None Include="..\Assets\Simple.frag">
       <Filter>Game\Rendering\Shaders</Filter>
     </None>
   </ItemGroup>
