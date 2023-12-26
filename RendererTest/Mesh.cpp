@@ -24,17 +24,17 @@ void Mesh::Initialise(unsigned int vertexCount, const Vertex* vertices, unsigned
 	//Fill Vertex Buffer
 	glBufferData(GL_ARRAY_BUFFER, vertexCount * sizeof(Vertex), vertices, GL_STATIC_DRAW);
 
-	// Enable First Element as Position
+	// Position
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
 
-	// Enable Second Element as Normal
+	// Normal
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_TRUE, sizeof(Vertex), 0);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, normal)));
 
-	// Enable Third Element as Texture Coords
+	// Texture Coords
 	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)32);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, texCoord)));
 
 	// Bind Indices if there Are Any
 	if (indexCount != 0)
@@ -92,6 +92,7 @@ void Mesh::InitialiseCube()
 
 	for (int i = 0; i < 3; i++)
 	{
+		// Positions
 		vertices[0 + 8 * i].position = { -0.5f, -0.5f,  0.5f, 1 };
 		vertices[1 + 8 * i].position = { 0.5f, -0.5f,  0.5f, 1 };
 		vertices[2 + 8 * i].position = { -0.5f, -0.5f, -0.5f, 1 };
@@ -101,34 +102,66 @@ void Mesh::InitialiseCube()
 		vertices[5 + 8 * i].position = { 0.5f,  0.5f,  0.5f, 1 };
 		vertices[6 + 8 * i].position = { -0.5f,  0.5f, -0.5f, 1 };
 		vertices[7 + 8 * i].position = { 0.5f,  0.5f, -0.5f, 1 };
-
-
-		vec4 normal;
-		if (i == 0) normal = { 0, 1, 0 , 0 };
-		else if (i == 1) normal = { 0, 0, 1, 0 };
-		else if (i == 2) normal = { 1, 0, 0, 0 };
-
-		vertices[0 + 8 * i].normal = -normal;
-		vertices[1 + 8 * i].normal = -normal;
-		vertices[2 + 8 * i].normal = -normal;
-		vertices[3 + 8 * i].normal = -normal;
-
-		vertices[4 + 8 * i].normal = normal;
-		vertices[5 + 8 * i].normal = normal;
-		vertices[6 + 8 * i].normal = normal;
-		vertices[7 + 8 * i].normal = normal;
-
-
-		vertices[0 + 8 * i].texCoord = { 0, 0 };
-		vertices[1 + 8 * i].texCoord = { 1, 0 };
-		vertices[2 + 8 * i].texCoord = { 0, 1 };
-		vertices[3 + 8 * i].texCoord = { 1, 1 };
-
-		vertices[4 + 8 * i].texCoord = { 0, 1 };
-		vertices[5 + 8 * i].texCoord = { 1, 1 };
-		vertices[6 + 8 * i].texCoord = { 0, 0 };
-		vertices[7 + 8 * i].texCoord = { 1, 0 };
 	}
+
+	// Normals
+	vec4 upNormal = { 0, 1, 0 , 0 };
+	vertices[0].normal  = -upNormal;
+	vertices[1].normal  = -upNormal;
+	vertices[2].normal  = -upNormal;
+	vertices[3].normal  = -upNormal;
+	vertices[4].normal  = upNormal;
+	vertices[5].normal  = upNormal;
+	vertices[6].normal  = upNormal;
+	vertices[7].normal  = upNormal;
+
+	vec4 forwardNormal = { 0, 0, 1, 0 };
+	vertices[10].normal = -forwardNormal;
+	vertices[11].normal = -forwardNormal;
+	vertices[14].normal = -forwardNormal;
+	vertices[15].normal = -forwardNormal;
+	vertices[8].normal  = forwardNormal;
+	vertices[9].normal  = forwardNormal;
+	vertices[12].normal = forwardNormal;
+	vertices[13].normal = forwardNormal;
+
+	vec4 rightNormal = { 1, 0, 0, 0 };
+	vertices[16].normal = -rightNormal;
+	vertices[18].normal = -rightNormal;
+	vertices[20].normal = -rightNormal;
+	vertices[22].normal = -rightNormal;
+	vertices[17].normal = rightNormal;
+	vertices[19].normal = rightNormal;
+	vertices[21].normal = rightNormal;
+	vertices[23].normal = rightNormal;
+
+	// Texture Coordinates
+	vertices[0].texCoord  = { 0, 0 };
+	vertices[1].texCoord  = { 1, 0 };
+	vertices[2].texCoord  = { 0, 1 };
+	vertices[3].texCoord  = { 1, 1 };
+	vertices[4].texCoord  = { 0, 1 };
+	vertices[5].texCoord  = { 1, 1 };
+	vertices[6].texCoord  = { 0, 0 };
+	vertices[7].texCoord  = { 1, 0 };
+
+	vertices[10].texCoord = { 1, 1 };
+	vertices[11].texCoord = { 0, 1 };
+	vertices[14].texCoord = { 1, 0 };
+	vertices[15].texCoord = { 0, 0 };
+	vertices[8].texCoord  = { 0, 1 };
+	vertices[9].texCoord  = { 1, 1 };
+	vertices[12].texCoord = { 0, 0 };
+	vertices[13].texCoord = { 1, 0 };
+
+	vertices[16].texCoord = { 1, 1 };
+	vertices[18].texCoord = { 0, 1 };
+	vertices[20].texCoord = { 1, 0 };
+	vertices[22].texCoord = { 0, 0 };
+	vertices[17].texCoord = { 0, 1 };
+	vertices[19].texCoord = { 1, 1 };
+	vertices[21].texCoord = { 0, 0 };
+	vertices[23].texCoord = { 1, 0 };
 
 	unsigned int indices[36] =
 	{
