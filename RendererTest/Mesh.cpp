@@ -60,6 +60,16 @@ void Mesh::InitialiseQuad()
 	vertices[2].position = { -0.5f,  0, -0.5f, 1 };
 	vertices[3].position = {  0.5f,  0, -0.5f, 1 };
 
+	for (int i = 0; i < 4; i++)
+	{
+		vertices[i].normal = { 0, 1, 0, 1 };
+	}
+
+	vertices[0].texCoord = { 0, 0 };
+	vertices[1].texCoord = { 1, 0 };
+	vertices[2].texCoord = { 0, 1 };
+	vertices[3].texCoord = { 1, 1 };
+
 	unsigned int indices[6] =
 	{
 		0, 1, 2, 2, 1, 3
@@ -71,37 +81,46 @@ void Mesh::InitialiseQuad()
 void Mesh::InitialiseCube()
 {
 	Vertex vertices[24];
-	vertices[0].position  = { -0.5f, -0.5f,  0.5f, 1 };
-	vertices[1].position  = {  0.5f, -0.5f,  0.5f, 1 };
-	vertices[2].position  = { -0.5f, -0.5f, -0.5f, 1 };
-	vertices[3].position  = {  0.5f, -0.5f, -0.5f, 1 };
-						  
-	vertices[4].position  = { -0.5f,  0.5f,  0.5f, 1 };
-	vertices[5].position  = {  0.5f,  0.5f,  0.5f, 1 };
-	vertices[6].position  = { -0.5f,  0.5f, -0.5f, 1 };
-	vertices[7].position  = {  0.5f,  0.5f, -0.5f, 1 };
+
+	for (int i = 0; i < 3; i++)
+	{
+		vertices[0 + 8 * i].position = { -0.5f, -0.5f,  0.5f, 1 };
+		vertices[1 + 8 * i].position = { 0.5f, -0.5f,  0.5f, 1 };
+		vertices[2 + 8 * i].position = { -0.5f, -0.5f, -0.5f, 1 };
+		vertices[3 + 8 * i].position = { 0.5f, -0.5f, -0.5f, 1 };
+		
+		vertices[4 + 8 * i].position = { -0.5f,  0.5f,  0.5f, 1 };
+		vertices[5 + 8 * i].position = { 0.5f,  0.5f,  0.5f, 1 };
+		vertices[6 + 8 * i].position = { -0.5f,  0.5f, -0.5f, 1 };
+		vertices[7 + 8 * i].position = { 0.5f,  0.5f, -0.5f, 1 };
 
 
-	vertices[8].position  = vertices[0].position;
-	vertices[9].position  = vertices[1].position;
-	vertices[10].position = vertices[2].position;
-	vertices[11].position = vertices[3].position;
+		vec4 normal;
+		if (i == 0) normal = { 0, 1, 0 , 1 };
+		else if (i == 1) normal = { 0, 0, 1, 1 };
+		else if (i == 2) normal = { 1, 0, 0, 1 };
 
-	vertices[12].position = vertices[4].position;
-	vertices[13].position = vertices[5].position;
-	vertices[14].position = vertices[6].position;
-	vertices[15].position = vertices[7].position;
+		vertices[0 + 8 * i].normal = -normal;
+		vertices[1 + 8 * i].normal = -normal;
+		vertices[2 + 8 * i].normal = -normal;
+		vertices[3 + 8 * i].normal = -normal;
+
+		vertices[4 + 8 * i].normal = normal;
+		vertices[5 + 8 * i].normal = normal;
+		vertices[6 + 8 * i].normal = normal;
+		vertices[7 + 8 * i].normal = normal;
 
 
-	vertices[16].position = vertices[0].position;
-	vertices[17].position = vertices[1].position;
-	vertices[18].position = vertices[2].position;
-	vertices[19].position = vertices[3].position;
+		vertices[0 + 8 * i].texCoord = { 0, 0 };
+		vertices[1 + 8 * i].texCoord = { 1, 0 };
+		vertices[2 + 8 * i].texCoord = { 0, 1 };
+		vertices[3 + 8 * i].texCoord = { 1, 1 };
 
-	vertices[20].position = vertices[4].position;
-	vertices[21].position = vertices[5].position;
-	vertices[22].position = vertices[6].position;
-	vertices[23].position = vertices[7].position;
+		vertices[4 + 8 * i].texCoord = { 0, 0 };
+		vertices[5 + 8 * i].texCoord = { 1, 0 };
+		vertices[6 + 8 * i].texCoord = { 0, 1 };
+		vertices[7 + 8 * i].texCoord = { 1, 1 };
+	}
 
 	unsigned int indices[36] =
 	{
