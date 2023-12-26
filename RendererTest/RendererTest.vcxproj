@@ -104,7 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir); $(SolutionDir)GLFW; $(SolutionDir)glad; $(SolutionDir)glm; ${SolutionDir)imgui; $(SolutionDir)nlohmannjson</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir); $(SolutionDir)GLFW; $(SolutionDir)glad; $(SolutionDir)glm; ${SolutionDir)imgui; $(SolutionDir)nlohmannjson; $(SolutionDir)stb</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -173,6 +173,8 @@
     <ClInclude Include="..\imgui\imstb_truetype.h" />
     <ClInclude Include="..\nlohmannjson\json.hpp" />
     <ClInclude Include="..\nlohmannjson\json_fwd.hpp" />
+    <ClInclude Include="..\stb\stb_image.h" />
+    <ClInclude Include="..\stb\stb_image_write.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Editor.h" />

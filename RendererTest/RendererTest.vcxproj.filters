@@ -44,6 +44,9 @@
     <Filter Include="Game\Rendering\Shaders">
       <UniqueIdentifier>{1218d668-2cea-459a-98cb-0fc9a9fca26f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="External Libraries\stb">
+      <UniqueIdentifier>{e39660ce-44b7-442b-88af-d22e6293eab2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
@@ -189,6 +192,12 @@
     </ClInclude>
     <ClInclude Include="Mesh.h">
       <Filter>Game\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\stb\stb_image.h">
+      <Filter>External Libraries\stb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\stb\stb_image_write.h">
+      <Filter>External Libraries\stb</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
