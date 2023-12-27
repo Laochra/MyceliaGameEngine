@@ -2,12 +2,9 @@
 
 #include <iostream>
 
-#define GLFW_INCLUDE_NONE
-#include "glfw3.h"
-#include "glad.h"
-#include <glm.hpp>
-
 #include "Camera.h"
+
+#include "GLIncludes.h"
 
 class Application
 {

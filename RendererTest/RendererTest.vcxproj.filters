@@ -7,9 +7,6 @@
     <Filter Include="Game\Input">
       <UniqueIdentifier>{1d65630a-870b-41a2-ae2d-b8c77647a62e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Cameras">
-      <UniqueIdentifier>{00ec51db-2cc8-4173-93b3-97070b065ba3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\Applications">
       <UniqueIdentifier>{600b10db-3245-43c1-93a4-b4b6cc861171}</UniqueIdentifier>
     </Filter>
@@ -47,6 +44,12 @@
     <Filter Include="External Libraries\stb">
       <UniqueIdentifier>{e39660ce-44b7-442b-88af-d22e6293eab2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\GameObjects">
+      <UniqueIdentifier>{a48a2135-7722-4f7c-a7f6-6655cd2bf8d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\GameObjects\Cameras">
+      <UniqueIdentifier>{00ec51db-2cc8-4173-93b3-97070b065ba3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
@@ -60,10 +63,10 @@
       <Filter>Game\Input</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>Game\Cameras</Filter>
+      <Filter>Game\GameObjects\Cameras</Filter>
     </ClCompile>
     <ClCompile Include="OrbitalCamera.cpp">
-      <Filter>Game\Cameras</Filter>
+      <Filter>Game\GameObjects\Cameras</Filter>
     </ClCompile>
     <ClCompile Include="Application.cpp">
       <Filter>Game\Applications</Filter>
@@ -102,19 +105,25 @@
       <Filter>External Libraries\imgui</Filter>
     </ClCompile>
     <ClCompile Include="EditorCamera.cpp">
-      <Filter>Game\Cameras</Filter>
+      <Filter>Game\GameObjects\Cameras</Filter>
     </ClCompile>
     <ClCompile Include="..\glad\glad.c">
       <Filter>External Libraries\glad</Filter>
-    </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>External Libraries\aie</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
       <Filter>Game\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
-      <Filter>External Libraries\aie</Filter>
+      <Filter>Game\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Game\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="UpdateList.cpp">
+      <Filter>Game\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Game\GameObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -125,10 +134,10 @@
       <Filter>Game\Input</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Game\Cameras</Filter>
+      <Filter>Game\GameObjects\Cameras</Filter>
     </ClInclude>
     <ClInclude Include="OrbitalCamera.h">
-      <Filter>Game\Cameras</Filter>
+      <Filter>Game\GameObjects\Cameras</Filter>
     </ClInclude>
     <ClInclude Include="Application.h">
       <Filter>Game\Applications</Filter>
@@ -173,7 +182,7 @@
       <Filter>External Libraries\imgui</Filter>
     </ClInclude>
     <ClInclude Include="EditorCamera.h">
-      <Filter>Game\Cameras</Filter>
+      <Filter>Game\GameObjects\Cameras</Filter>
     </ClInclude>
     <ClInclude Include="..\nlohmannjson\json.hpp">
       <Filter>External Libraries\nlohmannjson</Filter>
@@ -190,9 +199,6 @@
     <ClInclude Include="..\glad\khrplatform.h">
       <Filter>External Libraries\glad</Filter>
     </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>External Libraries\aie</Filter>
-    </ClInclude>
     <ClInclude Include="Mesh.h">
       <Filter>Game\Rendering</Filter>
     </ClInclude>
@@ -202,8 +208,26 @@
     <ClInclude Include="..\stb\stb_image_write.h">
       <Filter>External Libraries\stb</Filter>
     </ClInclude>
+    <ClInclude Include="Vertex.h">
+      <Filter>Game\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="GLIncludes.h">
+      <Filter>Game\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiIncludes.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
     <ClInclude Include="Texture.h">
-      <Filter>External Libraries\aie</Filter>
+      <Filter>Game\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Game\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Game\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="UpdateList.h">
+      <Filter>Game\Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

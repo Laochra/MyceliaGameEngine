@@ -1,25 +1,26 @@
 #include "Shader.h"
 #include <cstdio>
 #include <cassert>
-#include "glad.h"
-#include "glfw3.h"
 
-Shader::~Shader() {
-	glDeleteShader(m_handle);
+Shader::~Shader()
+{
+	glDeleteShader(glHandle);
 }
 
-bool Shader::loadShader(unsigned int stage, const char* filename) {
-	assert(stage > 0 && stage < eShaderStage::SHADER_STAGE_Count);
+bool Shader::LoadShader(ShaderStage stage, const char* filename)
+{
+	assert(stage > 0 && stage < ShaderStagesCount);
 
-	m_stage = stage;
+	stage = stage;
 
-	switch (stage) {
-	case eShaderStage::VERTEX:	m_handle = glCreateShader(GL_VERTEX_SHADER);	break;
-	case eShaderStage::TESSELLATION_EVALUATION:	m_handle = glCreateShader(GL_TESS_EVALUATION_SHADER);	break;
-	case eShaderStage::TESSELLATION_CONTROL:	m_handle = glCreateShader(GL_TESS_CONTROL_SHADER);	break;
-	case eShaderStage::GEOMETRY:	m_handle = glCreateShader(GL_GEOMETRY_SHADER);	break;
-	case eShaderStage::FRAGMENT:	m_handle = glCreateShader(GL_FRAGMENT_SHADER);	break;
-	default:	break;
+	switch (stage)
+	{
+	case VertexStage:					glHandle = glCreateShader(GL_VERTEX_SHADER);			break;
+	case TessellationEvaluationStage:	glHandle = glCreateShader(GL_TESS_EVALUATION_SHADER);	break;
+	case TessellationControlStage:		glHandle = glCreateShader(GL_TESS_CONTROL_SHADER);		break;
+	case GeometryStage:					glHandle = glCreateShader(GL_GEOMETRY_SHADER);			break;
+	case FragmentStage:					glHandle = glCreateShader(GL_FRAGMENT_SHADER);			break;
+	default: break;
 	};
 	
 	// open file
@@ -33,113 +34,235 @@ bool Shader::loadShader(unsigned int stage, const char* filename) {
 	fclose(file);
 	source[size] = 0;
 
-	glShaderSource(m_handle, 1, (const char**)&source, 0);
-	glCompileShader(m_handle);
+	glShaderSource(glHandle, 1, (const char**)&source, 0);
+	glCompileShader(glHandle);
 
 	delete[] source;
 
 	int success = GL_TRUE;
-	glGetShaderiv(m_handle, GL_LINK_STATUS, &success);
+	glGetShaderiv(glHandle, GL_LINK_STATUS, &success);
 	if (success == GL_FALSE) {
 		int infoLogLength = 0;
-		glGetShaderiv(m_handle, GL_INFO_LOG_LENGTH, &infoLogLength);
+		glGetShaderiv(glHandle, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-		delete[] m_lastError;
-		m_lastError = new char[infoLogLength];
-		glGetShaderInfoLog(m_handle, infoLogLength, 0, m_lastError);
+		delete[] lastError;
+		lastError = new char[infoLogLength];
+		glGetShaderInfoLog(glHandle, infoLogLength, 0, lastError);
 		return false;
 	}
 
 	return true;
 }
 
-bool Shader::createShader(unsigned int stage, const char* string) {
-	assert(stage > 0 && stage < eShaderStage::SHADER_STAGE_Count);
+bool Shader::CreateShader(ShaderStage stageInit, const char* string)
+{
+	assert(stage > 0 && stage < ShaderStagesCount);
 
-	m_stage = stage;
+	stage = stageInit;
 
-	switch (stage) {
-	case eShaderStage::VERTEX:	m_handle = glCreateShader(GL_VERTEX_SHADER);	break;
-	case eShaderStage::TESSELLATION_EVALUATION:	m_handle = glCreateShader(GL_TESS_EVALUATION_SHADER);	break;
-	case eShaderStage::TESSELLATION_CONTROL:	m_handle = glCreateShader(GL_TESS_CONTROL_SHADER);	break;
-	case eShaderStage::GEOMETRY:	m_handle = glCreateShader(GL_GEOMETRY_SHADER);	break;
-	case eShaderStage::FRAGMENT:	m_handle = glCreateShader(GL_FRAGMENT_SHADER);	break;
-	default:	break;
+	switch (stage)
+	{
+	case VertexStage:					glHandle = glCreateShader(GL_VERTEX_SHADER);			break;
+	case TessellationEvaluationStage:	glHandle = glCreateShader(GL_TESS_EVALUATION_SHADER);	break;
+	case TessellationControlStage:		glHandle = glCreateShader(GL_TESS_CONTROL_SHADER);		break;
+	case GeometryStage:					glHandle = glCreateShader(GL_GEOMETRY_SHADER);			break;
+	case FragmentStage:					glHandle = glCreateShader(GL_FRAGMENT_SHADER);			break;
+	default: break;
 	};
 
-	glShaderSource(m_handle, 1, (const char**)&string, 0);
-	glCompileShader(m_handle);
+	glShaderSource(glHandle, 1, (const char**)&string, 0);
+	glCompileShader(glHandle);
 	
 	int success = GL_TRUE;
-	glGetShaderiv(m_handle, GL_LINK_STATUS, &success);
+	glGetShaderiv(glHandle, GL_LINK_STATUS, &success);
 	if (success == GL_FALSE) {
 		int infoLogLength = 0;
-		glGetShaderiv(m_handle, GL_INFO_LOG_LENGTH, &infoLogLength);
+		glGetShaderiv(glHandle, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-		delete[] m_lastError;
-		m_lastError = new char[infoLogLength];
-		glGetShaderInfoLog(m_handle, infoLogLength, 0, m_lastError);
+		delete[] lastError;
+		lastError = new char[infoLogLength];
+		glGetShaderInfoLog(glHandle, infoLogLength, 0, lastError);
 		return false;
 	}
 
 	return true;
 }
 
-ShaderProgram::~ShaderProgram() {
-	delete[] m_lastError;
-	glDeleteProgram(m_program);
+ShaderProgram::~ShaderProgram()
+{
+	delete[] lastError;
+	glDeleteProgram(program);
 }
 
-bool ShaderProgram::loadShader(unsigned int stage, const char* filename) {
-	assert(stage > 0 && stage < eShaderStage::SHADER_STAGE_Count);
-	m_shaders[stage] = std::make_shared<Shader>();
-	return m_shaders[stage]->loadShader(stage, filename);
+bool ShaderProgram::LoadShader(ShaderStage stageInit, const char* filename)
+{
+	assert(stageInit > 0 && stageInit < ShaderStagesCount);
+	m_shaders[stageInit] = std::make_shared<Shader>();
+	return m_shaders[stageInit]->LoadShader(stageInit, filename);
 }
 
-bool ShaderProgram::createShader(unsigned int stage, const char* string) {
-	assert(stage > 0 && stage < eShaderStage::SHADER_STAGE_Count);
-	m_shaders[stage] = std::make_shared<Shader>();
-	return m_shaders[stage]->createShader(stage, string);
+bool ShaderProgram::CreateShader(ShaderStage stageInit, const char* string)
+{
+	assert(stageInit > 0 && stageInit < ShaderStagesCount);
+	m_shaders[stageInit] = std::make_shared<Shader>();
+	return m_shaders[stageInit]->CreateShader(stageInit, string);
 }
 
-void ShaderProgram::attachShader(const std::shared_ptr<Shader>& shader) {
+void ShaderProgram::AttachShader(const std::shared_ptr<Shader>& shader)
+{
 	assert(shader != nullptr);
-	m_shaders[shader->getStage()] = shader;
+	m_shaders[shader->GetStage()] = shader;
 }
 
-bool ShaderProgram::link() {
-	m_program = glCreateProgram();
+bool ShaderProgram::Link()
+{
+	program = glCreateProgram();
 	for (auto& s : m_shaders)
 		if (s != nullptr)
-			glAttachShader(m_program, s->getHandle());
-	glLinkProgram(m_program);
+			glAttachShader(program, s->GetGLHandle());
+	glLinkProgram(program);
 
 	int success = GL_TRUE;
-	glGetProgramiv(m_program, GL_LINK_STATUS, &success);
+	glGetProgramiv(program, GL_LINK_STATUS, &success);
 	if (success == GL_FALSE) {
 		int infoLogLength = 0;
-		glGetProgramiv(m_program, GL_INFO_LOG_LENGTH, &infoLogLength);
+		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-		delete[] m_lastError;
-		m_lastError = new char[infoLogLength + 1];
-		glGetProgramInfoLog(m_program, infoLogLength, 0, m_lastError);
+		delete[] lastError;
+		lastError = new char[infoLogLength + 1];
+		glGetProgramInfoLog(program, infoLogLength, 0, lastError);
 		return false;
 	}
 	return true;
 }
 
-void ShaderProgram::bind() {
-	assert(m_program > 0 && "Invalid shader program");
-	glUseProgram(m_program);
+void ShaderProgram::Bind()
+{
+	assert(program > 0 && "Invalid shader program");
+	glUseProgram(program);
 }
 
-int ShaderProgram::getUniform(const char* name) {
-	return glGetUniformLocation(m_program, name);
+int ShaderProgram::GetUniform(const char* name)
+{
+	return glGetUniformLocation(program, name);
 }
 
-bool ShaderProgram::bindUniform(const char* name, int value) {
-	assert(m_program > 0 && "Invalid shader program");
-	int i = glGetUniformLocation(m_program, name);
+void ShaderProgram::BindUniform(int ID, int value)
+{
+	assert(program > 0 && "Invalid shader program");
+	assert(ID >= 0 && "Invalid shader uniform");
+	glUniform1i(ID, value);
+}
+
+void ShaderProgram::BindUniform(int ID, float value)
+{
+	assert(program > 0 && "Invalid shader program");
+	assert(ID >= 0 && "Invalid shader uniform");
+	glUniform1f(ID, value);
+}
+
+void ShaderProgram::BindUniform(int ID, const vec2& value)
+{
+	assert(program > 0 && "Invalid shader program");
+	assert(ID >= 0 && "Invalid shader uniform");
+	glUniform2f(ID, value.x, value.y);
+}
+
+void ShaderProgram::BindUniform(int ID, const vec3& value)
+{
+	assert(program > 0 && "Invalid shader program");
+	assert(ID >= 0 && "Invalid shader uniform");
+	glUniform3f(ID, value.x, value.y, value.z);
+}
+
+void ShaderProgram::BindUniform(int ID, const vec4& value)
+{
+	assert(program > 0 && "Invalid shader program");
+	assert(ID >= 0 && "Invalid shader uniform");
+	glUniform4f(ID, value.x, value.y, value.z, value.w);
+}
+
+void ShaderProgram::BindUniform(int ID, const mat2& value)
+{
+	assert(program > 0 && "Invalid shader program");
+	assert(ID >= 0 && "Invalid shader uniform");
+	glUniformMatrix2fv(ID, 1, GL_FALSE, &value[0][0]);
+}
+
+void ShaderProgram::BindUniform(int ID, const mat3& value)
+{
+	assert(program > 0 && "Invalid shader program");
+	assert(ID >= 0 && "Invalid shader uniform");
+	glUniformMatrix3fv(ID, 1, GL_FALSE, &value[0][0]);
+}
+
+void ShaderProgram::BindUniform(int ID, const mat4& value)
+{
+	assert(program > 0 && "Invalid shader program");
+	assert(ID >= 0 && "Invalid shader uniform");
+	glUniformMatrix4fv(ID, 1, GL_FALSE, &value[0][0]);
+}
+
+void ShaderProgram::BindUniform(int ID, int count, int* value)
+{
+	assert(program > 0 && "Invalid shader program");
+	assert(ID >= 0 && "Invalid shader uniform");
+	glUniform1iv(ID, count, value);
+}
+
+void ShaderProgram::BindUniform(int ID, int count, float* value)
+{
+	assert(program > 0 && "Invalid shader program");
+	assert(ID >= 0 && "Invalid shader uniform");
+	glUniform1fv(ID, count, value);
+}
+
+void ShaderProgram::BindUniform(int ID, int count, const vec2* value)
+{
+	assert(program > 0 && "Invalid shader program");
+	assert(ID >= 0 && "Invalid shader uniform");
+	glUniform2fv(ID, count, (float*)value);
+}
+
+void ShaderProgram::BindUniform(int ID, int count, const vec3* value)
+{
+	assert(program > 0 && "Invalid shader program");
+	assert(ID >= 0 && "Invalid shader uniform");
+	glUniform3fv(ID, count, (float*)value);
+}
+
+void ShaderProgram::BindUniform(int ID, int count, const vec4* value)
+{
+	assert(program > 0 && "Invalid shader program");
+	assert(ID >= 0 && "Invalid shader uniform");
+	glUniform4fv(ID, count, (float*)value);
+}
+
+void ShaderProgram::BindUniform(int ID, int count, const mat2* value)
+{
+	assert(program > 0 && "Invalid shader program");
+	assert(ID >= 0 && "Invalid shader uniform");
+	glUniformMatrix2fv(ID, count, GL_FALSE, (float*)value);
+}
+
+void ShaderProgram::BindUniform(int ID, int count, const mat3* value)
+{
+	assert(program > 0 && "Invalid shader program");
+	assert(ID >= 0 && "Invalid shader uniform");
+	glUniformMatrix3fv(ID, count, GL_FALSE, (float*)value);
+}
+
+void ShaderProgram::BindUniform(int ID, int count, const mat4* value)
+{
+	assert(program > 0 && "Invalid shader program");
+	assert(ID >= 0 && "Invalid shader uniform");
+	glUniformMatrix4fv(ID, count, GL_FALSE, (float*)value);
+}
+
+bool ShaderProgram::BindUniform(const char* name, int value)
+{
+	assert(program > 0 && "Invalid shader program");
+	int i = glGetUniformLocation(program, name);
 	if (i < 0) {
 		printf("Shader uniform [%s] not found! Is it being used?\n", name);
 		return false;
@@ -148,9 +271,10 @@ bool ShaderProgram::bindUniform(const char* name, int value) {
 	return true;
 }
 
-bool ShaderProgram::bindUniform(const char* name, float value) {
-	assert(m_program > 0 && "Invalid shader program");
-	int i = glGetUniformLocation(m_program, name);
+bool ShaderProgram::BindUniform(const char* name, float value)
+{
+	assert(program > 0 && "Invalid shader program");
+	int i = glGetUniformLocation(program, name);
 	if (i < 0) {
 		printf("Shader uniform [%s] not found! Is it being used?\n", name);
 		return false;
@@ -159,9 +283,10 @@ bool ShaderProgram::bindUniform(const char* name, float value) {
 	return true;
 }
 
-bool ShaderProgram::bindUniform(const char* name, const glm::vec2& value) {
-	assert(m_program > 0 && "Invalid shader program");
-	int i = glGetUniformLocation(m_program, name);
+bool ShaderProgram::BindUniform(const char* name, const vec2& value)
+{
+	assert(program > 0 && "Invalid shader program");
+	int i = glGetUniformLocation(program, name);
 	if (i < 0) {
 		printf("Shader uniform [%s] not found! Is it being used?\n", name);
 		return false;
@@ -170,9 +295,10 @@ bool ShaderProgram::bindUniform(const char* name, const glm::vec2& value) {
 	return true;
 }
 
-bool ShaderProgram::bindUniform(const char* name, const glm::vec3& value) {
-	assert(m_program > 0 && "Invalid shader program");
-	int i = glGetUniformLocation(m_program, name);
+bool ShaderProgram::BindUniform(const char* name, const vec3& value)
+{
+	assert(program > 0 && "Invalid shader program");
+	int i = glGetUniformLocation(program, name);
 	if (i < 0) {
 		printf("Shader uniform [%s] not found! Is it being used?\n", name);
 		return false;
@@ -181,9 +307,10 @@ bool ShaderProgram::bindUniform(const char* name, const glm::vec3& value) {
 	return true;
 }
 
-bool ShaderProgram::bindUniform(const char* name, const glm::vec4& value) {
-	assert(m_program > 0 && "Invalid shader program");
-	int i = glGetUniformLocation(m_program, name);
+bool ShaderProgram::BindUniform(const char* name, const vec4& value)
+{
+	assert(program > 0 && "Invalid shader program");
+	int i = glGetUniformLocation(program, name);
 	if (i < 0) {
 		printf("Shader uniform [%s] not found! Is it being used?\n", name);
 		return false;
@@ -192,9 +319,10 @@ bool ShaderProgram::bindUniform(const char* name, const glm::vec4& value) {
 	return true;
 }
 
-bool ShaderProgram::bindUniform(const char* name, const glm::mat2& value) {
-	assert(m_program > 0 && "Invalid shader program");
-	int i = glGetUniformLocation(m_program, name);
+bool ShaderProgram::BindUniform(const char* name, const mat2& value)
+{
+	assert(program > 0 && "Invalid shader program");
+	int i = glGetUniformLocation(program, name);
 	if (i < 0) {
 		printf("Shader uniform [%s] not found! Is it being used?\n", name);
 		return false;
@@ -203,9 +331,10 @@ bool ShaderProgram::bindUniform(const char* name, const glm::mat2& value) {
 	return true;
 }
 
-bool ShaderProgram::bindUniform(const char* name, const glm::mat3& value) {
-	assert(m_program > 0 && "Invalid shader program");
-	int i = glGetUniformLocation(m_program, name);
+bool ShaderProgram::BindUniform(const char* name, const mat3& value)
+{
+	assert(program > 0 && "Invalid shader program");
+	int i = glGetUniformLocation(program, name);
 	if (i < 0) {
 		printf("Shader uniform [%s] not found! Is it being used?\n", name);
 		return false;
@@ -214,9 +343,10 @@ bool ShaderProgram::bindUniform(const char* name, const glm::mat3& value) {
 	return true;
 }
 
-bool ShaderProgram::bindUniform(const char* name, const glm::mat4& value) {
-	assert(m_program > 0 && "Invalid shader program");
-	int i = glGetUniformLocation(m_program, name);
+bool ShaderProgram::BindUniform(const char* name, const mat4& value)
+{
+	assert(program > 0 && "Invalid shader program");
+	int i = glGetUniformLocation(program, name);
 	if (i < 0) {
 		printf("Shader uniform [%s] not found! Is it being used?\n", name);
 		return false;
@@ -225,9 +355,10 @@ bool ShaderProgram::bindUniform(const char* name, const glm::mat4& value) {
 	return true;
 }
 
-bool ShaderProgram::bindUniform(const char* name, int count, int* value) {
-	assert(m_program > 0 && "Invalid shader program");
-	int i = glGetUniformLocation(m_program, name);
+bool ShaderProgram::BindUniform(const char* name, int count, int* value)
+{
+	assert(program > 0 && "Invalid shader program");
+	int i = glGetUniformLocation(program, name);
 	if (i < 0) {
 		printf("Shader uniform [%s] not found! Is it being used?\n", name);
 		return false;
@@ -236,9 +367,10 @@ bool ShaderProgram::bindUniform(const char* name, int count, int* value) {
 	return true;
 }
 
-bool ShaderProgram::bindUniform(const char* name, int count, float* value) {
-	assert(m_program > 0 && "Invalid shader program");
-	int i = glGetUniformLocation(m_program, name);
+bool ShaderProgram::BindUniform(const char* name, int count, float* value)
+{
+	assert(program > 0 && "Invalid shader program");
+	int i = glGetUniformLocation(program, name);
 	if (i < 0) {
 		printf("Shader uniform [%s] not found! Is it being used?\n", name);
 		return false;
@@ -247,9 +379,10 @@ bool ShaderProgram::bindUniform(const char* name, int count, float* value) {
 	return true;
 }
 
-bool ShaderProgram::bindUniform(const char* name, int count, const glm::vec2* value) {
-	assert(m_program > 0 && "Invalid shader program");
-	int i = glGetUniformLocation(m_program, name);
+bool ShaderProgram::BindUniform(const char* name, int count, const vec2* value)
+{
+	assert(program > 0 && "Invalid shader program");
+	int i = glGetUniformLocation(program, name);
 	if (i < 0) {
 		printf("Shader uniform [%s] not found! Is it being used?\n", name);
 		return false;
@@ -258,9 +391,10 @@ bool ShaderProgram::bindUniform(const char* name, int count, const glm::vec2* va
 	return true;
 }
 
-bool ShaderProgram::bindUniform(const char* name, int count, const glm::vec3* value) {
-	assert(m_program > 0 && "Invalid shader program");
-	int i = glGetUniformLocation(m_program, name);
+bool ShaderProgram::BindUniform(const char* name, int count, const vec3* value)
+{
+	assert(program > 0 && "Invalid shader program");
+	int i = glGetUniformLocation(program, name);
 	if (i < 0) {
 		printf("Shader uniform [%s] not found! Is it being used?\n", name);
 		return false;
@@ -269,9 +403,10 @@ bool ShaderProgram::bindUniform(const char* name, int count, const glm::vec3* va
 	return true;
 }
 
-bool ShaderProgram::bindUniform(const char* name, int count, const glm::vec4* value) {
-	assert(m_program > 0 && "Invalid shader program");
-	int i = glGetUniformLocation(m_program, name);
+bool ShaderProgram::BindUniform(const char* name, int count, const vec4* value)
+{
+	assert(program > 0 && "Invalid shader program");
+	int i = glGetUniformLocation(program, name);
 	if (i < 0) {
 		printf("Shader uniform [%s] not found! Is it being used?\n", name);
 		return false;
@@ -280,9 +415,10 @@ bool ShaderProgram::bindUniform(const char* name, int count, const glm::vec4* va
 	return true;
 }
 
-bool ShaderProgram::bindUniform(const char* name, int count, const glm::mat2* value) {
-	assert(m_program > 0 && "Invalid shader program");
-	int i = glGetUniformLocation(m_program, name);
+bool ShaderProgram::BindUniform(const char* name, int count, const mat2* value)
+{
+	assert(program > 0 && "Invalid shader program");
+	int i = glGetUniformLocation(program, name);
 	if (i < 0) {
 		printf("Shader uniform [%s] not found! Is it being used?\n", name);
 		return false;
@@ -291,9 +427,10 @@ bool ShaderProgram::bindUniform(const char* name, int count, const glm::mat2* va
 	return true;
 }
 
-bool ShaderProgram::bindUniform(const char* name, int count, const glm::mat3* value) {
-	assert(m_program > 0 && "Invalid shader program");
-	int i = glGetUniformLocation(m_program, name);
+bool ShaderProgram::BindUniform(const char* name, int count, const mat3* value)
+{
+	assert(program > 0 && "Invalid shader program");
+	int i = glGetUniformLocation(program, name);
 	if (i < 0) {
 		printf("Shader uniform [%s] not found! Is it being used?\n", name);
 		return false;
@@ -302,109 +439,14 @@ bool ShaderProgram::bindUniform(const char* name, int count, const glm::mat3* va
 	return true;
 }
 
-bool ShaderProgram::bindUniform(const char* name, int count, const glm::mat4* value) {
-	assert(m_program > 0 && "Invalid shader program");
-	int i = glGetUniformLocation(m_program, name);
+bool ShaderProgram::BindUniform(const char* name, int count, const mat4* value)
+{
+	assert(program > 0 && "Invalid shader program");
+	int i = glGetUniformLocation(program, name);
 	if (i < 0) {
 		printf("Shader uniform [%s] not found! Is it being used?\n", name);
 		return false;
 	}
 	glUniformMatrix4fv(i, count, GL_FALSE, (float*)value);
 	return true;
-}
-
-void ShaderProgram::bindUniform(int ID, int value) {
-	assert(m_program > 0 && "Invalid shader program");
-	assert(ID >= 0 && "Invalid shader uniform");
-	glUniform1i(ID, value);
-}
-
-void ShaderProgram::bindUniform(int ID, float value) {
-	assert(m_program > 0 && "Invalid shader program");
-	assert(ID >= 0 && "Invalid shader uniform");
-	glUniform1f(ID, value);
-}
-
-void ShaderProgram::bindUniform(int ID, const glm::vec2& value) {
-	assert(m_program > 0 && "Invalid shader program");
-	assert(ID >= 0 && "Invalid shader uniform");
-	glUniform2f(ID, value.x, value.y);
-}
-
-void ShaderProgram::bindUniform(int ID, const glm::vec3& value) {
-	assert(m_program > 0 && "Invalid shader program");
-	assert(ID >= 0 && "Invalid shader uniform");
-	glUniform3f(ID, value.x, value.y, value.z);
-}
-
-void ShaderProgram::bindUniform(int ID, const glm::vec4& value) {
-	assert(m_program > 0 && "Invalid shader program");
-	assert(ID >= 0 && "Invalid shader uniform");
-	glUniform4f(ID, value.x, value.y, value.z, value.w);
-}
-
-void ShaderProgram::bindUniform(int ID, const glm::mat2& value) {
-	assert(m_program > 0 && "Invalid shader program");
-	assert(ID >= 0 && "Invalid shader uniform");
-	glUniformMatrix2fv(ID, 1, GL_FALSE, &value[0][0]);
-}
-
-void ShaderProgram::bindUniform(int ID, const glm::mat3& value) {
-	assert(m_program > 0 && "Invalid shader program");
-	assert(ID >= 0 && "Invalid shader uniform");
-	glUniformMatrix3fv(ID, 1, GL_FALSE, &value[0][0]);
-}
-
-void ShaderProgram::bindUniform(int ID, const glm::mat4& value) {
-	assert(m_program > 0 && "Invalid shader program");
-	assert(ID >= 0 && "Invalid shader uniform");
-	glUniformMatrix4fv(ID, 1, GL_FALSE, &value[0][0]);
-}
-
-void ShaderProgram::bindUniform(int ID, int count, int* value) {
-	assert(m_program > 0 && "Invalid shader program");
-	assert(ID >= 0 && "Invalid shader uniform");
-	glUniform1iv(ID, count, value);
-}
-
-void ShaderProgram::bindUniform(int ID, int count, float* value) {
-	assert(m_program > 0 && "Invalid shader program");
-	assert(ID >= 0 && "Invalid shader uniform");
-	glUniform1fv(ID, count, value);
-}
-
-void ShaderProgram::bindUniform(int ID, int count, const glm::vec2* value) {
-	assert(m_program > 0 && "Invalid shader program");
-	assert(ID >= 0 && "Invalid shader uniform");
-	glUniform2fv(ID, count, (float*)value);
-}
-
-void ShaderProgram::bindUniform(int ID, int count, const glm::vec3* value) {
-	assert(m_program > 0 && "Invalid shader program");
-	assert(ID >= 0 && "Invalid shader uniform");
-	glUniform3fv(ID, count, (float*)value);
-}
-
-void ShaderProgram::bindUniform(int ID, int count, const glm::vec4* value) {
-	assert(m_program > 0 && "Invalid shader program");
-	assert(ID >= 0 && "Invalid shader uniform");
-	glUniform4fv(ID, count, (float*)value);
-}
-
-void ShaderProgram::bindUniform(int ID, int count, const glm::mat2* value) {
-	assert(m_program > 0 && "Invalid shader program");
-	assert(ID >= 0 && "Invalid shader uniform");
-	glUniformMatrix2fv(ID, count, GL_FALSE, (float*)value);
-}
-
-void ShaderProgram::bindUniform(int ID, int count, const glm::mat3* value) {
-	assert(m_program > 0 && "Invalid shader program");
-	assert(ID >= 0 && "Invalid shader uniform");
-	glUniformMatrix3fv(ID, count, GL_FALSE, (float*)value);
-}
-
-void ShaderProgram::bindUniform(int ID, int count, const glm::mat4* value) {
-	assert(m_program > 0 && "Invalid shader program");
-	assert(ID >= 0 && "Invalid shader uniform");
-	glUniformMatrix4fv(ID, count, GL_FALSE, (float*)value);
 }

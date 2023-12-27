@@ -104,7 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir); $(SolutionDir)GLFW; $(SolutionDir)glad; $(SolutionDir)glm; ${SolutionDir)imgui; $(SolutionDir)nlohmannjson; $(SolutionDir)stb</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir); $(SolutionDir)GLFW; $(SolutionDir)glad; $(SolutionDir)glm; $(SolutionDir)imgui; $(SolutionDir)nlohmannjson; $(SolutionDir)stb</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -122,7 +122,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir); $(SolutionDir)GLFW; $(SolutionDir)glad; $(SolutionDir)glm; ${SolutionDir)imgui; $(SolutionDir)nlohmannjson; $(SolutionDir)stb</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir); $(SolutionDir)GLFW; $(SolutionDir)glad; $(SolutionDir)glm; $(SolutionDir)imgui; $(SolutionDir)nlohmannjson; $(SolutionDir)stb</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -147,6 +147,7 @@
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="EditorCamera.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="KeyAxis.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Gizmos.cpp" />
@@ -158,6 +159,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Time.cpp" />
+    <ClCompile Include="UpdateList.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\glad\glad.h" />
@@ -182,13 +184,18 @@
     <ClInclude Include="EditorCamera.h" />
     <ClInclude Include="EditorCameraConfig.h" />
     <ClInclude Include="FileLoading.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="Gizmos.h" />
+    <ClInclude Include="ImGuiIncludes.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="OrbitalCamera.h" />
+    <ClInclude Include="GLIncludes.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Time.h" />
+    <ClInclude Include="UpdateList.h" />
+    <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Assets\Simple.frag">

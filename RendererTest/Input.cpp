@@ -1,6 +1,6 @@
 #include "Input.h"
 
-#include "imgui/imgui.h"
+#include "ImGuiIncludes.h"
 
 Input* input = nullptr;
 

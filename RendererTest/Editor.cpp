@@ -1,16 +1,13 @@
 #include "Editor.h"
 
-#include "imgui/imgui.h"
-#include "imgui/imgui_impl_glfw.h"
-#include "imgui/imgui_impl_opengl3.h"
+#include "ImGuiIncludes.h"
 
 #include "Time.h"
 #include "Input.h"
+#include "UpdateList.h"
+
 #include "EditorCamera.h"
 #include "EditorCameraConfig.h"
-
-using glm::vec4;
-using glm::mat4;
 
 void Editor::Initialise()
 {
@@ -30,12 +27,12 @@ void Editor::Initialise()
 
 	Gizmos::create(100000, 10000, 0, 0);
 
-	shader.loadShader(eShaderStage::VERTEX, "Simple.vert");
-	shader.loadShader(eShaderStage::FRAGMENT, "Simple.frag");
+	shader.LoadShader(VertexStage, "Simple.vert");
+	shader.LoadShader(FragmentStage, "Simple.frag");
 
-	if (shader.link() == false)
+	if (shader.Link() == false)
 	{
-		std::cout << "Shader Error: " << shader.getLastError();
+		std::cout << "Shader Error: " << shader.GetLastError();
 		return;
 	}
 
@@ -53,7 +50,7 @@ void Editor::Initialise()
 	light.direction = glm::normalize(vec3{ 0, -0.7, -0.7 });
 	ambientLight = { 0.25f, 0.25f, 0.25f };
 
-	meshTexture.load("shroom.png");
+	meshTexture.Load("shroom.png");
 }
 
 void Editor::OnFrameStart()
@@ -68,11 +65,13 @@ void Editor::OnFrameStart()
 		//ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 		//ImGui::ShowDemoWindow();
 	}
+
+	UpdateList::OnFrameStart();
 }
 
 void Editor::FixedUpdate()
 {
-
+	UpdateList::FixedUpdate();
 }
 
 void Editor::Update()
@@ -166,6 +165,8 @@ void Editor::Update()
 	//ImGui::End();
 
 	//light.direction = glm::normalize(vec3(glm::cos(Time::time * 2), glm::sin(Time::time * 2), 0));
+
+	UpdateList::Update();
 }
 
 void Editor::Draw()
@@ -194,21 +195,21 @@ void Editor::Draw()
 	Gizmos::draw(ProjectionViewMatrix);
 
 	// Bind Shader
-	shader.bind();
+	shader.Bind();
 
 	// Bind Light
-	shader.bindUniform("AmbientColour", ambientLight);
-	shader.bindUniform("LightColour", light.colour);
-	shader.bindUniform("LightDirection", light.direction);
+	shader.BindUniform("AmbientColour", ambientLight);
+	shader.BindUniform("LightColour", light.colour);
+	shader.BindUniform("LightDirection", light.direction);
 
 	// Bind Transform
-	shader.bindUniform("ProjectionViewModel", ProjectionViewMatrix * meshTransform);
+	shader.BindUniform("ProjectionViewModel", ProjectionViewMatrix * meshTransform);
 
 	// Bind Transform for Lighting
-	shader.bindUniform("ModelMatrix", meshTransform);
+	shader.BindUniform("ModelMatrix", meshTransform);
 
-	meshTexture.bind(0);
-	shader.bindUniform("diffuseTex", 0);
+	meshTexture.Bind(0);
+	shader.BindUniform("diffuseTex", 0);
 
 	// Draw Quad
 	mesh.Draw();
@@ -226,6 +227,8 @@ void Editor::Draw()
 			glfwMakeContextCurrent(window);
 		}
 	}
+
+	UpdateList::Draw();
 }
 
 void Editor::OnClose()

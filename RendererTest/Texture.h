@@ -2,48 +2,46 @@
 
 #include <string>
 
-// a class for wrapping up an opengl texture image
-class Texture {
+class Texture
+{
 public:
-
-	enum Format : unsigned int {
-		RED	= 1,
-		RG,
+	enum Format
+	{
+		None,
+		SingleChannel,
+		DualChannel,
 		RGB,
 		RGBA
 	};
 
 	Texture();
 	Texture(const char* filename);
-	Texture(unsigned int width, unsigned int height, Format format, unsigned char* pixels = nullptr);
+	Texture(unsigned int widthInit, unsigned int heightInit, Format formatInit, unsigned char* pixels = nullptr);
 	virtual ~Texture();
 
-	// load a jpg, bmp, png or tga
-	bool load(const char* filename);
+	// Supports .jpg, .bmp, .png and .tga
+	bool Load(const char* filename);
+	void Create(unsigned int widthInit, unsigned int heightInit, Format formatInit, unsigned char* pixels = nullptr);
 
-	// creates a texture that can be filled in with pixels
-	void create(unsigned int width, unsigned int height, Format format, unsigned char* pixels = nullptr);
+	// Returns the filename or "none" if not loaded from a file
+	const std::string& GetFileName() const { return fileName; }
 
-	// returns the filename or "none" if not loaded from a file
-	const std::string& getFilename() const { return m_filename; }
+	// Binds the Texture to Specified Slot for GL Use
+	void Bind(unsigned int slot) const;
 
-	// binds the texture to the specified slot
-	void bind(unsigned int slot) const;
+	unsigned int GetGLHandle() const { return glHandle; }
 
-	// returns the opengl texture handle
-	unsigned int getHandle() const { return m_glHandle; }
-
-	unsigned int getWidth() const { return m_width; }
-	unsigned int getHeight() const { return m_height; }
-	unsigned int getFormat() const { return m_format; }
-	const unsigned char* getPixels() const { return m_loadedPixels; }
+	unsigned int GetWidth() const { return width; }
+	unsigned int GetHeight() const { return height; }
+	Format GetFormat() const { return format; }
+	const unsigned char* GetPixels() const { return loadedPixels; }
 
 protected:
 
-	std::string		m_filename;
-	unsigned int	m_width;
-	unsigned int	m_height;
-	unsigned int	m_glHandle;
-	unsigned int	m_format;
-	unsigned char*	m_loadedPixels;
+	std::string	fileName;
+	unsigned int width;
+	unsigned int height;
+	unsigned int glHandle;
+	Format format;
+	unsigned char* loadedPixels;
 };

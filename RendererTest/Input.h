@@ -1,12 +1,9 @@
 #pragma once
 
-#include "glm.hpp"
-#include "glfw3.h"
+#include "GLIncludes.h"
 #include <set>
 #include <map>
 #include <vector>
-
-using glm::vec2;
 
 enum KeyCode
 {

@@ -1,18 +1,8 @@
 #pragma once
 
-#include <glm.hpp>
-#include "glad.h"
-#include "glfw3.h"
+#include "GLIncludes.h"
 
-using glm::vec4;
-using glm::vec2;
-
-struct Vertex
-{
-	vec4 position;
-	vec4 normal;
-	vec2 texCoord;
-};
+#include "Vertex.h"
 
 class Mesh
 {
