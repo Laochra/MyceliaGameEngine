@@ -2,7 +2,7 @@
 
 #include <combaseapi.h>
 
-#include "UpdateList.h"
+#include "Updater.h"
 
 GameObject::GameObject()
 {
@@ -10,16 +10,72 @@ GameObject::GameObject()
 	CoCreateGuid(&newGuid);
 	guid = newGuid.Data1;
 
-	UpdateList::Subscribe(this);
+	Updater::UpdateAdd(this);
+
+	Initialise();
+}
+GameObject::GameObject(unsigned long int guidInit)
+{
+	guid = guidInit;
+
+	Updater::UpdateAdd(this);
 
 	Initialise();
 }
 GameObject::~GameObject()
 {
-	UpdateList::Unsubscribe(this);
+	Updater::UpdateRemove(this);
 
 	OnDestroy();
 }
+
+GameObject::GameObjectState GameObject::GetState() const noexcept
+{
+	return state;
+}
+
+void GameObject::SetState(GameObjectState value) noexcept
+{
+	if (state == Destroyed) return;
+
+	state = value;
+
+	if (value == Destroyed)
+	{
+		Destroy();
+		return;
+	}
+
+	if (value == Active) OnActivate();
+	else OnDeactivate();
+}
+
+unsigned long int GameObject::GetGUID() const noexcept
+{
+	return guid;
+}
+
+bool GameObject::operator==(GameObject other) const noexcept
+{
+	return guid == other.guid;
+}
+
+bool GameObject::operator!=(GameObject other) const noexcept
+{
+	return guid != other.guid;
+}
+
+bool GameObject::operator==(GameObjectState stateToCheck) const noexcept
+{
+	return state == stateToCheck;
+}
+
+bool GameObject::operator!=(GameObjectState stateToCheck) const noexcept
+{
+	return state != stateToCheck;
+}
+
+
 
 void GameObject::OnFrameStart()
 {
@@ -27,7 +83,7 @@ void GameObject::OnFrameStart()
 }
 void GameObject::FixedUpdate()
 {
-
+	
 }
 void GameObject::Update()
 {
@@ -37,7 +93,11 @@ void GameObject::Draw()
 {
 
 }
-
+void GameObject::Destroy() noexcept
+{
+	OnDestroy();
+	state = Destroyed;
+}
 
 void GameObject::Initialise()
 {

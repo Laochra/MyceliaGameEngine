@@ -1,28 +1,29 @@
 #pragma once
 
+
+
 class GameObject
 {
 public:
 	GameObject();
+	GameObject(unsigned long int guidInit);
 	~GameObject();
 
-	bool GetActive() { return active; }
-	void SetActive(bool value)
-	{
-		if (value) OnActivate();
-		else OnDeactivate();
+	enum GameObjectState { Active, Inactive, Destroyed };
+	GameObjectState GetState() const noexcept;
+	void SetState(GameObjectState value) noexcept;
 
-		active = value;
-	}
-
-	unsigned long int GetGUID() { return guid; }
-	bool operator==(GameObject other) { return guid == other.guid; }
-	bool operator!=(GameObject other) { return guid != other.guid; }
+	unsigned long int GetGUID() const noexcept;
+	bool operator==(GameObject other) const noexcept;
+	bool operator!=(GameObject other) const noexcept;
+	bool operator==(GameObjectState stateToCheck) const noexcept;
+	bool operator!=(GameObjectState stateToCheck) const noexcept;
 
 	virtual void OnFrameStart();
 	virtual void FixedUpdate();
 	virtual void Update();
 	virtual void Draw();
+	void Destroy() noexcept;
 
 protected:
 	virtual void Initialise();
@@ -31,6 +32,6 @@ protected:
 	virtual void OnDeactivate();
 
 private:
-	bool active;
+	GameObjectState state = Active;
 	unsigned long int guid;
 };

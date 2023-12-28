@@ -2,6 +2,7 @@
 
 #include "Time.h"
 #include "Input.h"
+#include "Updater.h"
 
 bool applicationFocused = true;
 
@@ -32,10 +33,7 @@ int Application::Run()
 	return 0;
 }
 
-void WindowFocusCallback(GLFWwindow* window, int focused)
-{
-	//applicationFocused = focused ? true : false;
-}
+
 
 void Application::Initialise() { }
 void Application::OnFrameStart() { }
@@ -70,6 +68,7 @@ int Application::Setup()
 	glfwSetScrollCallback(window, ScrollCallback);
 
 	glfwSetWindowFocusCallback(window, WindowFocusCallback);
+	glfwSetErrorCallback(ErrorCallback);
 
 	glfwMakeContextCurrent(window);
 
@@ -94,24 +93,30 @@ void Application::GameLoop()
 		glfwPollEvents();
 
 		OnFrameStart();
+		Updater::CallOnFrameStart();
 
 		Time::Tick(glfwGetTime());
 		timeDebt += Time::delta;
 		while (timeDebt > Time::fixedStep)
 		{
 			FixedUpdate();
+			Updater::CallFixedUpdate();
 			timeDebt -= Time::fixedStep;
 		}
 
-		if (isRunning) Update();
-		
-		camera->Update();
+		if (isRunning)
+		{
+			Update();
+			Updater::CallUpdate();
+			camera->Update(); // remove this once camera is a gameobject
+		}
 
 		if (isRunning)
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			Draw();
+			Updater::CallDraw();
 
 			glfwSwapBuffers(window);
 		}
@@ -123,4 +128,16 @@ void Application::Close()
 	delete input;
 
 	glfwTerminate();
+}
+
+
+
+void WindowFocusCallback(GLFWwindow* window, int focused)
+{
+	//applicationFocused = focused ? true : false;
+}
+
+void ErrorCallback(int code, const char* description)
+{
+	std::cout << std::endl << "ERROR " << code << ": " << description << std::endl;
 }

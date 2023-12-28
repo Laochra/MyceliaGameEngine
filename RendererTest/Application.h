@@ -36,3 +36,4 @@ private:
 
 extern bool applicationFocused;
 void WindowFocusCallback(GLFWwindow* window, int focused);
+void ErrorCallback(int code, const char* description);

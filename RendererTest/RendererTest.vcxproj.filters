@@ -119,7 +119,7 @@
     <ClCompile Include="Shader.cpp">
       <Filter>Game\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="UpdateList.cpp">
+    <ClCompile Include="Updater.cpp">
       <Filter>Game\Utility</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
@@ -226,7 +226,7 @@
     <ClInclude Include="GameObject.h">
       <Filter>Game\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="UpdateList.h">
+    <ClInclude Include="Updater.h">
       <Filter>Game\Utility</Filter>
     </ClInclude>
   </ItemGroup>

@@ -159,7 +159,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Time.cpp" />
-    <ClCompile Include="UpdateList.cpp" />
+    <ClCompile Include="Updater.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\glad\glad.h" />
@@ -194,7 +194,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Time.h" />
-    <ClInclude Include="UpdateList.h" />
+    <ClInclude Include="Updater.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>

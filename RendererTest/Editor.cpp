@@ -2,25 +2,20 @@
 
 #include "ImGuiIncludes.h"
 
-#include "Time.h"
-#include "Input.h"
-#include "UpdateList.h"
-
 #include "EditorCamera.h"
 #include "EditorCameraConfig.h"
 
 void Editor::Initialise()
 {
-	// Begin Dear ImGui Setup
-		IMGUI_CHECKVERSION();
-		ImGui::CreateContext();
-		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;	// Enable Keyboard Controls
-		//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;	// Enable Gamepad Controls
-		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;		// Enable Docking
-		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;		// Enable Viewports
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;	// Enable Keyboard Controls
+	//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;	// Enable Gamepad Controls
+	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;		// Enable Docking
+	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;		// Enable Viewports
 	
-		ImGui_ImplGlfw_InitForOpenGL(window, /*install_callbacks:*/ true);
-		ImGui_ImplOpenGL3_Init();
+	ImGui_ImplGlfw_InitForOpenGL(window, /*install_callbacks:*/ true);
+	ImGui_ImplOpenGL3_Init();
 
 	camera = new EditorCamera();
 	EditorCameraConfig::Load((EditorCamera*)camera);
@@ -65,13 +60,11 @@ void Editor::OnFrameStart()
 		//ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 		//ImGui::ShowDemoWindow();
 	}
-
-	UpdateList::OnFrameStart();
 }
 
 void Editor::FixedUpdate()
 {
-	UpdateList::FixedUpdate();
+	
 }
 
 void Editor::Update()
@@ -165,8 +158,6 @@ void Editor::Update()
 	//ImGui::End();
 
 	//light.direction = glm::normalize(vec3(glm::cos(Time::time * 2), glm::sin(Time::time * 2), 0));
-
-	UpdateList::Update();
 }
 
 void Editor::Draw()
@@ -227,8 +218,6 @@ void Editor::Draw()
 			glfwMakeContextCurrent(window);
 		}
 	}
-
-	UpdateList::Draw();
 }
 
 void Editor::OnClose()
