@@ -62,7 +62,7 @@ void Mesh::Initialise(unsigned int vertexCount, const Vertex* vertices, unsigned
 
 void Mesh::InitialiseQuad()
 {
-	Vertex vertices[4];
+	Vertex vertices[4]{};
 	vertices[0].position = { -0.5f,  0,  0.5f, 1 };
 	vertices[1].position = {  0.5f,  0,  0.5f, 1 };
 	vertices[2].position = { -0.5f,  0, -0.5f, 1 };
@@ -88,7 +88,7 @@ void Mesh::InitialiseQuad()
 
 void Mesh::InitialiseCube()
 {
-	Vertex vertices[24];
+	Vertex vertices[24]{};
 
 	for (int i = 0; i < 3; i++)
 	{

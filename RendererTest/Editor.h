@@ -11,6 +11,8 @@
 #include "Shader.h"
 #include "Mesh.h"
 
+#include "GameObject3D.h"
+
 
 class Editor : public Application
 {
@@ -28,8 +30,9 @@ protected:
 private:
 	ShaderProgram shader;
 	Mesh mesh;
-	glm::mat4 meshTransform;
 	Texture meshTexture;
+
+	GameObject3D* object = nullptr;
 
 	struct Light
 	{
@@ -37,6 +40,6 @@ private:
 		glm::vec3 colour;
 	};
 
-	Light light;
-	glm::vec3 ambientLight;
+	Light light = Light();
+	glm::vec3 ambientLight = vec3();
 };

@@ -5,6 +5,8 @@
 #include "EditorCamera.h"
 #include "EditorCameraConfig.h"
 
+#include "Time.h"
+
 void Editor::Initialise()
 {
 	IMGUI_CHECKVERSION();
@@ -33,17 +35,14 @@ void Editor::Initialise()
 
 	mesh.InitialiseCube();
 
-	meshTransform =
-	{
-		2, 0, 0, 0,
-		0, 2, 0, 0,
-		0, 0, 2, 0,
-		0, 0, 0, 1
-	};
+	object = new GameObject3D();
+	object->position = vec3(0, 0, 0);
+	object->scale = vec3(3, 3, 3);
+	object->pivot = vec3(0, -0.5f, 0);
 
-	light.colour = { 1, 0.9f, 0.8f };
-	light.direction = glm::normalize(vec3{ 0, -0.7, -0.7 });
-	ambientLight = { 0.25f, 0.25f, 0.25f };
+	light.colour = vec3(1, 0.9f, 0.8f);
+	light.direction = glm::normalize(vec3(0, -0.7, -0.7));
+	ambientLight = vec3(0.25f, 0.25f, 0.25f);
 
 	meshTexture.Load("shroom.png");
 }
@@ -79,6 +78,17 @@ void Editor::Update()
 	{
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
+
+	object->LookTowards(camera->position, glm::radians(15.0f) * Time::delta);
+
+	//object->LookAt(camera->position);
+
+	//object->Rotate(glm::radians(0.5f), vec3(1, 0, 0));
+	//object->Rotate(glm::radians(1.5f), vec3(0, 1, 0));
+	//object->Rotate(glm::radians(0.25f), vec3(0, 0, 1));
+
+	//light.direction = glm::normalize(vec3(glm::cos(Time::time * 2), glm::sin(Time::time * 2), 0));
+
 
 	if (!applicationFocused) return;
 	ImGui::Begin("Camera Settings");
@@ -147,8 +157,6 @@ void Editor::Update()
 	}
 	ImGui::End();
 
-	meshTransform = glm::rotate(meshTransform, glm::radians(0.5f), vec3(0, 1, 0));
-
 	//ImGui::Begin("Light Settings");
 	//	ImGui::SeparatorText("Direction");
 	//	ImGui::InputFloat("X Direction", &light.direction.x);
@@ -156,8 +164,6 @@ void Editor::Update()
 	//	ImGui::InputFloat("Z Direction", &light.direction.z);
 	//	light.direction = glm::normalize(light.direction);
 	//ImGui::End();
-
-	//light.direction = glm::normalize(vec3(glm::cos(Time::time * 2), glm::sin(Time::time * 2), 0));
 }
 
 void Editor::Draw()
@@ -194,10 +200,10 @@ void Editor::Draw()
 	shader.BindUniform("LightDirection", light.direction);
 
 	// Bind Transform
-	shader.BindUniform("ProjectionViewModel", ProjectionViewMatrix * meshTransform);
+	shader.BindUniform("ProjectionViewModel", ProjectionViewMatrix * object->GetMatrix());
 
 	// Bind Transform for Lighting
-	shader.BindUniform("ModelMatrix", meshTransform);
+	shader.BindUniform("ModelMatrix", object->GetMatrix());
 
 	meshTexture.Bind(0);
 	shader.BindUniform("diffuseTex", 0);

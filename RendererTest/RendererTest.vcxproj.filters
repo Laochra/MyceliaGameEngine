@@ -50,6 +50,9 @@
     <Filter Include="Game\GameObjects\Cameras">
       <UniqueIdentifier>{00ec51db-2cc8-4173-93b3-97070b065ba3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\DataStructures">
+      <UniqueIdentifier>{4be50b85-926f-4f1d-8d73-0851ac556fb7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
@@ -123,6 +126,15 @@
       <Filter>Game\Utility</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
+      <Filter>Game\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="HashTable.cpp">
+      <Filter>Game\DataStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="HashBucket.cpp">
+      <Filter>Game\DataStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject3D.cpp">
       <Filter>Game\GameObjects</Filter>
     </ClCompile>
   </ItemGroup>
@@ -211,12 +223,6 @@
     <ClInclude Include="Vertex.h">
       <Filter>Game\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="GLIncludes.h">
-      <Filter>Game\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGuiIncludes.h">
-      <Filter>Editor</Filter>
-    </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Game\Rendering</Filter>
     </ClInclude>
@@ -228,6 +234,36 @@
     </ClInclude>
     <ClInclude Include="Updater.h">
       <Filter>Game\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject3D.h">
+      <Filter>Game\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GLIncludes.h">
+      <Filter>Game\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiIncludes.h">
+      <Filter>Game\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="MathIncludes.h">
+      <Filter>Game\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="BinaryNode.h">
+      <Filter>Game\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="BinaryTree.h">
+      <Filter>Game\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="HashTable.h">
+      <Filter>Game\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkedList.h">
+      <Filter>Game\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkedNode.h">
+      <Filter>Game\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="HashBucket.h">
+      <Filter>Game\DataStructures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
