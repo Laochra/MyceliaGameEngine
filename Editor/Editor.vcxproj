@@ -138,10 +138,18 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="OtherApplication.h" />
+    <ClCompile Include="Editor.cpp" />
+    <ClCompile Include="EditorCamera.cpp" />
+    <ClCompile Include="InputEditor.cpp" />
+    <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp" />
+    <ClInclude Include="Editor.h" />
+    <ClInclude Include="EditorCamera.h" />
+    <ClInclude Include="EditorCameraConfig.h" />
+    <ClInclude Include="FileLoading.h" />
+    <ClInclude Include="ImGuiIncludes.h" />
+    <ClInclude Include="InputEditor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

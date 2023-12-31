@@ -29,9 +29,6 @@
     <Filter Include="External Libraries\nlohmannjson">
       <UniqueIdentifier>{f4ce0ab0-f06b-41b9-a533-4309e1b7222d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Editor\JSON Configs">
-      <UniqueIdentifier>{8c1f8ce7-05e8-4dd1-88dd-6ee844ec7ff9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="External Libraries\aie">
       <UniqueIdentifier>{094ad3f6-a87e-497f-b0d0-1886a8a953f8}</UniqueIdentifier>
     </Filter>
@@ -46,9 +43,6 @@
     </Filter>
     <Filter Include="Game\GameObjects">
       <UniqueIdentifier>{a48a2135-7722-4f7c-a7f6-6655cd2bf8d5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\GameObjects\Cameras">
-      <UniqueIdentifier>{00ec51db-2cc8-4173-93b3-97070b065ba3}</UniqueIdentifier>
     </Filter>
     <Filter Include="Game\DataStructures">
       <UniqueIdentifier>{4be50b85-926f-4f1d-8d73-0851ac556fb7}</UniqueIdentifier>
@@ -65,23 +59,8 @@
     <ClCompile Include="Keybind.cpp">
       <Filter>Game\Input</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Game\GameObjects\Cameras</Filter>
-    </ClCompile>
-    <ClCompile Include="OrbitalCamera.cpp">
-      <Filter>Game\GameObjects\Cameras</Filter>
-    </ClCompile>
-    <ClCompile Include="Application.cpp">
-      <Filter>Game\Applications</Filter>
-    </ClCompile>
     <ClCompile Include="TimeManager.cpp">
       <Filter>Game\Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="Editor.cpp">
-      <Filter>Game\Applications</Filter>
-    </ClCompile>
-    <ClCompile Include="EditorCamera.cpp">
-      <Filter>Game\GameObjects\Cameras</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
       <Filter>Game\Rendering</Filter>
@@ -137,34 +116,22 @@
     <ClCompile Include="..\External\imgui\imgui_widgets.cpp">
       <Filter>External Libraries\imgui</Filter>
     </ClCompile>
+    <ClCompile Include="Application.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Game\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="OrbitalCamera.cpp">
+      <Filter>Game\GameObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FileLoading.h">
-      <Filter>Editor</Filter>
-    </ClInclude>
     <ClInclude Include="Input.h">
       <Filter>Game\Input</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Game\GameObjects\Cameras</Filter>
-    </ClInclude>
-    <ClInclude Include="OrbitalCamera.h">
-      <Filter>Game\GameObjects\Cameras</Filter>
-    </ClInclude>
-    <ClInclude Include="Application.h">
-      <Filter>Game\Applications</Filter>
-    </ClInclude>
     <ClInclude Include="TimeManager.h">
       <Filter>Game\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Editor.h">
-      <Filter>Game\Applications</Filter>
-    </ClInclude>
-    <ClInclude Include="EditorCamera.h">
-      <Filter>Game\GameObjects\Cameras</Filter>
-    </ClInclude>
-    <ClInclude Include="EditorCameraConfig.h">
-      <Filter>Editor\JSON Configs</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
       <Filter>Game\Rendering</Filter>
@@ -188,9 +155,6 @@
       <Filter>Game\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="GLIncludes.h">
-      <Filter>Game\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGuiIncludes.h">
       <Filter>Game\Utility</Filter>
     </ClInclude>
     <ClInclude Include="MathIncludes.h">
@@ -264,6 +228,15 @@
     </ClInclude>
     <ClInclude Include="..\External\imgui\imstb_truetype.h">
       <Filter>External Libraries\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Game\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="OrbitalCamera.h">
+      <Filter>Game\GameObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

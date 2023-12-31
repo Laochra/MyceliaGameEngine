@@ -19,6 +19,8 @@ void Editor::Initialise()
 	ImGui_ImplGlfw_InitForOpenGL(window, /*install_callbacks:*/ true);
 	ImGui_ImplOpenGL3_Init();
 
+	inputEditor = new InputEditor();
+
 	camera = new EditorCamera();
 	EditorCameraConfig::Load((EditorCamera*)camera);
 
@@ -68,7 +70,10 @@ void Editor::FixedUpdate()
 
 void Editor::Update()
 {
-	Keybind freeCamera(MouseRight);
+	if (ImGui::GetIO().WantCaptureMouse) input->enabled = false;
+	else input->enabled = true;
+
+	Keybind freeCamera(MouseRight); // TO-DO look into why this is seperate from camera keybind
 
 	if (freeCamera.pressed())
 	{
@@ -129,17 +134,17 @@ void Editor::Update()
 			{
 				ImGui::SeparatorText("Movement");
 
-				ConfigureKeyAxis("Back", "Forward", &((EditorCamera*)camera)->zInput);
+				inputEditor->ConfigureKeyAxis("Back", "Forward", &((EditorCamera*)camera)->zInput);
 				ImGui::Spacing(); ImGui::Spacing();
-				ConfigureKeyAxis("Left", "Right", &((EditorCamera*)camera)->xInput);
+				inputEditor->ConfigureKeyAxis("Left", "Right", &((EditorCamera*)camera)->xInput);
 				ImGui::Spacing(); ImGui::Spacing();
-				ConfigureKeyAxis("Down", "Up", &((EditorCamera*)camera)->yInput);
+				inputEditor->ConfigureKeyAxis("Down", "Up", &((EditorCamera*)camera)->yInput);
 
 				ImGui::SeparatorText("Other");
 
-				ConfigureKeybind("Quick Fly", &((EditorCamera*)camera)->quickMode);
+				inputEditor->ConfigureKeybind("Quick Fly", &((EditorCamera*)camera)->quickMode);
 				ImGui::Spacing(); ImGui::Spacing();
-				ConfigureKeybind("Free Camera", &((EditorCamera*)camera)->freeCamera);
+				inputEditor->ConfigureKeybind("Free Camera", &((EditorCamera*)camera)->freeCamera);
 
 				ImGui::EndTabItem();
 			}
@@ -228,6 +233,8 @@ void Editor::Draw()
 
 void Editor::OnClose()
 {
+	delete inputEditor;
+
 	delete camera;
 
 	Gizmos::destroy();

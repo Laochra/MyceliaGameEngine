@@ -2,7 +2,6 @@
 
 #include "GLIncludes.h"
 #include <set>
-#include <map>
 #include <vector>
 
 enum KeyCode
@@ -157,12 +156,11 @@ enum KeyCode
 class Input
 {
 public:
+	bool enabled = true;
+
 	std::set<KeyCode>* downKeys;
 	std::set<KeyCode>* pressedKeys;
 	std::set<KeyCode>* releasedKeys;
-
-	std::map<KeyCode, const char*>* keyCodeToName;
-	std::map<const char*, KeyCode>* keyNameToCode;
 
 	vec2 cursorPos = vec2(0, 0);
 	vec2 cursorMovement = vec2(0, 0);
@@ -247,7 +245,3 @@ private:
 	std::vector<KeyCode>* positiveKeys;
 	std::vector<KeyCode>* negativeKeys;
 };
-
-void ConfigureKeybind(const char* label, Keybind* keybind);
-
-void ConfigureKeyAxis(const char* negativeLabel, const char* positiveLabel, KeyAxis* keyAxis);

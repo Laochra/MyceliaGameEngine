@@ -147,8 +147,6 @@
     <ClCompile Include="..\External\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\External\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="Editor.cpp" />
-    <ClCompile Include="EditorCamera.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObject3D.cpp" />
     <ClCompile Include="HashBucket.cpp" />
@@ -187,15 +185,10 @@
     <ClInclude Include="BinaryNode.h" />
     <ClInclude Include="BinaryTree.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="Editor.h" />
-    <ClInclude Include="EditorCamera.h" />
-    <ClInclude Include="EditorCameraConfig.h" />
-    <ClInclude Include="FileLoading.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObject3D.h" />
     <ClInclude Include="HashBucket.h" />
     <ClInclude Include="HashTable.h" />
-    <ClInclude Include="ImGuiIncludes.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="LinkedList.h" />
     <ClInclude Include="LinkedNode.h" />

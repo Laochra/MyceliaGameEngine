@@ -4,6 +4,8 @@
 
 #include <string>
 
+#include "InputEditor.h"
+
 #include "Gizmos.h"
 
 #include "Texture.h"
@@ -28,6 +30,8 @@ protected:
 	virtual void OnClose() override;
 
 private:
+	InputEditor* inputEditor = nullptr;
+
 	ShaderProgram shader;
 	Mesh mesh;
 	Texture meshTexture;

@@ -1,9 +1,45 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="OtherApplication.h" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Editor.cpp" />
+    <ClCompile Include="EditorCamera.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="InputEditor.cpp">
+      <Filter>ImGuiEditors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp" />
+    <Filter Include="JSON Configs">
+      <UniqueIdentifier>{637a3dea-26f4-4707-ae52-2065566c555b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{0de3b673-3925-4af9-9b3e-152ecd81132c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObjects">
+      <UniqueIdentifier>{1ab21daf-0a9b-4c35-9efb-48f0a173de7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGuiEditors">
+      <UniqueIdentifier>{6f0aaeb8-728d-45fc-b389-cc6763e8306a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="EditorCameraConfig.h">
+      <Filter>JSON Configs</Filter>
+    </ClInclude>
+    <ClInclude Include="FileLoading.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiIncludes.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor.h" />
+    <ClInclude Include="EditorCamera.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="InputEditor.h">
+      <Filter>ImGuiEditors</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
