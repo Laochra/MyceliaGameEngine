@@ -136,15 +136,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\glad\glad.c" />
-    <ClCompile Include="..\imgui\imgui.cpp" />
-    <ClCompile Include="..\imgui\imgui_demo.cpp" />
-    <ClCompile Include="..\imgui\imgui_draw.cpp" />
-    <ClCompile Include="..\imgui\imgui_impl_glfw.cpp" />
-    <ClCompile Include="..\imgui\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="..\imgui\imgui_stdlib.cpp" />
-    <ClCompile Include="..\imgui\imgui_tables.cpp" />
-    <ClCompile Include="..\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="..\External\aie\Gizmos.cpp" />
+    <ClCompile Include="..\External\glad\glad.c" />
+    <ClCompile Include="..\External\imgui\imgui.cpp" />
+    <ClCompile Include="..\External\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\External\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\External\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="..\External\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="..\External\imgui\imgui_stdlib.cpp" />
+    <ClCompile Include="..\External\imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\External\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="EditorCamera.cpp" />
@@ -154,7 +155,6 @@
     <ClCompile Include="HashTable.cpp" />
     <ClCompile Include="KeyAxis.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Gizmos.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Keybind.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -166,22 +166,23 @@
     <ClCompile Include="Updater.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\glad\glad.h" />
-    <ClInclude Include="..\glad\khrplatform.h" />
-    <ClInclude Include="..\imgui\imconfig.h" />
-    <ClInclude Include="..\imgui\imgui.h" />
-    <ClInclude Include="..\imgui\imgui_impl_glfw.h" />
-    <ClInclude Include="..\imgui\imgui_impl_opengl3.h" />
-    <ClInclude Include="..\imgui\imgui_impl_opengl3_loader.h" />
-    <ClInclude Include="..\imgui\imgui_internal.h" />
-    <ClInclude Include="..\imgui\imgui_stdlib.h" />
-    <ClInclude Include="..\imgui\imstb_rectpack.h" />
-    <ClInclude Include="..\imgui\imstb_textedit.h" />
-    <ClInclude Include="..\imgui\imstb_truetype.h" />
-    <ClInclude Include="..\nlohmannjson\json.hpp" />
-    <ClInclude Include="..\nlohmannjson\json_fwd.hpp" />
-    <ClInclude Include="..\stb\stb_image.h" />
-    <ClInclude Include="..\stb\stb_image_write.h" />
+    <ClInclude Include="..\External\aie\Gizmos.h" />
+    <ClInclude Include="..\External\glad\glad.h" />
+    <ClInclude Include="..\External\glad\khrplatform.h" />
+    <ClInclude Include="..\External\imgui\imconfig.h" />
+    <ClInclude Include="..\External\imgui\imgui.h" />
+    <ClInclude Include="..\External\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="..\External\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="..\External\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="..\External\imgui\imgui_internal.h" />
+    <ClInclude Include="..\External\imgui\imgui_stdlib.h" />
+    <ClInclude Include="..\External\imgui\imstb_rectpack.h" />
+    <ClInclude Include="..\External\imgui\imstb_textedit.h" />
+    <ClInclude Include="..\External\imgui\imstb_truetype.h" />
+    <ClInclude Include="..\External\nlohmannjson\json.hpp" />
+    <ClInclude Include="..\External\nlohmannjson\json_fwd.hpp" />
+    <ClInclude Include="..\External\stb\stb_image.h" />
+    <ClInclude Include="..\External\stb\stb_image_write.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="BinaryNode.h" />
     <ClInclude Include="BinaryTree.h" />
@@ -192,7 +193,6 @@
     <ClInclude Include="FileLoading.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObject3D.h" />
-    <ClInclude Include="Gizmos.h" />
     <ClInclude Include="HashBucket.h" />
     <ClInclude Include="HashTable.h" />
     <ClInclude Include="ImGuiIncludes.h" />
@@ -216,10 +216,10 @@
     <None Include="..\Assets\Simple.vert">
       <FileType>Document</FileType>
     </None>
-    <None Include="..\imgui\imgui.natstepfilter" />
+    <None Include="..\External\imgui\imgui.natstepfilter" />
   </ItemGroup>
   <ItemGroup>
-    <Natvis Include="..\imgui\imgui.natvis" />
+    <Natvis Include="..\External\imgui\imgui.natvis" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
