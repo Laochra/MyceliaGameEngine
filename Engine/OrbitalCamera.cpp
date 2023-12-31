@@ -1,6 +1,6 @@
 #include "OrbitalCamera.h"
 
-#include "Time.h"
+#include "TimeManager.h"
 #include "Input.h"
 
 glm::mat4 OrbitalCamera::GetViewMatrix()

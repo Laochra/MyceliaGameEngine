@@ -74,7 +74,7 @@
     <ClCompile Include="Application.cpp">
       <Filter>Game\Applications</Filter>
     </ClCompile>
-    <ClCompile Include="Time.cpp">
+    <ClCompile Include="TimeManager.cpp">
       <Filter>Game\Utility</Filter>
     </ClCompile>
     <ClCompile Include="Editor.cpp">
@@ -154,7 +154,7 @@
     <ClInclude Include="Application.h">
       <Filter>Game\Applications</Filter>
     </ClInclude>
-    <ClInclude Include="Time.h">
+    <ClInclude Include="TimeManager.h">
       <Filter>Game\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Editor.h">

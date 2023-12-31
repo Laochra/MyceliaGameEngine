@@ -21,10 +21,9 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{95dc5033-750c-4828-9074-f841a1906fc7}</ProjectGuid>
-    <RootNamespace>RendererTest</RootNamespace>
+    <ProjectGuid>{ac87f54a-864c-47aa-878e-0542bc022bca}</ProjectGuid>
+    <RootNamespace>Editor</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>Engine</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -41,13 +40,13 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -105,8 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)External; $(SolutionDir)External/GLFW; $(SolutionDir)External/glad; $(SolutionDir)External/glm; $(SolutionDir)External/imgui; $(SolutionDir)External/nlohmannjson; $(SolutionDir)External/stb; $(SolutionDir)External/aie</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(SolutionDir)Engine;$(SolutionDir)External;$(SolutionDir)External/GLFW;$(SolutionDir)External/glad;$(SolutionDir)External/glm;$(SolutionDir)External/imgui;$(SolutionDir)External/nlohmannjson;$(SolutionDir)External/stb;$(SolutionDir)External/aie</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -123,8 +121,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)External; $(SolutionDir)External/GLFW; $(SolutionDir)External/glad; $(SolutionDir)External/glm; $(SolutionDir)External/imgui; $(SolutionDir)External/nlohmannjson; $(SolutionDir)External/stb; $(SolutionDir)External/aie</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(SolutionDir)Engine;$(SolutionDir)External;$(SolutionDir)External/GLFW;$(SolutionDir)External/glad;$(SolutionDir)External/glm;$(SolutionDir)External/imgui;$(SolutionDir)External/nlohmannjson;$(SolutionDir)External/stb;$(SolutionDir)External/aie</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -136,90 +133,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\External\aie\Gizmos.cpp" />
-    <ClCompile Include="..\External\glad\glad.c" />
-    <ClCompile Include="..\External\imgui\imgui.cpp" />
-    <ClCompile Include="..\External\imgui\imgui_demo.cpp" />
-    <ClCompile Include="..\External\imgui\imgui_draw.cpp" />
-    <ClCompile Include="..\External\imgui\imgui_impl_glfw.cpp" />
-    <ClCompile Include="..\External\imgui\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="..\External\imgui\imgui_stdlib.cpp" />
-    <ClCompile Include="..\External\imgui\imgui_tables.cpp" />
-    <ClCompile Include="..\External\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="Application.cpp" />
-    <ClCompile Include="Editor.cpp" />
-    <ClCompile Include="EditorCamera.cpp" />
-    <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="GameObject3D.cpp" />
-    <ClCompile Include="HashBucket.cpp" />
-    <ClCompile Include="HashTable.cpp" />
-    <ClCompile Include="KeyAxis.cpp" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Input.cpp" />
-    <ClCompile Include="Keybind.cpp" />
+    <ProjectReference Include="..\Engine\Engine.vcxproj">
+      <Project>{95dc5033-750c-4828-9074-f841a1906fc7}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="OtherApplication.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="OrbitalCamera.cpp" />
-    <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="TimeManager.cpp" />
-    <ClCompile Include="Updater.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\External\aie\Gizmos.h" />
-    <ClInclude Include="..\External\glad\glad.h" />
-    <ClInclude Include="..\External\glad\khrplatform.h" />
-    <ClInclude Include="..\External\imgui\imconfig.h" />
-    <ClInclude Include="..\External\imgui\imgui.h" />
-    <ClInclude Include="..\External\imgui\imgui_impl_glfw.h" />
-    <ClInclude Include="..\External\imgui\imgui_impl_opengl3.h" />
-    <ClInclude Include="..\External\imgui\imgui_impl_opengl3_loader.h" />
-    <ClInclude Include="..\External\imgui\imgui_internal.h" />
-    <ClInclude Include="..\External\imgui\imgui_stdlib.h" />
-    <ClInclude Include="..\External\imgui\imstb_rectpack.h" />
-    <ClInclude Include="..\External\imgui\imstb_textedit.h" />
-    <ClInclude Include="..\External\imgui\imstb_truetype.h" />
-    <ClInclude Include="..\External\nlohmannjson\json.hpp" />
-    <ClInclude Include="..\External\nlohmannjson\json_fwd.hpp" />
-    <ClInclude Include="..\External\stb\stb_image.h" />
-    <ClInclude Include="..\External\stb\stb_image_write.h" />
-    <ClInclude Include="Application.h" />
-    <ClInclude Include="BinaryNode.h" />
-    <ClInclude Include="BinaryTree.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="Editor.h" />
-    <ClInclude Include="EditorCamera.h" />
-    <ClInclude Include="EditorCameraConfig.h" />
-    <ClInclude Include="FileLoading.h" />
-    <ClInclude Include="GameObject.h" />
-    <ClInclude Include="GameObject3D.h" />
-    <ClInclude Include="HashBucket.h" />
-    <ClInclude Include="HashTable.h" />
-    <ClInclude Include="ImGuiIncludes.h" />
-    <ClInclude Include="Input.h" />
-    <ClInclude Include="LinkedList.h" />
-    <ClInclude Include="LinkedNode.h" />
-    <ClInclude Include="MathIncludes.h" />
-    <ClInclude Include="Mesh.h" />
-    <ClInclude Include="OrbitalCamera.h" />
-    <ClInclude Include="GLIncludes.h" />
-    <ClInclude Include="Shader.h" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="TimeManager.h" />
-    <ClInclude Include="Updater.h" />
-    <ClInclude Include="Vertex.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Assets\Simple.frag">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="..\Assets\Simple.vert">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="..\External\imgui\imgui.natstepfilter" />
-  </ItemGroup>
-  <ItemGroup>
-    <Natvis Include="..\External\imgui\imgui.natvis" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

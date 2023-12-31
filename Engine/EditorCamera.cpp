@@ -1,6 +1,6 @@
 #include "EditorCamera.h"
 
-#include "Time.h"
+#include "TimeManager.h"
 
 glm::mat4 EditorCamera::GetViewMatrix()
 {

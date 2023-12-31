@@ -5,7 +5,7 @@
 #include "EditorCamera.h"
 #include "EditorCameraConfig.h"
 
-#include "Time.h"
+#include "TimeManager.h"
 
 void Editor::Initialise()
 {

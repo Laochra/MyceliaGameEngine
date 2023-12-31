@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Time.h"
+#include "TimeManager.h"
 
 class GameObject
 {
