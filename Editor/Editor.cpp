@@ -37,10 +37,7 @@ void Editor::Initialise()
 
 	mesh.InitialiseCube();
 
-	object = new GameObject3D();
-	object->position = vec3(0, 0, 0);
-	object->scale = vec3(3, 3, 3);
-	object->pivot = vec3(0, -0.5f, 0);
+	object = GameObject3D::Instantiate<GameObject3D>(vec3(0, 0, 0), quat(), vec3(3, 3, 3), vec3(0, -0.5f, 0));
 
 	light.colour = vec3(1, 0.9f, 0.8f);
 	light.direction = glm::normalize(vec3(0, -0.7, -0.7));
@@ -83,14 +80,6 @@ void Editor::Update()
 	}
 
 	object->LookTowards(camera->position, glm::radians(15.0f) * Time::delta);
-
-	//object->LookAt(camera->position);
-
-	//object->Rotate(glm::radians(0.5f), vec3(1, 0, 0));
-	//object->Rotate(glm::radians(1.5f), vec3(0, 1, 0));
-	//object->Rotate(glm::radians(0.25f), vec3(0, 0, 1));
-
-	//light.direction = glm::normalize(vec3(glm::cos(Time::time * 2), glm::sin(Time::time * 2), 0));
 
 
 	ImGui::Begin("Camera Settings");

@@ -171,6 +171,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObject3D.h" />
+    <ClInclude Include="GuidGenerator.h" />
     <ClInclude Include="HashBucket.h" />
     <ClInclude Include="HashTable.h" />
     <ClInclude Include="Input.h" />

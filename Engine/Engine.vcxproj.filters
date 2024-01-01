@@ -178,6 +178,9 @@
     <ClInclude Include="OrbitalCamera.h">
       <Filter>Game\GameObjects</Filter>
     </ClInclude>
+    <ClInclude Include="GuidGenerator.h">
+      <Filter>Game\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Assets\Simple.vert">

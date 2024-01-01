@@ -8,9 +8,9 @@ GameObject::GameObjectState GameObject::GetState() const noexcept
 void GameObject::SetState(GameObjectState value) noexcept
 {
 	if (state == Destroyed || value == Destroyed) return;
-
+	
 	state = value;
-
+	
 	if (value == Active) OnActivate();
 	else OnDeactivate();
 }

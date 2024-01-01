@@ -2,8 +2,7 @@
 
 #include "TimeManager.h"
 #include "Updater.h"
-
-#include <combaseapi.h>
+#include "GuidGenerator.h"
 
 class GameObject;
 template<typename T>
@@ -56,11 +55,7 @@ template<GameObjectType T>
 inline T* GameObject::Instantiate(GameObjectState stateInit)
 {
 	T* gameObject = new T;
-	{
-		GUID newGuid;
-		CoCreateGuid(&newGuid);
-		gameObject->guid = newGuid.Data1;
-	}
+	gameObject->guid = GuidGenerator::NewGuid();
 	gameObject->state = stateInit;
 
 	gameObject->Initialise();

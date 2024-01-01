@@ -11,7 +11,7 @@ concept GameObject3DType = std::is_base_of<GameObject3D, T>::value;
 class GameObject3D : public GameObject
 {
 public:
-	vec3 position = vec3{0, 0, 0};
+	vec3 position = vec3(0, 0, 0);
 	quat rotation = quat();
 	vec3 scale = vec3(1, 1, 1);
 	vec3 pivot = vec3(0, 0, 0);
@@ -20,7 +20,6 @@ public:
 	LinkedList<GameObject3D*> children = LinkedList<GameObject3D*>();
 
 	using GameObject::GameObject;
-
 
 	mat4 GetMatrix() const noexcept;
 	mat4 GetLocalMatrix() const noexcept;
