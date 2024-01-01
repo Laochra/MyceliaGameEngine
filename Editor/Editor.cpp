@@ -21,7 +21,7 @@ void Editor::Initialise()
 
 	inputEditor = new InputEditor();
 
-	camera = new EditorCamera();
+	camera = GameObject3D::Instantiate<EditorCamera>(vec3(0.0f, 10.0f, 10.0f));
 	EditorCameraConfig::Load((EditorCamera*)camera);
 
 	Gizmos::create(100000, 10000, 0, 0);
@@ -52,15 +52,13 @@ void Editor::Initialise()
 void Editor::OnFrameStart()
 {
 	// Ready ImGui For Immediate Mode Rendering
-	if (applicationFocused)
-	{
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
 
-		//ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
-		//ImGui::ShowDemoWindow();
-	}
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	ImGui::NewFrame();
+
+	//ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+	//ImGui::ShowDemoWindow();
 }
 
 void Editor::FixedUpdate()
@@ -95,7 +93,6 @@ void Editor::Update()
 	//light.direction = glm::normalize(vec3(glm::cos(Time::time * 2), glm::sin(Time::time * 2), 0));
 
 
-	if (!applicationFocused) return;
 	ImGui::Begin("Camera Settings");
 	{
 		ImGui::BeginTabBar("Camera Settings Tab Bar");
@@ -105,12 +102,12 @@ void Editor::Update()
 				ImGui::SeparatorText("Clipping Planes");
 				ImGui::InputFloat("Near", &camera->nearClip);
 				ImGui::InputFloat("Far", &camera->farClip);
-
+	
 				ImGui::SeparatorText("FOV");
 				float fovDegrees = glm::degrees(camera->fov);
 				ImGui::InputFloat("(degrees)", &fovDegrees);
 				camera->fov = glm::radians(fovDegrees);
-
+	
 				ImGui::EndTabItem();
 			}
 			if (ImGui::BeginTabItem("Movement"))
@@ -119,42 +116,42 @@ void Editor::Update()
 				ImGui::InputFloat("x", &camera->position.x);
 				ImGui::InputFloat("y", &camera->position.y);
 				ImGui::InputFloat("z", &camera->position.z);
-
+	
 				ImGui::SeparatorText("Rotation");
 				ImGui::InputFloat("x ", &((EditorCamera*)camera)->xRotation);
 				ImGui::InputFloat("y ", &((EditorCamera*)camera)->yRotation);
-
+	
 				ImGui::SeparatorText("Fly Speed");
 				ImGui::InputFloat("Regular", &((EditorCamera*)camera)->flySpeed);
 				ImGui::InputFloat("Quick", &((EditorCamera*)camera)->quickFlySpeed);
-
+	
 				ImGui::EndTabItem();
 			}
 			if (ImGui::BeginTabItem("Controls"))
 			{
 				ImGui::SeparatorText("Movement");
-
+	
 				inputEditor->ConfigureKeyAxis("Back", "Forward", &((EditorCamera*)camera)->zInput);
 				ImGui::Spacing(); ImGui::Spacing();
 				inputEditor->ConfigureKeyAxis("Left", "Right", &((EditorCamera*)camera)->xInput);
 				ImGui::Spacing(); ImGui::Spacing();
 				inputEditor->ConfigureKeyAxis("Down", "Up", &((EditorCamera*)camera)->yInput);
-
+	
 				ImGui::SeparatorText("Other");
-
+	
 				inputEditor->ConfigureKeybind("Quick Fly", &((EditorCamera*)camera)->quickMode);
 				ImGui::Spacing(); ImGui::Spacing();
 				inputEditor->ConfigureKeybind("Free Camera", &((EditorCamera*)camera)->freeCamera);
-
+	
 				ImGui::EndTabItem();
 			}
 		}
 		ImGui::EndTabBar();
-
+	
 		ImGui::Spacing(); ImGui::Spacing();
 		ImGui::Separator();
 		ImGui::Spacing(); ImGui::Spacing();
-
+	
 		if (ImGui::Button("Save Settings"))
 		{
 			EditorCameraConfig::Save((EditorCamera*)camera);
@@ -217,17 +214,14 @@ void Editor::Draw()
 	mesh.Draw();
 
 	// Draw ImGui UI
-	if (applicationFocused)
-	{
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-		if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-		{
-			ImGui::UpdatePlatformWindows();
-			ImGui::RenderPlatformWindowsDefault();
-			glfwMakeContextCurrent(window);
-		}
+	if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+		glfwMakeContextCurrent(window);
 	}
 }
 

@@ -1,34 +1,5 @@
 #include "GameObject.h"
 
-#include <combaseapi.h>
-
-#include "Updater.h"
-
-GameObject::GameObject()
-{
-	GUID newGuid;
-	CoCreateGuid(&newGuid);
-	guid = newGuid.Data1;
-
-	Updater::UpdateAdd(this);
-
-	Initialise();
-}
-GameObject::GameObject(unsigned long int guidInit)
-{
-	guid = guidInit;
-
-	Updater::UpdateAdd(this);
-
-	Initialise();
-}
-GameObject::~GameObject()
-{
-	Updater::UpdateRemove(this);
-
-	OnDestroy();
-}
-
 GameObject::GameObjectState GameObject::GetState() const noexcept
 {
 	return state;
@@ -36,15 +7,9 @@ GameObject::GameObjectState GameObject::GetState() const noexcept
 
 void GameObject::SetState(GameObjectState value) noexcept
 {
-	if (state == Destroyed) return;
+	if (state == Destroyed || value == Destroyed) return;
 
 	state = value;
-
-	if (value == Destroyed)
-	{
-		Destroy();
-		return;
-	}
 
 	if (value == Active) OnActivate();
 	else OnDeactivate();
@@ -92,11 +57,6 @@ void GameObject::Update()
 void GameObject::Draw()
 {
 
-}
-void GameObject::Destroy() noexcept
-{
-	OnDestroy();
-	state = Destroyed;
 }
 
 void GameObject::Initialise()

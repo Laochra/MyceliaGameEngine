@@ -15,6 +15,8 @@ public:
 	float minElevation = 1;
 	float maxElevation = 15;
 
+	using Camera::Camera;
+
 	glm::mat4 GetViewMatrix() override;
 
 	void Update() override;

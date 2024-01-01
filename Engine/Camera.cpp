@@ -14,7 +14,7 @@ glm::mat4 Camera::GetProjectionMatrix(float w, float h)
     return glm::perspective(fov, aspect, nearClip, farClip);
 }
 
-void Camera::Update()
+void Camera::Initialise()
 {
-
+	fov = glm::radians(80.0f);
 }

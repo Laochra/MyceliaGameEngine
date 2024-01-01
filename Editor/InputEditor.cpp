@@ -29,7 +29,7 @@ InputEditor::InputEditor() noexcept
         (*keyCodeToName)[Mouse7] = "Mouse 7";
 
         // Special
-        (*keyCodeToName)[Escape] = "Escape";
+        (*keyCodeToName)[Esc] = "Escape";
         (*keyCodeToName)[Tab] = "Tab";
         (*keyCodeToName)[Enter] = "Enter";
         (*keyCodeToName)[keypadEnter] = "Enter (Keypad)";
@@ -177,7 +177,7 @@ InputEditor::InputEditor() noexcept
         (*keyNameToCode)["Mouse 7"] = Mouse7;
 
         // Special
-        (*keyNameToCode)["Escape"] = Escape;
+        (*keyNameToCode)["Escape"] = Esc;
         (*keyNameToCode)["Tab"] = Tab;
         (*keyNameToCode)["Enter"] = Enter;
         (*keyNameToCode)["Enter (Keypad)"] = keypadEnter;

@@ -20,19 +20,10 @@ public:
 	Keybind freeCamera;
 	Keybind quickMode;
 
-	EditorCamera()
-	{
-		fov = glm::radians(80.0f);
-
-		xInput.BindPair(A, D);
-		yInput.BindPair(LControl, Space);
-		zInput.BindPair(S, W);
-
-		freeCamera.Bind(MouseRight);
-		quickMode.Bind(LShift);
-	}
+	using Camera::Camera;
 
 	glm::mat4 GetViewMatrix() override;
 
+	void Initialise() override;
 	void Update() override;
 };

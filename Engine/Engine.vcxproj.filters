@@ -7,9 +7,6 @@
     <Filter Include="Game\Input">
       <UniqueIdentifier>{1d65630a-870b-41a2-ae2d-b8c77647a62e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Applications">
-      <UniqueIdentifier>{600b10db-3245-43c1-93a4-b4b6cc861171}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\Utility">
       <UniqueIdentifier>{bc1ccc9a-8a6f-4e39-a9af-fe1ea9a76739}</UniqueIdentifier>
     </Filter>
@@ -22,9 +19,6 @@
     </Filter>
     <Filter Include="External Libraries\glad">
       <UniqueIdentifier>{a82ee81f-24e7-4969-b8b9-06a958812dc7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="External Libraries\imgui">
-      <UniqueIdentifier>{a649e036-5fb9-49e0-abc8-8cb67aa5bd68}</UniqueIdentifier>
     </Filter>
     <Filter Include="External Libraries\nlohmannjson">
       <UniqueIdentifier>{f4ce0ab0-f06b-41b9-a533-4309e1b7222d}</UniqueIdentifier>
@@ -91,30 +85,6 @@
     </ClCompile>
     <ClCompile Include="..\External\aie\Gizmos.cpp">
       <Filter>External Libraries\aie</Filter>
-    </ClCompile>
-    <ClCompile Include="..\External\imgui\imgui.cpp">
-      <Filter>External Libraries\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\External\imgui\imgui_demo.cpp">
-      <Filter>External Libraries\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\External\imgui\imgui_draw.cpp">
-      <Filter>External Libraries\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\External\imgui\imgui_impl_glfw.cpp">
-      <Filter>External Libraries\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\External\imgui\imgui_impl_opengl3.cpp">
-      <Filter>External Libraries\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\External\imgui\imgui_stdlib.cpp">
-      <Filter>External Libraries\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\External\imgui\imgui_tables.cpp">
-      <Filter>External Libraries\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\External\imgui\imgui_widgets.cpp">
-      <Filter>External Libraries\imgui</Filter>
     </ClCompile>
     <ClCompile Include="Application.cpp">
       <Filter>Game</Filter>
@@ -199,36 +169,6 @@
     <ClInclude Include="..\External\stb\stb_image_write.h">
       <Filter>External Libraries\stb</Filter>
     </ClInclude>
-    <ClInclude Include="..\External\imgui\imconfig.h">
-      <Filter>External Libraries\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\External\imgui\imgui.h">
-      <Filter>External Libraries\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\External\imgui\imgui_impl_glfw.h">
-      <Filter>External Libraries\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\External\imgui\imgui_impl_opengl3.h">
-      <Filter>External Libraries\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\External\imgui\imgui_impl_opengl3_loader.h">
-      <Filter>External Libraries\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\External\imgui\imgui_internal.h">
-      <Filter>External Libraries\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\External\imgui\imgui_stdlib.h">
-      <Filter>External Libraries\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\External\imgui\imstb_rectpack.h">
-      <Filter>External Libraries\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\External\imgui\imstb_textedit.h">
-      <Filter>External Libraries\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\External\imgui\imstb_truetype.h">
-      <Filter>External Libraries\imgui</Filter>
-    </ClInclude>
     <ClInclude Include="Application.h">
       <Filter>Game</Filter>
     </ClInclude>
@@ -246,13 +186,5 @@
     <None Include="..\Assets\Simple.frag">
       <Filter>Game\Rendering\Shaders</Filter>
     </None>
-    <None Include="..\External\imgui\imgui.natstepfilter">
-      <Filter>External Libraries\imgui</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Natvis Include="..\External\imgui\imgui.natvis">
-      <Filter>External Libraries\imgui</Filter>
-    </Natvis>
   </ItemGroup>
 </Project>

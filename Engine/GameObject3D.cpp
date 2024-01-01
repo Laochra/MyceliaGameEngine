@@ -1,11 +1,11 @@
 #include "GameObject3D.h"
 
-mat4 GameObject3D::GetMatrix()
+mat4 GameObject3D::GetMatrix() const noexcept
 {
     if (parent == nullptr) return GetLocalMatrix();
     else return GetLocalMatrix() * parent->GetMatrix();
 }
-mat4 GameObject3D::GetLocalMatrix()
+mat4 GameObject3D::GetLocalMatrix() const noexcept
 {
 	mat4 centrer = mat4
 	(
@@ -34,25 +34,37 @@ mat4 GameObject3D::GetLocalMatrix()
 	return translater * rotator * scaler * centrer;
 }
 
-vec3 GameObject3D::GetRotationEuler()
+vec3 GameObject3D::GetRotationEuler() const  noexcept
 {
 	return glm::eulerAngles(rotation);
 }
-void GameObject3D::SetRotationEuler(float radians, vec3 axis)
+void GameObject3D::SetRotationEuler(float radians, vec3 axis) noexcept
 {
 	rotation = glm::angleAxis(radians, axis);
 }
 
-void GameObject3D::Translate(vec3 amountToTranslate)
+vec3 GameObject3D::GetGlobalPosition() const noexcept
+{
+	if (parent == nullptr) return position - pivot;
+	return parent->GetGlobalPosition() + position - pivot;
+}
+
+void GameObject3D::Translate(vec3 amountToTranslate) noexcept
 {
 	position += amountToTranslate;
 }
 
-void GameObject3D::Rotate(float radians, vec3 axis)
+quat GameObject3D::GetGlobalRotation() const noexcept
+{
+	if (parent == nullptr) return glm::normalize(rotation);
+	return glm::normalize(parent->GetGlobalRotation() * rotation);
+}
+
+void GameObject3D::Rotate(float radians, vec3 axis) noexcept
 {
 	rotation = glm::normalize(glm::rotate(rotation, radians, axis));
 }
-void GameObject3D::RotateTowards(quat targetRotation, float maxRadians)
+void GameObject3D::RotateTowards(quat targetRotation, float maxRadians) noexcept
 {
 	if (maxRadians == 0) return;
 
@@ -67,12 +79,12 @@ void GameObject3D::RotateTowards(quat targetRotation, float maxRadians)
 	
 	rotation = glm::normalize(glm::slerp(rotation, targetRotation, glm::min(radians / difference, 1.0f)));
 }
-void GameObject3D::LookAt(vec3 positionToLookAt)
+void GameObject3D::LookAt(vec3 positionToLookAt) noexcept
 {
 	vec3 direction = glm::normalize(positionToLookAt + pivot - position);
 	rotation = glm::normalize(glm::quatLookAt(direction, vec3(0, 1, 0 )));
 }
-void GameObject3D::LookTowards(vec3 positionToLookTowards, float maxRadians)
+void GameObject3D::LookTowards(vec3 positionToLookTowards, float maxRadians) noexcept
 {
 	vec3 direction = glm::normalize(positionToLookTowards + pivot - position);
 	quat targetRotation = glm::normalize(glm::quatLookAt(direction, vec3(0, 1, 0)));
@@ -80,13 +92,19 @@ void GameObject3D::LookTowards(vec3 positionToLookTowards, float maxRadians)
 	RotateTowards(targetRotation, glm::radians(15.0f) * Time::delta);
 }
 
-void GameObject3D::Scale(vec3 amountToScale)
+vec3 GameObject3D::GetGlobalScale() const noexcept
+{
+	if (parent == nullptr) return scale;
+	return parent->GetGlobalScale() * scale;
+}
+
+void GameObject3D::Scale(vec3 amountToScale) noexcept
 {
 	scale.x *= amountToScale.x;
 	scale.y *= amountToScale.y;
 	scale.z *= amountToScale.z;
 }
-void GameObject3D::Scale(float amountToScale)
+void GameObject3D::Scale(float amountToScale) noexcept
 {
 	scale.x *= amountToScale;
 	scale.y *= amountToScale;

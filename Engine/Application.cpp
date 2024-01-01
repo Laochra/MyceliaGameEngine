@@ -22,7 +22,7 @@ int Application::Run()
 		std::cout << std::endl <<
 			"No camera was set up in Initialise(), so a default camera was created." <<
 			"Application will not behave as expected." << std::endl;
-		camera = new Camera();
+		camera = GameObject::Instantiate<Camera>();
 	}
 
 	GameLoop();
@@ -108,7 +108,6 @@ void Application::GameLoop()
 		{
 			Update();
 			Updater::CallUpdate();
-			camera->Update(); // remove this once camera is a gameobject
 		}
 
 		if (isRunning)
@@ -134,7 +133,7 @@ void Application::Close()
 
 void WindowFocusCallback(GLFWwindow* window, int focused)
 {
-	//applicationFocused = focused ? true : false;
+	applicationFocused = focused;
 }
 
 void ErrorCallback(int code, const char* description)

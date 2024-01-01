@@ -3,6 +3,7 @@
 #include <glm.hpp>
 #include <gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 
 using glm::vec2;
 using glm::vec3;

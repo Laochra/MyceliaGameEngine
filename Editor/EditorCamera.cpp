@@ -10,7 +10,20 @@ glm::mat4 EditorCamera::GetViewMatrix()
     vec3 forward(cos(phiR) * cos(thetaR), sin(phiR), cos(phiR) * sin(thetaR));
     vec3 up(0, 1, 0);
 
-    return glm::lookAt(position, position + forward, up);
+	vec3 globalPosition = GetGlobalPosition();
+    return glm::lookAt(globalPosition, globalPosition + forward, up);
+}
+
+void EditorCamera::Initialise()
+{
+	fov = glm::radians(80.0f);
+
+	xInput.BindPair(A, D);
+	yInput.BindPair(LControl, Space);
+	zInput.BindPair(S, W);
+
+	freeCamera.Bind(MouseRight);
+	quickMode.Bind(LShift);
 }
 
 void EditorCamera::Update()

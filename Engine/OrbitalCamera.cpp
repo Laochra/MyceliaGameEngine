@@ -6,12 +6,12 @@
 glm::mat4 OrbitalCamera::GetViewMatrix()
 {
     vec3 up = vec3(0, 1, 0);
-    return glm::lookAt(position, centre, up);
+    return glm::lookAt(GetGlobalPosition(), centre, up);
 }
 
 void OrbitalCamera::Update()
 {
-    vec3 forward = glm::normalize(vec3(position.x, 0, position.z) - vec3(centre.x, 0, centre.z));
+    vec3 forward = glm::normalize(vec3(GetGlobalPosition().x, 0, GetGlobalPosition().z) - vec3(centre.x, 0, centre.z));
     vec3 up = vec3(0, 1, 0);
     vec3 right = glm::cross(forward, up);
 
@@ -36,10 +36,10 @@ void OrbitalCamera::Update()
 		centre += -(float)zInput * forward * 2.0f * Time::delta;
 	}
 
-	Keybind cursorToggle(LAlt);
+	Keybind cursorToggle(MouseRight);
 
 	// Mouse Orbitting
-	if (!cursorToggle)
+	if (cursorToggle)
 	{
 		position += input->cursorMovement.x * right * 2.0f * Time::delta;
 

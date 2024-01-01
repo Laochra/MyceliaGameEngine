@@ -1,29 +1,22 @@
 #pragma once
 
-#include "glm.hpp"
-#include "ext.hpp"
+#include "GameObject3D.h"
 
-using glm::vec3;
-using glm::mat4;
+#include "MathIncludes.h"
 
-class Camera
+class Camera : public GameObject3D
 {
 public:
-	vec3 position = vec3(0, 10, 10);
-
 	float fov;
 
 	float nearClip = 0.1f;
 	float farClip = 1000;
 
+	using GameObject3D::GameObject3D;
+
 	virtual glm::mat4 GetViewMatrix();
 
 	virtual glm::mat4 GetProjectionMatrix(float w, float h);
 
-	Camera()
-	{
-		fov = glm::pi<float>() * 0.25f;
-	}
-
-	virtual void Update();
+	void Initialise() override;
 };
