@@ -7,6 +7,8 @@
 class OrbitalCamera : public Camera
 {
 public:
+	using Camera::Camera;
+
 	vec3 centre = vec3(0, 0, 0);
 
 	float minZoom = 2;
@@ -15,7 +17,6 @@ public:
 	float minElevation = 1;
 	float maxElevation = 15;
 
-	using Camera::Camera;
 
 	glm::mat4 GetViewMatrix() override;
 

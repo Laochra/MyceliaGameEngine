@@ -16,5 +16,7 @@ glm::mat4 Camera::GetProjectionMatrix(float w, float h)
 
 void Camera::Initialise()
 {
+	Updater::UpdateAdd(this);
+
 	fov = glm::radians(80.0f);
 }

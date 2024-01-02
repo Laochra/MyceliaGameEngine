@@ -34,15 +34,6 @@ mat4 GameObject3D::GetLocalMatrix() const noexcept
 	return translater * rotator * scaler * centrer;
 }
 
-vec3 GameObject3D::GetRotationEuler() const  noexcept
-{
-	return glm::eulerAngles(rotation);
-}
-void GameObject3D::SetRotationEuler(float radians, vec3 axis) noexcept
-{
-	rotation = glm::angleAxis(radians, axis);
-}
-
 vec3 GameObject3D::GetGlobalPosition() const noexcept
 {
 	if (parent == nullptr) return position - pivot;

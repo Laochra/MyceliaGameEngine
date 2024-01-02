@@ -5,27 +5,49 @@
 #include "GuidGenerator.h"
 
 class GameObject;
-template<typename T>
-concept GameObjectType = std::is_base_of<GameObject, T>::value;
+template<class T> concept GameObjectClass = std::is_base_of<GameObject, T>::value;
 
 class GameObject
 {
 public:
-	enum GameObjectState { Active, Inactive, Destroyed };
-	GameObjectState GetState() const noexcept;
-	void SetState(GameObjectState value) noexcept;
+	enum GameObjectState
+	{
+		/// <summary>The GameObject can recieve updates</summary>
+		Active,
+		/// <summary>The GameObject cannot recieve updates</summary>
+		Inactive,
+		/// <summary>The GameObject has been destroyed and should no longer be referenced</summary>
+		Destroyed
+	};
 
-	unsigned long int GetGUID() const noexcept;
+	/// <summary>Check if GameObjects are equal based on their GUIDs</summary> <returns>True if GameObjects are equal</returns>
 	bool operator==(GameObject other) const noexcept;
+	/// <summary>Check if GameObjects are equal based on their GUIDs</summary> <returns>False if GameObjects are equal</returns>
 	bool operator!=(GameObject other) const noexcept;
+	/// <summary>Check the state of the GameObject</summary> <returns>True if state is equal</returns>
 	bool operator==(GameObjectState stateToCheck) const noexcept;
+	/// <summary>Check the state of the GameObject</summary> <returns>False if state is equal</returns>
 	bool operator!=(GameObjectState stateToCheck) const noexcept;
+
+
+	/// <returns>The Globally Unique Identifier of the GameObject</returns>
+	unsigned long int GetGUID() const noexcept;
+	/// <returns>The current state of the GameObject</returns>
+	GameObjectState GetState() const noexcept;
+	/// <param name="newState">: The state to set the GameObject to</param>
+	void SetState(GameObjectState newState) noexcept;
 
 
 	virtual void OnFrameStart();
 	virtual void FixedUpdate();
 	virtual void Update();
 	virtual void Draw();
+
+
+	/// <summary>Creates a new instance of a GameObject</summary> <param name="stateInit">(default: Active)</param> <returns>A pointer to the created instance</returns>
+	template<GameObjectClass T> static T* Instantiate(GameObjectState stateInit = Active);
+	/// <summary>Calls OnDestroy() on the GameObject instance and permanently sets its state to Destroyed</summary> <param name="gameObject"></param>
+	template<GameObjectClass T> static void Destroy(T* gameObject);
 
 protected:
 	GameObject() = default;
@@ -39,45 +61,21 @@ protected:
 private:
 	unsigned long int guid;
 	GameObjectState state = Active;
-
-
-public: // Statics
-	template <GameObjectType T>
-	static T* Instantiate(GameObjectState stateInit = Active);
-	template <GameObjectType T>
-	static T* Instantiate(unsigned long int guidInit, GameObjectState stateInit = Active);
-
-	template <GameObjectType T>
-	static void Destroy(T* gameObject);
 };
 
-template<GameObjectType T>
-inline T* GameObject::Instantiate(GameObjectState stateInit)
+
+
+template<GameObjectClass T> inline T* GameObject::Instantiate(GameObjectState stateInit)
 {
 	T* gameObject = new T;
 	gameObject->guid = GuidGenerator::NewGuid();
 	gameObject->state = stateInit;
 
 	gameObject->Initialise();
-	Updater::UpdateAdd(gameObject);
 
 	return gameObject;
 }
-template<GameObjectType T>
-inline T* GameObject::Instantiate(unsigned long int guidInit, GameObjectState stateInit)
-{
-	T* gameObject = new T;
-	gameObject->guid = guidInit;
-	gameObject->state = stateInit;
-
-	gameObject->Initialise();
-	Updater::UpdateAdd(gameObject);
-
-	return gameObject;
-}
-
-template<GameObjectType T>
-inline void GameObject::Destroy(T* gameObject)
+template<GameObjectClass T> inline void GameObject::Destroy(T* gameObject)
 {
 	if (gameObject == Destroyed) return;
 

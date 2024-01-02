@@ -68,13 +68,11 @@ void Editor::Update()
 	if (ImGui::GetIO().WantCaptureMouse) input->enabled = false;
 	else input->enabled = true;
 
-	Keybind freeCamera(MouseRight); // TO-DO look into why this is seperate from camera keybind
-
-	if (freeCamera.pressed())
+	if (((EditorCamera*)camera)->freeCamera.pressed())
 	{
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
-	else if (freeCamera.released())
+	else if (((EditorCamera*)camera)->freeCamera.released())
 	{
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}

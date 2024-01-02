@@ -61,11 +61,11 @@ void GameObject::Draw()
 
 void GameObject::Initialise()
 {
-
+	Updater::UpdateAdd(this);
 }
 void GameObject::OnDestroy()
 {
-
+	
 }
 void GameObject::OnActivate()
 {

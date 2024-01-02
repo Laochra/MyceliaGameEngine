@@ -7,6 +7,8 @@
 class EditorCamera : public Camera
 {
 public:
+	using Camera::Camera;
+
 	float xRotation = -90;
 	float yRotation = -45;
 
@@ -20,7 +22,6 @@ public:
 	Keybind freeCamera;
 	Keybind quickMode;
 
-	using Camera::Camera;
 
 	glm::mat4 GetViewMatrix() override;
 

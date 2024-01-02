@@ -16,6 +16,8 @@ glm::mat4 EditorCamera::GetViewMatrix()
 
 void EditorCamera::Initialise()
 {
+	Updater::UpdateAdd(this);
+
 	fov = glm::radians(80.0f);
 
 	xInput.BindPair(A, D);
