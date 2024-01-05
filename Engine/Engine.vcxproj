@@ -149,8 +149,9 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Keybind.cpp" />
-    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="LightingManager.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="OrbitalCamera.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -175,10 +176,12 @@
     <ClInclude Include="HashBucket.h" />
     <ClInclude Include="HashTable.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="LightingManager.h" />
     <ClInclude Include="LinkedList.h" />
     <ClInclude Include="LinkedNode.h" />
     <ClInclude Include="MathIncludes.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="OrbitalCamera.h" />
     <ClInclude Include="GLIncludes.h" />
     <ClInclude Include="Shader.h" />
@@ -186,14 +189,6 @@
     <ClInclude Include="TimeManager.h" />
     <ClInclude Include="Updater.h" />
     <ClInclude Include="Vertex.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Assets\Simple.frag">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="..\Assets\Simple.vert">
-      <FileType>Document</FileType>
-    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

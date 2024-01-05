@@ -19,3 +19,7 @@ public:
 
 	void Initialise() override;
 };
+
+extern Camera* mainCamera;
+extern int screenWidth;
+extern int screenHeight;

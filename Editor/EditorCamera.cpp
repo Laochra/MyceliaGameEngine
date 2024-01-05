@@ -1,4 +1,5 @@
 #include "EditorCamera.h"
+#include "EditorCameraConfig.h"
 
 #include "TimeManager.h"
 
@@ -18,14 +19,17 @@ void EditorCamera::Initialise()
 {
 	Updater::UpdateAdd(this);
 
-	fov = glm::radians(80.0f);
+	if (!EditorCameraConfig::Load(this))
+	{
+		fov = glm::radians(80.0f);
 
-	xInput.BindPair(A, D);
-	yInput.BindPair(LControl, Space);
-	zInput.BindPair(S, W);
+		xInput.BindPair(A, D);
+		yInput.BindPair(LControl, Space);
+		zInput.BindPair(S, W);
 
-	freeCamera.Bind(MouseRight);
-	quickMode.Bind(LShift);
+		freeCamera.Bind(MouseRight);
+		quickMode.Bind(LShift);
+	}
 }
 
 void EditorCamera::Update()
@@ -40,24 +44,18 @@ void EditorCamera::Update()
 	if (freeCamera)
 	{
 		// Keyboard Movement
-		vec3 xzMovement(0, 0, 0);
+		vec3 xzMovement = ((float)xInput * right) + ((float)zInput * forward);
 
-		if (glm::abs((float)xInput) > 0.15f)
-		{
-			xzMovement += (float)xInput * right;
-		}
-		if (glm::abs((float)zInput) > 0.15f)
-		{
-			xzMovement += (float)zInput * forward;
-		}
 		if (xzMovement != vec3(0, 0, 0))
 		{
-			position += glm::normalize(xzMovement) * (quickMode ? quickFlySpeed : flySpeed) * Time::delta;
+			if (xzMovement.length() > 1) xzMovement = glm::normalize(xzMovement);
+
+			Translate(glm::normalize(xzMovement) * (quickMode ? quickFlySpeed : flySpeed) * Time::delta);
 		}
 
 		if (yInput != 0.0f)
 		{
-			position += (float)yInput * up * (quickMode ? quickFlySpeed : flySpeed) * Time::delta;
+			Translate((float)yInput * up * (quickMode ? quickFlySpeed : flySpeed) * Time::delta);
 		}
 
 		// Mouse Look

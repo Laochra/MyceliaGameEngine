@@ -7,13 +7,14 @@ using json = nlohmann::json;
 
 namespace EditorCameraConfig
 {
-	inline void Load(EditorCamera* camera)
+	inline bool Load(EditorCamera* camera)
 	{
 		std::ifstream input("UserSettings/EditorCameraConfig.json");
-		json config;
 
-		if (input.good()) input >> config;
-		else config = json();
+		if (!input.good()) return false;
+
+		json config;
+		input >> config;
 
 		if (!config.contains("Display")) config["Display"] = json();
 		{

@@ -17,7 +17,7 @@ enum KeyCode
 	Mouse7			= 7,
 
 	// Special
-	Esc			= GLFW_KEY_ESCAPE,
+	Esc				= GLFW_KEY_ESCAPE,
 	Tab				= GLFW_KEY_TAB,
 	Enter			= GLFW_KEY_ENTER,
 	keypadEnter		= GLFW_KEY_KP_ENTER,

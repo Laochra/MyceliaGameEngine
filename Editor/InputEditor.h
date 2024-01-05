@@ -5,15 +5,8 @@
 
 #include <map>
 
-class InputEditor
+namespace InputEditor
 {
-public:
-	std::map<KeyCode, const char*>* keyCodeToName;
-	std::map<const char*, KeyCode>* keyNameToCode;
-
-	InputEditor() noexcept;
-
-	void ConfigureKeybind(const char* label, Keybind* keybind);
-
-	void ConfigureKeyAxis(const char* negativeLabel, const char* positiveLabel, KeyAxis* keyAxis);
-};
+	extern void ConfigureKeybind(const char* label, Keybind* keybind);
+	extern void ConfigureKeyAxis(const char* negativeLabel, const char* positiveLabel, KeyAxis* keyAxis);
+}

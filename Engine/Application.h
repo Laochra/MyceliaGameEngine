@@ -11,8 +11,6 @@ class Application
 public:
 	bool isRunning = false;
 
-	Camera* camera = nullptr;
-
 	int Run();
 
 	Application() noexcept { }
@@ -26,6 +24,7 @@ protected:
 	virtual void FixedUpdate();
 	virtual void Update();
 	virtual void Draw();
+	virtual void DrawGUI();
 	virtual void OnClose();
 
 private:

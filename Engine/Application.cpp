@@ -17,12 +17,12 @@ int Application::Run()
 
 	Initialise();
 
-	if (camera == nullptr)
+	if (mainCamera == nullptr)
 	{
 		std::cout << std::endl <<
 			"No camera was set up in Initialise(), so a default camera was created." <<
 			"Application will not behave as expected." << std::endl;
-		camera = GameObject::Instantiate<Camera>();
+		mainCamera = GameObject::Instantiate<Camera>();
 	}
 
 	GameLoop();
@@ -40,7 +40,8 @@ void Application::OnFrameStart() { }
 
 void Application::FixedUpdate() { } 
 void Application::Update() { } 
-void Application::Draw() { } 
+void Application::Draw() { }
+void Application::DrawGUI() { }
 void Application::OnClose() { }
 
 
@@ -52,6 +53,7 @@ int Application::Setup()
 		return -1;
 	}
 
+	glfwWindowHint(GLFW_MAXIMIZED, GL_TRUE);
 	window = glfwCreateWindow(1600, 900, "My First Window", nullptr, nullptr);
 	if (window == nullptr)
 	{
@@ -116,6 +118,7 @@ void Application::GameLoop()
 
 			Draw();
 			Updater::CallDraw();
+			DrawGUI();
 
 			glfwSwapBuffers(window);
 		}

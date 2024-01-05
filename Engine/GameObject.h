@@ -42,6 +42,8 @@ public:
 	virtual void FixedUpdate();
 	virtual void Update();
 	virtual void Draw();
+	virtual void Initialise();
+	virtual void OnDestroy();
 
 
 	/// <summary>Creates a new instance of a GameObject</summary> <param name="stateInit">(default: Active)</param> <returns>A pointer to the created instance</returns>
@@ -53,8 +55,6 @@ protected:
 	GameObject() = default;
 	~GameObject() = default;
 
-	virtual void Initialise();
-	virtual void OnDestroy();
 	virtual void OnActivate();
 	virtual void OnDeactivate();
 

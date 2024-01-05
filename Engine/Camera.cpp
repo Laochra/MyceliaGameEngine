@@ -1,5 +1,9 @@
 #include "Camera.h"
 
+Camera* mainCamera = nullptr;
+int screenWidth = 0;
+int screenHeight = 0;
+
 glm::mat4 Camera::GetViewMatrix()
 {
 	return glm::mat4();

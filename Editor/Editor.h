@@ -14,6 +14,8 @@
 #include "Mesh.h"
 
 #include "GameObject3D.h"
+#include "MeshRenderer.h"
+#include "LightingManager.h"
 
 
 class Editor : public Application
@@ -27,23 +29,9 @@ protected:
 	virtual void FixedUpdate() override;
 	virtual void Update() override;
 	virtual void Draw() override;
+	virtual void DrawGUI() override;
 	virtual void OnClose() override;
 
 private:
-	InputEditor* inputEditor = nullptr;
-
-	ShaderProgram shader;
-	Mesh mesh;
-	Texture meshTexture;
-
-	GameObject3D* object = nullptr;
-
-	struct Light
-	{
-		glm::vec3 direction;
-		glm::vec3 colour;
-	};
-
-	Light light = Light();
-	glm::vec3 ambientLight = vec3();
+	MeshRenderer* object = nullptr;
 };

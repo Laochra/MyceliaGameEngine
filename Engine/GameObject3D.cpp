@@ -1,48 +1,53 @@
 #include "GameObject3D.h"
 
-mat4 GameObject3D::GetMatrix() const noexcept
+void GameObject3D::UpdateMatrices() noexcept
 {
-    if (parent == nullptr) return GetLocalMatrix();
-    else return GetLocalMatrix() * parent->GetMatrix();
-}
-mat4 GameObject3D::GetLocalMatrix() const noexcept
-{
-	mat4 centrer = mat4
-	(
+	mat4 centrer = mat4{
 		1,			0,			0,			0,
 		0,			1,			0,			0,
 		0,			0,			1,			0,
 		-pivot.x,	-pivot.y,	-pivot.z,	1
-	);
-
-	mat4 scaler = mat4
-	(
+	};
+	mat4 scaler = mat4{
 		scale.x,	0,			0,			0,
 		0,			scale.y,	0,			0,
 		0,			0,			scale.z,	0,
 		0,			0,			0,			1
-	);
+	};
 	mat4 rotator = glm::mat4_cast(rotation);
-	mat4 translater = mat4
-	(
+	mat4 translater = mat4{
 		1,			0,			0,			0,
 		0,			1,			0,			0,
 		0,			0,			1,			0,
 		position.x,	position.y,	position.z, 1
-	);
+	};
 
-	return translater * rotator * scaler * centrer;
+	localMatrix = translater * rotator * scaler * centrer;
+
+	if (parent == nullptr) globalMatrix = localMatrix;
+	else globalMatrix = localMatrix * parent->globalMatrix;
+
+	dirty = false;
 }
+
+mat4 GameObject3D::GetMatrix() noexcept
+{
+	if (dirty) UpdateMatrices();
+    
+	return globalMatrix;
+}
+mat4 GameObject3D::GetLocalMatrix() noexcept
+{
+	if (dirty) UpdateMatrices();
+
+	return localMatrix;
+}
+
 
 vec3 GameObject3D::GetGlobalPosition() const noexcept
 {
 	if (parent == nullptr) return position - pivot;
 	return parent->GetGlobalPosition() + position - pivot;
-}
-
-void GameObject3D::Translate(vec3 amountToTranslate) noexcept
-{
-	position += amountToTranslate;
 }
 
 quat GameObject3D::GetGlobalRotation() const noexcept
@@ -51,9 +56,53 @@ quat GameObject3D::GetGlobalRotation() const noexcept
 	return glm::normalize(parent->GetGlobalRotation() * rotation);
 }
 
+vec3 GameObject3D::GetGlobalScale() const noexcept
+{
+	if (parent == nullptr) return scale;
+	return parent->GetGlobalScale() * scale;
+}
+
+
+vec3 GameObject3D::GetPosition() const noexcept
+{
+	return position;
+}
+
+void GameObject3D::SetPosition(vec3 newPosition) noexcept
+{
+	if (position != newPosition)
+	{
+		position = newPosition;
+
+		if (!dirty) dirty = true;
+	}
+}
+void GameObject3D::Translate(vec3 amountToTranslate) noexcept
+{
+	position += amountToTranslate;
+
+	if (!dirty) dirty = true;
+}
+
+quat GameObject3D::GetRotation() const noexcept
+{
+	return rotation;
+}
+
+void GameObject3D::SetRotation(quat newRotation) noexcept
+{
+	if (rotation != newRotation)
+	{
+		rotation = newRotation;
+
+		if (!dirty) dirty = true;
+	}
+}
 void GameObject3D::Rotate(float radians, vec3 axis) noexcept
 {
 	rotation = glm::normalize(glm::rotate(rotation, radians, axis));
+
+	if (!dirty) dirty = true;
 }
 void GameObject3D::RotateTowards(quat targetRotation, float maxRadians) noexcept
 {
@@ -69,11 +118,15 @@ void GameObject3D::RotateTowards(quat targetRotation, float maxRadians) noexcept
 	if (radians == 0.0f) return;
 	
 	rotation = glm::normalize(glm::slerp(rotation, targetRotation, glm::min(radians / difference, 1.0f)));
+
+	if (!dirty) dirty = true;
 }
 void GameObject3D::LookAt(vec3 positionToLookAt) noexcept
 {
 	vec3 direction = glm::normalize(positionToLookAt + pivot - position);
 	rotation = glm::normalize(glm::quatLookAt(direction, vec3(0, 1, 0 )));
+
+	if (!dirty) dirty = true;
 }
 void GameObject3D::LookTowards(vec3 positionToLookTowards, float maxRadians) noexcept
 {
@@ -81,23 +134,60 @@ void GameObject3D::LookTowards(vec3 positionToLookTowards, float maxRadians) noe
 	quat targetRotation = glm::normalize(glm::quatLookAt(direction, vec3(0, 1, 0)));
 
 	RotateTowards(targetRotation, glm::radians(15.0f) * Time::delta);
+
+	if (!dirty) dirty = true;
 }
 
-vec3 GameObject3D::GetGlobalScale() const noexcept
+vec3 GameObject3D::GetScale() const noexcept
 {
-	if (parent == nullptr) return scale;
-	return parent->GetGlobalScale() * scale;
+	return scale;
 }
 
+void GameObject3D::SetScale(vec3 newScale) noexcept
+{
+	if (scale != newScale)
+	{
+		scale = newScale;
+
+		if (!dirty) dirty = true;
+	}
+}
+void GameObject3D::SetScale(float newScale) noexcept
+{
+	if (scale != vec3(newScale))
+	{
+		scale = vec3(newScale);
+
+		if (!dirty) dirty = true;
+	}
+}
 void GameObject3D::Scale(vec3 amountToScale) noexcept
 {
 	scale.x *= amountToScale.x;
 	scale.y *= amountToScale.y;
 	scale.z *= amountToScale.z;
+
+	if (!dirty) dirty = true;
 }
 void GameObject3D::Scale(float amountToScale) noexcept
 {
 	scale.x *= amountToScale;
 	scale.y *= amountToScale;
 	scale.z *= amountToScale;
+
+	if (!dirty) dirty = true;
+}
+
+void GameObject3D::SetPivot(vec3 newPivot) noexcept
+{
+	if (pivot != newPivot)
+	{
+		pivot = newPivot;
+
+		if (!dirty) dirty = true;
+	}
+}
+vec3 GameObject3D::GetPivot() const noexcept
+{
+	return pivot;
 }

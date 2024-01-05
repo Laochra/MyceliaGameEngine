@@ -33,6 +33,12 @@
     <ClCompile Include="..\External\imgui\imgui_widgets.cpp">
       <Filter>External Libraries\imgui</Filter>
     </ClCompile>
+    <ClCompile Include="GUI.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshRendererGUI.h">
+      <Filter>EditorWindows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="JSON Configs">
@@ -100,6 +106,18 @@
     </ClInclude>
     <ClInclude Include="..\External\imgui\imstb_truetype.h">
       <Filter>External Libraries\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorCameraGUI.h">
+      <Filter>EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject3DGUI.h">
+      <Filter>EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectGUI.h">
+      <Filter>EditorWindows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

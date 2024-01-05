@@ -1,18 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Game">
-      <UniqueIdentifier>{5cf65a99-a9fd-4241-a8ca-e1eeb35f4881}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Input">
-      <UniqueIdentifier>{1d65630a-870b-41a2-ae2d-b8c77647a62e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Utility">
-      <UniqueIdentifier>{bc1ccc9a-8a6f-4e39-a9af-fe1ea9a76739}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Editor">
-      <UniqueIdentifier>{068a1155-7c7e-48a5-8e24-c6aeca3a0859}</UniqueIdentifier>
-    </Filter>
     <Filter Include="External Libraries">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
@@ -26,128 +14,81 @@
     <Filter Include="External Libraries\aie">
       <UniqueIdentifier>{094ad3f6-a87e-497f-b0d0-1886a8a953f8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Rendering">
-      <UniqueIdentifier>{2da33dea-8583-43a9-9e05-ab2a19965f9c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Rendering\Shaders">
-      <UniqueIdentifier>{1218d668-2cea-459a-98cb-0fc9a9fca26f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="External Libraries\stb">
       <UniqueIdentifier>{e39660ce-44b7-442b-88af-d22e6293eab2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\GameObjects">
-      <UniqueIdentifier>{a48a2135-7722-4f7c-a7f6-6655cd2bf8d5}</UniqueIdentifier>
+    <Filter Include="Data Structures">
+      <UniqueIdentifier>{cb1dfe3c-2700-4333-b82b-8eea298b4699}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\DataStructures">
-      <UniqueIdentifier>{4be50b85-926f-4f1d-8d73-0851ac556fb7}</UniqueIdentifier>
+    <Filter Include="GameObjects">
+      <UniqueIdentifier>{b61dff94-7514-4367-9fd2-0b2903446e0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{3c06960c-984d-40a9-80b8-1d9d1f70c06d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{2416e02a-dbaf-496d-946f-281a2874866d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{873164c5-233b-433e-98d2-94c45f03a1b7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Input.cpp">
-      <Filter>Game\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="KeyAxis.cpp">
-      <Filter>Game\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="Keybind.cpp">
-      <Filter>Game\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="TimeManager.cpp">
-      <Filter>Game\Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Game\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Game\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Game\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Updater.cpp">
-      <Filter>Game\Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Game\GameObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="HashTable.cpp">
-      <Filter>Game\DataStructures</Filter>
-    </ClCompile>
-    <ClCompile Include="HashBucket.cpp">
-      <Filter>Game\DataStructures</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject3D.cpp">
-      <Filter>Game\GameObjects</Filter>
-    </ClCompile>
     <ClCompile Include="..\External\glad\glad.c">
       <Filter>External Libraries\glad</Filter>
     </ClCompile>
     <ClCompile Include="..\External\aie\Gizmos.cpp">
       <Filter>External Libraries\aie</Filter>
     </ClCompile>
-    <ClCompile Include="Application.cpp">
-      <Filter>Game</Filter>
+    <ClCompile Include="HashBucket.cpp">
+      <Filter>Data Structures</Filter>
+    </ClCompile>
+    <ClCompile Include="HashTable.cpp">
+      <Filter>Data Structures</Filter>
+    </ClCompile>
+    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="OrbitalCamera.cpp">
+      <Filter>GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>Game\GameObjects</Filter>
+      <Filter>GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="OrbitalCamera.cpp">
-      <Filter>Game\GameObjects</Filter>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject3D.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyAxis.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Keybind.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeManager.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Updater.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshRenderer.cpp" />
+    <ClCompile Include="LightingManager.cpp">
+      <Filter>Rendering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Input.h">
-      <Filter>Game\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="TimeManager.h">
-      <Filter>Game\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Game\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Vertex.h">
-      <Filter>Game\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Game\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>Game\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Game\GameObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="Updater.h">
-      <Filter>Game\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject3D.h">
-      <Filter>Game\GameObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="GLIncludes.h">
-      <Filter>Game\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="MathIncludes.h">
-      <Filter>Game\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="BinaryNode.h">
-      <Filter>Game\DataStructures</Filter>
-    </ClInclude>
-    <ClInclude Include="BinaryTree.h">
-      <Filter>Game\DataStructures</Filter>
-    </ClInclude>
-    <ClInclude Include="HashTable.h">
-      <Filter>Game\DataStructures</Filter>
-    </ClInclude>
-    <ClInclude Include="LinkedList.h">
-      <Filter>Game\DataStructures</Filter>
-    </ClInclude>
-    <ClInclude Include="LinkedNode.h">
-      <Filter>Game\DataStructures</Filter>
-    </ClInclude>
-    <ClInclude Include="HashBucket.h">
-      <Filter>Game\DataStructures</Filter>
-    </ClInclude>
     <ClInclude Include="..\External\glad\glad.h">
       <Filter>External Libraries\glad</Filter>
     </ClInclude>
@@ -169,25 +110,72 @@
     <ClInclude Include="..\External\stb\stb_image_write.h">
       <Filter>External Libraries\stb</Filter>
     </ClInclude>
-    <ClInclude Include="Application.h">
-      <Filter>Game</Filter>
+    <ClInclude Include="BinaryNode.h">
+      <Filter>Data Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="BinaryTree.h">
+      <Filter>Data Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="HashBucket.h">
+      <Filter>Data Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="HashTable.h">
+      <Filter>Data Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkedList.h">
+      <Filter>Data Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkedNode.h">
+      <Filter>Data Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h" />
+    <ClInclude Include="OrbitalCamera.h">
+      <Filter>GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Game\GameObjects</Filter>
+      <Filter>GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="OrbitalCamera.h">
-      <Filter>Game\GameObjects</Filter>
+    <ClInclude Include="GameObject.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject3D.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertex.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Updater.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="GLIncludes.h">
+      <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="GuidGenerator.h">
-      <Filter>Game\Utility</Filter>
+      <Filter>Utility</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Assets\Simple.vert">
-      <Filter>Game\Rendering\Shaders</Filter>
-    </None>
-    <None Include="..\Assets\Simple.frag">
-      <Filter>Game\Rendering\Shaders</Filter>
-    </None>
+    <ClInclude Include="MathIncludes.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeManager.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshRenderer.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="LightingManager.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

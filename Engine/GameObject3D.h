@@ -12,27 +12,27 @@ class GameObject3D : public GameObject
 public:
 	using GameObject::GameObject;
 
-	vec3 position = vec3();
-	quat rotation = quat();
-	vec3 scale = vec3(1);
-	vec3 pivot = vec3();
-
 	GameObject3D* parent = nullptr;
 	LinkedList<GameObject3D*> children = LinkedList<GameObject3D*>();
 
 
+	void UpdateMatrices() noexcept;
 	/// <returns>The global transform matrix of the GameObject</returns>
-	mat4 GetMatrix() const noexcept;
+	mat4 GetMatrix() noexcept;
 	/// <returns>The local transform matrix of the GameObject</returns>
-	mat4 GetLocalMatrix() const noexcept;
+	mat4 GetLocalMatrix() noexcept;
 
 	vec3 GetGlobalPosition() const noexcept;
 	quat GetGlobalRotation() const noexcept;
 	vec3 GetGlobalScale() const noexcept;
 
 
+	vec3 GetPosition() const noexcept;
+	void SetPosition(vec3 newPosition) noexcept;
 	void Translate(vec3 amountToTranslate) noexcept;
 
+	quat GetRotation() const noexcept;
+	void SetRotation(quat newRotation) noexcept;
 	void Rotate(float radians, vec3 axis) noexcept;
 	/// <summary>Interpolates between the current and target rotations, without rotating more than the max radians</summary>
 	void RotateTowards(quat targetRotation, float maxRadians) noexcept;
@@ -41,9 +41,15 @@ public:
 	/// <summary>Rotate so that the GameObject faces the provided position, without rotating more than the max radians</summary>
 	void LookTowards(vec3 positionToLookTowards, float maxRadians) noexcept;
 
+	vec3 GetScale() const noexcept;
+	void SetScale(vec3 newScale) noexcept;
+	void SetScale(float newScale) noexcept;
 	void Scale(vec3 amountToScale) noexcept;
 	void Scale(float amountToScale) noexcept;
 
+	vec3 GetPivot() const noexcept;
+	void SetPivot(vec3 newPivot) noexcept;
+	
 
 	/// <summary>Creates a new instance of a GameObject3D</summary> <param name="positionInit"></param> <param name="rotationInit">(default: identity)</param> <param name="scaleInit">(default: 1,1,1)</param> <param name="pivotInit">(default: 0,0,0)</param> <param name="parentInit">(default: nullptr)</param> <param name="stateInit">(default: Active)</param> <returns>A pointer to the created instance</returns>
 	template<GameObject3DClass T> static T* Instantiate(vec3 positionInit, quat rotationInit = quat(), vec3 scaleInit = vec3(1), vec3 pivotInit = vec3(), T* parentInit = nullptr, GameObjectState stateInit = Active);
@@ -54,6 +60,16 @@ public:
 	template<GameObject3DClass T> static T* Instantiate(mat4 matrixInit, vec3 pivotInit = vec3(), T* parentInit = nullptr, GameObjectState stateInit = Active);
 	/// <summary>Creates a new instance of a GameObject3D</summary> <param name="parentInit"></param> <param name="matrixInit">(default: identity)</param> <param name="stateInit">(default: Active)</param> <returns>A pointer to the created instance</returns>
 	template<GameObject3DClass T> static T* Instantiate(T* parentInit, mat4 matrixInit = glm::identity(), vec3 pivotInit = vec3(), GameObjectState stateInit = Active);
+	
+private:
+	vec3 position = vec3();
+	quat rotation = quat();
+	vec3 scale = vec3(1);
+	vec3 pivot = vec3();
+
+	mat4 globalMatrix = mat4();
+	mat4 localMatrix = mat4();
+	bool dirty = true;
 };
 
 
