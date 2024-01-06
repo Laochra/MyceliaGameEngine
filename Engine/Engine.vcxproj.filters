@@ -87,6 +87,7 @@
     <ClCompile Include="LightingManager.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="Material.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\External\glad\glad.h">
@@ -175,6 +176,9 @@
       <Filter>GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="LightingManager.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
       <Filter>Rendering</Filter>
     </ClInclude>
   </ItemGroup>

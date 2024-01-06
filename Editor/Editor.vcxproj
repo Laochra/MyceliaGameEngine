@@ -176,6 +176,7 @@
     <ClInclude Include="GUI.h" />
     <ClInclude Include="ImGuiIncludes.h" />
     <ClInclude Include="InputEditor.h" />
+    <ClInclude Include="ShaderProgramGUI.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\External\imgui\imgui.natstepfilter" />

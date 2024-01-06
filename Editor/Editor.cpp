@@ -7,6 +7,8 @@
 
 #include "MeshRendererGUI.h"
 
+#include "ShaderProgramGUI.h"
+
 #include "TimeManager.h"
 
 void Editor::Initialise()
@@ -75,6 +77,10 @@ void Editor::Update()
 
 	ImGui::Begin("Inspector");
 		MeshRendererGUI::Draw(object);
+	ImGui::End();
+
+	ImGui::Begin("Shader Program Editor");
+		ShaderProgramGUI::Draw();
 	ImGui::End();
 
 	//ImGui::Begin("Light Settings");
