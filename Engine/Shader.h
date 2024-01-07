@@ -50,9 +50,12 @@ public:
 	}
 	~ShaderProgram();
 
+	bool LoadAndLinkFromJSON(const char* filename);
+
 	bool LoadShader(ShaderStage stage, const char* filename);
 	bool CreateShader(ShaderStage stage, const char* string);
 	void AttachShader(const std::shared_ptr<Shader>& shader);
+	void ClearShader(ShaderStage stage);
 
 	bool Link();
 
@@ -103,4 +106,7 @@ private:
 	unsigned int program;
 	std::shared_ptr<Shader> m_shaders[ShaderStagesCount];
 	char* lastError;
+
+	bool LoadShaderFromJSON(ShaderStage stage, const char* filename);
+	bool JSONFileIsValid(const char* filename);
 };

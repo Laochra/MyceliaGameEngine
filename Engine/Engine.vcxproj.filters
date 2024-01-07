@@ -83,11 +83,18 @@
     <ClCompile Include="Updater.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
-    <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="LightingManager.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="ShaderManager.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshRenderer.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\External\glad\glad.h">
@@ -179,6 +186,9 @@
       <Filter>Rendering</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderManager.h">
       <Filter>Rendering</Filter>
     </ClInclude>
   </ItemGroup>

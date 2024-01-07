@@ -95,16 +95,16 @@ void Editor::Update()
 void Editor::Draw()
 {
 	Gizmos::clear();
-
+	
 	Gizmos::addTransform(mat4(1));
-
+	
 	vec4 white(1);
 	vec4 black(0, 0, 0, 1);
-
+	
 	for (int i = 0; i < 21; i++)
 	{
 		Gizmos::addLine(vec3(-10 + i, 0, 10), vec3(-10 + i, 0, -10), i == 10 ? white : black);
-
+	
 		Gizmos::addLine(vec3(-10, 0, -10 + i), vec3(10, 0, -10 + i), i == 10 ? white : black);
 	}
 

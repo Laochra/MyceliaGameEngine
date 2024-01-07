@@ -18,5 +18,5 @@ public:
 private:
 	Mesh* mesh = nullptr;
 	Texture* texture = nullptr;
-	ShaderProgram shaderProgram = ShaderProgram();
+	ShaderProgram* shaderProgram = nullptr;
 };

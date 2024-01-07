@@ -155,6 +155,7 @@
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="OrbitalCamera.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="Updater.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="OrbitalCamera.h" />
     <ClInclude Include="GLIncludes.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TimeManager.h" />
     <ClInclude Include="Updater.h" />

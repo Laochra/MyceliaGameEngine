@@ -3,6 +3,7 @@
 #include "TimeManager.h"
 #include "Input.h"
 #include "Updater.h"
+#include "ShaderManager.h"
 
 bool applicationFocused = true;
 
@@ -63,6 +64,7 @@ int Application::Setup()
 	}
 
 	input = new Input();
+	shaderManager = new ShaderManager();
 
 	glfwSetKeyCallback(window, KeyCallback);
 	glfwSetCursorPosCallback(window, CursorPosCallback);
@@ -128,6 +130,7 @@ void Application::GameLoop()
 void Application::Close()
 {
 	delete input;
+	delete shaderManager;
 
 	glfwTerminate();
 }

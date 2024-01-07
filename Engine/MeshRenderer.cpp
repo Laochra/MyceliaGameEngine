@@ -3,26 +3,30 @@
 #include "Camera.h"
 #include "LightingManager.h"
 
+#include "ShaderManager.h"
+
 void MeshRenderer::Draw()
 {
+	if (shaderProgram == nullptr) return;
+
 	mat4 ProjectionViewMatrix = mainCamera->GetProjectionMatrix(screenWidth, screenHeight) * mainCamera->GetViewMatrix();
 
 	// Bind Shader
-	shaderProgram.Bind();
+	shaderProgram->Bind();
 
 	// Bind Light
-	shaderProgram.BindUniform("AmbientColour", LightingManager::ambientLight);
-	shaderProgram.BindUniform("LightColour", LightingManager::light.colour);
-	shaderProgram.BindUniform("LightDirection", LightingManager::light.direction);
+	shaderProgram->BindUniform("AmbientColour", LightingManager::ambientLight);
+	shaderProgram->BindUniform("LightColour", LightingManager::light.colour);
+	shaderProgram->BindUniform("LightDirection", LightingManager::light.direction);
 
 	// Bind Transform
-	shaderProgram.BindUniform("ProjectionViewModel", ProjectionViewMatrix * GetMatrix());
+	shaderProgram->BindUniform("ProjectionViewModel", ProjectionViewMatrix * GetMatrix());
 
 	// Bind Transform for Lighting
-	shaderProgram.BindUniform("ModelMatrix", GetMatrix());
+	shaderProgram->BindUniform("ModelMatrix", GetMatrix());
 
 	texture->Bind(0);
-	shaderProgram.BindUniform("diffuseTex", 0);
+	shaderProgram->BindUniform("diffuseTex", 0);
 
 	mesh->Draw();
 }
@@ -47,14 +51,7 @@ void MeshRenderer::Initialise()
 	texture = new Texture();
 	texture->Load("shroom.png");
 
-	shaderProgram.LoadShader(VertexStage, "Simple.vert");
-	shaderProgram.LoadShader(FragmentStage, "Simple.frag");
-
-	if (shaderProgram.Link() == false)
-	{
-		std::cout << "Shader Error: " << shaderProgram.GetLastError();
-		return;
-	}
+	shaderProgram = shaderManager->GetProgram("Shaders\\DefaultLit.shaderprogram");
 }
 void MeshRenderer::OnDestroy()
 {
