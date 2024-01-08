@@ -1,0 +1,7 @@
+{
+  "Fragment": "Shaders\\Lit.frag",
+  "Geometry": "None",
+  "TessControl": "None",
+  "TessEvaluation": "None",
+  "Vertex": "Shaders\\Lit.vert"
+}

@@ -20,9 +20,9 @@ int Application::Run()
 
 	if (mainCamera == nullptr)
 	{
-		std::cout << std::endl <<
-			"No camera was set up in Initialise(), so a default camera was created." <<
-			"Application will not behave as expected." << std::endl;
+		std::cout <<
+			"\nNo camera was set up in Initialise(), so a default camera was created." <<
+			"Application will not behave as expected.\n";
 		mainCamera = GameObject::Instantiate<Camera>();
 	}
 
@@ -50,7 +50,7 @@ int Application::Setup()
 {
 	if (!glfwInit())
 	{
-		std::cout << std::endl << "GLFW failed to initialise";
+		std::cout << "\nGLFW failed to initialise";
 		return -1;
 	}
 
@@ -58,7 +58,7 @@ int Application::Setup()
 	window = glfwCreateWindow(1600, 900, "My First Window", nullptr, nullptr);
 	if (window == nullptr)
 	{
-		std::cout << std::endl << "GLFW failed to create a window";
+		std::cout << "\nGLFW failed to create a window";
 		glfwTerminate();
 		return -1;
 	}
@@ -78,7 +78,7 @@ int Application::Setup()
 
 	if (!gladLoadGL())
 	{
-		std::cout << std::endl << "GLAD failed to load OpenGL functions";
+		std::cout << "\nGLAD failed to load OpenGL functions";
 		return -1;
 	}
 
@@ -144,5 +144,5 @@ void WindowFocusCallback(GLFWwindow* window, int focused)
 
 void ErrorCallback(int code, const char* description)
 {
-	std::cout << std::endl << "ERROR " << code << ": " << description << std::endl;
+	std::cout << "\nERROR " << code << ": " << description << "\n";
 }

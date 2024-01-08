@@ -122,6 +122,9 @@
     <ClInclude Include="ShaderProgramGUI.h">
       <Filter>EditorWindows</Filter>
     </ClInclude>
+    <ClInclude Include="ConsoleGUI.h">
+      <Filter>EditorWindows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\External\imgui\imgui.natstepfilter">

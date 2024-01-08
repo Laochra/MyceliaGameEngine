@@ -195,14 +195,13 @@ inline void LinkedList<T>::Sort(bool numeric)
 	LinkedNode<T>* currentNode = first;
 	if (numeric == true && std::is_arithmetic<T>::value == false)
 	{
-		std::cout << std::endl
-			<< "Warning: LinkedList.Sort() has only been defined to work with < checks." << std::endl
-			<< "This function only allows numeric types by default for safety and a more helpful error message." << std::endl
-			<< "You can pass the numeric parameter as false to allow non-numeric types." << std::endl
-			<< "(This will cause compile errors for types without the < operator)" << std::endl
-			<< std::endl
-			<< "Feel free to define your own cases for types without the < operator." << std::endl
-			<< std::endl;
+		std::cout
+			<< "\nWarning: LinkedList.Sort() has only been defined to work with < checks.\n"
+			<< "This function only allows numeric types by default for safety and a more helpful error message.\n"
+			<< "You can pass the numeric parameter as false to allow non-numeric types.\n"
+			<< "(This will cause compile errors for types without the < operator)\n"
+			
+			<< "\nFeel free to define your own cases for types without the < operator.\n\n";
 		return;
 	} // Ensure numeric safety by default
 

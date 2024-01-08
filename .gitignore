@@ -39,5 +39,4 @@
 *.zip
 
 x64/
-SimpleFramework/x64/
 *.bak

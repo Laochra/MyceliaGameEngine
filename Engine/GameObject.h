@@ -59,7 +59,7 @@ protected:
 	virtual void OnDeactivate();
 
 private:
-	unsigned long int guid;
+	unsigned long int guid = 0;
 	GameObjectState state = Active;
 };
 

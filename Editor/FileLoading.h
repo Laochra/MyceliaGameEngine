@@ -15,7 +15,7 @@ inline std::string LoadFileAsString(std::string filename)
 		{
 			std::string currentLine;
 			std::getline(inputFile, currentLine);
-			fileContents << currentLine << std::endl;
+			fileContents << currentLine << "\n";
 		}
 		return fileContents.str();
 	}

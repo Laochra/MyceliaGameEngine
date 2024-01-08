@@ -9,7 +9,7 @@ class Camera : public GameObject3D
 public:
 	using GameObject3D::GameObject3D;
 
-	float fov;
+	float fov = 0;
 	float nearClip = 0.1f;
 	float farClip = 1000;
 

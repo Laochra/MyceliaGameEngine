@@ -116,7 +116,9 @@ namespace EditorCameraConfig
 		}
 
 		std::ofstream output("UserSettings/EditorCameraConfig.json");
-		output << std::setw(4) << config << std::endl;
+		output << std::setw(2) << config << "\n";
+
+		return true;
 	}
 
 	inline void Save(EditorCamera* camera)
@@ -140,6 +142,6 @@ namespace EditorCameraConfig
 		newConfig["Controls"]["Free Camera"] = camera->freeCamera.GetBinds();
 
 		std::ofstream output("UserSettings/EditorCameraConfig.json");
-		output << std::setw(4) << newConfig << std::endl;
+		output << std::setw(2) << newConfig << "\n";
 	}
 }

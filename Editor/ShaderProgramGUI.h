@@ -25,22 +25,41 @@ using std::ifstream;
 
 #include "json.hpp"
 using json = nlohmann::json;
+using parse_error = nlohmann::json_abi_v3_11_3::detail::parse_error;
+
+#include "ConsoleGUI.h"
 
 namespace ShaderProgramGUI
 {
-	inline vector<path> shaderPrograms;
+struct Fields
+{
+	string programName = "";
+	string filePath = "New File";
+	string vertShader = "None";
+	string teseShader = "None";
+	string tescShader = "None";
+	string geomShader = "None";
+	string fragShader = "None";
+};
 
-	inline vector<path> vertexShaders;
-	inline vector<path> tessellationEvaluationShaders;
-	inline vector<path> tessellationControlShaders;
-	inline vector<path> geometryShaders;
-	inline vector<path> fragmentShaders;
+inline vector<path> shaderPrograms;
 
-	inline bool dirty = false;
+inline vector<path> vertexShaders;
+inline vector<path> tessEvaluationShaders;
+inline vector<path> tessellationControlShaders;
+inline vector<path> geometryShaders;
+inline vector<path> fragmentShaders;
 
-	inline void Initialise();
-	inline void Draw();
-	inline void DrawShaderPopup(ShaderStage stage, vector<path> shaderPaths, string& currentShader);
+inline Fields current = Fields();
+inline bool dirty = false;
+
+inline void Initialise();
+inline void Save();
+inline void NewLoad(path filePath);
+inline void Reload();
+inline void Load(string filePathStr);
+inline void Draw();
+inline void DrawShaderPopup(ShaderStage stage, vector<path> shaderPaths, string& currentShader);
 }
 
 void ShaderProgramGUI::Initialise()
@@ -48,7 +67,7 @@ void ShaderProgramGUI::Initialise()
 	shaderPrograms.clear();
 
 	vertexShaders.clear();
-	tessellationEvaluationShaders.clear();
+	tessEvaluationShaders.clear();
 	tessellationControlShaders.clear();
 	geometryShaders.clear();
 	fragmentShaders.clear();
@@ -60,108 +79,114 @@ void ShaderProgramGUI::Initialise()
 		path filePath = entry.path();
 		path extension = filePath.extension();
 
-		if (extension.string() == string(".shaderprogram"))
-		{
-			shaderPrograms.push_back(filePath);
-		}
-		else if (extension.string() == string(".vert"))
-		{
-			vertexShaders.push_back(filePath);
-		}
-		else if (extension.string() == string(".tese"))
-		{
-			tessellationEvaluationShaders.push_back(filePath);
-		}
-		else if (extension.string() == string(".tesc"))
-		{
-			tessellationControlShaders.push_back(filePath);
-		}
-		else if (extension.string() == string(".geom"))
-		{
-			geometryShaders.push_back(filePath);
-		}
-		else if (extension.string() == string(".frag"))
-		{
-			fragmentShaders.push_back(filePath);
-		}
+		if (extension.string() == ".shaderprogram") shaderPrograms.push_back(filePath);
+		else if (extension.string() == ".vert") vertexShaders.push_back(filePath);
+		else if (extension.string() == ".tese") tessEvaluationShaders.push_back(filePath);
+		else if (extension.string() == ".tesc") tessellationControlShaders.push_back(filePath);
+		else if (extension.string() == ".geom") geometryShaders.push_back(filePath);
+		else if (extension.string() == ".frag") fragmentShaders.push_back(filePath);
 	}
+}
+
+void ShaderProgramGUI::Save()
+{
+	dirty = false;
+	json shaderProgram;
+
+	shaderProgram["Vertex"] = current.vertShader;
+	shaderProgram["TessEvaluation"] = current.teseShader;
+	shaderProgram["TessControl"] = current.tescShader;
+	shaderProgram["Geometry"] = current.geomShader;
+	shaderProgram["Fragment"] = current.fragShader;
+
+	ostringstream stream;
+	stream << "Shaders\\" + current.programName + ".shaderprogram";
+
+	string oldFilename = current.filePath;
+	current.filePath = stream.str();
+
+	ofstream output(current.filePath.c_str());
+	output << std::setw(2) << shaderProgram << "\n";
+
+	if (current.filePath == oldFilename)
+	{
+		shaderManager->ReloadProgram(current.filePath.c_str());
+	}
+}
+
+void ShaderProgramGUI::NewLoad(path filePath)
+{
+	current.filePath = filePath.string();
+
+	Load(current.filePath);
+}
+
+void ShaderProgramGUI::Reload()
+{
+	Load(current.filePath);
+}
+
+void ShaderProgramGUI::Load(string filePathStr)
+{
+	dirty = false;
+	current = Fields();
+
+	current.filePath = filePathStr;
+
+	ifstream input(current.filePath.c_str()); assert(input.good());
+	
+	path filePath = path(current.filePath);
+
+	current.programName = filePath.filename().string();
+	int extensionSize = (int)filePath.extension().string().size();
+	for (int i = 0; i < extensionSize; i++) {current.programName.pop_back();}
+
+	json shaderProgram;
+	try {input >> shaderProgram;}
+	catch(parse_error)
+	{
+		Log({current.filePath, " was corrupt. All fields defaulted to \"None\".\n"}, ConsoleGUI::Warning);
+		Save();
+		input = ifstream(current.filePath.c_str()); assert(input.good());
+		input >> shaderProgram;
+	}
+
+	if (shaderProgram.contains("Vertex")) current.vertShader = shaderProgram["Vertex"];
+	else {dirty = true; Log({current.filePath, " did not specify a Vertex shader. Defaulted to \"None\".\n"}, ConsoleGUI::Warning);}
+
+	if (shaderProgram.contains("TessEvaluation")) current.teseShader = shaderProgram["TessEvaluation"];
+	else {dirty = true; Log({current.filePath, " did not specify a Tess Evaluation shader. Defaulted to \"None\".\n"}, ConsoleGUI::Warning);}
+
+	if (shaderProgram.contains("TessControl")) current.tescShader = shaderProgram["TessControl"];
+	else {dirty = true; Log({current.filePath, " did not specify a Tess Control shader. Defaulted to \"None\".\n"}, ConsoleGUI::Warning);}
+
+	if (shaderProgram.contains("Geometry")) current.geomShader = shaderProgram["Geometry"];
+	else {dirty = true; Log({current.filePath, " did not specify a Geometry shader. Defaulted to \"None\".\n"}, ConsoleGUI::Warning);}
+
+	if (shaderProgram.contains("Fragment")) current.fragShader = shaderProgram["Fragment"];
+	else {dirty = true; Log({current.filePath, " did not specify a Fragment shader. Defaulted to \"None\".\n"}, ConsoleGUI::Warning);}
+	
+	if (dirty) Save();
 }
 
 void ShaderProgramGUI::Draw()
 {
 	Initialise();
 
-	static string currentFile = string("New File");
-
-	static string currentVertShader = string("None");
-	static string currentTeseShader = string("None");
-	static string currentTescShader = string("None");
-	static string currentGeomShader = string("None");
-	static string currentFragShader = string("None");
-
-	static string programName = string();
-
-	if (ImGui::BeginCombo("Current File", currentFile.c_str()))
+	if (ImGui::BeginCombo("Current File", current.filePath.c_str()))
 	{
-		bool isNewFile = currentFile == string("New File");
-		if (ImGui::Selectable("New File", isNewFile))
+		if (ImGui::Selectable("New File", current.filePath == "New File"))
 		{
 			dirty = false;
-
-			currentFile = string("New File");
-			programName = string();
-			currentVertShader = string("None");
-			currentTeseShader = string("None");
-			currentTescShader = string("None");
-			currentGeomShader = string("None");
-			currentFragShader = string("None");
+			current = Fields();
 		}
-		if (isNewFile) ImGui::SetItemDefaultFocus();
 
 		for (int i = 0; i < shaderPrograms.size(); i++)
 		{
-			bool isCurrent = shaderPrograms[i].string() == currentFile;
+			bool isCurrent = shaderPrograms[i].string() == current.filePath;
 			if (ImGui::Selectable(shaderPrograms[i].filename().string().c_str(), isCurrent))
 			{
-				dirty = false;
-
-				currentFile = shaderPrograms[i].string();
-
-				ifstream input(currentFile.c_str());
-
-				if (!input.good())
-				{
-					std::cout << std::endl << currentFile << " is not a valid filepath" << std::endl;
-					currentFile = string("New File");
-					programName = string();
-				}
-				else
-				{
-					programName = shaderPrograms[i].filename().string();
-					int extensionSize = shaderPrograms[i].extension().string().size();
-					for (int i = 0; i < extensionSize; i++)
-					{
-						programName.pop_back();
-					}
-
-					json shaderProgram;
-					input >> shaderProgram;
-
-					if (shaderProgram.contains("Vertex")) currentVertShader = shaderProgram["Vertex"];
-					else std::cout << std::endl << currentFile << " does not contain a valid Vertex shader" << std::endl;
-
-					if (shaderProgram.contains("Tessellation Evaluation")) currentTeseShader = shaderProgram["Tessellation Evaluation"];
-					else std::cout << std::endl << currentFile << " does not contain a valid Tessellation Evaluation shader" << std::endl;
-
-					if (shaderProgram.contains("Tessellation Control")) currentTescShader = shaderProgram["Tessellation Control"];
-					else std::cout << std::endl << currentFile << " does not contain a valid Tessellation Control shader" << std::endl;
-
-					if (shaderProgram.contains("Geometry")) currentGeomShader = shaderProgram["Geometry"];
-					else std::cout << std::endl << currentFile << " does not contain a valid Geometry shader" << std::endl;
-
-					if (shaderProgram.contains("Fragment")) currentFragShader = shaderProgram["Fragment"];
-					else std::cout << std::endl << currentFile << " does not contain a valid Fragment shader" << std::endl;
-				}
+				NewLoad(shaderPrograms[i]);
 			}
 			if (isCurrent) ImGui::SetItemDefaultFocus();
 		}
@@ -169,52 +194,39 @@ void ShaderProgramGUI::Draw()
 		ImGui::EndCombo();
 	}
 
-	if (ImGui::InputText("Program Name", &programName))
+	if (ImGui::InputText("Program Name", &current.programName))
 	{
 		dirty = true;
 	}
 
 	ImGui::Spacing();
 
-	if (ImGui::Button("Save"))
-	{
-		dirty = false;
-
-		json shaderProgram;
-
-		shaderProgram["Vertex"] = currentVertShader;
-		shaderProgram["Tessellation Evaluation"] = currentTeseShader;
-		shaderProgram["Tessellation Control"] = currentTescShader;
-		shaderProgram["Geometry"] = currentGeomShader;
-		shaderProgram["Fragment"] = currentFragShader;
-
-		ostringstream stream;
-		stream << "Shaders\\" + programName + ".shaderprogram";
-
-		string oldFilename = currentFile;
-		currentFile = stream.str();
-
-		ofstream output(currentFile.c_str());
-		output << std::setw(4) << shaderProgram << std::endl;
-
-		if (currentFile == oldFilename)
+	ImGui::BeginDisabled(!dirty || current.programName.size() == 0);
+		if (ImGui::Button("Save"))
 		{
-			shaderManager->ReloadProgram(currentFile.c_str());
+			std::remove(current.filePath.c_str());
+			Save();
 		}
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("New"))
-	{
-		dirty = false;
-
-		currentFile = string("New File");
-		programName = string();
-		currentVertShader = string("None");
-		currentTeseShader = string("None");
-		currentTescShader = string("None");
-		currentGeomShader = string("None");
-		currentFragShader = string("None");
-	}
+		ImGui::SameLine();
+		if (ImGui::Button("Save New"))
+		{
+			Save();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Revert"))
+		{
+			Reload();
+		}
+	ImGui::EndDisabled();
+	ImGui::BeginDisabled(current.filePath == "New File");
+		ImGui::SameLine();
+		if (ImGui::Button("Delete"))
+		{
+			std::remove(current.filePath.c_str());
+			dirty = false;
+			current = Fields();
+		}
+	ImGui::EndDisabled();
 	if (dirty)
 	{
 		ImGui::SameLine();
@@ -223,15 +235,13 @@ void ShaderProgramGUI::Draw()
 		ImGui::PopStyleColor();
 	}
 
-
 	ImGui::Spacing();
 
-	DrawShaderPopup(VertexStage, vertexShaders, currentVertShader);
-	DrawShaderPopup(TessellationEvaluationStage, tessellationEvaluationShaders, currentTeseShader);
-	DrawShaderPopup(TessellationControlStage, tessellationEvaluationShaders, currentTescShader);
-	DrawShaderPopup(GeometryStage, geometryShaders, currentGeomShader);
-	DrawShaderPopup(FragmentStage, fragmentShaders, currentFragShader);
-
+	DrawShaderPopup(VertexStage, vertexShaders, current.vertShader);
+	DrawShaderPopup(TessEvaluationStage, tessEvaluationShaders, current.teseShader);
+	DrawShaderPopup(TessControlStage, tessEvaluationShaders, current.tescShader);
+	DrawShaderPopup(GeometryStage, geometryShaders, current.geomShader);
+	DrawShaderPopup(FragmentStage, fragmentShaders, current.fragShader);
 }
 
 void ShaderProgramGUI::DrawShaderPopup(ShaderStage stage, vector<path> shaderPaths, string& currentShader)
@@ -239,20 +249,21 @@ void ShaderProgramGUI::DrawShaderPopup(ShaderStage stage, vector<path> shaderPat
 	string stageName;
 	switch (stage)
 	{
-	case VertexStage: stageName = string("Vertex"); break;
-	case TessellationEvaluationStage: stageName = string("Tess Evaluation"); break;
-	case TessellationControlStage: stageName = string("Tess Control"); break;
-	case GeometryStage: stageName = string("Geometry"); break;
-	case FragmentStage: stageName = string("Fragment"); break;
+	case VertexStage: stageName = "Vertex"; break;
+	case TessEvaluationStage: stageName = "Tess Evaluation"; break;
+	case TessControlStage: stageName = "Tess Control"; break;
+	case GeometryStage: stageName = "Geometry"; break;
+	case FragmentStage: stageName = "Fragment"; break;
 	}
 
+	ImGui::BeginDisabled(shaderPaths.size() == 0);
 	if (ImGui::BeginCombo(stageName.c_str(), currentShader.c_str()))
 	{
-		bool isNone = currentShader == string("None");
+		bool isNone = currentShader == "None";
 		if (ImGui::Selectable("None", isNone))
 		{
 			dirty = true;
-			currentShader = string("None");
+			currentShader = "None";
 		}
 		if (isNone) ImGui::SetItemDefaultFocus();
 
@@ -269,4 +280,5 @@ void ShaderProgramGUI::DrawShaderPopup(ShaderStage stage, vector<path> shaderPat
 
 		ImGui::EndCombo();
 	}
+	ImGui::EndDisabled();
 }

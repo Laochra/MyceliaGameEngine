@@ -1,39 +1,39 @@
 {
-    "Controls": {
-        "Backward": [
-            83
-        ],
-        "Down": [
-            341
-        ],
-        "Forward": [
-            87
-        ],
-        "Free Camera": [
-            1
-        ],
-        "Left": [
-            65
-        ],
-        "Quick Mode": [
-            340
-        ],
-        "Right": [
-            68
-        ],
-        "Up": [
-            32
-        ]
+  "Controls": {
+    "Backward": [
+      83
+    ],
+    "Down": [
+      341
+    ],
+    "Forward": [
+      87
+    ],
+    "Free Camera": [
+      1
+    ],
+    "Left": [
+      65
+    ],
+    "Quick Mode": [
+      340
+    ],
+    "Right": [
+      68
+    ],
+    "Up": [
+      32
+    ]
+  },
+  "Display": {
+    "Clipping Planes": {
+      "Far": 1000.0,
+      "Near": 0.10000000149011612
     },
-    "Display": {
-        "Clipping Planes": {
-            "Far": 1000.0,
-            "Near": 0.10000000149011612
-        },
-        "FOV": 1.3962633609771729
-    },
-    "Movement": {
-        "Fly Speed": 2.0,
-        "Quick Fly Speed": 6.0
-    }
+    "FOV": 1.3962633609771729
+  },
+  "Movement": {
+    "Fly Speed": 2.0,
+    "Quick Fly Speed": 6.0
+  }
 }

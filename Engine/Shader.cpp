@@ -26,9 +26,9 @@ bool Shader::LoadShader(ShaderStage stage, const char* filename)
 
 	switch (stage)
 	{
-	case VertexStage:					glHandle = glCreateShader(GL_VERTEX_SHADER);			break;
-	case TessellationEvaluationStage:	glHandle = glCreateShader(GL_TESS_EVALUATION_SHADER);	break;
-	case TessellationControlStage:		glHandle = glCreateShader(GL_TESS_CONTROL_SHADER);		break;
+	case VertexStage:						glHandle = glCreateShader(GL_VERTEX_SHADER);				break;
+	case TessEvaluationStage:			glHandle = glCreateShader(GL_TESS_EVALUATION_SHADER);	break;
+	case TessControlStage:				glHandle = glCreateShader(GL_TESS_CONTROL_SHADER);		break;
 	case GeometryStage:					glHandle = glCreateShader(GL_GEOMETRY_SHADER);			break;
 	case FragmentStage:					glHandle = glCreateShader(GL_FRAGMENT_SHADER);			break;
 	default: break;
@@ -73,9 +73,9 @@ bool Shader::CreateShader(ShaderStage stageInit, const char* string)
 
 	switch (stage)
 	{
-	case VertexStage:					glHandle = glCreateShader(GL_VERTEX_SHADER);			break;
-	case TessellationEvaluationStage:	glHandle = glCreateShader(GL_TESS_EVALUATION_SHADER);	break;
-	case TessellationControlStage:		glHandle = glCreateShader(GL_TESS_CONTROL_SHADER);		break;
+	case VertexStage:						glHandle = glCreateShader(GL_VERTEX_SHADER);				break;
+	case TessEvaluationStage:			glHandle = glCreateShader(GL_TESS_EVALUATION_SHADER);	break;
+	case TessControlStage:				glHandle = glCreateShader(GL_TESS_CONTROL_SHADER);		break;
 	case GeometryStage:					glHandle = glCreateShader(GL_GEOMETRY_SHADER);			break;
 	case FragmentStage:					glHandle = glCreateShader(GL_FRAGMENT_SHADER);			break;
 	default: break;
@@ -116,11 +116,11 @@ bool ShaderProgram::LoadAndLinkFromJSON(const char* filename)
 	string vertexFile = shaderProgram["Vertex"];
 	if (LoadShaderFromJSON(VertexStage, vertexFile.c_str()) == false) return false;
 
-	string tessellationEvaluationFile = shaderProgram["Tessellation Evaluation"];
-	if (LoadShaderFromJSON(TessellationEvaluationStage, tessellationEvaluationFile.c_str()) == false) return false;
+	string tessellationEvaluationFile = shaderProgram["TessEvaluation"];
+	if (LoadShaderFromJSON(TessEvaluationStage, tessellationEvaluationFile.c_str()) == false) return false;
 
-	string tessellationControlFile = shaderProgram["Tessellation Control"];
-	if (LoadShaderFromJSON(TessellationControlStage, tessellationControlFile.c_str()) == false) return false;
+	string tessellationControlFile = shaderProgram["TessControl"];
+	if (LoadShaderFromJSON(TessControlStage, tessellationControlFile.c_str()) == false) return false;
 
 	string geometryFile = shaderProgram["Geometry"];
 	if (LoadShaderFromJSON(GeometryStage, geometryFile.c_str()) == false) return false;
@@ -508,7 +508,7 @@ bool ShaderProgram::LoadShaderFromJSON(ShaderStage stage, const char* filename)
 
 	if (LoadShader(stage, filename) == false)
 	{
-		std::cout << std::endl << filename << " is not a valid shader file" << std::endl;
+		std::cout << "\n" << filename << " is not a valid shader file\n";
 		return false;
 	}
 
@@ -521,8 +521,8 @@ bool ShaderProgram::JSONFileIsValid(const char* filename)
 	ifstream input(filename);
 	if (!input.good())
 	{
-		std::cout << std::endl << "Input file " << filename
-			<< " is missing, it may have been moved, deleted, or renamed" << std::endl;
+		std::cout << "\nInput file " << filename
+			<< " is missing, it may have been moved, deleted, or renamed\n";
 		return false;
 	}
 
@@ -532,27 +532,27 @@ bool ShaderProgram::JSONFileIsValid(const char* filename)
 	bool incompleteFile = false;
 	if (!shaderProgram.contains("Vertex"))
 	{
-		std::cout << std::endl << filename << " does not specify a Vertex shader, specify \"None\" to disregard it" << std::endl;
+		std::cout << "\n" << filename << " does not specify a Vertex shader, specify \"None\" to disregard it\n";
 		incompleteFile = true;
 	}
-	if (!shaderProgram.contains("Tessellation Evaluation"))
+	if (!shaderProgram.contains("TessEvaluation"))
 	{
-		std::cout << std::endl << filename << " does not specify a Tessellation Evaluation shader, specify \"None\" to disregard it" << std::endl;
+		std::cout << "\n" << filename << " does not specify a Tessellation Evaluation shader, specify \"None\" to disregard it\n";
 		incompleteFile = true;
 	}
-	if (!shaderProgram.contains("Tessellation Control"))
+	if (!shaderProgram.contains("TessControl"))
 	{
-		std::cout << std::endl << filename << " does not specify a Tessellation Control shader, specify \"None\" to disregard it" << std::endl;
+		std::cout << "\n" << filename << " does not specify a Tessellation Control shader, specify \"None\" to disregard it\n";
 		incompleteFile = true;
 	}
 	if (!shaderProgram.contains("Geometry"))
 	{
-		std::cout << std::endl << filename << " does not specify a Geometry shader, specify \"None\" to disregard it" << std::endl;
+		std::cout << "\n" << filename << " does not specify a Geometry shader, specify \"None\" to disregard it\n";
 		incompleteFile = true;
 	}
 	if (!shaderProgram.contains("Fragment"))
 	{
-		std::cout << std::endl << filename << " does not specify a Fragment shader, specify \"None\" to disregard it" << std::endl;
+		std::cout << "\n" << filename << " does not specify a Fragment shader, specify \"None\" to disregard it\n";
 		incompleteFile = true;
 	}
 	if (incompleteFile) return false;

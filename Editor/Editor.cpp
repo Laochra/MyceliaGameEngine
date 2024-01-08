@@ -9,6 +9,8 @@
 
 #include "ShaderProgramGUI.h"
 
+#include "ConsoleGUI.h"
+
 #include "TimeManager.h"
 
 void Editor::Initialise()
@@ -83,6 +85,10 @@ void Editor::Update()
 		ShaderProgramGUI::Draw();
 	ImGui::End();
 
+	ImGui::Begin("Console");
+		ConsoleGUI::Draw();
+	ImGui::End();
+
 	//ImGui::Begin("Light Settings");
 	//	ImGui::SeparatorText("Direction");
 	//	ImGui::InputFloat("X Direction", &light.direction.x);
@@ -112,7 +118,7 @@ void Editor::Draw()
 
 	glViewport(0, 0, screenWidth, screenHeight);
 
-	mat4 ProjectionViewMatrix = mainCamera->GetProjectionMatrix(screenWidth, screenHeight) * mainCamera->GetViewMatrix();
+	mat4 ProjectionViewMatrix = mainCamera->GetProjectionMatrix((float)screenWidth, (float)screenHeight) * mainCamera->GetViewMatrix();
 
 	Gizmos::draw(ProjectionViewMatrix);
 }

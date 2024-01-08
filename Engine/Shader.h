@@ -9,8 +9,8 @@ enum ShaderStage
 	UndefinedStage,
 
 	VertexStage,
-	TessellationEvaluationStage,
-	TessellationControlStage,
+	TessEvaluationStage,
+	TessControlStage,
 	GeometryStage,
 	FragmentStage
 };
