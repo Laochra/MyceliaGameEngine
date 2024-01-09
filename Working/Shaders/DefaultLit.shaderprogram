@@ -1,7 +1,56 @@
 {
-    "Fragment": "Shaders\\Lit.frag",
-    "Geometry": "None",
-    "TessControl": "None",
-    "TessEvaluation": "None",
-    "Vertex": "Shaders\\Lit.vert"
+  "Attributes": [
+    {
+      "Exposed": true,
+      "Name": "Normal",
+      "Type": 35666
+    },
+    {
+      "Exposed": true,
+      "Name": "Position",
+      "Type": 35666
+    },
+    {
+      "Exposed": false,
+      "Name": "TexCoords",
+      "Type": 35664
+    }
+  ],
+  "Fragment": "Shaders\\Lit.frag",
+  "Geometry": "None",
+  "TessControl": "None",
+  "TessEvaluation": "None",
+  "Uniforms": [
+    {
+      "Exposed": false,
+      "Name": "AmbientColour",
+      "Type": 35665
+    },
+    {
+      "Exposed": false,
+      "Name": "LightColour",
+      "Type": 35665
+    },
+    {
+      "Exposed": false,
+      "Name": "LightDirection",
+      "Type": 35665
+    },
+    {
+      "Exposed": false,
+      "Name": "ModelMatrix",
+      "Type": 35676
+    },
+    {
+      "Exposed": false,
+      "Name": "ProjectionViewModel",
+      "Type": 35676
+    },
+    {
+      "Exposed": true,
+      "Name": "diffuseTex",
+      "Type": 35678
+    }
+  ],
+  "Vertex": "Shaders\\Lit.vert"
 }

@@ -6,7 +6,7 @@ namespace InputEditor
     const char* keys[keyAmount] = {
         "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
         "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0 (Keypad)", "1 (Keypad)", "2 (Keypad)", "3 (Keypad)", "4 (Keypad)", "5 (Keypad)", "6 (Keypad)", "7 (Keypad)", "8 (Keypad)", "9 (Keypad)",
-        "Space", ",", ".", ";", "- (Hyphen)", "'", "`", "/", "Back Slash", "[", "]",
+        "Space", ",", ".", ";", "-", "'", "`", "/", "\\", "[", "]",
         "Mouse Left", "Mouse Right", "Mouse Middle", "Mouse 3", "Mouse 4", "Mouse 5", "Mouse 6", "Mouse 7",
         "Shift (Left)", "Shift (Right)", "Control (Left)", "Control (Right)", "Alt (Left)", "Alt (Right)", "Super (Left)", "Super (Right)",
         "Esc", "Tab", "Enter", "Enter (Keypad)", "Backspace", "Delete", "Insert", "Pause", "Print", "Menu",
@@ -16,7 +16,7 @@ namespace InputEditor
          "f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "f10", "f11", "f12", "f13", "f14", "f15", "f16", "f17", "f18", "f19", "f20", "f21", "f22", "f23", "f24", "f25",
     };
 
-    std::map<KeyCode, const char*> keyCodeToName = {
+    const std::map<KeyCode, const char*> keyCodeToName = {
         // Mouse
         { MouseLeft, "Mouse Left" },
         { MouseRight, "Mouse Right" },
@@ -54,11 +54,11 @@ namespace InputEditor
         { Comma, "," },
         { Period, "." },
         { Semicolon, ";" },
-        { Hyphen, "- (Hyphen)" },
+        { Hyphen, "-" },
         { Apostrophe, "'" },
         { Grave, "`" },
         { ForwardSlash, "/" },
-        { BackSlash, "Back Slash" },
+        { BackSlash, "\\" },
         { LBracket, "[" },
         { RBracket, "]" },
 
@@ -163,7 +163,7 @@ namespace InputEditor
         { Y, "Y" },
         { Z, "Z" }
     };
-    std::map<const char*, KeyCode> keyNameToCode = {
+    const std::map<const char*, KeyCode> keyNameToCode = {
         // Mouse
         { "Mouse Left", MouseLeft },
         { "Mouse Right", MouseRight },
@@ -200,12 +200,12 @@ namespace InputEditor
         { "Space", Space },
         { ",", Comma },
         { ".", Period },
-        { " },", Semicolon },
-        { "- (Hyphen)", Hyphen },
+        { ";", Semicolon },
+        { "-", Hyphen },
         { "'", Apostrophe },
         { "`", Grave },
         { "/", ForwardSlash },
-        { "Back Slash", BackSlash },
+        { "\\", BackSlash },
         { "[", LBracket },
         { "]", RBracket },
 
@@ -315,7 +315,7 @@ namespace InputEditor
     {
         const char* currentKey = keyCodeToName.find(keybind->GetBinds()[0])->second;
 
-        if (ImGui::BeginCombo(label, currentKey))
+        if (ImGui::BeginCombo(label, currentKey, ImGuiComboFlags_HeightLarge))
         {
             for (int i = 0; i < keyAmount; i++)
             {
@@ -338,7 +338,7 @@ namespace InputEditor
         const char* currentNegativeKey = keyCodeToName.find(keyAxis->GetNegativeBinds()[0])->second;
         const char* currentPositiveKey = keyCodeToName.find(keyAxis->GetPositiveBinds()[0])->second;
 
-        if (ImGui::BeginCombo(negativeLabel, currentNegativeKey))
+        if (ImGui::BeginCombo(negativeLabel, currentNegativeKey, ImGuiComboFlags_HeightLarge))
         {
             for (int i = 0; i < keyAmount; i++)
             {
@@ -355,7 +355,7 @@ namespace InputEditor
 
             ImGui::EndCombo();
         }
-        if (ImGui::BeginCombo(positiveLabel, currentPositiveKey))
+        if (ImGui::BeginCombo(positiveLabel, currentPositiveKey, ImGuiComboFlags_HeightLarge))
         {
             for (int i = 0; i < keyAmount; i++)
             {

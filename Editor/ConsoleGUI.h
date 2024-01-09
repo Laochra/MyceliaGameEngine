@@ -27,8 +27,9 @@ namespace ConsoleGUI
 	inline void Draw();
 }
 
+using ConsoleGUI::LogType;
 
-inline void Log(stringParams message, ConsoleGUI::LogType type = ConsoleGUI::Message);
+inline void Log(stringParams message, LogType type = LogType::Message);
 inline void ClearLogs();
 
 
@@ -52,7 +53,7 @@ void ConsoleGUI::Draw()
 }
 
 
-void Log(stringParams message, ConsoleGUI::LogType type)
+void Log(stringParams message, LogType type)
 {
 	string logMessage = string(std::to_string(ConsoleGUI::logs.size())) + string(": ");
 	for (string str : message) { logMessage += str; }
@@ -60,8 +61,8 @@ void Log(stringParams message, ConsoleGUI::LogType type)
 	ConsoleGUI::logs.push_back(ConsoleGUI::ConsoleLog(type, logMessage));
 
 	#if _DEBUG
-	const char* typeMessage = type == ConsoleGUI::Message ? "\nMessage "
-		: type == ConsoleGUI::Warning ? "\nWarning: "
+	const char* typeMessage = type == LogType::Message ? "\nMessage "
+		: type == LogType::Warning ? "\nWarning: "
 		: "\nError: ";
 	std::cout << typeMessage << logMessage << "\n";
 	#endif

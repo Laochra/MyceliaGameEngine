@@ -74,20 +74,25 @@ void Editor::Update()
 	
 
 	ImGui::Begin("Camera Settings");
+	{
 		EditorCameraGUI::Draw((EditorCamera*)mainCamera);
-	ImGui::End();
+	} ImGui::End();
 
 	ImGui::Begin("Inspector");
+	{
 		MeshRendererGUI::Draw(object);
-	ImGui::End();
+	} ImGui::End();
 
-	ImGui::Begin("Shader Program Editor");
+	if (ShaderProgramGUI::dirty == false) ImGui::Begin("Shader Program Editor");
+	else ImGui::Begin("Shader Program Editor", (bool*)0, ImGuiWindowFlags_UnsavedDocument);
+	{
 		ShaderProgramGUI::Draw();
-	ImGui::End();
+	} ImGui::End();
 
 	ImGui::Begin("Console");
+	{
 		ConsoleGUI::Draw();
-	ImGui::End();
+	} ImGui::End();
 
 	//ImGui::Begin("Light Settings");
 	//	ImGui::SeparatorText("Direction");

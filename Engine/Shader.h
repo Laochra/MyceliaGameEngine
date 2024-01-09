@@ -4,6 +4,12 @@
 
 #include <memory>
 
+#include <string>
+using std::string;
+
+#include <vector>
+using std::vector;
+
 enum ShaderStage
 {
 	UndefinedStage,
@@ -15,6 +21,64 @@ enum ShaderStage
 	FragmentStage
 };
 const int ShaderStagesCount = 6;
+
+enum ShaderInputType : unsigned int
+{
+	UndefinedTypeGL = 0,
+
+	Sampler2GL = GL_SAMPLER_2D,
+	Sampler3GL = GL_SAMPLER_CUBE,
+
+	FloatGL = GL_FLOAT,
+	Float2GL = GL_FLOAT_VEC2,
+	Float3GL = GL_FLOAT_VEC3,
+	Float4GL = GL_FLOAT_VEC4,
+	Float2x2GL = GL_FLOAT_MAT2,
+	Float2x3GL = GL_FLOAT_MAT2x3,
+	Float2x4GL = GL_FLOAT_MAT2x4,
+	Float3x2GL = GL_FLOAT_MAT3x2, 
+	Float3x3GL = GL_FLOAT_MAT3,
+	Float3x4GL = GL_FLOAT_MAT3x4,
+	Float4x2GL = GL_FLOAT_MAT4x2,
+	Float4x3GL = GL_FLOAT_MAT4x3,
+	Float4x4GL = GL_FLOAT_MAT4,
+
+	DoubleGL = GL_DOUBLE,
+	Double2GL = GL_DOUBLE_VEC2,
+	Double3GL = GL_DOUBLE_VEC3,
+	Double4GL = GL_DOUBLE_VEC4,
+	Double2x2GL = GL_DOUBLE_MAT2,
+	Double2x3GL = GL_DOUBLE_MAT2x3,
+	Double2x4GL = GL_DOUBLE_MAT2x4,
+	Double3x2GL = GL_DOUBLE_MAT3x2,
+	Double3x3GL = GL_DOUBLE_MAT3,
+	Double3x4GL = GL_DOUBLE_MAT3x4,
+	Double4x2GL = GL_DOUBLE_MAT4x2,
+	Double4x3GL = GL_DOUBLE_MAT4x3,
+	Double4x4GL = GL_DOUBLE_MAT4,
+
+	IntGL = GL_INT,
+	Int2GL = GL_INT_VEC2,
+	Int3GL = GL_INT_VEC3,
+	Int4GL = GL_INT_VEC4,
+	UIntGL = GL_UNSIGNED_INT,
+	UInt2GL = GL_UNSIGNED_INT_VEC2,
+	UInt3GL = GL_UNSIGNED_INT_VEC3,
+	UInt4GL = GL_UNSIGNED_INT_VEC4,
+
+	BoolGL = GL_BOOL,
+	BoolGL2 = GL_BOOL_VEC2,
+	BoolGL3 = GL_BOOL_VEC3,
+	BoolGL4 = GL_BOOL_VEC4,
+};
+const char* GetShaderInputTypeName(ShaderInputType type);
+
+struct ShaderInput
+{
+	string name = "";
+	ShaderInputType type = UndefinedTypeGL;
+	bool exposed = false;
+};
 
 class Shader
 {
@@ -64,6 +128,8 @@ public:
 	void Bind();
 
 	unsigned int GetGLHandle() const { return program; }
+
+	void GetFields(vector<ShaderInput>& attributes, vector<ShaderInput>& uniforms);
 
 	int GetUniform(const char* name);
 

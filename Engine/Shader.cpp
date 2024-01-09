@@ -13,6 +13,58 @@ using std::ifstream;
 
 #include <iostream>
 
+const std::map<ShaderInputType, const char*> shaderInputTypeToString = {
+   {UndefinedTypeGL, "Undefined"},
+	{Sampler2GL, "Sampler2D"},
+   {Sampler3GL, "Sampler3D"},
+
+	{FloatGL, "Float"},
+	{Float2GL, "Float2"},
+	{Float3GL, "Float3"},
+	{Float4GL, "Float4"},
+	{Float2x2GL, "Float2D"},
+	{Float2x3GL, "Float2x3"},
+	{Float2x4GL, "Float2x4"},
+	{Float3x2GL, "Float3x2"},
+	{Float3x3GL, "Float3D"},
+	{Float3x4GL, "Float3x4"},
+	{Float4x2GL, "Float4x2"},
+	{Float4x3GL, "Float4x3"},
+	{Float4x4GL, "Float4D"},
+
+	{DoubleGL, "Double"},
+	{Double2GL, "Double2"},
+	{Double3GL, "Double3"},
+	{Double4GL, "Double4"},
+	{Double2x2GL, "Double2D"},
+	{Double2x3GL, "Double2x3"},
+	{Double2x4GL, "Double2x4"},
+	{Double3x2GL, "Double3x2"},
+	{Double3x3GL, "Double3D"},
+	{Double3x4GL, "Double3x4"},
+	{Double4x2GL, "Double4x2"},
+	{Double4x3GL, "Double4x3"},
+	{Double4x4GL, "Double4D"},
+
+	{IntGL, "Int"},
+	{Int2GL, "Int2"},
+	{Int3GL, "Int3"},
+	{Int4GL, "Int4"},
+	{UIntGL,  "UInt"},
+	{UInt2GL,  "UInt2"},
+	{UInt3GL,  "UInt3"},
+	{UInt4GL,  "UInt4"},
+	{BoolGL,  "Bool"},
+	{BoolGL2,  "Bool2"},
+	{BoolGL3,  "Bool3"},
+	{BoolGL4,  "Bool4"}
+};
+
+const char* GetShaderInputTypeName(ShaderInputType type)
+{
+	return shaderInputTypeToString.find(type)->second;
+}
+
 Shader::~Shader()
 {
 	glDeleteShader(glHandle);
@@ -186,6 +238,34 @@ void ShaderProgram::Bind()
 {
 	assert(program > 0 && "Invalid shader program");
 	glUseProgram(program);
+}
+
+void ShaderProgram::GetFields(vector<ShaderInput>& attributes, vector<ShaderInput>& uniforms)
+{
+	attributes.clear();
+	uniforms.clear();
+
+	int count, length, size;
+	const int buffer = 32;
+	char name[buffer];
+
+	glGetProgramiv(program, GL_ACTIVE_ATTRIBUTES, &count);
+	for (unsigned int i = 0; i < count; i++)
+	{
+		ShaderInput attribute = ShaderInput();
+		glGetActiveAttrib(program, i, buffer, &length, &size, (unsigned int*)&attribute.type, name);
+		for (int i = 0; i < length; i++) { attribute.name += name[i]; }
+		attributes.push_back(attribute);
+	}
+
+	glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &count);
+	for (unsigned int i = 0; i < count; i++)
+	{
+		ShaderInput uniform = ShaderInput();
+		glGetActiveUniform(program, i, buffer, &length, &size, (unsigned int*)&uniform.type, name);
+		for (int i = 0; i < length; i++) { uniform.name += name[i]; }
+		uniforms.push_back(uniform);
+	}
 }
 
 int ShaderProgram::GetUniform(const char* name)
@@ -521,13 +601,17 @@ bool ShaderProgram::JSONFileIsValid(const char* filename)
 	ifstream input(filename);
 	if (!input.good())
 	{
-		std::cout << "\nInput file " << filename
-			<< " is missing, it may have been moved, deleted, or renamed\n";
+		std::cout << "\nInput file " << filename << " is missing, it may have been moved, deleted, or renamed\n";
 		return false;
 	}
 
 	json shaderProgram;
-	input >> shaderProgram;
+	try { input >> shaderProgram; }
+	catch (nlohmann::json_abi_v3_11_3::detail::parse_error)
+	{
+		std::cout << "\nInput file " << filename << " is corrupt\n";
+		return false;
+	}
 
 	bool incompleteFile = false;
 	if (!shaderProgram.contains("Vertex"))
@@ -537,12 +621,12 @@ bool ShaderProgram::JSONFileIsValid(const char* filename)
 	}
 	if (!shaderProgram.contains("TessEvaluation"))
 	{
-		std::cout << "\n" << filename << " does not specify a Tessellation Evaluation shader, specify \"None\" to disregard it\n";
+		std::cout << "\n" << filename << " does not specify a Tess Evaluation shader, specify \"None\" to disregard it\n";
 		incompleteFile = true;
 	}
 	if (!shaderProgram.contains("TessControl"))
 	{
-		std::cout << "\n" << filename << " does not specify a Tessellation Control shader, specify \"None\" to disregard it\n";
+		std::cout << "\n" << filename << " does not specify a Tess Control shader, specify \"None\" to disregard it\n";
 		incompleteFile = true;
 	}
 	if (!shaderProgram.contains("Geometry"))
