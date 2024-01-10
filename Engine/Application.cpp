@@ -55,7 +55,7 @@ int Application::Setup()
 	}
 
 	glfwWindowHint(GLFW_MAXIMIZED, GL_TRUE);
-	window = glfwCreateWindow(1600, 900, "My First Window", nullptr, nullptr);
+	window = glfwCreateWindow(1600, 900, "Window", nullptr, nullptr);
 	if (window == nullptr)
 	{
 		std::cout << "\nGLFW failed to create a window";
@@ -81,9 +81,6 @@ int Application::Setup()
 		std::cout << "\nGLAD failed to load OpenGL functions";
 		return -1;
 	}
-
-	glClearColor(0.8f, 0.75f, 0.85f, 1);
-	glEnable(GL_DEPTH_TEST);
 
 	return 0;
 }
@@ -116,8 +113,6 @@ void Application::GameLoop()
 
 		if (isRunning)
 		{
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 			Draw();
 			Updater::CallDraw();
 			DrawGUI();

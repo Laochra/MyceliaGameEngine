@@ -34,4 +34,16 @@ protected:
 
 private:
 	MeshRenderer* object = nullptr;
+
+	// Scene View Buffers
+	unsigned int sceneViewFrameBuffer = 0;
+	unsigned int sceneViewColourBuffer = 0;
+	unsigned int sceneViewDepthStencilBuffer = 0;
+
+	// Windows
+	bool consoleOpen = true;
+	bool inspectorOpen = true;
+	bool sceneViewOpen = true;
+	bool shaderProgramEditorOpen = true;
+	bool cameraSettingsOpen = true;
 };

@@ -409,7 +409,7 @@ void ShaderProgramGUI::Draw()
 		}
 		else
 		{
-			ImGui::SeparatorText("Attributes");
+			if (current.attributes.size() != 0) ImGui::SeparatorText("Attributes");
 
 			ImVec4 typeColour = ImVec4(0.75f, 0.4f, 0.95f, 1);
 			for (ShaderInput& input : current.attributes)
@@ -426,7 +426,7 @@ void ShaderProgramGUI::Draw()
 					ImGui::Text(input.name.c_str());
 				} ImGui::PopID();
 			}
-			ImGui::SeparatorText("Uniforms");
+			if (current.uniforms.size() != 0) ImGui::SeparatorText("Uniforms");
 			for (ShaderInput& input : current.uniforms)
 			{
 				ImGui::PushID(input.name.c_str());

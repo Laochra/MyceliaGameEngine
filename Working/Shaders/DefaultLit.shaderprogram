@@ -1,12 +1,12 @@
 {
   "Attributes": [
     {
-      "Exposed": true,
+      "Exposed": false,
       "Name": "Normal",
       "Type": 35666
     },
     {
-      "Exposed": true,
+      "Exposed": false,
       "Name": "Position",
       "Type": 35666
     },
