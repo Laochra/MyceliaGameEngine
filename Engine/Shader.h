@@ -26,8 +26,8 @@ enum ShaderInputType : unsigned int
 {
 	UndefinedTypeGL = 0,
 
-	Sampler2GL = GL_SAMPLER_2D,
-	Sampler3GL = GL_SAMPLER_CUBE,
+	TextureGL = GL_SAMPLER_2D,
+	CubemapGL = GL_SAMPLER_CUBE,
 
 	FloatGL = GL_FLOAT,
 	Float2GL = GL_FLOAT_VEC2,
@@ -80,26 +80,28 @@ struct ShaderInput
 	bool exposed = false;
 };
 
+
+
 class Shader
 {
 public:
-	Shader() : stage(UndefinedStage), glHandle(0), lastError(nullptr) {}
-	Shader(ShaderStage stageInit, const char* filename) : stage(UndefinedStage), glHandle(0), lastError(nullptr) { LoadShader(stageInit, filename); }
-	~Shader();
+Shader() : stage(UndefinedStage), glHandle(0), lastError(nullptr) {}
+Shader(ShaderStage stageInit, const char* filename) : stage(UndefinedStage), glHandle(0), lastError(nullptr) { LoadShader(stageInit, filename); }
+~Shader();
 
-	bool LoadShader(ShaderStage stageInit, const char* filename);
-	bool CreateShader(ShaderStage stageInit, const char* string);
+bool LoadShader(ShaderStage stageInit, const char* filename);
+bool CreateShader(ShaderStage stageInit, const char* string);
 
-	ShaderStage GetStage() const { return stage; }
-	unsigned int GetGLHandle() const { return glHandle; }
+ShaderStage GetStage() const { return stage; }
+unsigned int GetGLHandle() const { return glHandle; }
 
-	const char* GetLastError() const { return lastError; }
+const char* GetLastError() const { return lastError; }
 
 protected:
 
-	ShaderStage	stage;
-	unsigned int glHandle;
-	char* lastError;
+ShaderStage	stage;
+unsigned int glHandle;
+char* lastError;
 };
 
 

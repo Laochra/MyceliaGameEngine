@@ -1,33 +1,20 @@
 #pragma once
 
-#include "ImGuiIncludes.h"
-#include "imgui_stdlib.h"
-#include "GUI.h"
 #include "Shader.h"
 #include "ShaderManager.h"
+
+#include "ImGuiIncludes.h"
+#include "GUI.h"
+#include "JsonIncludes.h"
+
+#include "ConsoleGUI.h"
 
 #include <vector>
 using std::vector;
 
-#include <filesystem>
-namespace filesystem = std::filesystem;
-using filesystem::directory_entry;
-using filesystem::directory_iterator;
-using filesystem::path;
-
 #include <sstream>
 using std::string;
 using std::ostringstream;
-
-#include <fstream>
-using std::ofstream;
-using std::ifstream;
-
-#include "json.hpp"
-using json = nlohmann::json;
-using parse_error = nlohmann::json_abi_v3_11_3::detail::parse_error;
-
-#include "ConsoleGUI.h"
 
 namespace ShaderProgramGUI
 {
@@ -80,12 +67,14 @@ void ShaderProgramGUI::Initialise()
 	geometryShaders.clear();
 	fragmentShaders.clear();
 
-	string shadersPath = "Shaders";
-
+	string shadersPath = "Assets\\Shaders";
+	
+	path filePath;
+	path extension;
 	for (const directory_entry& entry : directory_iterator(shadersPath))
 	{
-		path filePath = entry.path();
-		path extension = filePath.extension();
+		filePath = entry.path();
+		extension = filePath.extension();
 
 		if (extension.string() == ".shaderprogram") shaderPrograms.push_back(filePath);
 		else if (extension.string() == ".vert") vertexShaders.push_back(filePath);
@@ -131,7 +120,7 @@ void ShaderProgramGUI::Save()
 
 
 	ostringstream stream;
-	stream << "Shaders\\" + current.programName + ".shaderprogram";
+	stream << "Assets\\Shaders\\" + current.programName + ".shaderprogram";
 
 	current.filePath = stream.str();
 
@@ -141,9 +130,7 @@ void ShaderProgramGUI::Save()
 
 void ShaderProgramGUI::NewLoad(path filePath)
 {
-	current.filePath = filePath.string();
-
-	Load(current.filePath);
+	Load(filePath.string());
 }
 
 void ShaderProgramGUI::Reload()
@@ -164,7 +151,7 @@ void ShaderProgramGUI::Load(string filePathStr)
 	path filePath = path(current.filePath);
 
 	current.programName = filePath.filename().string();
-	int extensionSize = (int)filePath.extension().string().size();
+	const int extensionSize = (int)filePath.extension().string().size();
 	for (int i = 0; i < extensionSize; i++) {current.programName.pop_back();}
 
 	json shaderProgram;
@@ -334,10 +321,7 @@ void ShaderProgramGUI::Draw()
 		ImGui::EndCombo();
 	}
 
-	if (ImGui::InputText("Program Name", &current.programName))
-	{
-		dirty = true;
-	}
+	if (ImGui::InputText("Program Name", &current.programName)) { dirty = true; }
 
 	ImGui::Spacing();
 
@@ -367,10 +351,7 @@ void ShaderProgramGUI::Draw()
 	ImGui::BeginDisabled(!dirty || newFile);
 	{
 		ImGui::SameLine();
-		if (ImGui::Button("Revert"))
-		{
-			Reload();
-		}
+		if (ImGui::Button("Revert")) { Reload(); }
 	} ImGui::EndDisabled();
 
 	ImGui::BeginDisabled(newFile);
@@ -409,38 +390,31 @@ void ShaderProgramGUI::Draw()
 		}
 		else
 		{
-			if (current.attributes.size() != 0) ImGui::SeparatorText("Attributes");
-
+			if (current.attributes.size() != 0) { ImGui::SeparatorText("Attributes"); }
 			ImVec4 typeColour = ImVec4(0.75f, 0.4f, 0.95f, 1);
 			for (ShaderInput& input : current.attributes)
 			{
 				ImGui::PushID(input.name.c_str());
 				{
-					if (ImGui::Checkbox("##", &input.exposed))
-					{
-						dirty = true;
-					}
+					if (ImGui::Checkbox("##", &input.exposed)) { dirty = true; }
 					ImGui::SameLine();
 					ImGui::TextColored(typeColour, GetShaderInputTypeName(input.type));
 					ImGui::SameLine();
 					ImGui::Text(input.name.c_str());
 				} ImGui::PopID();
 			}
-			if (current.uniforms.size() != 0) ImGui::SeparatorText("Uniforms");
+
+			if (current.uniforms.size() != 0) { ImGui::SeparatorText("Uniforms"); }
 			for (ShaderInput& input : current.uniforms)
 			{
 				ImGui::PushID(input.name.c_str());
 				{
-					if (ImGui::Checkbox("##", &input.exposed))
-					{
-						dirty = true;
-					}
+					if (ImGui::Checkbox("##", &input.exposed)) { dirty = true; }
 					ImGui::SameLine();
 					ImGui::TextColored(typeColour, GetShaderInputTypeName(input.type));
 					ImGui::SameLine();
 					ImGui::Text(input.name.c_str());
-				}
-				ImGui::PopID();
+				} ImGui::PopID();
 			}
 		}
 	} ImGui::EndChild();

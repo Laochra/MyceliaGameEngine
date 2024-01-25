@@ -95,6 +95,9 @@
     <ClCompile Include="MeshRenderer.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="MaterialManager.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\External\glad\glad.h">
@@ -189,6 +192,15 @@
       <Filter>Rendering</Filter>
     </ClInclude>
     <ClInclude Include="ShaderManager.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonIncludes.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="FilesIncludes.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialManager.h">
       <Filter>Rendering</Filter>
     </ClInclude>
   </ItemGroup>

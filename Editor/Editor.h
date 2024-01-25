@@ -45,5 +45,6 @@ private:
 	bool inspectorOpen = true;
 	bool sceneViewOpen = true;
 	bool shaderProgramEditorOpen = true;
+	bool materialEditorOpen = true;
 	bool cameraSettingsOpen = true;
 };

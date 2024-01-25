@@ -8,6 +8,7 @@
 #include "MeshRendererGUI.h"
 
 #include "ShaderProgramGUI.h"
+#include "MaterialGUI.h"
 
 #include "ConsoleGUI.h"
 
@@ -115,6 +116,10 @@ void Editor::Update()
 				{
 					shaderProgramEditorOpen = true;
 				}
+				if (ImGui::MenuItem("Material Editor", (const char*)0, false, !materialEditorOpen))
+				{
+					materialEditorOpen = true;
+				}
 				ImGui::EndMenu();
 			}
 			ImGui::EndMenu();
@@ -183,6 +188,15 @@ void Editor::Update()
 		else ImGui::Begin("Shader Program Editor", &shaderProgramEditorOpen, ImGuiWindowFlags_UnsavedDocument);
 		{
 			ShaderProgramGUI::Draw();
+		} ImGui::End();
+	}
+
+	if (materialEditorOpen)
+	{
+		if (MaterialGUI::dirty == false) ImGui::Begin("Material Editor", &materialEditorOpen);
+		else ImGui::Begin("Material Editor", &materialEditorOpen, ImGuiWindowFlags_UnsavedDocument);
+		{
+			MaterialGUI::Draw();
 		} ImGui::End();
 	}
 

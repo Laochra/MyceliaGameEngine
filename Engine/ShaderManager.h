@@ -3,6 +3,7 @@
 #include "Shader.h"
 
 #include <map>
+using std::map;
 
 #include <string>
 using std::string;
@@ -14,7 +15,7 @@ public:
 	void ReloadProgram(const char* filepath);
 
 private:
-	std::map<string, ShaderProgram*> loadedPrograms;
+	map<string, ShaderProgram*> loadedPrograms;
 
 	ShaderProgram* AddProgram(const char* filepath);
 };

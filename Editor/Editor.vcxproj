@@ -177,6 +177,7 @@
     <ClInclude Include="GUI.h" />
     <ClInclude Include="ImGuiIncludes.h" />
     <ClInclude Include="InputEditor.h" />
+    <ClInclude Include="MaterialGUI.h" />
     <ClInclude Include="ShaderProgramGUI.h" />
   </ItemGroup>
   <ItemGroup>

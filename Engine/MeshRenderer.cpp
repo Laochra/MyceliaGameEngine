@@ -51,7 +51,7 @@ void MeshRenderer::Initialise()
 	texture = new Texture();
 	texture->Load("shroom.png");
 
-	shaderProgram = shaderManager->GetProgram("Shaders\\DefaultLit.shaderprogram");
+	shaderProgram = shaderManager->GetProgram("Assets\\Shaders\\DefaultLit.shaderprogram");
 }
 void MeshRenderer::OnDestroy()
 {

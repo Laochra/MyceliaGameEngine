@@ -16,7 +16,7 @@
       "Type": 35664
     }
   ],
-  "Fragment": "Shaders\\Lit.frag",
+  "Fragment": "Assets\\Shaders\\Lit.frag",
   "Geometry": "None",
   "TessControl": "None",
   "TessEvaluation": "None",
@@ -52,5 +52,5 @@
       "Type": 35678
     }
   ],
-  "Vertex": "Shaders\\Lit.vert"
+  "Vertex": "Assets\\Shaders\\Lit.vert"
 }

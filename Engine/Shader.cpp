@@ -2,8 +2,7 @@
 #include <cstdio>
 #include <cassert>
 
-#include "json.hpp"
-using json = nlohmann::json;
+#include "JsonIncludes.h"
 
 #include <string>
 using std::string;
@@ -15,36 +14,36 @@ using std::ifstream;
 
 const std::map<ShaderInputType, const char*> shaderInputTypeToString = {
    {UndefinedTypeGL, "Undefined"},
-	{Sampler2GL, "Sampler2D"},
-   {Sampler3GL, "Sampler3D"},
+	{TextureGL, "Texture"},
+   {CubemapGL, "Cubemap"},
 
 	{FloatGL, "Float"},
 	{Float2GL, "Float2"},
 	{Float3GL, "Float3"},
 	{Float4GL, "Float4"},
-	{Float2x2GL, "Float2D"},
+	{Float2x2GL, "Float2x2"},
 	{Float2x3GL, "Float2x3"},
 	{Float2x4GL, "Float2x4"},
 	{Float3x2GL, "Float3x2"},
-	{Float3x3GL, "Float3D"},
+	{Float3x3GL, "Float3x3"},
 	{Float3x4GL, "Float3x4"},
 	{Float4x2GL, "Float4x2"},
 	{Float4x3GL, "Float4x3"},
-	{Float4x4GL, "Float4D"},
+	{Float4x4GL, "Float4x4"},
 
 	{DoubleGL, "Double"},
 	{Double2GL, "Double2"},
 	{Double3GL, "Double3"},
 	{Double4GL, "Double4"},
-	{Double2x2GL, "Double2D"},
+	{Double2x2GL, "Double2x2"},
 	{Double2x3GL, "Double2x3"},
 	{Double2x4GL, "Double2x4"},
 	{Double3x2GL, "Double3x2"},
-	{Double3x3GL, "Double3D"},
+	{Double3x3GL, "Double3x3"},
 	{Double3x4GL, "Double3x4"},
 	{Double4x2GL, "Double4x2"},
 	{Double4x3GL, "Double4x3"},
-	{Double4x4GL, "Double4D"},
+	{Double4x4GL, "Double4x4"},
 
 	{IntGL, "Int"},
 	{Int2GL, "Int2"},
@@ -607,7 +606,7 @@ bool ShaderProgram::JSONFileIsValid(const char* filename)
 
 	json shaderProgram;
 	try { input >> shaderProgram; }
-	catch (nlohmann::json_abi_v3_11_3::detail::parse_error)
+	catch (parse_error)
 	{
 		std::cout << "\nInput file " << filename << " is corrupt\n";
 		return false;

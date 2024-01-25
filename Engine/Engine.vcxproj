@@ -165,6 +165,7 @@
     <ClCompile Include="Keybind.cpp" />
     <ClCompile Include="LightingManager.cpp" />
     <ClCompile Include="Material.cpp" />
+    <ClCompile Include="MaterialManager.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="OrbitalCamera.cpp" />
@@ -186,16 +187,19 @@
     <ClInclude Include="BinaryNode.h" />
     <ClInclude Include="BinaryTree.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="FilesIncludes.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObject3D.h" />
     <ClInclude Include="GuidGenerator.h" />
     <ClInclude Include="HashBucket.h" />
     <ClInclude Include="HashTable.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="JsonIncludes.h" />
     <ClInclude Include="LightingManager.h" />
     <ClInclude Include="LinkedList.h" />
     <ClInclude Include="LinkedNode.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="MaterialManager.h" />
     <ClInclude Include="MathIncludes.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshRenderer.h" />
