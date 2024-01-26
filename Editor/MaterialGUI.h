@@ -380,6 +380,8 @@ void MaterialGUI::Draw()
 
 void MaterialGUI::DrawField(MaterialInput& field)
 {
+	ImGui::PushID(field.name.c_str());
+
 	switch (field.type)
 	{
 		case TextureGL:
@@ -395,55 +397,201 @@ void MaterialGUI::DrawField(MaterialInput& field)
 
 		case FloatGL:
 		{
-			float value = field.Get<float>();
-			if (ImGui::DragFloat(field.name.c_str(), &value, 0.01f)) { dirty = true; }
+			float value;
+			if (!field.Get<float>(&value))
+			{
+				Log({ "Field didn't contain enough bytes. Value has been set to default." }, LogType::Warning);
+				dirty = true; value = 0.0f; field.Set<float>(value);
+			}
+
+			if (ImGui::DragFloat(field.name.c_str(), &value, 0.01f))
+			{
+				dirty = true;
+				field.Set<float>(value);
+			}
 			break;
 		}
 		case Float2GL:
 		{
-			vec2 value = field.Get<vec2>();
-			if (ImGui::DragFloat2(field.name.c_str(), (float*)&value, 0.01f)) { dirty = true; }
+			vec2 value;
+			if (!field.Get<vec2>(&value))
+			{
+				Log({ "Field didn't contain enough bytes. Value has been set to default." }, LogType::Warning);
+				dirty = true; value = vec2(); field.Set<vec2>(value);
+			}
+
+			if (ImGui::DragFloat2(field.name.c_str(), (float*)&value, 0.01f))
+			{
+				dirty = true;
+				field.Set<vec2>(value);
+			}
+
 			break;
 		}
 		case Float3GL:
 		{
-			vec3 value = field.Get<vec3>();
-			if (ImGui::DragFloat3(field.name.c_str(), (float*)&value, 0.01f)) { dirty = true; }
+			vec3 value;
+			if (!field.Get<vec3>(&value))
+			{
+				Log({"Field didn't contain enough bytes. Value has been set to default."}, LogType::Warning);
+				dirty = true; value = vec3(); field.Set<vec3>(value);
+			}
+
+			if (ImGui::DragFloat3(field.name.c_str(), (float*)&value, 0.01f))
+			{
+				dirty = true;
+				field.Set<vec3>(value);
+			}
 			break;
 		}
 		case Float4GL:
 		{
-			vec4 value = field.Get<vec4>();
-			if (ImGui::DragFloat4(field.name.c_str(), (float*)&value, 0.01f)) { dirty = true; }
+			vec4 value;
+			if (!field.Get<vec4>(&value))
+			{
+				Log({ "Field didn't contain enough bytes. Value has been set to default." }, LogType::Warning);
+				dirty = true; value = vec4(); field.Set<vec4>(value);
+			}
+
+			if (ImGui::DragFloat4(field.name.c_str(), (float*)&value, 0.01f))
+			{
+				dirty = true;
+				field.Set<vec4>(value);
+			}
+			break;
+		}
+		case Float2x2GL:
+		{
+			glm::mat2x2 value;
+			if (!field.Get<glm::mat2x2>(&value))
+			{
+				Log({ "Field didn't contain enough bytes. Value has been set to default." }, LogType::Warning);
+				dirty = true; value = glm::mat2x2(); field.Set<glm::mat2x2>(value);
+			}
+
+			bool modified = false;
+			if (ImGui::DragFloat2("##1", (float*)&value[0], 0.01f)) { modified = true; }
+			if (ImGui::DragFloat2("##2", (float*)&value[1], 0.01f)) { modified = true; }
+
+			if (modified)
+			{
+				dirty = true;
+				field.Set<glm::mat2x2>(value);
+			}
+			break;
+		}
+		case Float3x3GL:
+		{
+			glm::mat3x3 value;
+			if (!field.Get<glm::mat3x3>(&value))
+			{
+				Log({ "Field didn't contain enough bytes. Value has been set to default." }, LogType::Warning);
+				dirty = true; value = glm::mat3x3(); field.Set<glm::mat3x3>(value);
+			}
+
+			bool modified = false;
+			if (ImGui::DragFloat3("##1", (float*)&value[0], 0.01f)) { modified = true; }
+			if (ImGui::DragFloat3("##2", (float*)&value[1], 0.01f)) { modified = true; }
+			if (ImGui::DragFloat3("##3", (float*)&value[2], 0.01f)) { modified = true; }
+
+			if (modified)
+			{
+				dirty = true;
+				field.Set<glm::mat3x3>(value);
+			}
+			break;
+		}
+		case Float4x4GL:
+		{
+			glm::mat4x4 value;
+			if (!field.Get<glm::mat4x4>(&value))
+			{
+				Log({ "Field didn't contain enough bytes. Value has been set to default." }, LogType::Warning);
+				dirty = true; value = glm::mat4x4(); field.Set<glm::mat4x4>(value);
+			}
+
+			bool modified = false;
+			if (ImGui::DragFloat4("##1", (float*)&value[0], 0.01f)) { modified = true; }
+			if (ImGui::DragFloat4("##2", (float*)&value[1], 0.01f)) { modified = true; }
+			if (ImGui::DragFloat4("##3", (float*)&value[2], 0.01f)) { modified = true; }
+			if (ImGui::DragFloat4("##4", (float*)&value[3], 0.01f)) { modified = true; }
+
+			if (modified)
+			{
+				dirty = true;
+				field.Set<glm::mat4x4>(value);
+			}
 			break;
 		}
 		
 		case IntGL:
 		{
-			int value = field.Get<int>();
-			if (ImGui::DragInt(field.name.c_str(), &value, 1)) { dirty = true; }
+			int value;
+			if (!field.Get<int>(&value))
+			{
+				Log({ "Field didn't contain enough bytes. Value has been set to default." }, LogType::Warning);
+				dirty = true; value = 0; field.Set<int>(value);
+			}
+
+			if (ImGui::DragInt(field.name.c_str(), &value, 1))
+			{
+				dirty = true;
+				field.Set<int>(value);
+			}
 			break;
 		}
 		case Int2GL:
 		{
-			glm::ivec2 value = field.Get<glm::ivec2>();
-			if (ImGui::DragInt2(field.name.c_str(), (int*)&value, 1)) { dirty = true; }
+			glm::ivec2 value;
+			if (!field.Get<glm::ivec2>(&value))
+			{
+				Log({ "Field didn't contain enough bytes. Value has been set to default." }, LogType::Warning);
+				dirty = true; value = glm::ivec2(); field.Set<glm::ivec2>(value);
+			}
+
+			if (ImGui::DragInt2(field.name.c_str(), (int*)&value, 1))
+			{
+				dirty = true;
+				field.Set<glm::ivec2>(value);
+			}
 			break;
 		}
 		case Int3GL:
 		{
-			glm::ivec3 value = field.Get<glm::ivec3>();
-			if (ImGui::DragInt3(field.name.c_str(), (int*)&value, 1)) { dirty = true; }
+			glm::ivec3 value;
+			if (!field.Get<glm::ivec3>(&value))
+			{
+				Log({ "Field didn't contain enough bytes. Value has been set to default." }, LogType::Warning);
+				dirty = true; value = glm::ivec3(); field.Set<glm::ivec3>(value);
+			}
+
+			if (ImGui::DragInt3(field.name.c_str(), (int*)&value, 1))
+			{
+				dirty = true;
+				field.Set<glm::ivec3>(value);
+			}
 			break;
 		}
 		case Int4GL:
 		{
-			glm::ivec2 value = field.Get<glm::ivec4>();
-			if (ImGui::DragInt4(field.name.c_str(), (int*)&value, 1)) { dirty = true; }
+			glm::ivec4 value;
+			if (!field.Get<glm::ivec4>(&value))
+			{
+				Log({ "Field didn't contain enough bytes. Value has been set to default." }, LogType::Warning);
+				dirty = true; value = glm::ivec4(); field.Set<glm::ivec4>(value);
+			}
+
+			if (ImGui::DragInt4(field.name.c_str(), (int*)&value, 1))
+			{
+				dirty = true;
+				field.Set<glm::ivec4>(value);
+			}
 			break;
 		}
 
 
 		/// TO-DO: Add remaining field types
 	}
+
+	ImGui::PopID();
 }

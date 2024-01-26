@@ -5,6 +5,8 @@
 
 #include "JsonIncludes.h"
 
+#include <iostream>
+
 using std::vector;
 
 typedef unsigned int uint;
@@ -21,12 +23,26 @@ struct MaterialInput
 	MaterialInput() = default;
 
 	vector<int> GetRaw() { return *(vector<int>*)&bytes; }
-	template<typename T> T Get() { return *(T*)&bytes; }
+	template<typename T> bool Get(T* valueOutput)
+	{
+		if (bytes.size() < sizeof(T))
+		{
+			std::cout << "\nError: Attempted to access value larger than contained bytes\n";
+			return false;
+		}
+		*valueOutput = *(T*)bytes.data();
+		return true;
+	}
+
+	template<typename T> void Set(T valueInit)
+	{
+		bytes = GetBytes((byte*)&valueInit, sizeof(T));
+	}
 
 	private:
 	vector<byte> bytes;
 
-	vector<byte> GetBytes(unsigned char* valueBytes, uint valueSize)
+	vector<byte> GetBytes(byte* valueBytes, uint valueSize)
 	{
 		vector<byte> result;
 		for (uint i = 0; i < valueSize; i++) { result.push_back(valueBytes[i]); }
