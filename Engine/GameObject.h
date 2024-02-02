@@ -4,6 +4,8 @@
 #include "Updater.h"
 #include "GuidGenerator.h"
 
+#include "GameObjectManager.h"
+
 class GameObject;
 template<class T> concept GameObjectClass = std::is_base_of<GameObject, T>::value;
 
@@ -21,9 +23,9 @@ public:
 	};
 
 	/// <summary>Check if GameObjects are equal based on their GUIDs</summary> <returns>True if GameObjects are equal</returns>
-	bool operator==(GameObject other) const noexcept;
+	bool operator==(GameObject& other) const noexcept;
 	/// <summary>Check if GameObjects are equal based on their GUIDs</summary> <returns>False if GameObjects are equal</returns>
-	bool operator!=(GameObject other) const noexcept;
+	bool operator!=(GameObject& other) const noexcept;
 	/// <summary>Check the state of the GameObject</summary> <returns>True if state is equal</returns>
 	bool operator==(GameObjectState stateToCheck) const noexcept;
 	/// <summary>Check the state of the GameObject</summary> <returns>False if state is equal</returns>
@@ -61,6 +63,10 @@ protected:
 private:
 	unsigned long int guid = 0;
 	GameObjectState state = Active;
+
+
+	// Friends
+	friend class GameObjectManager;
 };
 
 
@@ -73,12 +79,18 @@ template<GameObjectClass T> inline T* GameObject::Instantiate(GameObjectState st
 
 	gameObject->Initialise();
 
+	gameObjectManager->Add(gameObject);
+
 	return gameObject;
 }
 template<GameObjectClass T> inline void GameObject::Destroy(T* gameObject)
 {
-	if (gameObject == Destroyed) return;
+	if (*gameObject == Destroyed) return;
 
 	gameObject->OnDestroy();
-	state = Destroyed;
+
+	gameObjectManager->Remove(gameObject);
+	gameObjectManager->Bury(gameObject);
+
+	gameObject->state = Destroyed;
 }

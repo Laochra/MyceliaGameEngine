@@ -20,12 +20,12 @@ unsigned long int GameObject::GetGUID() const noexcept
 	return guid;
 }
 
-bool GameObject::operator==(GameObject other) const noexcept
+bool GameObject::operator==(GameObject& other) const noexcept
 {
 	return guid == other.guid;
 }
 
-bool GameObject::operator!=(GameObject other) const noexcept
+bool GameObject::operator!=(GameObject& other) const noexcept
 {
 	return guid != other.guid;
 }

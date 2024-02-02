@@ -1,5 +1,54 @@
 #include "GameObject3D.h"
 
+GameObject3D* GameObject3D::GetParent() const noexcept
+{
+	return parent;
+}
+
+void GameObject3D::SetParent(GameObject3D* parentInit) noexcept
+{
+	if (parentInit == parent) return;
+
+	if (parentInit == nullptr)
+	{
+		gameObjectManager->Add(this);
+		parent->RemoveChild(this);
+	}
+	else
+	{
+		if (parent == nullptr)
+		{
+			gameObjectManager->Remove(this);
+		}
+		else
+		{
+			parent->RemoveChild(this);
+		}
+		parentInit->AddChild(this);
+	}
+
+	parent = parentInit;
+}
+const vector<GameObject3D*>* GameObject3D::GetChildren() const noexcept
+{
+	return &children;
+}
+void GameObject3D::AddChild(GameObject3D* child) noexcept
+{
+	children.push_back(child);
+}
+void GameObject3D::RemoveChild(GameObject3D* child) noexcept
+{
+	for (int i = 0; i < children.size(); i++)
+	{
+		if (*children[i] == *child)
+		{
+			children.erase(children.begin() + i);
+			break;
+		}
+	}
+}
+
 void GameObject3D::UpdateMatrices() noexcept
 {
 	mat4 centrer = mat4{

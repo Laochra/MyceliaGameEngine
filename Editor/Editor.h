@@ -17,6 +17,7 @@
 #include "MeshRenderer.h"
 #include "LightingManager.h"
 
+#include "GameObjectManager.h"
 
 class Editor : public Application
 {
@@ -42,6 +43,7 @@ private:
 
 	// Windows
 	bool consoleOpen = true;
+	bool heirarchyOpen = true;
 	bool inspectorOpen = true;
 	bool sceneViewOpen = true;
 	bool shaderProgramEditorOpen = true;

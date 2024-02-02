@@ -95,6 +95,9 @@
     <ClCompile Include="MeshRenderer.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="GameObjectManager.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\External\glad\glad.h">
@@ -190,6 +193,9 @@
     </ClInclude>
     <ClInclude Include="ShaderManager.h">
       <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectManager.h">
+      <Filter>GameObjects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

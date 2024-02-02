@@ -10,6 +10,7 @@
 #include "ShaderProgramGUI.h"
 
 #include "ConsoleGUI.h"
+#include "Heirarchy.h"
 
 #include "TimeManager.h"
 
@@ -17,21 +18,28 @@ void Editor::Initialise()
 {
 	glfwSetWindowTitle(window, "Editor");
 
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;		// Enable Keyboard Controls
-	//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;	// Enable Gamepad Controls
-	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;			// Enable Docking
-	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;		// Enable Viewports
-	
-	ImGui_ImplGlfw_InitForOpenGL(window, /*install_callbacks:*/ true);
-	ImGui_ImplOpenGL3_Init();
+	// ImGui Initialisation
+	{
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;		// Enable Keyboard Controls
+		//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;	// Enable Gamepad Controls
+		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;			// Enable Docking
+		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;		// Enable Viewports
+
+		ImGui_ImplGlfw_InitForOpenGL(window, /*install_callbacks:*/ true);
+		ImGui_ImplOpenGL3_Init();
+	}
+
+	gameObjectManager = new GameObjectManager();
 
 	mainCamera = GameObject3D::Instantiate<EditorCamera>(vec3(0.0f, 10.0f, 10.0f));
 
 	Gizmos::create(100000, 10000, 0, 0);
 
 	object = GameObject3D::Instantiate<MeshRenderer>(vec3(0, 0, 0), quat(), vec3(3, 3, 3), vec3(0, -0.5f, 0));
+
+	GameObject* child = GameObject3D::Instantiate<GameObject3D>(object);
 
 	LightingManager::light.colour = vec3(1, 0.9f, 0.8f);
 	LightingManager::light.direction = glm::normalize(vec3(0, -0.7, -0.7));
@@ -92,6 +100,10 @@ void Editor::Update()
 			{
 				consoleOpen = true;
 			}
+			if (ImGui::MenuItem("Heirarchy", (const char*)0, false, !heirarchyOpen))
+			{
+				heirarchyOpen = true;
+			}
 			if (ImGui::MenuItem("Inspector", (const char*)0, false, !inspectorOpen))
 			{
 				inspectorOpen = true;
@@ -127,6 +139,15 @@ void Editor::Update()
 		ImGui::Begin("Console", &consoleOpen);
 
 		ConsoleGUI::Draw();
+
+		ImGui::End();
+	}
+
+	if (heirarchyOpen)
+	{
+		ImGui::Begin("Heirarchy", &heirarchyOpen);
+
+		Heirarchy::Draw();
 
 		ImGui::End();
 	}
@@ -281,6 +302,8 @@ void Editor::DrawGUI()
 void Editor::OnClose()
 {
 	delete mainCamera;
+
+	delete gameObjectManager;
 
 	Gizmos::destroy();
 

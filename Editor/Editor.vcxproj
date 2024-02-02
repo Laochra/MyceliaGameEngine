@@ -175,6 +175,7 @@
     <ClInclude Include="GameObjectGUI.h" />
     <ClInclude Include="GameObject3DGUI.h" />
     <ClInclude Include="GUI.h" />
+    <ClInclude Include="Heirarchy.h" />
     <ClInclude Include="ImGuiIncludes.h" />
     <ClInclude Include="InputEditor.h" />
     <ClInclude Include="ShaderProgramGUI.h" />
