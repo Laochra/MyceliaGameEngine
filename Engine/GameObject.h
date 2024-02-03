@@ -38,6 +38,8 @@ public:
 	GameObjectState GetState() const noexcept;
 	/// <param name="newState">: The state to set the GameObject to</param>
 	void SetState(GameObjectState newState) noexcept;
+	/// <returns>The GameObject type name as a char string</returns>
+	virtual const char* GetName() noexcept { return "GameObject"; }
 
 
 	virtual void OnFrameStart();
@@ -77,9 +79,9 @@ template<GameObjectClass T> inline T* GameObject::Instantiate(GameObjectState st
 	gameObject->guid = GuidGenerator::NewGuid();
 	gameObject->state = stateInit;
 
-	gameObject->Initialise();
-
 	gameObjectManager->Add(gameObject);
+
+	gameObject->Initialise();
 
 	return gameObject;
 }

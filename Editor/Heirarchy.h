@@ -43,7 +43,9 @@ void Heirarchy::Draw()
 
 void Heirarchy::DrawEntry(GameObject3D* gameObject3D)
 {
-	ImGui::Text(std::to_string(gameObject3D->GetGUID()).c_str());
+	ImGui::PushID(GUI::GenerateID(gameObject3D).c_str());
+
+	ImGui::Text(gameObject3D->GetName());
 
 	if (gameObject3D->GetChildren()->size() != 0)
 	{
@@ -54,4 +56,6 @@ void Heirarchy::DrawEntry(GameObject3D* gameObject3D)
 		}
 		ImGui::Unindent();
 	}
+
+	ImGui::PopID();
 }

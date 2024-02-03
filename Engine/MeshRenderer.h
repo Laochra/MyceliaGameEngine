@@ -8,6 +8,10 @@
 class MeshRenderer : public GameObject3D
 {
 public:
+	using GameObject3D::GameObject3D;
+	/// <returns>The GameObject type name as a char string</returns>
+	virtual const char* GetName() noexcept override { return "MeshRenderer"; }
+
 	void Initialise() override;
 	void OnDestroy() override;
 	void Draw() override;

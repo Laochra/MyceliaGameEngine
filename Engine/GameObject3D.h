@@ -12,6 +12,8 @@ class GameObject3D : public GameObject
 {
 public:
 	using GameObject::GameObject;
+	/// <returns>The GameObject type name as a char string</returns>
+	virtual const char* GetName() noexcept override { return "GameObject3D"; }
 
 	GameObject3D* GetParent() const noexcept;
 	void SetParent(GameObject3D* parentInit) noexcept;
