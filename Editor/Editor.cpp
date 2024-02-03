@@ -39,7 +39,9 @@ void Editor::Initialise()
 
 	object = GameObject3D::Instantiate<MeshRenderer>(vec3(0, 0, 0), quat(), vec3(3, 3, 3), vec3(0, -0.5f, 0));
 
-	GameObject* child = GameObject3D::Instantiate<GameObject3D>(object);
+	GameObject3D::Instantiate<GameObject3D>(object);
+	GameObject3D::Instantiate<GameObject3D>(object);
+	GameObject3D::Instantiate<GameObject3D>(object);
 
 	LightingManager::light.colour = vec3(1, 0.9f, 0.8f);
 	LightingManager::light.direction = glm::normalize(vec3(0, -0.7, -0.7));

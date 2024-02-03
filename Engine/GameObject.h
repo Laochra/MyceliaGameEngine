@@ -6,6 +6,8 @@
 
 #include "GameObjectManager.h"
 
+#include <type_traits>
+
 class GameObject;
 template<class T> concept GameObjectClass = std::is_base_of<GameObject, T>::value;
 
@@ -53,11 +55,13 @@ public:
 	/// <summary>Creates a new instance of a GameObject</summary> <param name="stateInit">(default: Active)</param> <returns>A pointer to the created instance</returns>
 	template<GameObjectClass T> static T* Instantiate(GameObjectState stateInit = Active);
 	/// <summary>Calls OnDestroy() on the GameObject instance and permanently sets its state to Destroyed</summary> <param name="gameObject"></param>
-	template<GameObjectClass T> static void Destroy(T* gameObject);
+	static void Destroy(GameObject* gameObject);
 
 protected:
 	GameObject() = default;
 	~GameObject() = default;
+	GameObject(const GameObject&) = delete;
+	GameObject& operator=(const GameObject&) = delete;
 
 	virtual void OnActivate();
 	virtual void OnDeactivate();
@@ -85,14 +89,12 @@ template<GameObjectClass T> inline T* GameObject::Instantiate(GameObjectState st
 
 	return gameObject;
 }
-template<GameObjectClass T> inline void GameObject::Destroy(T* gameObject)
+inline void GameObject::Destroy(GameObject* gameObject)
 {
+	if (gameObject == nullptr) return;
 	if (*gameObject == Destroyed) return;
 
 	gameObject->OnDestroy();
-
-	gameObjectManager->Remove(gameObject);
-	gameObjectManager->Bury(gameObject);
 
 	gameObject->state = Destroyed;
 }

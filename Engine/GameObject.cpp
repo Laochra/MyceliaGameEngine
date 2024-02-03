@@ -65,7 +65,8 @@ void GameObject::Initialise()
 }
 void GameObject::OnDestroy()
 {
-	
+	gameObjectManager->Remove(this);
+	gameObjectManager->Bury(this);
 }
 void GameObject::OnActivate()
 {

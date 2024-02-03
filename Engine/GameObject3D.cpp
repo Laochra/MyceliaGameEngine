@@ -1,5 +1,16 @@
 #include "GameObject3D.h"
 
+void GameObject3D::OnDestroy()
+{
+	for (GameObject3D* child : children)
+	{
+		GameObject::Destroy(child);
+	}
+
+	gameObjectManager->Remove(this);
+	gameObjectManager->Bury(this);
+}
+
 GameObject3D* GameObject3D::GetParent() const noexcept
 {
 	return parent;
@@ -29,6 +40,7 @@ void GameObject3D::SetParent(GameObject3D* parentInit) noexcept
 
 	parent = parentInit;
 }
+
 const vector<GameObject3D*>* GameObject3D::GetChildren() const noexcept
 {
 	return &children;
@@ -47,6 +59,87 @@ void GameObject3D::RemoveChild(GameObject3D* child) noexcept
 			break;
 		}
 	}
+}
+
+void GameObject3D::MoveTo(int newIndex) noexcept
+{
+	if (parent == nullptr)
+	{
+		gameObjectManager->Move(this, newIndex);
+	}
+	else
+	{
+		parent->MoveChildTo(this, newIndex);
+	}
+}
+void GameObject3D::MoveChildTo(GameObject3D* child, int newIndex) noexcept
+{
+	int i = child->GetIndex();
+
+	if (i == newIndex) return;
+
+	int direction;
+	if (i < newIndex) direction = 1;
+	else direction = -1;
+
+	while (i != newIndex)
+	{
+		if (i + direction < 0 || i + direction >= children.size()) return;
+
+		children[i] = children[i + direction];
+
+		i += direction;
+	}
+
+	children[i] = child;
+}
+
+bool GameObject3D::ContainsChild(const GameObject3D* child, bool recursive) const noexcept
+{
+	if (!recursive)
+	{
+		for (int i = 0; i < children.size(); i++)
+		{
+			if (children[i] == child)
+			{
+				return true;
+			}
+		}
+	}
+	else
+	{
+		for (int i = 0; i < children.size(); i++)
+		{
+			if (children[i] == child || children[i]->ContainsChild(child, true))
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+int GameObject3D::GetIndex() const noexcept
+{
+	if (parent == nullptr)
+	{
+		return gameObjectManager->GetIndexOf((GameObject*)this);
+	}
+	else
+	{
+		return parent->GetChildIndex(this);
+	}
+}
+int GameObject3D::GetChildIndex(const GameObject3D* child) const noexcept
+{
+	for (int i = 0; i < children.size(); i++)
+	{
+		if (children[i] == child || children[i]->ContainsChild(child, true))
+		{
+			return i;
+		}
+	}
+	
+	return -1;
 }
 
 void GameObject3D::UpdateMatrices() noexcept

@@ -1,7 +1,9 @@
 #pragma once
 
 #include "GameObject.h"
+
 #include "MathIncludes.h"
+
 #include <vector>
 using std::vector;
 
@@ -15,11 +17,22 @@ public:
 	/// <returns>The GameObject type name as a char string</returns>
 	virtual const char* GetName() noexcept override { return "GameObject3D"; }
 
+	virtual void OnDestroy() override;
+
 	GameObject3D* GetParent() const noexcept;
 	void SetParent(GameObject3D* parentInit) noexcept;
+
 	const vector<GameObject3D*>* GetChildren() const noexcept;
 	void AddChild(GameObject3D* child) noexcept;
 	void RemoveChild(GameObject3D* child) noexcept;
+
+	void MoveTo(int newIndex) noexcept;
+	void MoveChildTo(GameObject3D* child, int newIndex) noexcept;
+
+	bool ContainsChild(const GameObject3D* child, bool recursive = false) const noexcept;
+	int GetIndex() const noexcept;
+	int GetChildIndex(const GameObject3D* child) const noexcept;
+
 
 	void UpdateMatrices() noexcept;
 	/// <returns>The global transform matrix of the GameObject</returns>
