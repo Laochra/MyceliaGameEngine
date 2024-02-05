@@ -153,7 +153,6 @@
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="InputEditor.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="MeshRendererGUI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\External\imgui\imconfig.h" />
@@ -178,6 +177,7 @@
     <ClInclude Include="Heirarchy.h" />
     <ClInclude Include="ImGuiIncludes.h" />
     <ClInclude Include="InputEditor.h" />
+    <ClInclude Include="MeshRendererGUI.h" />
     <ClInclude Include="ShaderProgramGUI.h" />
   </ItemGroup>
   <ItemGroup>

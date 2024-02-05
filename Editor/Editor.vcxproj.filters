@@ -36,9 +36,6 @@
     <ClCompile Include="GUI.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
-    <ClCompile Include="MeshRendererGUI.h">
-      <Filter>EditorWindows</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="JSON Configs">
@@ -126,6 +123,9 @@
       <Filter>EditorWindows</Filter>
     </ClInclude>
     <ClInclude Include="Heirarchy.h">
+      <Filter>EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshRendererGUI.h">
       <Filter>EditorWindows</Filter>
     </ClInclude>
   </ItemGroup>
