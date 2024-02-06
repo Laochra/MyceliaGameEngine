@@ -3,6 +3,7 @@
 //#include "GameObject2D.h"
 #include "GameObject3D.h"
 
+
 GameObjectManager* gameObjectManager;
 
 GameObjectManager::~GameObjectManager() noexcept

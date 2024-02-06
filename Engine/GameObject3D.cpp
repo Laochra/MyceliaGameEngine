@@ -18,7 +18,6 @@ GameObject3D* GameObject3D::GetParent() const noexcept
 
 void GameObject3D::SetParent(GameObject3D* parentInit) noexcept
 {
-	if (parentInit == parent) return;
 
 	if (parentInit == nullptr)
 	{
