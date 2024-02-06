@@ -15,7 +15,7 @@ void MeshRendererGUI::Draw(MeshRenderer* meshRenderer)
 {
 	GameObject3DGUI::Draw(meshRenderer);
 
-	std::string idStr = GUI::GenerateID("Mesh Renderer", meshRenderer);
+	std::string idStr = GUI::GenerateID("MeshRenderer", meshRenderer);
 	const char* id = idStr.c_str();
 
 	if (ImGui::CollapsingHeader(id, ImGuiTreeNodeFlags_DefaultOpen))

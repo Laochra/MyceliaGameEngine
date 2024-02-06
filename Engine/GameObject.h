@@ -14,7 +14,7 @@ template<class T> concept GameObjectClass = std::is_base_of<GameObject, T>::valu
 class GameObject
 {
 public:
-	enum GameObjectState
+	enum GameObjectState : unsigned char
 	{
 		/// <summary>The GameObject can recieve updates</summary>
 		Active,
