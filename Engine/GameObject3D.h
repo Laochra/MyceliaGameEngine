@@ -99,6 +99,14 @@ template<GameObject3DClass T> inline T* GameObject3D::Instantiate(vec3 positionI
 {
 	T* gameObject = GameObject::Instantiate<T>(stateInit);
 
+	//T* gameObject = new T;
+	//gameObject->guid = GuidGenerator::NewGuid();
+	//gameObject->state = stateInit;
+	//
+	//if (parentInit == nullptr) gameObjectManager->Add(gameObject);
+	//
+	//gameObject->Initialise();
+
 	gameObject->position = positionInit;
 	gameObject->rotation = rotationInit;
 	gameObject->scale = scaleInit;

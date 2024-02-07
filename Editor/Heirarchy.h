@@ -150,8 +150,11 @@ void Heirarchy::DragDropTarget(const char* id, GameObject3D* target, DragDropTar
 
 					if (ImGui::IsKeyReleased(ImGuiKey_MouseLeft))
 					{
-						(*payloadObject)->SetParent(target->GetParent());
-						(*payloadObject)->MoveTo(target->GetIndex() + offset);
+						GameObject3D* cachedPayloadObject = *payloadObject;
+
+						cachedPayloadObject->SetParent(target->GetParent());
+						cachedPayloadObject->MoveTo(target->GetIndex() + offset);
+
 					}
 				}
 			}

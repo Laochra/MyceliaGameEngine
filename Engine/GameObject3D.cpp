@@ -18,14 +18,12 @@ GameObject3D* GameObject3D::GetParent() const noexcept
 
 void GameObject3D::SetParent(GameObject3D* parentInit) noexcept
 {
-
 	if (parentInit == nullptr)
 	{
-		if (parent != nullptr)
-		{
-			gameObjectManager->Add(this);
-			parent->RemoveChild(this);
-		}
+		if (parent == nullptr) return;
+		
+		gameObjectManager->Add(this);
+		parent->RemoveChild(this);
 	}
 	else
 	{

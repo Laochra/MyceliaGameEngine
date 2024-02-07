@@ -51,6 +51,7 @@ void GameObjectManager::Move(GameObject* gameObject, int newIndex) noexcept
 	{
 		if (i + direction < 0 || i + direction >= gameObjects.size()) return;
 
+		// TODO this is sus, please look at
 		gameObjects[i] = gameObjects[i + direction];
 
 		i += direction;
