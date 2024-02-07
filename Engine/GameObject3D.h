@@ -99,6 +99,8 @@ template<GameObject3DClass T> inline T* GameObject3D::Instantiate(vec3 positionI
 {
 	T* gameObject = GameObject::Instantiate<T>(stateInit);
 
+	// TODO Finish Seperating from GameObject's Instantiate
+
 	//T* gameObject = new T;
 	//gameObject->guid = GuidGenerator::NewGuid();
 	//gameObject->state = stateInit;
