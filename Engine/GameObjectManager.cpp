@@ -43,21 +43,21 @@ void GameObjectManager::Move(GameObject* gameObject, int newIndex) noexcept
 
 	if (i == newIndex) return;
 
-	int direction;
+	char direction;
 	if (i < newIndex) direction = 1;
 	else direction = -1;
 
+	GameObject* current;
 	while (i != newIndex)
 	{
 		if (i + direction < 0 || i + direction >= gameObjects.size()) return;
 
-		// TODO this is sus, please look at
+		current = gameObjects[i];
 		gameObjects[i] = gameObjects[i + direction];
+		gameObjects[i + direction] = current;
 
 		i += direction;
 	}
-
-	gameObjects[i] = gameObject;
 }
 void GameObjectManager::Delete(GameObject* gameObject)
 {
