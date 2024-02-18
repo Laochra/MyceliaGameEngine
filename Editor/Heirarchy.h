@@ -80,7 +80,7 @@ void Heirarchy::DrawEntry(GameObject3D* gameObject3D)
 {
 	ImGui::PushID(GUI::GenerateID(gameObject3D).c_str());
 
-	ImGui::Text(std::to_string(gameObject3D->GetGUID()).c_str());
+	ImGui::Text(gameObject3D->GetName());
 	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
 	{
 		ImGui::SetDragDropPayload("GameObject3D", &gameObject3D, sizeof(GameObject3D**));
