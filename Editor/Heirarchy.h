@@ -15,6 +15,8 @@ using std::string;
 
 #include "ConsoleGUI.h"
 
+#include "Inspector.h"
+
 namespace Heirarchy
 {
 	enum DragDropTargetOffset : char
@@ -80,7 +82,11 @@ void Heirarchy::DrawEntry(GameObject3D* gameObject3D)
 {
 	ImGui::PushID(GUI::GenerateID(gameObject3D).c_str());
 
-	ImGui::Text(gameObject3D->GetName());
+	bool isSelected = inspector->GetTarget() == gameObject3D;
+	if (ImGui::Selectable(gameObject3D->name.c_str(), &isSelected))
+	{
+		inspector->SetTarget(gameObject3D);
+	}
 	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
 	{
 		ImGui::SetDragDropPayload("GameObject3D", &gameObject3D, sizeof(GameObject3D**));

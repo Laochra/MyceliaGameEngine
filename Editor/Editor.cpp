@@ -12,6 +12,8 @@
 #include "ConsoleGUI.h"
 #include "Heirarchy.h"
 
+#include "Inspector.h"
+
 #include "TimeManager.h"
 
 void Editor::Initialise()
@@ -32,12 +34,15 @@ void Editor::Initialise()
 	}
 
 	gameObjectManager = new GameObjectManager();
+	inspector = new Inspector();
 
 	mainCamera = GameObject3D::Instantiate<EditorCamera>(vec3(0.0f, 10.0f, 10.0f));
 
 	Gizmos::create(100000, 10000, 0, 0);
 
 	object = GameObject3D::Instantiate<MeshRenderer>(vec3(0, 0, 0), quat(), vec3(3, 3, 3), vec3(0, -0.5f, 0));
+
+	inspector->SetTarget(object);
 
 	GameObject3D::Instantiate<GameObject3D>(object);
 	GameObject3D::Instantiate<GameObject3D>(object);
@@ -158,7 +163,7 @@ void Editor::Update()
 	{
 		ImGui::Begin("Inspector", &inspectorOpen);
 
-		MeshRendererGUI::Draw(object);
+		inspector->Draw();
 
 		ImGui::End();
 	}
@@ -213,7 +218,7 @@ void Editor::Update()
 	{
 		ImGui::Begin("Camera", &cameraSettingsOpen);
 		{
-			EditorCameraGUI::Draw((EditorCamera*)mainCamera);
+			EditorCameraGUI::DrawEditorCameraGUI((EditorCamera*)mainCamera);
 		} ImGui::End();
 	}
 
@@ -306,6 +311,7 @@ void Editor::OnClose()
 	delete mainCamera;
 
 	delete gameObjectManager;
+	delete inspector;
 
 	Gizmos::destroy();
 

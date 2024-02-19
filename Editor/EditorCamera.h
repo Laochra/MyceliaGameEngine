@@ -8,8 +8,7 @@ class EditorCamera : public Camera
 {
 public:
 	using Camera::Camera;
-	/// <returns>The GameObject type name as a char string</returns>
-	virtual const char* GetName() noexcept override { return "EditorCamera"; }
+	Details(EditorCamera);
 
 	float xRotation = -90;
 	float yRotation = -45;

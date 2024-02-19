@@ -33,8 +33,23 @@
     <ClCompile Include="..\External\imgui\imgui_widgets.cpp">
       <Filter>External Libraries\imgui</Filter>
     </ClCompile>
+    <ClCompile Include="GameObjectGUI.cpp">
+      <Filter>EditorWindows</Filter>
+    </ClCompile>
     <ClCompile Include="GUI.cpp">
       <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshRendererGUI.cpp">
+      <Filter>EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="Inspector.cpp">
+      <Filter>EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject3DGUI.cpp">
+      <Filter>EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorCameraGUI.cpp">
+      <Filter>EditorWindows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -107,9 +122,6 @@
     <ClInclude Include="EditorCameraGUI.h">
       <Filter>EditorWindows</Filter>
     </ClInclude>
-    <ClInclude Include="GUI.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject3DGUI.h">
       <Filter>EditorWindows</Filter>
     </ClInclude>
@@ -126,6 +138,12 @@
       <Filter>EditorWindows</Filter>
     </ClInclude>
     <ClInclude Include="MeshRendererGUI.h">
+      <Filter>EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Inspector.h">
       <Filter>EditorWindows</Filter>
     </ClInclude>
   </ItemGroup>

@@ -6,14 +6,22 @@
 
 #include "GameObjectManager.h"
 
+#include <string>
+
 #include <type_traits>
 
 class GameObject;
 template<class T> concept GameObjectClass = std::is_base_of<GameObject, T>::value;
 
+#define Details(nameInit) virtual const char* ClassName() noexcept { return #nameInit; }
+
+
 class GameObject
 {
 public:
+	Details(GameObject);
+	std::string name;
+
 	enum GameObjectState : unsigned char
 	{
 		/// <summary>The GameObject can recieve updates</summary>
@@ -40,9 +48,7 @@ public:
 	GameObjectState GetState() const noexcept;
 	/// <param name="newState">: The state to set the GameObject to</param>
 	void SetState(GameObjectState newState) noexcept;
-	/// <returns>The GameObject type name as a char string</returns>
-	virtual const char* GetName() noexcept { return "GameObject"; }
-
+	
 
 	virtual void OnFrameStart();
 	virtual void FixedUpdate();
@@ -82,6 +88,7 @@ template<GameObjectClass T> inline T* GameObject::Instantiate(GameObjectState st
 	T* gameObject = new T;
 	gameObject->guid = GuidGenerator::NewGuid();
 	gameObject->state = stateInit;
+	gameObject->name = gameObject->ClassName();
 
 	gameObjectManager->Add(gameObject);
 

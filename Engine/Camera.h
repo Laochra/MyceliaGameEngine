@@ -8,8 +8,7 @@ class Camera : public GameObject3D
 {
 public:
 	using GameObject3D::GameObject3D;
-	/// <returns>The GameObject type name as a char string</returns>
-	virtual const char* GetName() noexcept override { return "Camera"; }
+	Details(Camera);
 
 	float fov = 0;
 	float nearClip = 0.1f;

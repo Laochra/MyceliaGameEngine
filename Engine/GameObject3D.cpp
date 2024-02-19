@@ -166,8 +166,15 @@ void GameObject3D::UpdateMatrices() noexcept
 
 	localMatrix = translater * rotator * scaler * centrer;
 
-	if (parent == nullptr) globalMatrix = localMatrix;
-	else globalMatrix = localMatrix * parent->globalMatrix;
+	if (parent == nullptr)
+	{
+		globalMatrix = localMatrix;
+	}
+	else
+	{
+		if (parent->dirty) parent->UpdateMatrices();
+		globalMatrix = localMatrix * parent->globalMatrix;
+	}
 
 	dirty = false;
 }

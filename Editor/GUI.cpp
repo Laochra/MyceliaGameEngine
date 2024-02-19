@@ -7,7 +7,7 @@
 std::string GUI::GenerateID(GameObject* gameObject)
 {
 	std::ostringstream stream;
-	stream << gameObject->GetName() << "##" << gameObject->GetGUID();
+	stream << gameObject->name << "##" << gameObject->GetGUID();
 
 	return stream.str();
 }

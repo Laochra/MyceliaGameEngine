@@ -8,8 +8,7 @@ class OrbitalCamera : public Camera
 {
 public:
 	using Camera::Camera;
-	/// <returns>The GameObject type name as a char string</returns>
-	virtual const char* GetName() noexcept override { return "OrbitalCamera"; }
+	Details(OrbitalCamera);
 
 	vec3 centre = vec3(0, 0, 0);
 

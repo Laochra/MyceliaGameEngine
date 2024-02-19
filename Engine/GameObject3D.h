@@ -13,9 +13,9 @@ template<class T> concept GameObject3DClass = std::is_base_of<GameObject3D, T>::
 class GameObject3D : public GameObject
 {
 public:
+	Details(GameObject3D);
+
 	using GameObject::GameObject;
-	/// <returns>The GameObject type name as a char string</returns>
-	virtual const char* GetName() noexcept override { return "GameObject3D"; }
 
 	virtual void OnDestroy() override;
 
