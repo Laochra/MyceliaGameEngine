@@ -8,13 +8,16 @@ GameObjectManager* gameObjectManager;
 
 GameObjectManager::~GameObjectManager() noexcept
 {
-	for (GameObject* gameObject : gameObjects)
+	for (int i = 0; i < gameObjects.size(); i++)
 	{
-		Delete(gameObject);
+		GameObject::Destroy(gameObjects[i]);
+		Bury(gameObjects[i]);
+		gameObjects.erase(gameObjects.begin() + i);
 	}
-	for (GameObject* gameObject : graveyard)
+	for (int i = 0; i < graveyard.size(); i++)
 	{
-		Delete(gameObject);
+		Delete(graveyard[i]);
+		graveyard.erase(graveyard.begin() + i);
 	}
 }
 
@@ -61,6 +64,8 @@ void GameObjectManager::Move(GameObject* gameObject, int newIndex) noexcept
 }
 void GameObjectManager::Delete(GameObject* gameObject)
 {
+	if (gameObject == nullptr) return;
+
 	if (*gameObject != GameObject::Destroyed)
 	{
 		GameObject::Destroy(gameObject);
