@@ -46,6 +46,7 @@ public:
 	unsigned long int GetGUID() const noexcept;
 	/// <returns>The current state of the GameObject</returns>
 	GameObjectState GetState() const noexcept;
+	virtual bool IsActive() noexcept;
 	/// <param name="newState">: The state to set the GameObject to</param>
 	void SetState(GameObjectState newState) noexcept;
 	

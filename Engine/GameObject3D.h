@@ -22,6 +22,8 @@ public:
 	GameObject3D* GetParent() const noexcept;
 	void SetParent(GameObject3D* parentInit) noexcept;
 
+	bool IsActive() noexcept override;
+
 	const vector<GameObject3D*>* GetChildren() const noexcept;
 	void AddChild(GameObject3D* child) noexcept;
 	void RemoveChild(GameObject3D* child) noexcept;

@@ -41,6 +41,12 @@ void GameObject3D::SetParent(GameObject3D* parentInit) noexcept
 	parent = parentInit;
 }
 
+bool GameObject3D::IsActive() noexcept
+{
+	if (parent == nullptr) { return *this == Active; }
+	else { return *this == Active && parent->IsActive(); }
+}
+
 const vector<GameObject3D*>* GameObject3D::GetChildren() const noexcept
 {
 	return &children;

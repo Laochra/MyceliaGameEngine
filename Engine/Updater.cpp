@@ -51,7 +51,7 @@ namespace Updater
 		int i = 0;
 		while (i < onFrameStartList.size())
 		{
-			if (*onFrameStartList[i] == GameObject::Active)
+			if (onFrameStartList[i]->IsActive())
 			{
 				onFrameStartList[i]->OnFrameStart();
 			}
@@ -69,7 +69,7 @@ namespace Updater
 		int i = 0;
 		while (i < fixedUpdateList.size())
 		{
-			if (*fixedUpdateList[i] == GameObject::Active)
+			if (fixedUpdateList[i]->IsActive())
 			{
 				fixedUpdateList[i]->FixedUpdate();
 			}
@@ -87,7 +87,7 @@ namespace Updater
 		int i = 0;
 		while (i < updateList.size())
 		{
-			if (*updateList[i] == GameObject::Active)
+			if (updateList[i]->IsActive())
 			{
 				updateList[i]->Update();
 			}
@@ -105,7 +105,7 @@ namespace Updater
 		int i = 0;
 		while (i < drawList.size())
 		{
-			if (*drawList[i] == GameObject::Active)
+			if (drawList[i]->IsActive())
 			{
 				drawList[i]->Draw();
 			}

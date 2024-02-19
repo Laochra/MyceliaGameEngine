@@ -5,6 +5,11 @@ GameObject::GameObjectState GameObject::GetState() const noexcept
 	return state;
 }
 
+bool GameObject::IsActive() noexcept
+{
+	return *this == Active;
+}
+
 void GameObject::SetState(GameObjectState value) noexcept
 {
 	if (state == Destroyed || value == Destroyed) return;
