@@ -113,6 +113,9 @@
       <AdditionalLibraryDirectories>$(SolutionDir)External/GLFW</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies); glfw3.lib</AdditionalDependencies>
     </Link>
+    <ResourceCompile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -133,6 +136,9 @@
       <AdditionalLibraryDirectories>$(SolutionDir)External/GLFW</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies); glfw3.lib</AdditionalDependencies>
     </Link>
+    <ResourceCompile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.vcxproj">
@@ -184,6 +190,7 @@
     <ClInclude Include="InputEditor.h" />
     <ClInclude Include="Inspector.h" />
     <ClInclude Include="MeshRendererGUI.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="ShaderProgramGUI.h" />
   </ItemGroup>
   <ItemGroup>
@@ -191,6 +198,13 @@
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\External\imgui\imgui.natvis" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Editor.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Working\Editor.ico" />
+    <Image Include="Editor.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

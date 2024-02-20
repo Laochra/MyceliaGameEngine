@@ -16,9 +16,16 @@
 
 #include "TimeManager.h"
 
+#include "stb/stb_image.h"
+
 void Editor::Initialise()
 {
 	glfwSetWindowTitle(window, "Editor");
+
+	GLFWimage icon;
+	icon.pixels = stbi_load("shroom.png", &icon.width, &icon.height, 0, 4);
+	glfwSetWindowIcon(window, 1, &icon);
+	stbi_image_free(icon.pixels);
 
 	// ImGui Initialisation
 	{
