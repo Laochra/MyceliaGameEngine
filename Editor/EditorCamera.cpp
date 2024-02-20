@@ -65,4 +65,6 @@ void EditorCamera::Update()
 		if (yRotation > 85) yRotation = 85;
 		if (yRotation < -85) yRotation = -85;
 	}
+
+	SetRotation(quat(glm::vec3(glm::radians(xRotation), glm::radians(yRotation), glm::radians(0.0f))));
 }
