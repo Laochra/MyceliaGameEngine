@@ -22,10 +22,16 @@ void Editor::Initialise()
 {
 	glfwSetWindowTitle(window, "Editor");
 
-	GLFWimage icon;
-	icon.pixels = stbi_load("shroom.png", &icon.width, &icon.height, 0, 4);
-	glfwSetWindowIcon(window, 1, &icon);
-	stbi_image_free(icon.pixels);
+	GLFWimage icons[4];
+	icons[0].pixels = stbi_load("shroom16x16.png", &icons[0].width, &icons[0].height, 0, 4);
+	icons[1].pixels = stbi_load("shroom32x32.png", &icons[1].width, &icons[1].height, 0, 4);
+	icons[2].pixels = stbi_load("shroom48x48.png", &icons[2].width, &icons[2].height, 0, 4);
+	icons[3].pixels = stbi_load("shroom64x64.png", &icons[3].width, &icons[3].height, 0, 4);
+	glfwSetWindowIcon(window, 4, icons);
+	stbi_image_free(icons[0].pixels);
+	stbi_image_free(icons[1].pixels);
+	stbi_image_free(icons[2].pixels);
+	stbi_image_free(icons[3].pixels);
 
 	// ImGui Initialisation
 	{

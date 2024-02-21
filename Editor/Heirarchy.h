@@ -87,6 +87,7 @@ void Heirarchy::DrawEntry(GameObject3D* gameObject3D)
 	{
 		inspector->SetTarget(gameObject3D);
 	}
+	//if (ImGui::IsItemHovered()) // TODO: Add + button on hover
 	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
 	{
 		ImGui::SetDragDropPayload("GameObject3D", &gameObject3D, sizeof(GameObject3D**));
