@@ -87,13 +87,31 @@ void Heirarchy::DrawEntry(GameObject3D* gameObject3D)
 	{
 		inspector->SetTarget(gameObject3D);
 	}
-	//if (ImGui::IsItemHovered()) // TODO: Add + button on hover
+	if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenOverlapped))
+	{
+		//if (ImGui::IsKeyDown(ImGuiKey_MouseRight))
+		{
+			ImGui::SetNextWindowSize({ 100, 150 });
+			
+			ImGui::Begin("New Window", (bool*)0, ImGuiWindowFlags_NoDecoration || ImGuiWindowFlags_NoMove);
+
+			ImGui::Selectable("Option 1");
+			ImGui::Selectable("Option 2");
+			ImGui::Selectable("Option 3");
+			ImGui::Selectable("Option 3");
+
+			ImGui::End();
+		}
+	}
 	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
 	{
 		ImGui::SetDragDropPayload("GameObject3D", &gameObject3D, sizeof(GameObject3D**));
 		if (ImGui::IsDragDropPayloadBeingAccepted())
 		{
-			ImGui::Text("Move GameObject3D here?");
+			std::stringstream tooltip;
+			tooltip << "Move " << gameObject3D->ClassName() << " here?";
+
+			ImGui::Text(tooltip.str().c_str());
 		}
 		else
 		{
