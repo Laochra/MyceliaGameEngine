@@ -5,6 +5,8 @@
 
 #include "ShaderManager.h"
 
+#include "MemoryManagement.h"
+
 void MeshRenderer::Draw()
 {
 	if (shaderProgram == nullptr) return;
@@ -43,6 +45,8 @@ Texture* MeshRenderer::GetTexture()
 
 void MeshRenderer::Initialise()
 {
+	GameObject3D::Initialise();
+
 	Updater::DrawAdd(this);
 
 	mesh = new Mesh();
@@ -55,6 +59,8 @@ void MeshRenderer::Initialise()
 }
 void MeshRenderer::OnDestroy()
 {
-	delete mesh;
-	delete texture;
+	del(mesh);
+	del(texture);
+
+	GameObject3D::OnDestroy();
 }

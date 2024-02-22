@@ -5,9 +5,11 @@ Inspector* inspector = new Inspector();
 #include "GameObject3DGUI.h"
 #include "MeshRendererGUI.h"
 
+#include "MemoryManagement.h"
+
 void Inspector::SetTarget(GameObject* target)
 {
-	if (targetGUI != nullptr) { delete targetGUI; }
+	del(targetGUI);
 
 	const char* targetClassName = target->ClassName();
 
@@ -35,5 +37,5 @@ void Inspector::Draw()
 
 Inspector::~Inspector()
 {
-	if (targetGUI != nullptr) { delete targetGUI; }
+	del(targetGUI);
 }

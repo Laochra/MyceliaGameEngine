@@ -13,36 +13,20 @@ namespace Updater
 	{
 		onFrameStartList.push_back(gameObject);
 	}
-	void OnFrameStartRemove(GameObject* gameObject)
-	{
-		std::remove(onFrameStartList.begin(), onFrameStartList.end(), gameObject);
-	}
 
 	void FixedUpdateAdd(GameObject* gameObject)
 	{
 		fixedUpdateList.push_back(gameObject);
-	}
-	void FixedUpdateRemove(GameObject* gameObject)
-	{
-		std::remove(fixedUpdateList.begin(), fixedUpdateList.end(), gameObject);
 	}
 
 	void UpdateAdd(GameObject* gameObject)
 	{
 		updateList.push_back(gameObject);
 	}
-	void UpdateRemove(GameObject* gameObject)
-	{
-		std::remove(updateList.begin(), updateList.end(), gameObject);
-	}
 
 	void DrawAdd(GameObject* gameObject)
 	{
 		drawList.push_back(gameObject);
-	}
-	void DrawRemove(GameObject* gameObject)
-	{
-		std::remove(drawList.begin(), drawList.end(), gameObject);
 	}
 
 
@@ -57,7 +41,7 @@ namespace Updater
 			}
 			else if (*onFrameStartList[i] == GameObject::Destroyed)
 			{
-				OnFrameStartRemove(onFrameStartList[i]);
+				onFrameStartList.erase(onFrameStartList.begin() + i);
 				continue;
 			}
 
@@ -75,7 +59,7 @@ namespace Updater
 			}
 			else if (*fixedUpdateList[i] == GameObject::Destroyed)
 			{
-				FixedUpdateRemove(fixedUpdateList[i]);
+				fixedUpdateList.erase(fixedUpdateList.begin() + i);
 				continue;
 			}
 
@@ -93,7 +77,7 @@ namespace Updater
 			}
 			else if (*updateList[i] == GameObject::Destroyed)
 			{
-				UpdateRemove(updateList[i]);
+				updateList.erase(updateList.begin() + i);
 				continue;
 			}
 
@@ -111,7 +95,7 @@ namespace Updater
 			}
 			else if (*drawList[i] == GameObject::Destroyed)
 			{
-				DrawRemove(drawList[i]);
+				drawList.erase(drawList.begin() + i);
 				continue;
 			}
 

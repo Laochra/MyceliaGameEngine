@@ -3,6 +3,7 @@
 //#include "GameObject2D.h"
 #include "GameObject3D.h"
 
+#include "MemoryManagement.h"
 
 GameObjectManager* gameObjectManager;
 
@@ -11,8 +12,6 @@ GameObjectManager::~GameObjectManager() noexcept
 	for (int i = 0; i < gameObjects.size(); i++)
 	{
 		GameObject::Destroy(gameObjects[i]);
-		Bury(gameObjects[i]);
-		gameObjects.erase(gameObjects.begin() + i);
 	}
 	for (int i = 0; i < graveyard.size(); i++)
 	{
@@ -71,7 +70,7 @@ void GameObjectManager::Delete(GameObject* gameObject)
 		GameObject::Destroy(gameObject);
 	}
 
-	delete gameObject;
+	del(gameObject);
 }
 
 int GameObjectManager::GetIndexOf(GameObject* gameObject) const noexcept

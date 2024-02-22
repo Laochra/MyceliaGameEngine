@@ -7,8 +7,9 @@ void GameObject3D::OnDestroy()
 		GameObject::Destroy(child);
 	}
 
-	gameObjectManager->Remove(this);
-	gameObjectManager->Bury(this);
+	if (parent != nullptr) SetParent(nullptr);
+	
+	GameObject::OnDestroy();
 }
 
 GameObject3D* GameObject3D::GetParent() const noexcept

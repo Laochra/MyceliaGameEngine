@@ -72,14 +72,14 @@ public:
 	
 
 	/// <summary>Creates a new instance of a GameObject3D</summary> <param name="positionInit"></param> <param name="rotationInit">(default: identity)</param> <param name="scaleInit">(default: 1,1,1)</param> <param name="pivotInit">(default: 0,0,0)</param> <param name="parentInit">(default: nullptr)</param> <param name="stateInit">(default: Active)</param> <returns>A pointer to the created instance</returns>
-	template<GameObject3DClass T> static T* Instantiate(vec3 positionInit, quat rotationInit = quat(), vec3 scaleInit = vec3(1), vec3 pivotInit = vec3(), T* parentInit = nullptr, GameObjectState stateInit = Active);
+	template<GameObject3DClass T> static T* Instantiate(vec3 positionInit, quat rotationInit = quat(), vec3 scaleInit = vec3(1), vec3 pivotInit = vec3(), GameObject3D* parentInit = nullptr, GameObjectState stateInit = Active);
 	/// <summary>Creates a new instance of a GameObject3D</summary> <param name="parentInit"></param> <param name="positionInit"></param> <param name="rotationInit">(default: identity)</param> <param name="scaleInit">(default: 1,1,1)</param> <param name="pivotInit">(default: 0,0,0)</param> <param name="stateInit">(default: Active)</param> <returns>A pointer to the created instance</returns>
-	template<GameObject3DClass T> static T* Instantiate(T* parentInit, vec3 positionInit, quat rotationInit = quat(), vec3 scaleInit = vec3(1), vec3 pivotInit = vec3(), GameObjectState stateInit = Active);
+	template<GameObject3DClass T> static T* Instantiate(GameObject3D* parentInit, vec3 positionInit, quat rotationInit = quat(), vec3 scaleInit = vec3(1), vec3 pivotInit = vec3(), GameObjectState stateInit = Active);
 
 	/// <summary>Creates a new instance of a GameObject3D</summary> <param name="matrixInit"></param> <param name="parentInit">(default: nullptr)</param> <param name="stateInit">(default: Active)</param> <returns>A pointer to the created instance</returns>
-	template<GameObject3DClass T> static T* Instantiate(mat4 matrixInit, vec3 pivotInit = vec3(), T* parentInit = nullptr, GameObjectState stateInit = Active);
+	template<GameObject3DClass T> static T* Instantiate(mat4 matrixInit, vec3 pivotInit = vec3(), GameObject3D* parentInit = nullptr, GameObjectState stateInit = Active);
 	/// <summary>Creates a new instance of a GameObject3D</summary> <param name="parentInit"></param> <param name="matrixInit">(default: identity)</param> <param name="stateInit">(default: Active)</param> <returns>A pointer to the created instance</returns>
-	template<GameObject3DClass T> static T* Instantiate(T* parentInit, mat4 matrixInit = glm::identity<mat4>(), vec3 pivotInit = vec3(), GameObjectState stateInit = Active);
+	template<GameObject3DClass T> static T* Instantiate(GameObject3D* parentInit, mat4 matrixInit = glm::identity<mat4>(), vec3 pivotInit = vec3(), GameObjectState stateInit = Active);
 	
 private:
 	GameObject3D* parent = nullptr;
@@ -97,7 +97,7 @@ private:
 
 
 
-template<GameObject3DClass T> inline T* GameObject3D::Instantiate(vec3 positionInit, quat rotationInit, vec3 scaleInit, vec3 pivotInit, T* parentInit, GameObjectState stateInit)
+template<GameObject3DClass T> inline T* GameObject3D::Instantiate(vec3 positionInit, quat rotationInit, vec3 scaleInit, vec3 pivotInit, GameObject3D* parentInit, GameObjectState stateInit)
 {
 	T* gameObject = GameObject::Instantiate<T>(stateInit);
 
@@ -119,14 +119,14 @@ template<GameObject3DClass T> inline T* GameObject3D::Instantiate(vec3 positionI
 
 	return gameObject;
 }
-template<GameObject3DClass T> inline T* GameObject3D::Instantiate(T* parentInit, vec3 positionInit, quat rotationInit, vec3 scaleInit, vec3 pivotInit, GameObjectState stateInit)
+template<GameObject3DClass T> inline T* GameObject3D::Instantiate(GameObject3D* parentInit, vec3 positionInit, quat rotationInit, vec3 scaleInit, vec3 pivotInit, GameObjectState stateInit)
 {
 	T* gameObject = GameObject3D::Instantiate<T>(positionInit, rotationInit, scaleInit, pivotInit, parentInit, stateInit);
 
 	return gameObject;
 }
 
-template<GameObject3DClass T> inline T* GameObject3D::Instantiate(mat4 matrixInit, vec3 pivotInit, T* parentInit, GameObjectState stateInit)
+template<GameObject3DClass T> inline T* GameObject3D::Instantiate(mat4 matrixInit, vec3 pivotInit, GameObject3D* parentInit, GameObjectState stateInit)
 {
 	vec3 positionInit = matrixInit[3];
 	quat rotationInit = glm::quat_cast(matrixInit);
@@ -139,7 +139,7 @@ template<GameObject3DClass T> inline T* GameObject3D::Instantiate(mat4 matrixIni
 
 	return gameObject;
 }
-template<GameObject3DClass T> inline T* GameObject3D::Instantiate(T* parentInit, mat4 matrixInit, vec3 pivotInit, GameObjectState stateInit)
+template<GameObject3DClass T> inline T* GameObject3D::Instantiate(GameObject3D* parentInit, mat4 matrixInit, vec3 pivotInit, GameObjectState stateInit)
 {
 	T* gameObject = GameObject3D::Instantiate<T>(matrixInit, pivotInit, parentInit, stateInit);
 

@@ -1,5 +1,7 @@
 #include "Input.h"
 
+#include "MemoryManagement.h"
+
 KeyAxis::KeyAxis() noexcept
 {
     positiveKeys = new std::vector<KeyCode>();
@@ -14,8 +16,8 @@ KeyAxis::KeyAxis(KeyCode negative, KeyCode positive) noexcept
 }
 KeyAxis::~KeyAxis() noexcept
 {
-    delete positiveKeys;
-    delete negativeKeys;
+    del(positiveKeys);
+    del(negativeKeys);
 }
 
 float KeyAxis::value() const noexcept

@@ -199,6 +199,7 @@
     <ClInclude Include="LinkedNode.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MathIncludes.h" />
+    <ClInclude Include="MemoryManagement.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="OrbitalCamera.h" />

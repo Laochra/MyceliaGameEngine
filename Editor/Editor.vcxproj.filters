@@ -161,4 +161,7 @@
   <ItemGroup>
     <ResourceCompile Include="Editor.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="Editor.ico" />
+  </ItemGroup>
 </Project>

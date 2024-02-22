@@ -14,6 +14,8 @@ GameObjectGUI::GameObjectGUI(GameObject* targetInit)
 
 void GameObjectGUI::DrawGameObjectGUI(GameObject* gameObject)
 {
+	if (gameObject == nullptr || *gameObject == GameObject::Destroyed) return;
+
 	std::string idStr = GUI::GenerateID("GameObject", gameObject);
 	const char* id = idStr.c_str();
 

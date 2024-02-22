@@ -197,5 +197,8 @@
     <ClInclude Include="GameObjectManager.h">
       <Filter>GameObjects</Filter>
     </ClInclude>
+    <ClInclude Include="MemoryManagement.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

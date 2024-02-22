@@ -27,6 +27,28 @@ namespace Heirarchy
 		After = 1
 	};
 
+	struct RightClickMenu
+	{
+		bool open = false;
+		ImVec2 position = ImVec2(0.0f, 0.0f);
+		GameObject* target = nullptr;
+
+		void Open(GameObject* targetInit, ImVec2 positionInit)
+		{
+			open = true;
+			position = positionInit;
+			target = targetInit;
+		}
+
+		void Close()
+		{
+			open = false;
+			target = nullptr;
+		}
+	};
+
+	inline RightClickMenu rightClickMenu;
+
 	inline void Draw();
 
 	inline void DrawEntry(GameObject3D* gameObject3D);
@@ -76,6 +98,52 @@ void Heirarchy::Draw()
 		}
 		ImGui::Spacing();
 	}
+
+	if (rightClickMenu.open)
+	{
+		ImGui::SetNextWindowSize(ImVec2(150, 100));
+		ImGui::SetNextWindowPos(rightClickMenu.position);
+		ImGui::SetNextWindowBgAlpha(0.9f);
+
+		ImGui::Begin(rightClickMenu.target->name.c_str(), (bool*)0, ImGuiWindowFlags_NoMove || ImGuiWindowFlags_NoDecoration);
+		
+		bool isHovered = false;
+
+		if (ImGui::BeginMenu("Add New"))
+		{
+			if (ImGui::IsWindowHovered()) isHovered = true;
+
+			if (dynamic_cast<GameObject3D*>(rightClickMenu.target) != nullptr)
+			{
+				if (ImGui::MenuItem("GameObject3D"))
+				{
+					GameObject3D::Instantiate<GameObject3D>((GameObject3D*)rightClickMenu.target);
+					rightClickMenu.Close();
+				}
+				if (ImGui::MenuItem("MeshRenderer"))
+				{
+					GameObject3D::Instantiate<MeshRenderer>((GameObject3D*)rightClickMenu.target);
+					rightClickMenu.Close();
+				}
+			}
+			ImGui::EndMenu();
+		}
+		if (ImGui::MenuItem("Duplicate (WIP)"))
+		{
+			// TODO: Add Code For Cloning GameObjects and Call it Here
+		}
+		if (ImGui::MenuItem("Delete"))
+		{
+			GameObject::Destroy(rightClickMenu.target);
+			rightClickMenu.Close();
+		}
+		
+		if (ImGui::IsWindowHovered()) isHovered = true;
+
+		if (!isHovered && ImGui::IsKeyPressed(ImGuiKey_MouseLeft)) { rightClickMenu.Close(); }
+		
+		ImGui::End();
+	}
 }
 
 void Heirarchy::DrawEntry(GameObject3D* gameObject3D)
@@ -89,18 +157,10 @@ void Heirarchy::DrawEntry(GameObject3D* gameObject3D)
 	}
 	if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenOverlapped))
 	{
-		//if (ImGui::IsKeyDown(ImGuiKey_MouseRight))
+		if (ImGui::IsKeyPressed(ImGuiKey_MouseRight))
 		{
-			ImGui::SetNextWindowSize({ 100, 150 });
-			
-			ImGui::Begin("New Window", (bool*)0, ImGuiWindowFlags_NoDecoration || ImGuiWindowFlags_NoMove);
-
-			ImGui::Selectable("Option 1");
-			ImGui::Selectable("Option 2");
-			ImGui::Selectable("Option 3");
-			ImGui::Selectable("Option 3");
-
-			ImGui::End();
+			inspector->SetTarget(gameObject3D);
+			rightClickMenu.Open(gameObject3D, ImGui::GetCursorScreenPos());
 		}
 	}
 	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))

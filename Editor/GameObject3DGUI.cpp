@@ -9,6 +9,8 @@ void GameObject3DGUI::Draw()
 
 void GameObject3DGUI::DrawGameObject3DGUI(GameObject3D* gameObject3D)
 {
+	if (gameObject3D == nullptr || *gameObject3D == GameObject::Destroyed) return;
+
 	GameObjectGUI::DrawGameObjectGUI(gameObject3D);
 
 	std::string idStr = GUI::GenerateID("GameObject3D", gameObject3D);

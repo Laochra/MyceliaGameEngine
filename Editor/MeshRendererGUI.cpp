@@ -9,6 +9,8 @@ void MeshRendererGUI::Draw()
 
 void MeshRendererGUI::DrawMeshRendererGUI(MeshRenderer* meshRenderer)
 {
+	if (meshRenderer == nullptr || *meshRenderer == GameObject::Destroyed) return;
+
 	GameObject3DGUI::DrawGameObject3DGUI(meshRenderer);
 
 	std::string idStr = GUI::GenerateID("MeshRenderer", meshRenderer);
