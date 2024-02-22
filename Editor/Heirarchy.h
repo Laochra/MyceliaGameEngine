@@ -101,7 +101,7 @@ void Heirarchy::Draw()
 
 	if (rightClickMenu.open)
 	{
-		ImGui::SetNextWindowSize(ImVec2(150, 100));
+		ImGui::SetNextWindowSize(ImVec2(150, 65));
 		ImGui::SetNextWindowPos(rightClickMenu.position);
 		ImGui::SetNextWindowBgAlpha(0.9f);
 
@@ -128,10 +128,12 @@ void Heirarchy::Draw()
 			}
 			ImGui::EndMenu();
 		}
-		if (ImGui::MenuItem("Duplicate (WIP)"))
-		{
-			// TODO: Add Code For Cloning GameObjects and Call it Here
-		}
+		ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1), "Duplicate (WIP)");
+		//if (ImGui::MenuItem("Duplicate (WIP)"))
+		//{
+		//	// TODO: Add Code For Cloning GameObjects and Call it Here
+		//	rightClickMenu.Close();
+		//}
 		if (ImGui::MenuItem("Delete"))
 		{
 			GameObject::Destroy(rightClickMenu.target);
