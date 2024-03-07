@@ -1,5 +1,7 @@
 #include "GameObject.h"
 
+#include "GameObjectFolder.h"
+
 GameObject::GameObjectState GameObject::GetState() const noexcept
 {
 	return state;
@@ -67,10 +69,11 @@ void GameObject::Draw()
 void GameObject::Initialise()
 {
 	Updater::UpdateAdd(this);
+	if (gameObjectManager->other == nullptr) gameObjectManager->other = (GameObjectFolder*)this;
+	else gameObjectManager->other->AddChild(this);
 }
 void GameObject::OnDestroy()
 {
-	gameObjectManager->Remove(this);
 	gameObjectManager->Bury(this);
 }
 void GameObject::OnActivate()

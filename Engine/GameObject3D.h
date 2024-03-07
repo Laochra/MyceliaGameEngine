@@ -19,6 +19,8 @@ public:
 
 	using GameObject::GameObject;
 
+	virtual void Initialise() override;
+
 	virtual void OnDestroy() override;
 
 	bool IsActive() noexcept override;
@@ -120,7 +122,13 @@ template<GameObject3DClass T> inline T* GameObject3D::Instantiate(mat4 matrixIni
 	T* gameObject = GameObject3D::Instantiate<T>(positionInit, rotationInit, scaleInit, pivotInit, parentInit, stateInit);
 
 	gameObject->pivot = pivotInit;
-	gameObject->SetParent(parentInit);
+
+	if (parentInit == nullptr)
+	{
+		if (gameObjectManager->root3D == nullptr) gameObjectManager->root3D = gameObject;
+		else gameObject->SetParent(gameObjectManager->root3D);
+	}
+	else gameObject->SetParent(parentInit);
 
 	return gameObject;
 }

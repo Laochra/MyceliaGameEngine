@@ -18,7 +18,6 @@ glm::mat4 EditorCamera::GetViewMatrix()
 void EditorCamera::Initialise()
 {
 	Updater::UpdateAdd(this);
-	gameObjectManager->Remove(this);
 
 	if (!EditorCameraConfig::Load(this))
 	{

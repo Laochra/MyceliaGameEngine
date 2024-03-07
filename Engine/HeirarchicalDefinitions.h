@@ -8,25 +8,9 @@ template<class H> H* Heirarchical<H>::GetParent() const noexcept
 }
 template<class H> void Heirarchical<H>::SetParent(H* parentInit) noexcept
 {
-	if (parentInit == nullptr)
-	{
-		if (parent == nullptr) return;
-
-		gameObjectManager->Add((H*)this);
-		parent->RemoveChild((H*)this);
-	}
-	else
-	{
-		if (parent == nullptr)
-		{
-			gameObjectManager->Remove((H*)this);
-		}
-		else
-		{
-			parent->RemoveChild((H*)this);
-		}
-		parentInit->AddChild((H*)this);
-	}
+	// H doesn't have a parent if its not a Heirarchical class so this breaks
+	if (parent != nullptr) { parent->RemoveChild((H*)this); }
+	if (parentInit != nullptr) { parentInit->AddChild((H*)this); }
 
 	parent = parentInit;
 }
@@ -53,14 +37,7 @@ template<class H> void Heirarchical<H>::RemoveChild(H* child) noexcept
 
 template<class H> void Heirarchical<H>::MoveTo(int newIndex) noexcept
 {
-	if (parent == nullptr)
-	{
-		gameObjectManager->Move((H*)this, newIndex);
-	}
-	else
-	{
-		parent->MoveChildTo((H*)this, newIndex);
-	}
+	parent->MoveChildTo((H*)this, newIndex);
 }
 template<class H> void Heirarchical<H>::MoveChildTo(H* child, int newIndex) noexcept
 {
@@ -110,23 +87,13 @@ template<class H> bool Heirarchical<H>::ContainsChild(const H* child, bool recur
 }
 template<class H> int Heirarchical<H>::GetIndex() const noexcept
 {
-	if (parent == nullptr)
-	{
-		return gameObjectManager->GetIndexOf((GameObject*)this);
-	}
-	else
-	{
-		return parent->GetChildIndex((H*)this);
-	}
+	return parent->GetChildIndex((H*)this);
 }
 template<class H> int Heirarchical<H>::GetChildIndex(const H* child) const noexcept
 {
 	for (int i = 0; i < children.size(); i++)
 	{
-		if (children[i] == child || children[i]->ContainsChild(child, true))
-		{
-			return i;
-		}
+		if (children[i] == child) { return i; }
 	}
 
 	return -1;

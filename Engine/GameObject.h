@@ -19,7 +19,7 @@ class GameObject
 {
 public:
 	SerialiseAs(GameObject);
-	char* name;
+	char* name = nullptr;
 
 	enum GameObjectState : unsigned char
 	{
@@ -91,8 +91,6 @@ template<GameObjectClass T> inline T* GameObject::Instantiate(GameObjectState st
 
 	std::string className = gameObject->ClassName();
 	AssignStringToCString(gameObject->name, className);
-
-	gameObjectManager->Add(gameObject);
 
 	gameObject->Initialise();
 

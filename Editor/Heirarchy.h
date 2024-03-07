@@ -66,36 +66,22 @@ void Heirarchy::Draw()
 
 	if (ImGui::CollapsingHeader("3D"))
 	{
+		const vector<GameObject3D*>* gameObjects3D = gameObjectManager->root3D->GetChildren();
+
 		// Drag Drop Target BEFORE First GameObject3D
-		for (GameObject* gameObject : gameObjectManager->gameObjects)
-		{
-			if (dynamic_cast<GameObject3D*>(gameObject) != nullptr)
-			{
-				ImGui::SeparatorEx(ImGuiSeparatorFlags_Horizontal, 2.0f);
-				DragDropTarget("GameObject3D", (GameObject3D*)gameObject, Before);
-				break;
-			}
-		}
+		ImGui::SeparatorEx(ImGuiSeparatorFlags_Horizontal, 2.0f);
+		DragDropTarget("GameObject3D", (*gameObjects3D)[0], Before);
 		
 		// Draw 3D Heirarchy
-		for (GameObject* gameObject : gameObjectManager->gameObjects)
+		for (int i = 0; i < gameObjects3D->size(); i++)
 		{
-			if (dynamic_cast<GameObject3D*>(gameObject) != nullptr)
-			{
-				DrawEntry((GameObject3D*)gameObject);
-			}
+			DrawEntry((*gameObjects3D)[i]);
 		}
 
 		// Drag Drop Target AFTER Last GameObject3D
-		for (int i = gameObjectManager->gameObjects.size() - 1; i >= 0; i--)
-		{
-			if (dynamic_cast<GameObject3D*>(gameObjectManager->gameObjects[i]) != nullptr)
-			{
-				ImGui::SeparatorEx(ImGuiSeparatorFlags_Horizontal, 2.0f);
-				DragDropTarget("GameObject3D", (GameObject3D*)gameObjectManager->gameObjects[i], After);
-				break;
-			}
-		}
+		ImGui::SeparatorEx(ImGuiSeparatorFlags_Horizontal, 2.0f);
+		DragDropTarget("GameObject3D", (*gameObjects3D)[gameObjects3D->size() - 1], After);
+
 		ImGui::Spacing();
 	}
 
@@ -113,18 +99,15 @@ void Heirarchy::Draw()
 		{
 			if (ImGui::IsWindowHovered()) isHovered = true;
 
-			if (dynamic_cast<GameObject3D*>(rightClickMenu.target) != nullptr)
+			if (ImGui::MenuItem("GameObject3D"))
 			{
-				if (ImGui::MenuItem("GameObject3D"))
-				{
-					GameObject3D::Instantiate<GameObject3D>((GameObject3D*)rightClickMenu.target);
-					rightClickMenu.Close();
-				}
-				if (ImGui::MenuItem("MeshRenderer"))
-				{
-					GameObject3D::Instantiate<MeshRenderer>((GameObject3D*)rightClickMenu.target);
-					rightClickMenu.Close();
-				}
+				GameObject3D::Instantiate<GameObject3D>((GameObject3D*)rightClickMenu.target);
+				rightClickMenu.Close();
+			}
+			if (ImGui::MenuItem("MeshRenderer"))
+			{
+				GameObject3D::Instantiate<MeshRenderer>((GameObject3D*)rightClickMenu.target);
+				rightClickMenu.Close();
 			}
 			ImGui::EndMenu();
 		}

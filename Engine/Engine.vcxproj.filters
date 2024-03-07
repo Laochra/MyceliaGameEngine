@@ -98,6 +98,9 @@
     <ClCompile Include="GameObjectManager.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="GameObjectFolder.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\External\glad\glad.h">
@@ -208,6 +211,9 @@
     </ClInclude>
     <ClInclude Include="StringIncludes.h">
       <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectFolder.h">
+      <Filter>GameObjects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

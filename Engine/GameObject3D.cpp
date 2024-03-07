@@ -1,5 +1,11 @@
 #include "GameObject3D.h"
 
+
+void GameObject3D::Initialise()
+{
+	Updater::UpdateAdd(this);
+}
+
 void GameObject3D::OnDestroy()
 {
 	for (GameObject3D* child : children)
