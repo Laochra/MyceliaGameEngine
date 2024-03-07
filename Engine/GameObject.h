@@ -6,7 +6,7 @@
 
 #include "GameObjectManager.h"
 
-#include <string>
+#include "StringIncludes.h"
 
 #include <type_traits>
 
@@ -15,12 +15,11 @@ template<class T> concept GameObjectClass = std::is_base_of<GameObject, T>::valu
 
 #define SerialiseAs(nameInit) virtual const char* ClassName() noexcept { return #nameInit; }
 
-
 class GameObject
 {
 public:
 	SerialiseAs(GameObject);
-	std::string name;
+	char* name;
 
 	enum GameObjectState : unsigned char
 	{
@@ -86,16 +85,18 @@ private:
 
 template<GameObjectClass T> inline T* GameObject::Instantiate(GameObjectState stateInit)
 {
-	T* gameObject = new T;
+	GameObject* gameObject = (new T);
 	gameObject->guid = GuidGenerator::NewGuid();
 	gameObject->state = stateInit;
-	gameObject->name = gameObject->ClassName();
+
+	std::string className = gameObject->ClassName();
+	AssignStringToCString(gameObject->name, className);
 
 	gameObjectManager->Add(gameObject);
 
 	gameObject->Initialise();
 
-	return gameObject;
+	return (T*)gameObject;
 }
 inline void GameObject::Destroy(GameObject* gameObject)
 {

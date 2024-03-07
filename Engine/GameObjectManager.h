@@ -4,6 +4,7 @@
 using std::vector;
 
 class GameObject;
+class GameObject3D;
 
 class GameObjectManager
 {
@@ -12,6 +13,9 @@ public:
 	~GameObjectManager() noexcept;
 	GameObjectManager(const GameObjectManager&) noexcept = delete;
 	GameObjectManager& operator=(const GameObjectManager&) noexcept = delete;
+
+	//GameObject2D* root2D;
+	GameObject3D* root3D;
 
 	vector<GameObject*> gameObjects = vector<GameObject*>();
 	void Add(GameObject* gameObject) noexcept;

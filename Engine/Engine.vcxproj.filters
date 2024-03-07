@@ -206,5 +206,8 @@
     <ClInclude Include="HeirarchicalDefinitions.h">
       <Filter>GameObjects</Filter>
     </ClInclude>
+    <ClInclude Include="StringIncludes.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

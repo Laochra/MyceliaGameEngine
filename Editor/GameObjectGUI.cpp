@@ -2,6 +2,8 @@
 
 #include "GUI.h"
 
+#include "StringIncludes.h"
+
 void GameObjectGUI::Draw()
 {
 	DrawGameObjectGUI(target);
@@ -21,7 +23,12 @@ void GameObjectGUI::DrawGameObjectGUI(GameObject* gameObject)
 
 	if (ImGui::CollapsingHeader(id, ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if (ImGui::InputText(" ", &gameObject->name));
+		std::string tempName(gameObject->name);
+		if (ImGui::InputText(" ", &tempName))
+		{
+			delete gameObject->name;
+			AssignStringToCString(gameObject->name, tempName);
+		}
 		ImGui::SameLine();
 		bool active = gameObject->GetState() == GameObject::Active;
 		ImGui::Checkbox("Active", &active);

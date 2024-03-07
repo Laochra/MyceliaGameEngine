@@ -105,7 +105,7 @@ void Heirarchy::Draw()
 		ImGui::SetNextWindowPos(rightClickMenu.position);
 		ImGui::SetNextWindowBgAlpha(0.9f);
 
-		ImGui::Begin(rightClickMenu.target->name.c_str(), (bool*)0, ImGuiWindowFlags_NoMove || ImGuiWindowFlags_NoDecoration);
+		ImGui::Begin(rightClickMenu.target->name, (bool*)0, ImGuiWindowFlags_NoMove || ImGuiWindowFlags_NoDecoration);
 		
 		bool isHovered = false;
 
@@ -153,7 +153,7 @@ void Heirarchy::DrawEntry(GameObject3D* gameObject3D)
 	ImGui::PushID(GUI::GenerateID(gameObject3D).c_str());
 
 	bool isSelected = inspector->GetTarget() == gameObject3D;
-	if (ImGui::Selectable(gameObject3D->name.c_str(), &isSelected))
+	if (ImGui::Selectable(gameObject3D->name, &isSelected))
 	{
 		inspector->SetTarget(gameObject3D);
 	}
