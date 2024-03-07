@@ -7,8 +7,9 @@
 class EditorCamera : public Camera
 {
 public:
+	SerialisedAs(EditorCamera);
+
 	using Camera::Camera;
-	Details(EditorCamera);
 
 	float xRotation = -90;
 	float yRotation = -45;

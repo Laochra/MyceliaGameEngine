@@ -13,7 +13,7 @@ template<class T> concept GameObject3DClass = std::is_base_of<GameObject3D, T>::
 class GameObject3D : public GameObject
 {
 public:
-	Details(GameObject3D);
+	SerialisedAs(GameObject3D);
 
 	using GameObject::GameObject;
 

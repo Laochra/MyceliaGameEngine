@@ -8,8 +8,9 @@
 class MeshRenderer : public GameObject3D
 {
 public:
+	SerialisedAs(MeshRenderer);
+
 	using GameObject3D::GameObject3D;
-	Details(MeshRenderer);
 
 	void Initialise() override;
 	void OnDestroy() override;
