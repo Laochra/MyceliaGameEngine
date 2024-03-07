@@ -7,7 +7,7 @@
 class OrbitalCamera : public Camera
 {
 public:
-	SerialisedAs(OrbitalCamera);
+	SerialiseAs(OrbitalCamera);
 
 	using Camera::Camera;
 

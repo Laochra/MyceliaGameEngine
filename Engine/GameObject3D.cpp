@@ -12,35 +12,7 @@ void GameObject3D::OnDestroy()
 	GameObject::OnDestroy();
 }
 
-GameObject3D* GameObject3D::GetParent() const noexcept
-{
-	return parent;
-}
 
-void GameObject3D::SetParent(GameObject3D* parentInit) noexcept
-{
-	if (parentInit == nullptr)
-	{
-		if (parent == nullptr) return;
-		
-		gameObjectManager->Add(this);
-		parent->RemoveChild(this);
-	}
-	else
-	{
-		if (parent == nullptr)
-		{
-			gameObjectManager->Remove(this);
-		}
-		else
-		{
-			parent->RemoveChild(this);
-		}
-		parentInit->AddChild(this);
-	}
-
-	parent = parentInit;
-}
 
 bool GameObject3D::IsActive() noexcept
 {
@@ -48,106 +20,7 @@ bool GameObject3D::IsActive() noexcept
 	else { return *this == Active && parent->IsActive(); }
 }
 
-const vector<GameObject3D*>* GameObject3D::GetChildren() const noexcept
-{
-	return &children;
-}
-void GameObject3D::AddChild(GameObject3D* child) noexcept
-{
-	children.push_back(child);
-}
-void GameObject3D::RemoveChild(GameObject3D* child) noexcept
-{
-	for (int i = 0; i < children.size(); i++)
-	{
-		if (*children[i] == *child)
-		{
-			children.erase(children.begin() + i);
-			break;
-		}
-	}
-}
 
-void GameObject3D::MoveTo(int newIndex) noexcept
-{
-	if (parent == nullptr)
-	{
-		gameObjectManager->Move(this, newIndex);
-	}
-	else
-	{
-		parent->MoveChildTo(this, newIndex);
-	}
-}
-void GameObject3D::MoveChildTo(GameObject3D* child, int newIndex) noexcept
-{
-	int i = child->GetIndex();
-
-	if (i == newIndex) return;
-
-	int direction;
-	if (i < newIndex) direction = 1;
-	else direction = -1;
-
-	while (i != newIndex)
-	{
-		if (i + direction < 0 || i + direction >= children.size()) return;
-
-		children[i] = children[i + direction];
-
-		i += direction;
-	}
-
-	children[i] = child;
-}
-
-bool GameObject3D::ContainsChild(const GameObject3D* child, bool recursive) const noexcept
-{
-	if (!recursive)
-	{
-		for (int i = 0; i < children.size(); i++)
-		{
-			if (children[i] == child)
-			{
-				return true;
-			}
-		}
-	}
-	else
-	{
-		for (int i = 0; i < children.size(); i++)
-		{
-			if (children[i] == child || children[i]->ContainsChild(child, true))
-			{
-				return true;
-			}
-		}
-	}
-	return false;
-}
-int GameObject3D::GetIndex() const noexcept
-{
-	if (parent == nullptr)
-	{
-		return gameObjectManager->GetIndexOf((GameObject*)this);
-	}
-	else
-	{
-		return parent->GetChildIndex(this);
-	}
-}
-int GameObject3D::GetChildIndex(const GameObject3D* child) const noexcept
-{
-	for (int i = 0; i < children.size(); i++)
-	{
-		if (children[i] == child || children[i]->ContainsChild(child, true))
-		{
-			return i;
-		}
-	}
-	
-	return -1;
-}
 
 void GameObject3D::UpdateMatrices() noexcept
 {

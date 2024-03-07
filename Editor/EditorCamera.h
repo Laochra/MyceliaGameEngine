@@ -7,7 +7,7 @@
 class EditorCamera : public Camera
 {
 public:
-	SerialisedAs(EditorCamera);
+	SerialiseAs(EditorCamera);
 
 	using Camera::Camera;
 

@@ -8,7 +8,7 @@
 class MeshRenderer : public GameObject3D
 {
 public:
-	SerialisedAs(MeshRenderer);
+	SerialiseAs(MeshRenderer);
 
 	using GameObject3D::GameObject3D;
 

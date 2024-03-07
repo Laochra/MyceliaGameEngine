@@ -193,6 +193,8 @@
     <ClInclude Include="GuidGenerator.h" />
     <ClInclude Include="HashBucket.h" />
     <ClInclude Include="HashTable.h" />
+    <ClInclude Include="Heirarchical.h" />
+    <ClInclude Include="HeirarchicalDefinitions.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="LightingManager.h" />
     <ClInclude Include="LinkedList.h" />

@@ -7,8 +7,9 @@
 class Camera : public GameObject3D
 {
 public:
+	SerialiseAs(Camera);
+
 	using GameObject3D::GameObject3D;
-	Details(Camera);
 
 	float fov = 0;
 	float nearClip = 0.1f;

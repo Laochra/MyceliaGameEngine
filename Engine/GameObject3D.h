@@ -7,33 +7,21 @@
 #include <vector>
 using std::vector;
 
+#include "HeirarchicalDefinitions.h"
+
 class GameObject3D;
 template<class T> concept GameObject3DClass = std::is_base_of<GameObject3D, T>::value;
 
-class GameObject3D : public GameObject
+class GameObject3D : public GameObject, public Heirarchical<GameObject3D>
 {
 public:
-	SerialisedAs(GameObject3D);
+	SerialiseAs(GameObject3D);
 
 	using GameObject::GameObject;
 
 	virtual void OnDestroy() override;
 
-	GameObject3D* GetParent() const noexcept;
-	void SetParent(GameObject3D* parentInit) noexcept;
-
 	bool IsActive() noexcept override;
-
-	const vector<GameObject3D*>* GetChildren() const noexcept;
-	void AddChild(GameObject3D* child) noexcept;
-	void RemoveChild(GameObject3D* child) noexcept;
-
-	void MoveTo(int newIndex) noexcept;
-	void MoveChildTo(GameObject3D* child, int newIndex) noexcept;
-
-	bool ContainsChild(const GameObject3D* child, bool recursive = false) const noexcept;
-	int GetIndex() const noexcept;
-	int GetChildIndex(const GameObject3D* child) const noexcept;
 
 
 	void UpdateMatrices() noexcept;
@@ -82,9 +70,6 @@ public:
 	template<GameObject3DClass T> static T* Instantiate(GameObject3D* parentInit, mat4 matrixInit = glm::identity<mat4>(), vec3 pivotInit = vec3(), GameObjectState stateInit = Active);
 	
 private:
-	GameObject3D* parent = nullptr;
-	vector<GameObject3D*> children = vector<GameObject3D*>();
-
 	vec3 position = vec3();
 	quat rotation = quat();
 	vec3 scale = vec3(1);

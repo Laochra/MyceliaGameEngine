@@ -13,13 +13,13 @@
 class GameObject;
 template<class T> concept GameObjectClass = std::is_base_of<GameObject, T>::value;
 
-#define SerialisedAs(nameInit) virtual const char* ClassName() noexcept { return #nameInit; }
+#define SerialiseAs(nameInit) virtual const char* ClassName() noexcept { return #nameInit; }
 
 
 class GameObject
 {
 public:
-	SerialisedAs(GameObject);
+	SerialiseAs(GameObject);
 	std::string name;
 
 	enum GameObjectState : unsigned char

@@ -200,5 +200,11 @@
     <ClInclude Include="MemoryManagement.h">
       <Filter>Utility</Filter>
     </ClInclude>
+    <ClInclude Include="Heirarchical.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="HeirarchicalDefinitions.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
