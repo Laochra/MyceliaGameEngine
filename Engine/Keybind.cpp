@@ -1,5 +1,7 @@
 #include "Input.h"
 
+#include "MemoryManagement.h"
+
 Keybind::Keybind() noexcept
 {
     keys = new std::vector<KeyCode>();
@@ -12,7 +14,7 @@ Keybind::Keybind(KeyCode keyCode) noexcept
 }
 Keybind::~Keybind() noexcept
 {
-    delete keys;
+    del(keys);
 }
 
 bool Keybind::down() const noexcept

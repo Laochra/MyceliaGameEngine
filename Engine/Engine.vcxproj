@@ -157,6 +157,7 @@
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObject3D.cpp" />
+    <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="HashBucket.cpp" />
     <ClCompile Include="HashTable.cpp" />
     <ClCompile Include="KeyAxis.cpp" />
@@ -190,9 +191,12 @@
     <ClInclude Include="FilesIncludes.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObject3D.h" />
+    <ClInclude Include="GameObjectManager.h" />
     <ClInclude Include="GuidGenerator.h" />
     <ClInclude Include="HashBucket.h" />
     <ClInclude Include="HashTable.h" />
+    <ClInclude Include="Heirarchical.h" />
+    <ClInclude Include="HeirarchicalDefinitions.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="JsonIncludes.h" />
     <ClInclude Include="LightingManager.h" />
@@ -201,12 +205,14 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="MaterialManager.h" />
     <ClInclude Include="MathIncludes.h" />
+    <ClInclude Include="MemoryManagement.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="OrbitalCamera.h" />
     <ClInclude Include="GLIncludes.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderManager.h" />
+    <ClInclude Include="StringIncludes.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TimeManager.h" />
     <ClInclude Include="Updater.h" />

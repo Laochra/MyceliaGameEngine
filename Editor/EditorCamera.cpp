@@ -5,19 +5,20 @@
 
 glm::mat4 EditorCamera::GetViewMatrix()
 {
-    float thetaR = glm::radians(xRotation);
-    float phiR = glm::radians(yRotation);
+	float thetaR = glm::radians(xRotation);
+	float phiR = glm::radians(yRotation);
 
-    vec3 forward(cos(phiR) * cos(thetaR), sin(phiR), cos(phiR) * sin(thetaR));
-    vec3 up(0, 1, 0);
+	vec3 forward(cos(phiR) * cos(thetaR), sin(phiR), cos(phiR) * sin(thetaR));
+	vec3 up(0, 1, 0);
 
 	vec3 globalPosition = GetGlobalPosition();
-    return glm::lookAt(globalPosition, globalPosition + forward, up);
+	return glm::lookAt(globalPosition, globalPosition + forward, up);
 }
 
 void EditorCamera::Initialise()
 {
 	Updater::UpdateAdd(this);
+	gameObjectManager->Remove(this);
 
 	if (!EditorCameraConfig::Load(this))
 	{
@@ -64,4 +65,6 @@ void EditorCamera::Update()
 		if (yRotation > 85) yRotation = 85;
 		if (yRotation < -85) yRotation = -85;
 	}
+
+	SetRotation(quat(glm::vec3(glm::radians(xRotation), glm::radians(yRotation), glm::radians(0.0f))));
 }

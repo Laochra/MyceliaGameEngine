@@ -1,5 +1,27 @@
 #include "GameObject3D.h"
 
+void GameObject3D::OnDestroy()
+{
+	for (GameObject3D* child : children)
+	{
+		GameObject::Destroy(child);
+	}
+
+	if (parent != nullptr) SetParent(nullptr);
+	
+	GameObject::OnDestroy();
+}
+
+
+
+bool GameObject3D::IsActive() noexcept
+{
+	if (parent == nullptr) { return *this == Active; }
+	else { return *this == Active && parent->IsActive(); }
+}
+
+
+
 void GameObject3D::UpdateMatrices() noexcept
 {
 	mat4 centrer = mat4{
@@ -24,8 +46,15 @@ void GameObject3D::UpdateMatrices() noexcept
 
 	localMatrix = translater * rotator * scaler * centrer;
 
-	if (parent == nullptr) globalMatrix = localMatrix;
-	else globalMatrix = localMatrix * parent->globalMatrix;
+	if (parent == nullptr)
+	{
+		globalMatrix = localMatrix;
+	}
+	else
+	{
+		if (parent->dirty) parent->UpdateMatrices();
+		globalMatrix = localMatrix * parent->globalMatrix;
+	}
 
 	dirty = false;
 }

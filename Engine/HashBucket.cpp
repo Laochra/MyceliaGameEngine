@@ -1,5 +1,7 @@
 #include "HashBucket.h"
 
+#include "MemoryManagement.h"
+
 HashBucket::HashBucket()
 {
 	entries = new LinkedList<char*>();
@@ -8,6 +10,6 @@ HashBucket::HashBucket()
 
 HashBucket::~HashBucket()
 {
-	delete entries;
-	delete counts;
+	del(entries);
+	del(counts);
 }

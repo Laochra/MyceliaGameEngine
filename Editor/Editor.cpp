@@ -11,28 +11,56 @@
 #include "MaterialGUI.h"
 
 #include "ConsoleGUI.h"
+#include "Heirarchy.h"
+
+#include "Inspector.h"
 
 #include "TimeManager.h"
+
+#include "stb/stb_image.h"
 
 void Editor::Initialise()
 {
 	glfwSetWindowTitle(window, "Editor");
 
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;		// Enable Keyboard Controls
-	//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;	// Enable Gamepad Controls
-	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;			// Enable Docking
-	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;		// Enable Viewports
-	
-	ImGui_ImplGlfw_InitForOpenGL(window, /*install_callbacks:*/ true);
-	ImGui_ImplOpenGL3_Init();
+	GLFWimage icons[4];
+	icons[0].pixels = stbi_load("shroom16x16.png", &icons[0].width, &icons[0].height, 0, 4);
+	icons[1].pixels = stbi_load("shroom32x32.png", &icons[1].width, &icons[1].height, 0, 4);
+	icons[2].pixels = stbi_load("shroom48x48.png", &icons[2].width, &icons[2].height, 0, 4);
+	icons[3].pixels = stbi_load("shroom64x64.png", &icons[3].width, &icons[3].height, 0, 4);
+	glfwSetWindowIcon(window, 4, icons);
+	stbi_image_free(icons[0].pixels);
+	stbi_image_free(icons[1].pixels);
+	stbi_image_free(icons[2].pixels);
+	stbi_image_free(icons[3].pixels);
+
+	// ImGui Initialisation
+	{
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;		// Enable Keyboard Controls
+		//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;	// Enable Gamepad Controls
+		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;			// Enable Docking
+		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;		// Enable Viewports
+
+		ImGui_ImplGlfw_InitForOpenGL(window, /*install_callbacks:*/ true);
+		ImGui_ImplOpenGL3_Init();
+	}
+
+	gameObjectManager = new GameObjectManager();
+	inspector = new Inspector();
 
 	mainCamera = GameObject3D::Instantiate<EditorCamera>(vec3(0.0f, 10.0f, 10.0f));
 
 	Gizmos::create(100000, 10000, 0, 0);
 
 	object = GameObject3D::Instantiate<MeshRenderer>(vec3(0, 0, 0), quat(), vec3(3, 3, 3), vec3(0, -0.5f, 0));
+
+	inspector->SetTarget(object);
+
+	GameObject3D::Instantiate<GameObject3D>(object);
+	GameObject3D::Instantiate<GameObject3D>(object);
+	GameObject3D::Instantiate<GameObject3D>(object);
 
 	LightingManager::light.colour = vec3(1, 0.9f, 0.8f);
 	LightingManager::light.direction = glm::normalize(vec3(0, -0.7, -0.7));
@@ -93,6 +121,10 @@ void Editor::Update()
 			{
 				consoleOpen = true;
 			}
+			if (ImGui::MenuItem("Heirarchy", (const char*)0, false, !heirarchyOpen))
+			{
+				heirarchyOpen = true;
+			}
 			if (ImGui::MenuItem("Inspector", (const char*)0, false, !inspectorOpen))
 			{
 				inspectorOpen = true;
@@ -136,11 +168,20 @@ void Editor::Update()
 		ImGui::End();
 	}
 
+	if (heirarchyOpen)
+	{
+		ImGui::Begin("Heirarchy", &heirarchyOpen);
+
+		Heirarchy::Draw();
+
+		ImGui::End();
+	}
+
 	if (inspectorOpen)
 	{
 		ImGui::Begin("Inspector", &inspectorOpen);
 
-		MeshRendererGUI::Draw(object);
+		inspector->Draw();
 
 		ImGui::End();
 	}
@@ -204,7 +245,7 @@ void Editor::Update()
 	{
 		ImGui::Begin("Camera", &cameraSettingsOpen);
 		{
-			EditorCameraGUI::Draw((EditorCamera*)mainCamera);
+			EditorCameraGUI::DrawEditorCameraGUI((EditorCamera*)mainCamera);
 		} ImGui::End();
 	}
 
@@ -295,6 +336,9 @@ void Editor::DrawGUI()
 void Editor::OnClose()
 {
 	delete mainCamera;
+
+	delete gameObjectManager;
+	delete inspector;
 
 	Gizmos::destroy();
 

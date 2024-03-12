@@ -33,10 +33,22 @@
     <ClCompile Include="..\External\imgui\imgui_widgets.cpp">
       <Filter>External Libraries\imgui</Filter>
     </ClCompile>
+    <ClCompile Include="GameObjectGUI.cpp">
+      <Filter>EditorWindows</Filter>
+    </ClCompile>
     <ClCompile Include="GUI.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
-    <ClCompile Include="MeshRendererGUI.h">
+    <ClCompile Include="MeshRendererGUI.cpp">
+      <Filter>EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="Inspector.cpp">
+      <Filter>EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject3DGUI.cpp">
+      <Filter>EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorCameraGUI.cpp">
       <Filter>EditorWindows</Filter>
     </ClCompile>
   </ItemGroup>
@@ -110,9 +122,6 @@
     <ClInclude Include="EditorCameraGUI.h">
       <Filter>EditorWindows</Filter>
     </ClInclude>
-    <ClInclude Include="GUI.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject3DGUI.h">
       <Filter>EditorWindows</Filter>
     </ClInclude>
@@ -128,6 +137,19 @@
     <ClInclude Include="MaterialGUI.h">
       <Filter>EditorWindows</Filter>
     </ClInclude>
+    <ClInclude Include="Heirarchy.h">
+      <Filter>EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshRendererGUI.h">
+      <Filter>EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Inspector.h">
+      <Filter>EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\External\imgui\imgui.natstepfilter">
@@ -138,5 +160,11 @@
     <Natvis Include="..\External\imgui\imgui.natvis">
       <Filter>External Libraries\imgui</Filter>
     </Natvis>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Editor.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Editor.ico" />
   </ItemGroup>
 </Project>

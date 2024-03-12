@@ -7,6 +7,8 @@
 class OrbitalCamera : public Camera
 {
 public:
+	SerialiseAs(OrbitalCamera);
+
 	using Camera::Camera;
 
 	vec3 centre = vec3(0, 0, 0);

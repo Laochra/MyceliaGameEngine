@@ -1,5 +1,7 @@
 #include "Input.h"
 
+#include "MemoryManagement.h"
+
 Input* input = nullptr;
 
 Input::Input()
@@ -10,9 +12,9 @@ Input::Input()
 }
 Input::~Input()
 {
-    delete downKeys;
-    delete pressedKeys;
-    delete releasedKeys;
+    del(downKeys);
+    del(pressedKeys);
+    del(releasedKeys);
 }
 
 bool Input::GetKeyDown(KeyCode keyCode) const noexcept

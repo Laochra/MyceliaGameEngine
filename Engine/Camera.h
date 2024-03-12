@@ -7,6 +7,8 @@
 class Camera : public GameObject3D
 {
 public:
+	SerialiseAs(Camera);
+
 	using GameObject3D::GameObject3D;
 
 	float fov = 0;

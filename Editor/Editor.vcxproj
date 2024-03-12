@@ -113,6 +113,9 @@
       <AdditionalLibraryDirectories>$(SolutionDir)External/GLFW</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies); glfw3.lib</AdditionalDependencies>
     </Link>
+    <ResourceCompile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -133,6 +136,9 @@
       <AdditionalLibraryDirectories>$(SolutionDir)External/GLFW</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies); glfw3.lib</AdditionalDependencies>
     </Link>
+    <ResourceCompile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.vcxproj">
@@ -150,10 +156,14 @@
     <ClCompile Include="..\External\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="EditorCamera.cpp" />
+    <ClCompile Include="EditorCameraGUI.cpp" />
+    <ClCompile Include="GameObject3DGUI.cpp" />
+    <ClCompile Include="GameObjectGUI.cpp" />
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="InputEditor.cpp" />
+    <ClCompile Include="Inspector.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="MeshRendererGUI.h" />
+    <ClCompile Include="MeshRendererGUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\External\imgui\imconfig.h" />
@@ -175,9 +185,13 @@
     <ClInclude Include="GameObjectGUI.h" />
     <ClInclude Include="GameObject3DGUI.h" />
     <ClInclude Include="GUI.h" />
+    <ClInclude Include="Heirarchy.h" />
     <ClInclude Include="ImGuiIncludes.h" />
     <ClInclude Include="InputEditor.h" />
     <ClInclude Include="MaterialGUI.h" />
+    <ClInclude Include="Inspector.h" />
+    <ClInclude Include="MeshRendererGUI.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="ShaderProgramGUI.h" />
   </ItemGroup>
   <ItemGroup>
@@ -185,6 +199,12 @@
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\External\imgui\imgui.natvis" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Editor.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Editor.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,38 +1,17 @@
 #pragma once
 
 #include "ImGuiIncludes.h"
-#include "GUI.h"
 #include "GameObject3DGUI.h"
 
 #include "MeshRenderer.h"
 
-namespace MeshRendererGUI
+class MeshRendererGUI : public GameObject3DGUI
 {
-	inline void Draw(MeshRenderer* meshRenderer);
-}
+public:
+	using GameObject3DGUI::GameObject3DGUI;
 
-void MeshRendererGUI::Draw(MeshRenderer* meshRenderer)
-{
-	GameObject3DGUI::Draw(meshRenderer);
+	virtual void Draw() override;
 
-	std::string idStr = GUI::GenerateID("Mesh Renderer", meshRenderer);
-	const char* id = idStr.c_str();
-
-	if (ImGui::CollapsingHeader(id, ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		if (meshRenderer->GetTexture() != nullptr)
-		{
-			ImGui::Text("Texture Filename:");
-			ImGui::SameLine();
-			ImGui::Text(meshRenderer->GetTexture()->GetFileName().c_str());
-		}
-		else
-		{
-			ImGui::Text("Texture Filename: -");
-		}
-
-		ImGui::Text("Mesh Filename: -");
-
-		ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
-	}
-}
+protected:
+	static void DrawMeshRendererGUI(MeshRenderer* meshRenderer);
+};

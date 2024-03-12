@@ -97,6 +97,8 @@
     </ClCompile>
     <ClCompile Include="MaterialManager.cpp">
       <Filter>Rendering</Filter>
+    <ClCompile Include="GameObjectManager.cpp">
+      <Filter>GameObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -200,8 +202,17 @@
     <ClInclude Include="FilesIncludes.h">
       <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="MaterialManager.h">
-      <Filter>Rendering</Filter>
+    <ClInclude Include="MemoryManagement.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Heirarchical.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="HeirarchicalDefinitions.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="StringIncludes.h">
+      <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

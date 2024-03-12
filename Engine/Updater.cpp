@@ -13,36 +13,20 @@ namespace Updater
 	{
 		onFrameStartList.push_back(gameObject);
 	}
-	void OnFrameStartRemove(GameObject* gameObject)
-	{
-		std::remove(onFrameStartList.begin(), onFrameStartList.end(), gameObject);
-	}
 
 	void FixedUpdateAdd(GameObject* gameObject)
 	{
 		fixedUpdateList.push_back(gameObject);
-	}
-	void FixedUpdateRemove(GameObject* gameObject)
-	{
-		std::remove(fixedUpdateList.begin(), fixedUpdateList.end(), gameObject);
 	}
 
 	void UpdateAdd(GameObject* gameObject)
 	{
 		updateList.push_back(gameObject);
 	}
-	void UpdateRemove(GameObject* gameObject)
-	{
-		std::remove(updateList.begin(), updateList.end(), gameObject);
-	}
 
 	void DrawAdd(GameObject* gameObject)
 	{
 		drawList.push_back(gameObject);
-	}
-	void DrawRemove(GameObject* gameObject)
-	{
-		std::remove(drawList.begin(), drawList.end(), gameObject);
 	}
 
 
@@ -51,13 +35,13 @@ namespace Updater
 		int i = 0;
 		while (i < onFrameStartList.size())
 		{
-			if (*onFrameStartList[i] == GameObject::Active)
+			if (onFrameStartList[i]->IsActive())
 			{
 				onFrameStartList[i]->OnFrameStart();
 			}
 			else if (*onFrameStartList[i] == GameObject::Destroyed)
 			{
-				OnFrameStartRemove(onFrameStartList[i]);
+				onFrameStartList.erase(onFrameStartList.begin() + i);
 				continue;
 			}
 
@@ -69,13 +53,13 @@ namespace Updater
 		int i = 0;
 		while (i < fixedUpdateList.size())
 		{
-			if (*fixedUpdateList[i] == GameObject::Active)
+			if (fixedUpdateList[i]->IsActive())
 			{
 				fixedUpdateList[i]->FixedUpdate();
 			}
 			else if (*fixedUpdateList[i] == GameObject::Destroyed)
 			{
-				FixedUpdateRemove(fixedUpdateList[i]);
+				fixedUpdateList.erase(fixedUpdateList.begin() + i);
 				continue;
 			}
 
@@ -87,13 +71,13 @@ namespace Updater
 		int i = 0;
 		while (i < updateList.size())
 		{
-			if (*updateList[i] == GameObject::Active)
+			if (updateList[i]->IsActive())
 			{
 				updateList[i]->Update();
 			}
 			else if (*updateList[i] == GameObject::Destroyed)
 			{
-				UpdateRemove(updateList[i]);
+				updateList.erase(updateList.begin() + i);
 				continue;
 			}
 
@@ -105,13 +89,13 @@ namespace Updater
 		int i = 0;
 		while (i < drawList.size())
 		{
-			if (*drawList[i] == GameObject::Active)
+			if (drawList[i]->IsActive())
 			{
 				drawList[i]->Draw();
 			}
 			else if (*drawList[i] == GameObject::Destroyed)
 			{
-				DrawRemove(drawList[i]);
+				drawList.erase(drawList.begin() + i);
 				continue;
 			}
 

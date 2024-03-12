@@ -5,6 +5,11 @@ GameObject::GameObjectState GameObject::GetState() const noexcept
 	return state;
 }
 
+bool GameObject::IsActive() noexcept
+{
+	return *this == Active;
+}
+
 void GameObject::SetState(GameObjectState value) noexcept
 {
 	if (state == Destroyed || value == Destroyed) return;
@@ -20,12 +25,12 @@ unsigned long int GameObject::GetGUID() const noexcept
 	return guid;
 }
 
-bool GameObject::operator==(GameObject other) const noexcept
+bool GameObject::operator==(GameObject& other) const noexcept
 {
 	return guid == other.guid;
 }
 
-bool GameObject::operator!=(GameObject other) const noexcept
+bool GameObject::operator!=(GameObject& other) const noexcept
 {
 	return guid != other.guid;
 }
@@ -65,7 +70,8 @@ void GameObject::Initialise()
 }
 void GameObject::OnDestroy()
 {
-	
+	gameObjectManager->Remove(this);
+	gameObjectManager->Bury(this);
 }
 void GameObject::OnActivate()
 {
