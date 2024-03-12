@@ -15,7 +15,7 @@ class MaterialManager
 	void ReloadMaterial(const char* filepath);
 
 	private:
-	map<string, Material*> loadedMaterials;
+	map<string, Material*> loadedMaterials = map<string, Material*>();
 
 	Material* AddMaterial(const char* filepath);
 };

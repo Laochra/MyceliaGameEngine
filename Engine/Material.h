@@ -22,7 +22,8 @@ struct MaterialInput
 	MaterialInput(string nameInit, T valueInit, ShaderInputType typeInit) : name(nameInit), type(typeInit), bytes(GetBytes((byte*)&valueInit, sizeof(T))) {}
 	MaterialInput() = default;
 
-	vector<int> GetRaw() { return *(vector<int>*)&bytes; }
+	vector<byte> GetRaw() { return bytes; }
+	vector<int> GetRawPacked() { return *(vector<int>*) &bytes; }
 	template<typename T> bool Get(T* valueOutput)
 	{
 		if (bytes.size() < sizeof(T))
@@ -34,9 +35,18 @@ struct MaterialInput
 		return true;
 	}
 
+	void SetRaw(byte* valueInit, int valueSize)
+	{
+		bytes = GetBytes(valueInit, valueSize);
+	}
 	template<typename T> void Set(T valueInit)
 	{
 		bytes = GetBytes((byte*)&valueInit, sizeof(T));
+	}
+
+	const int GetByteCount() const
+	{
+		return bytes.size();
 	}
 
 	private:

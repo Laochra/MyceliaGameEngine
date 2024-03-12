@@ -22,7 +22,7 @@ enum ShaderStage
 };
 const int ShaderStagesCount = 6;
 
-enum ShaderInputType : unsigned int
+enum ShaderInputType : unsigned char
 {
 	UndefinedTypeGL = 0,
 

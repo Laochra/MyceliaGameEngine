@@ -49,6 +49,7 @@ void Editor::Initialise()
 
 	gameObjectManager = new GameObjectManager();
 	inspector = new Inspector();
+	materialManager = new MaterialManager();
 
 	mainCamera = GameObject3D::Instantiate<EditorCamera>(vec3(0.0f, 10.0f, 10.0f));
 

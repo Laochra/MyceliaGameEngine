@@ -18,6 +18,10 @@ using std::ostringstream;
 
 namespace MaterialGUI
 {
+inline const string materialsPath = "Assets\\Materials";
+inline const string shadersPath = "Assets\\Shaders";
+inline const string texturesPath = "Assets\\Textures";
+
 struct Fields
 {
 	string materialName = "";
@@ -30,6 +34,7 @@ struct Fields
 
 inline vector<path> materials;
 inline vector<path> shaderPrograms;
+inline vector<path> textures;
 
 inline Fields current = Fields();
 inline bool dirty = false;
@@ -50,10 +55,7 @@ void MaterialGUI::Initialise()
 {
 	materials.clear();
 	shaderPrograms.clear();
-
-	string materialsPath = "Assets\\Materials";
-	string shadersPath = "Assets\\Shaders";
-
+	textures.clear();
 
 	path filePath;
 	path extension;
@@ -71,11 +73,69 @@ void MaterialGUI::Initialise()
 
 		if (extension.string() == ".shaderprogram") shaderPrograms.push_back(filePath);
 	}
+	for (const directory_entry& entry : directory_iterator(texturesPath))
+	{
+		filePath = entry.path();
+		extension = filePath.extension();
+
+		if (extension.string() == ".png") textures.push_back(filePath); // TODO: Refactor this to allow for multiple image formats
+	}
 }
 
 void MaterialGUI::Save()
 {
 	// save out to json file
+
+	dirty = false;
+	json material;
+
+	material["ShaderProgram"] = current.shaderFilePath;
+
+	vector<json> attributes;
+	for (MaterialInput input : current.attributes)
+	{
+		json attribute;
+		attribute["Name"] = input.name;
+		if (input.type == ShaderInputType::TextureGL)
+		{
+			vector<byte> bytes = input.GetRaw();
+			string data;
+			for (int i = 0; i < input.GetByteCount(); i++) { data.push_back(bytes[i]); }
+			data.pop_back();
+			attribute["Data"] = data;
+		}
+		else attribute["Data"] = input.GetRaw();
+		
+		attributes.push_back(attribute);
+	}
+	material["Attributes"] = attributes;
+
+	vector<json> uniforms;
+	for (MaterialInput input : current.uniforms)
+	{
+		json uniform;
+		uniform["Name"] = input.name;
+		if (input.type == ShaderInputType::TextureGL)
+		{
+			vector<byte> bytes = input.GetRaw();
+			string data;
+			for (int i = 0; i < input.GetByteCount(); i++) { data.push_back(bytes[i]); }
+			data.pop_back();
+			uniform["Data"] = data;
+		}
+		else uniform["Data"] = input.GetRaw();
+
+		uniforms.push_back(uniform);
+	}
+	material["Uniforms"] = uniforms;
+
+	ostringstream stream;
+	stream << materialsPath << '\\' << current.materialName + ".material";
+
+	current.filePath = stream.str();
+
+	ofstream output(current.filePath.c_str());
+	output << std::setw(2) << material << "\n";
 }
 void MaterialGUI::NewLoad(path filePath)
 {
@@ -386,7 +446,59 @@ void MaterialGUI::DrawField(MaterialInput& field)
 	{
 		case TextureGL:
 		{
-			ImGui::Text("Texture goes here");
+			vector<byte> value = field.GetRaw();
+
+			string valueStr;
+
+			bool changeMade = false;
+
+			if (field.GetByteCount() > 0)
+			{
+				valueStr = (const char*)value.data();
+			}
+			else
+			{
+				Log({ "Field didn't contain enough bytes. Value has been set to default." }, LogType::Warning);
+
+				valueStr = "None";
+				changeMade = true;
+			}
+
+			if (ImGui::BeginCombo("##Texture", valueStr.c_str()))
+			{
+				if (ImGui::Selectable("None", valueStr == "None"))
+				{
+					value.clear();
+					changeMade = true;
+					valueStr = "None";
+				}
+
+				for (int i = 0; i < textures.size(); i++)
+				{
+					bool isCurrent = textures[i].filename().string() == valueStr;
+					if (ImGui::Selectable(textures[i].filename().string().c_str(), isCurrent))
+					{
+						value.clear();
+						changeMade = true;
+						valueStr = textures[i].filename().string();
+					}
+					if (isCurrent) ImGui::SetItemDefaultFocus();
+				}
+
+				ImGui::EndCombo();
+			}
+
+			if (changeMade)
+			{
+				for (int i = 0; i < valueStr.size(); i += sizeof(byte))
+				{
+					value.push_back(valueStr[i]);
+				}
+				value.push_back('\0');
+
+				field.SetRaw(value.data(), value.size()); dirty = true;
+			}
+
 			break;
 		}
 		case CubemapGL:
