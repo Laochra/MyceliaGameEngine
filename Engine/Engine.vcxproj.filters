@@ -1,64 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="External Libraries">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="External Libraries\glad">
-      <UniqueIdentifier>{a82ee81f-24e7-4969-b8b9-06a958812dc7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="External Libraries\nlohmannjson">
-      <UniqueIdentifier>{f4ce0ab0-f06b-41b9-a533-4309e1b7222d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="External Libraries\aie">
-      <UniqueIdentifier>{094ad3f6-a87e-497f-b0d0-1886a8a953f8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="External Libraries\stb">
-      <UniqueIdentifier>{e39660ce-44b7-442b-88af-d22e6293eab2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data Structures">
-      <UniqueIdentifier>{cb1dfe3c-2700-4333-b82b-8eea298b4699}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameObjects">
-      <UniqueIdentifier>{b61dff94-7514-4367-9fd2-0b2903446e0d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Input">
-      <UniqueIdentifier>{3c06960c-984d-40a9-80b8-1d9d1f70c06d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Rendering">
-      <UniqueIdentifier>{2416e02a-dbaf-496d-946f-281a2874866d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Utility">
-      <UniqueIdentifier>{873164c5-233b-433e-98d2-94c45f03a1b7}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\External\glad\glad.c">
-      <Filter>External Libraries\glad</Filter>
-    </ClCompile>
-    <ClCompile Include="..\External\aie\Gizmos.cpp">
-      <Filter>External Libraries\aie</Filter>
-    </ClCompile>
-    <ClCompile Include="HashBucket.cpp">
-      <Filter>Data Structures</Filter>
-    </ClCompile>
-    <ClCompile Include="HashTable.cpp">
-      <Filter>Data Structures</Filter>
-    </ClCompile>
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="OrbitalCamera.cpp">
-      <Filter>GameObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>GameObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>GameObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject3D.cpp">
-      <Filter>GameObjects</Filter>
-    </ClCompile>
     <ClCompile Include="Input.cpp">
       <Filter>Input</Filter>
     </ClCompile>
@@ -68,14 +11,17 @@
     <ClCompile Include="Keybind.cpp">
       <Filter>Input</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Rendering</Filter>
+    <ClCompile Include="..\External\aie\Gizmos.cpp">
+      <Filter>3rd Party\aie</Filter>
     </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Rendering</Filter>
+    <ClCompile Include="..\External\glad\glad.c">
+      <Filter>3rd Party\glad</Filter>
     </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Rendering</Filter>
+    <ClCompile Include="HashBucket.cpp">
+      <Filter>Data Structures</Filter>
+    </ClCompile>
+    <ClCompile Include="HashTable.cpp">
+      <Filter>Data Structures</Filter>
     </ClCompile>
     <ClCompile Include="TimeManager.cpp">
       <Filter>Utility</Filter>
@@ -86,42 +32,68 @@
     <ClCompile Include="LightingManager.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialManager.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
     <ClCompile Include="ShaderManager.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Material.cpp">
+    <ClCompile Include="Texture.cpp">
       <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject3D.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectManager.cpp">
+      <Filter>GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="MeshRenderer.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="MaterialManager.cpp">
-      <Filter>Rendering</Filter>
-    <ClCompile Include="GameObjectManager.cpp">
+    <ClCompile Include="OrbitalCamera.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\External\glad\glad.h">
-      <Filter>External Libraries\glad</Filter>
-    </ClInclude>
-    <ClInclude Include="..\External\glad\khrplatform.h">
-      <Filter>External Libraries\glad</Filter>
+    <ClInclude Include="Application.h" />
+    <ClInclude Include="Input.h">
+      <Filter>Input</Filter>
     </ClInclude>
     <ClInclude Include="..\External\aie\Gizmos.h">
-      <Filter>External Libraries\aie</Filter>
+      <Filter>3rd Party\aie</Filter>
     </ClInclude>
-    <ClInclude Include="..\External\nlohmannjson\json.hpp">
-      <Filter>External Libraries\nlohmannjson</Filter>
+    <ClInclude Include="..\External\glad\glad.h">
+      <Filter>3rd Party\glad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\External\glad\khrplatform.h">
+      <Filter>3rd Party\glad</Filter>
     </ClInclude>
     <ClInclude Include="..\External\nlohmannjson\json_fwd.hpp">
-      <Filter>External Libraries\nlohmannjson</Filter>
+      <Filter>3rd Party\nlohmannjson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\External\nlohmannjson\json.hpp">
+      <Filter>3rd Party\nlohmannjson</Filter>
     </ClInclude>
     <ClInclude Include="..\External\stb\stb_image.h">
-      <Filter>External Libraries\stb</Filter>
+      <Filter>3rd Party\stb</Filter>
     </ClInclude>
     <ClInclude Include="..\External\stb\stb_image_write.h">
-      <Filter>External Libraries\stb</Filter>
+      <Filter>3rd Party\stb</Filter>
     </ClInclude>
     <ClInclude Include="BinaryNode.h">
       <Filter>Data Structures</Filter>
@@ -141,9 +113,53 @@
     <ClInclude Include="LinkedNode.h">
       <Filter>Data Structures</Filter>
     </ClInclude>
-    <ClInclude Include="Application.h" />
-    <ClInclude Include="OrbitalCamera.h">
-      <Filter>GameObjects</Filter>
+    <ClInclude Include="GLIncludes.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="GuidGenerator.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonIncludes.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="MathIncludes.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryManagement.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="StringIncludes.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeManager.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Updater.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="LightingManager.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialManager.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderManager.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertex.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>GameObjects</Filter>
@@ -154,65 +170,55 @@
     <ClInclude Include="GameObject3D.h">
       <Filter>GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Input.h">
-      <Filter>Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Vertex.h">
-      <Filter>Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Updater.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="GLIncludes.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="GuidGenerator.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="MathIncludes.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="TimeManager.h">
-      <Filter>Utility</Filter>
+    <ClInclude Include="GameObjectManager.h">
+      <Filter>GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="MeshRenderer.h">
       <Filter>GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="LightingManager.h">
-      <Filter>Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="ShaderManager.h">
-      <Filter>Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="JsonIncludes.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="FilesIncludes.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="MemoryManagement.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Heirarchical.h">
+    <ClInclude Include="OrbitalCamera.h">
       <Filter>GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="HeirarchicalDefinitions.h">
       <Filter>GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="StringIncludes.h">
+    <ClInclude Include="Heirarchical.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="FilesIncludes.h">
       <Filter>Utility</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Input">
+      <UniqueIdentifier>{c4a19235-8757-4053-a417-cd31e156652a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rd Party">
+      <UniqueIdentifier>{4a0a98d1-620f-49a5-beca-e64854117ff2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rd Party\aie">
+      <UniqueIdentifier>{b64ec9b8-b105-4f8b-b2fa-33e8b2d45b16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rd Party\glad">
+      <UniqueIdentifier>{e5c04dce-6479-49ab-9cf1-0c8e24197e9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rd Party\nlohmannjson">
+      <UniqueIdentifier>{85b26a63-4c14-4d5d-ba89-10dac7898efc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rd Party\stb">
+      <UniqueIdentifier>{266f10a5-5684-4aec-9fe0-c3a3a534c658}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data Structures">
+      <UniqueIdentifier>{ff554352-7503-477d-ab78-3c10859ab54f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{e4441737-659e-4c7c-b2bf-ca58ce7009fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{e7b37129-1033-45ec-b61e-a712027e7e27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObjects">
+      <UniqueIdentifier>{fbfba128-c378-4846-8e98-d81e8ca08805}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
