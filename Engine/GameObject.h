@@ -23,12 +23,9 @@ public:
 
 	enum GameObjectState : unsigned char
 	{
-		/// <summary>The GameObject can recieve updates</summary>
-		Active,
-		/// <summary>The GameObject cannot recieve updates</summary>
-		Inactive,
-		/// <summary>The GameObject has been destroyed and should no longer be referenced</summary>
-		Destroyed
+		Active,		// The GameObject can recieve updates
+		Inactive,	// The GameObject cannot recieve updates
+		Destroyed	// The GameObject has been destroyed and should no longer be referenced
 	};
 
 	/// <summary>Check if GameObjects are equal based on their GUIDs</summary> <returns>True if GameObjects are equal</returns>
@@ -42,7 +39,7 @@ public:
 
 
 	/// <returns>The Globally Unique Identifier of the GameObject</returns>
-	unsigned long int GetGUID() const noexcept;
+	unsigned long long int GetGUID() const noexcept;
 	/// <returns>The current state of the GameObject</returns>
 	GameObjectState GetState() const noexcept;
 	virtual bool IsActive() noexcept;
@@ -73,7 +70,7 @@ protected:
 	virtual void OnDeactivate();
 
 private:
-	unsigned long int guid = 0;
+	unsigned long long int guid = 0;
 	GameObjectState state = Active;
 
 

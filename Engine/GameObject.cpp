@@ -20,7 +20,7 @@ void GameObject::SetState(GameObjectState value) noexcept
 	else OnDeactivate();
 }
 
-unsigned long int GameObject::GetGUID() const noexcept
+unsigned long long int GameObject::GetGUID() const noexcept
 {
 	return guid;
 }
