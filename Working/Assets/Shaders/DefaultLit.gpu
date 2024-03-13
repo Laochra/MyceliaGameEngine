@@ -3,17 +3,17 @@
     {
       "Exposed": false,
       "Name": "Normal",
-      "Type": 35666
+      "Type": 82
     },
     {
       "Exposed": false,
       "Name": "Position",
-      "Type": 35666
+      "Type": 82
     },
     {
       "Exposed": false,
       "Name": "TexCoords",
-      "Type": 35664
+      "Type": 80
     }
   ],
   "Fragment": "Assets\\Shaders\\Lit.frag",
@@ -24,32 +24,32 @@
     {
       "Exposed": false,
       "Name": "AmbientColour",
-      "Type": 35665
+      "Type": 81
     },
     {
       "Exposed": false,
       "Name": "LightColour",
-      "Type": 35665
+      "Type": 81
     },
     {
       "Exposed": false,
       "Name": "LightDirection",
-      "Type": 35665
+      "Type": 81
     },
     {
       "Exposed": false,
       "Name": "ModelMatrix",
-      "Type": 35676
+      "Type": 92
     },
     {
       "Exposed": false,
       "Name": "ProjectionViewModel",
-      "Type": 35676
+      "Type": 92
     },
     {
       "Exposed": true,
       "Name": "diffuseTex",
-      "Type": 35678
+      "Type": 94
     }
   ],
   "Vertex": "Assets\\Shaders\\Lit.vert"

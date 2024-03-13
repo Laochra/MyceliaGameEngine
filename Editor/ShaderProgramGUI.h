@@ -76,7 +76,7 @@ void ShaderProgramGUI::Initialise()
 		filePath = entry.path();
 		extension = filePath.extension();
 
-		if (extension.string() == ".shaderprogram") shaderPrograms.push_back(filePath);
+		if (extension.string() == ".gpu") shaderPrograms.push_back(filePath);
 		else if (extension.string() == ".vert") vertexShaders.push_back(filePath);
 		else if (extension.string() == ".tese") tessEvaluationShaders.push_back(filePath);
 		else if (extension.string() == ".tesc") tessellationControlShaders.push_back(filePath);
@@ -120,7 +120,7 @@ void ShaderProgramGUI::Save()
 
 
 	ostringstream stream;
-	stream << "Assets\\Shaders\\" + current.programName + ".shaderprogram";
+	stream << "Assets\\Shaders\\" + current.programName + ".gpu";
 
 	current.filePath = stream.str();
 

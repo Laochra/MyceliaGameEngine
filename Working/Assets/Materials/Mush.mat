@@ -1,0 +1,10 @@
+{
+  "Attributes": [],
+  "ShaderProgram": "Assets\\Shaders\\DefaultLit.shpr",
+  "Uniforms": [
+    {
+      "Data": "Assets\\Textures\\shroom.png",
+      "Name": "diffuseTex"
+    }
+  ]
+}

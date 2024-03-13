@@ -64,14 +64,14 @@ void MaterialGUI::Initialise()
 		filePath = entry.path();
 		extension = filePath.extension();
 
-		if (extension.string() == ".material") materials.push_back(filePath);
+		if (extension.string() == ".mat") materials.push_back(filePath);
 	}
 	for (const directory_entry& entry : directory_iterator(shadersPath))
 	{
 		filePath = entry.path();
 		extension = filePath.extension();
 
-		if (extension.string() == ".shaderprogram") shaderPrograms.push_back(filePath);
+		if (extension.string() == ".gpu") shaderPrograms.push_back(filePath);
 	}
 	for (const directory_entry& entry : directory_iterator(texturesPath))
 	{
@@ -130,7 +130,7 @@ void MaterialGUI::Save()
 	material["Uniforms"] = uniforms;
 
 	ostringstream stream;
-	stream << materialsPath << '\\' << current.materialName + ".material";
+	stream << materialsPath << '\\' << current.materialName + ".mat";
 
 	current.filePath = stream.str();
 
@@ -475,12 +475,12 @@ void MaterialGUI::DrawField(MaterialInput& field)
 
 				for (int i = 0; i < textures.size(); i++)
 				{
-					bool isCurrent = textures[i].filename().string() == valueStr;
+					bool isCurrent = textures[i].string() == valueStr;
 					if (ImGui::Selectable(textures[i].filename().string().c_str(), isCurrent))
 					{
 						value.clear();
 						changeMade = true;
-						valueStr = textures[i].filename().string();
+						valueStr = textures[i].string();
 					}
 					if (isCurrent) ImGui::SetItemDefaultFocus();
 				}
