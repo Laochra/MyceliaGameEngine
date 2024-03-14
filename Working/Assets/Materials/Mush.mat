@@ -1,6 +1,6 @@
 {
   "Attributes": [],
-  "ShaderProgram": "Assets\\Shaders\\DefaultLit.shpr",
+  "ShaderProgram": "Assets\\Shaders\\DefaultLit.gpu",
   "Uniforms": [
     {
       "Data": "Assets\\Textures\\shroom.png",

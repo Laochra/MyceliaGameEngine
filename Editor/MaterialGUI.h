@@ -149,63 +149,64 @@ void MaterialGUI::Load(string filePathStr)
 {
 	// apply all data from json file to current cache
 
-	//dirty = false;
-	//current = Fields();
-	//
-	//current.filePath = filePathStr;
-	//
-	//ifstream materialInput(current.filePath.c_str());
-	//assert(materialInput.good());
-	//
-	//path filePath = path(current.filePath);
-	//
-	//current.materialName = filePath.filename().string();
-	//const int extensionSize = (int)filePath.extension().string().size();
-	//for (int i = 0; i < extensionSize; i++) { current.materialName.pop_back(); }
-	//
-	//json material;
-	//try { materialInput >> material; }
-	//catch (parse_error)
-	//{
-	//	Log({ current.filePath, " was corrupt. All fields defaulted to \"None\".\n" }, LogType::Warning);
-	//	Save();
-	//	materialInput = ifstream(current.filePath.c_str());
-	//	assert(materialInput.good());
-	//	materialInput >> material;
-	//
-	//	return;
-	//}
-	//
-	//if (material[""])
+	dirty = false;
+	current = Fields();
+	
+	current.filePath = filePathStr;
+	
+	ifstream materialInput(current.filePath.c_str());
+	assert(materialInput.good());
+	
+	path filePath = path(current.filePath);
+	
+	current.materialName = filePath.filename().string();
+	const int extensionSize = (int)filePath.extension().string().size();
+	for (int i = 0; i < extensionSize; i++) { current.materialName.pop_back(); }
+	
+	json material;
+	try { materialInput >> material; }
+	catch (parse_error)
+	{
+		Log({ current.filePath, " was corrupt. All fields defaulted to \"None\".\n" }, LogType::Warning);
+		Save();
+		materialInput = ifstream(current.filePath.c_str());
+		assert(materialInput.good());
+		materialInput >> material;
+		
+		return;
+	}
+	
 
-	// Field Loading
-	//{
-	//	if (shaderProgram.contains("Attributes"))
-	//	{
-	//		vector<json> attributes = shaderProgram["Attributes"];
-	//		for (int i = 0; i < current.attributes.size(); i++)
-	//		{
-	//			if (i >= attributes.size()) { dirty = true; attributes.push_back(json()); }
-	//
-	//			if (attributes[i].contains("Exposed")) current.attributes[i].exposed = attributes[i]["Exposed"];
-	//			else { dirty = true; Log({ "Attribute '", current.attributes[i].name , "' in ", current.filePath, " did not specify an Exposed status.\n" }, LogType::Warning); }
-	//		}
-	//	}
-	//	else { dirty = true; Log({ current.filePath, " did not contain an Attributes list.\n" }, LogType::Warning); }
-	//
-	//	if (shaderProgram.contains("Uniforms"))
-	//	{
-	//		vector<json> uniforms = shaderProgram["Uniforms"];
-	//		for (int i = 0; i < current.uniforms.size(); i++)
-	//		{
-	//			if (i >= uniforms.size()) { dirty = true; uniforms.push_back(json()); }
-	//
-	//			if (uniforms[i].contains("Exposed")) current.uniforms[i].exposed = uniforms[i]["Exposed"];
-	//			else { dirty = true; Log({ "Uniform '", current.uniforms[i].name , "' in ", current.filePath, " did not specify an Exposed status.\n" }, LogType::Warning); }
-	//		}
-	//	}
-	//	else { dirty = true; Log({ current.filePath, " did not contain a Uniforms list.\n" }, LogType::Warning); }
-	//}
+	// Ensuring Shader Program is Valid
+	if (!material.contains("ShaderProgram"))
+	{
+		dirty = true;
+		Log({ current.filePath, " did not specify a Shader Program. Defaulted to \"None\".\n" }, LogType::Warning);
+		material["ShaderProgram"] = "None";
+	}
+	if (material["ShaderProgram"] == "None")
+	{
+		if (dirty) Save();
+		return;
+	}
+
+	current.shaderFilePath = material["ShaderProgram"];
+
+	ifstream shaderInput(current.filePath.c_str());
+	assert(shaderInput.good());
+
+	json shaderProgram;
+	try { shaderInput >> shaderProgram; }
+	catch (parse_error)
+	{
+		Log({ current.filePath, " was corrupt. Shader Program defaulted to \"None\"." }, LogType::Warning);
+		current.shaderFilePath = "None";
+		Save();
+
+		return;
+	}
+
+	// TODO: Finish populating cache using the material file (getting types from shaderprogram file)
 
 	if (dirty) Save();
 }

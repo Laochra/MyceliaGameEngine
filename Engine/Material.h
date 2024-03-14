@@ -23,7 +23,6 @@ struct MaterialInput
 	MaterialInput() = default;
 
 	vector<byte> GetRaw() { return bytes; }
-	vector<int> GetRawPacked() { return *(vector<int>*) &bytes; }
 	template<typename T> bool Get(T* valueOutput)
 	{
 		if (bytes.size() < sizeof(T))

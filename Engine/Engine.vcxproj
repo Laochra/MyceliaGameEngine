@@ -122,6 +122,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)External; $(SolutionDir)External/GLFW; $(SolutionDir)External/glad; $(SolutionDir)External/glm; $(SolutionDir)External/nlohmannjson; $(SolutionDir)External/stb; $(SolutionDir)External/aie</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,6 +142,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)External; $(SolutionDir)External/GLFW; $(SolutionDir)External/glad; $(SolutionDir)External/glm; $(SolutionDir)External/nlohmannjson; $(SolutionDir)External/stb; $(SolutionDir)External/aie</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
