@@ -175,6 +175,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="Updater.cpp" />
   </ItemGroup>
@@ -216,6 +217,7 @@
     <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="StringIncludes.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureManager.h" />
     <ClInclude Include="TimeManager.h" />
     <ClInclude Include="Updater.h" />
     <ClInclude Include="Vertex.h" />

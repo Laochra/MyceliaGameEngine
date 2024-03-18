@@ -147,8 +147,6 @@ void MaterialGUI::Reload()
 }
 void MaterialGUI::Load(string filePathStr)
 {
-	// apply all data from json file to current cache
-
 	dirty = false;
 	current = Fields();
 	
@@ -192,7 +190,7 @@ void MaterialGUI::Load(string filePathStr)
 
 	current.shaderFilePath = material["ShaderProgram"];
 
-	ifstream shaderInput(current.filePath.c_str());
+	ifstream shaderInput(current.shaderFilePath.c_str());
 	assert(shaderInput.good());
 
 	json shaderProgram;
@@ -206,7 +204,67 @@ void MaterialGUI::Load(string filePathStr)
 		return;
 	}
 
-	// TODO: Finish populating cache using the material file (getting types from shaderprogram file)
+	vector<json> attributes = material["Attributes"];
+	if (attributes.size() > 0)
+	{
+		vector<json> shaderAttributes = shaderProgram["Attributes"];
+
+		for (json attribute : attributes)
+		{
+			for (json shaderAttribute : shaderAttributes)
+			{
+				if (!shaderAttribute["Exposed"]) continue;
+
+				if (shaderAttribute["Name"] == attribute["Name"])
+				{
+					string name = attribute["Name"];
+					byte type = shaderAttribute["Type"];
+
+					if (type == TextureGL) // Probably also want this for CubeMap
+					{
+						string path = attribute["Data"];
+						current.uniforms.push_back(MaterialInput(name, path, (ShaderInputType)type));
+					}
+					else
+					{
+						vector<byte> data = attribute["Data"];
+						current.uniforms.push_back(MaterialInput(name, data, (ShaderInputType)type));
+					}
+					break;
+				}
+			}
+		}
+	}
+
+	vector<json> uniforms = material["Uniforms"];
+	if (uniforms.size() > 0)
+	{
+		vector<json> shaderUniforms = shaderProgram["Uniforms"];
+
+		for (json uniform : uniforms)
+		{
+			for (json shaderUniform : shaderUniforms)
+			{
+				if (shaderUniform["Name"] == uniform["Name"])
+				{
+					string name = uniform["Name"];
+					byte type = shaderUniform["Type"];
+
+					if (type == TextureGL) // Probably also want this for CubeMap
+					{
+						string path = uniform["Data"];
+						current.uniforms.push_back(MaterialInput(name, path, (ShaderInputType)type));
+					}
+					else
+					{
+						vector<byte> data = uniform["Data"];
+						current.uniforms.push_back(MaterialInput(name, data, (ShaderInputType)type));
+					}
+					break;
+				}
+			}
+		}
+	}
 
 	if (dirty) Save();
 }

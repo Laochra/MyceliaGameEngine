@@ -2,7 +2,7 @@
 
 #include "GameObject3D.h"
 #include "Mesh.h"
-#include "Texture.h"
+#include "Material.h"
 #include "Shader.h"
 
 class MeshRenderer : public GameObject3D
@@ -17,10 +17,9 @@ public:
 	void Draw() override;
 
 	Mesh GetMesh();
-	Texture* GetTexture();
+	Material* GetMaterial();
 
 private:
 	Mesh* mesh = nullptr;
-	Texture* texture = nullptr;
-	ShaderProgram* shaderProgram = nullptr;
+	Material* material = nullptr;
 };

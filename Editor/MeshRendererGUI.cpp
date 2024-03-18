@@ -18,16 +18,16 @@ void MeshRendererGUI::DrawMeshRendererGUI(MeshRenderer* meshRenderer)
 
 	if (ImGui::CollapsingHeader(id, ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if (meshRenderer->GetTexture() != nullptr)
-		{
-			ImGui::Text("Texture Filename:");
-			ImGui::SameLine();
-			ImGui::Text(meshRenderer->GetTexture()->GetFileName().c_str());
-		}
-		else
-		{
-			ImGui::Text("Texture Filename: -");
-		}
+		//if (meshRenderer->GetTexture() != nullptr)
+		//{
+		//	ImGui::Text("Texture Filename:");
+		//	ImGui::SameLine();
+		//	ImGui::Text(meshRenderer->GetTexture()->GetFileName().c_str());
+		//}
+		//else
+		//{
+		//	ImGui::Text("Texture Filename: -");
+		//}
 
 		ImGui::Text("Mesh Filename: -");
 

@@ -9,26 +9,31 @@
 
 void MeshRenderer::Draw()
 {
-	if (shaderProgram == nullptr) return;
+	if (material == nullptr) return;
+	if (material->shaderProgram == nullptr) return;
 
 	mat4 ProjectionViewMatrix = mainCamera->GetProjectionMatrix(screenWidth, screenHeight) * mainCamera->GetViewMatrix();
 
 	// Bind Shader
-	shaderProgram->Bind();
+	material->shaderProgram->Bind();
 
 	// Bind Light
-	shaderProgram->BindUniform("AmbientColour", LightingManager::ambientLight);
-	shaderProgram->BindUniform("LightColour", LightingManager::light.colour);
-	shaderProgram->BindUniform("LightDirection", LightingManager::light.direction);
+	material->shaderProgram->BindUniform("AmbientColour", LightingManager::ambientLight);
+	material->shaderProgram->BindUniform("LightColour", LightingManager::light.colour);
+	material->shaderProgram->BindUniform("LightDirection", LightingManager::light.direction);
 
 	// Bind Transform
-	shaderProgram->BindUniform("ProjectionViewModel", ProjectionViewMatrix * GetMatrix());
+	material->shaderProgram->BindUniform("ProjectionViewModel", ProjectionViewMatrix * GetMatrix());
 
 	// Bind Transform for Lighting
-	shaderProgram->BindUniform("ModelMatrix", GetMatrix());
+	material->shaderProgram->BindUniform("ModelMatrix", GetMatrix());
 
+	vector<byte> texturePathRaw = material->uniforms[0].GetRaw();
+	string texturePath; for (byte currentChar : texturePathRaw) { texturePath.push_back(currentChar); }
+	Texture* texture = new Texture(texturePath.c_str());
 	texture->Bind(0);
-	shaderProgram->BindUniform("diffuseTex", 0);
+
+	material->shaderProgram->BindUniform("diffuseTex", 0);
 
 	mesh->Draw();
 }
@@ -38,9 +43,9 @@ Mesh MeshRenderer::GetMesh()
 	return *mesh;
 }
 
-Texture* MeshRenderer::GetTexture()
+Material* MeshRenderer::GetMaterial()
 {
-	return texture;
+	return material;
 }
 
 void MeshRenderer::Initialise()
@@ -52,15 +57,13 @@ void MeshRenderer::Initialise()
 	mesh = new Mesh();
 	mesh->InitialiseCube();
 
-	texture = new Texture();
-	texture->Load("shroom.png");
-
-	shaderProgram = shaderManager->GetProgram("Assets\\Shaders\\DefaultLit.gpu");
+	material = new Material();
+	material->LoadFromJSON("Assets\\Materials\\Mush.mat");
 }
 void MeshRenderer::OnDestroy()
 {
 	del(mesh);
-	del(texture);
+	del(material);
 
 	GameObject3D::OnDestroy();
 }

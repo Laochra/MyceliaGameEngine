@@ -68,6 +68,9 @@
     <ClCompile Include="OrbitalCamera.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="TextureManager.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -187,6 +190,9 @@
     </ClInclude>
     <ClInclude Include="FilesIncludes.h">
       <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureManager.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

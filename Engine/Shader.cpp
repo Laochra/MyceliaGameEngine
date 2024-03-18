@@ -241,6 +241,9 @@ void ShaderProgram::Bind()
 
 void ShaderProgram::GetFields(vector<ShaderInput>& attributes, vector<ShaderInput>& uniforms)
 {
+	vector<ShaderInput> oldAttributes = attributes;
+	vector<ShaderInput> oldUniforms = uniforms;
+
 	attributes.clear();
 	uniforms.clear();
 
@@ -251,19 +254,21 @@ void ShaderProgram::GetFields(vector<ShaderInput>& attributes, vector<ShaderInpu
 	glGetProgramiv(program, GL_ACTIVE_ATTRIBUTES, &count);
 	for (unsigned int i = 0; i < count; i++)
 	{
-		ShaderInput attribute = ShaderInput();
-		glGetActiveAttrib(program, i, buffer, &length, &size, (unsigned int*)&attribute.type, name);
-		for (int i = 0; i < length; i++) { attribute.name += name[i]; }
-		attributes.push_back(attribute);
+		attributes.push_back(ShaderInput());
+		glGetActiveAttrib(program, i, buffer, &length, &size, (unsigned int*)&attributes.back().type, name);
+		for (int i = 0; i < length; i++) { attributes.back().name += name[i]; }
+		attributes.back().exposed = false;
+		for (ShaderInput input : oldAttributes) { if (attributes.back().name == input.name) { attributes.back().exposed = input.exposed; } }
 	}
 
 	glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &count);
 	for (unsigned int i = 0; i < count; i++)
 	{
-		ShaderInput uniform = ShaderInput();
-		glGetActiveUniform(program, i, buffer, &length, &size, (unsigned int*)&uniform.type, name);
-		for (int i = 0; i < length; i++) { uniform.name += name[i]; }
-		uniforms.push_back(uniform);
+		uniforms.push_back(ShaderInput());
+		glGetActiveUniform(program, i, buffer, &length, &size, (unsigned int*)&uniforms.back().type, name);
+		for (int i = 0; i < length; i++) { uniforms.back().name += name[i]; }
+		uniforms.back().exposed = false;
+		for (ShaderInput input : oldUniforms) { if (uniforms.back().name == input.name) { uniforms.back().exposed = input.exposed; } }
 	}
 }
 

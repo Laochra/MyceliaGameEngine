@@ -19,7 +19,12 @@ struct MaterialInput
 	ShaderInputType type = UndefinedTypeGL;
 
 	template<typename T>
-	MaterialInput(string nameInit, T valueInit, ShaderInputType typeInit) : name(nameInit), type(typeInit), bytes(GetBytes((byte*)&valueInit, sizeof(T))) {}
+	MaterialInput(string nameInit, T valueInit, ShaderInputType typeInit = UndefinedTypeGL) :
+		name(nameInit), type(typeInit), bytes(GetBytes((byte*)&valueInit, sizeof(T))) {}
+	MaterialInput(string nameInit, vector<byte> bytesInit, ShaderInputType typeInit = UndefinedTypeGL) :
+		name(nameInit), type(typeInit) { for (byte currentByte : bytesInit) { bytes.push_back(currentByte); } }
+	MaterialInput(string nameInit, string filepathInit, ShaderInputType typeInit = UndefinedTypeGL) :
+		name(nameInit), type(typeInit) { for (char currentChar : filepathInit) { bytes.push_back(currentChar); } bytes.push_back('\0'); }
 	MaterialInput() = default;
 
 	vector<byte> GetRaw() { return bytes; }
@@ -62,15 +67,15 @@ struct MaterialInput
 class Material
 {
 public:
-	Texture GetTexture() const noexcept;
-	const char* GetTextureFilename() const noexcept;
+	bool LoadFromJSON(const char* filepathInit);
+	const char* GetFilePath();
 
-	bool LoadFromJSON(const char* filename);
-
-private:
-	Texture* texture = nullptr;
+protected:
+	char* filepath;
 	ShaderProgram* shaderProgram;
 
 	vector<MaterialInput> attributes;
 	vector<MaterialInput> uniforms;
+
+	friend class MeshRenderer;
 };
