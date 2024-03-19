@@ -4,6 +4,8 @@
 #include "LightingManager.h"
 
 #include "ShaderManager.h"
+#include "MaterialManager.h"
+#include "TextureManager.h"
 
 #include "MemoryManagement.h"
 
@@ -28,12 +30,24 @@ void MeshRenderer::Draw()
 	// Bind Transform for Lighting
 	material->shaderProgram->BindUniform("ModelMatrix", GetMatrix());
 
-	vector<byte> texturePathRaw = material->uniforms[0].GetRaw();
-	string texturePath; for (byte currentChar : texturePathRaw) { texturePath.push_back(currentChar); }
-	Texture* texture = new Texture(texturePath.c_str());
-	texture->Bind(0);
-
-	material->shaderProgram->BindUniform("diffuseTex", 0);
+	//vector<byte> texturePathRaw = material->uniforms[0].GetRaw();
+	//string texturePath; for (byte currentChar : texturePathRaw) { texturePath.push_back(currentChar); }
+	//Texture* texture = new Texture(texturePath.c_str());
+	
+	for (int i = 0; i < material->uniforms.size(); i++)
+	{
+		if (material->uniforms[i].name == "diffuseTex")
+		{
+			string filepath = material->uniforms[i].GetAsFilepath();
+			if (filepath != "None") // TODO: Finish debugging this mess
+			{
+				textureManager->GetTexture(material->uniforms[i].GetAsFilepath().c_str())->Bind(0);
+				material->shaderProgram->BindUniform("diffuseTex", 0);
+			}
+			
+			break;
+		}
+	}
 
 	mesh->Draw();
 }
@@ -57,13 +71,11 @@ void MeshRenderer::Initialise()
 	mesh = new Mesh();
 	mesh->InitialiseCube();
 
-	material = new Material();
-	material->LoadFromJSON("Assets\\Materials\\Mush.mat");
+	material = materialManager->GetMaterial("Assets\\Materials\\Mush.mat");
 }
 void MeshRenderer::OnDestroy()
 {
 	del(mesh);
-	del(material);
 
 	GameObject3D::OnDestroy();
 }

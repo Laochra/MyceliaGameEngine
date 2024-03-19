@@ -9,6 +9,9 @@
 
 using std::vector;
 
+#include <map>
+using std::map;
+
 typedef unsigned int uint;
 typedef unsigned char byte;
 
@@ -26,6 +29,19 @@ struct MaterialInput
 	MaterialInput(string nameInit, string filepathInit, ShaderInputType typeInit = UndefinedTypeGL) :
 		name(nameInit), type(typeInit) { for (char currentChar : filepathInit) { bytes.push_back(currentChar); } bytes.push_back('\0'); }
 	MaterialInput() = default;
+
+	bool operator==(MaterialInput& other) const
+	{
+		return this->name == other.name && this->type == other.type && this->bytes.size() == other.bytes.size();
+	}
+
+	string GetAsFilepath() const
+	{
+		string filepath;
+		filepath.reserve(bytes.size());
+		for (byte currentChar : bytes) { filepath.push_back(currentChar); }
+		return filepath;
+	}
 
 	vector<byte> GetRaw() { return bytes; }
 	template<typename T> bool Get(T* valueOutput)
@@ -76,6 +92,8 @@ protected:
 
 	vector<MaterialInput> attributes;
 	vector<MaterialInput> uniforms;
+
+	map<string, uint> boundTextureHandles;
 
 	friend class MeshRenderer;
 };

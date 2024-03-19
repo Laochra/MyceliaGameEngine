@@ -19,6 +19,8 @@
 
 #include "stb/stb_image.h"
 
+#include "TextureManager.h"
+
 void Editor::Initialise()
 {
 	glfwSetWindowTitle(window, "Editor");
@@ -50,6 +52,7 @@ void Editor::Initialise()
 	gameObjectManager = new GameObjectManager();
 	inspector = new Inspector();
 	materialManager = new MaterialManager();
+	textureManager = new TextureManager();
 
 	mainCamera = GameObject3D::Instantiate<EditorCamera>(vec3(0.0f, 10.0f, 10.0f));
 

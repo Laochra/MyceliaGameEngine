@@ -44,4 +44,7 @@ protected:
 	unsigned int glHandle;
 	Format format;
 	unsigned char* loadedPixels;
+
+	friend class TextureManager;
+	friend class Material;
 };

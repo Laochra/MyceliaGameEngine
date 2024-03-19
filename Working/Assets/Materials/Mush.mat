@@ -3,7 +3,7 @@
   "ShaderProgram": "Assets\\Shaders\\DefaultLit.gpu",
   "Uniforms": [
     {
-      "Data": "Assets\\Textures\\shroom.png",
+      "Data": "None",
       "Name": "diffuseTex"
     }
   ]

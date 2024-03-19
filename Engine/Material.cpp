@@ -2,9 +2,19 @@
 
 #include "ShaderManager.h"
 
+#include "TextureManager.h"
+
 bool Material::LoadFromJSON(const char* filepathInit)
 {
    //if (!JSONFileIsValid(filename)) return false;
+
+	int size = 1;
+	while (filepathInit[size] != '\0') { size++; }
+	filepath = new char[size];
+	for (int currentChar = 0; currentChar <= size; currentChar++)
+	{
+		filepath[currentChar] = filepathInit[currentChar];
+	}
 
 	ifstream materialInput(filepathInit);
 	assert(materialInput.good());
@@ -68,6 +78,8 @@ bool Material::LoadFromJSON(const char* filepathInit)
 					{
 						string path = attribute["Data"];
 						attributes.push_back(MaterialInput(name, path, (ShaderInputType)type));
+						Texture* texture = textureManager->GetTexture(path.c_str());
+						boundTextureHandles.insert(std::pair<string, uint>(name, texture->glHandle));
 					}
 					else
 					{
