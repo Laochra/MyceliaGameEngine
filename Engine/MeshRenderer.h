@@ -16,8 +16,9 @@ public:
 	void OnDestroy() override;
 	void Draw() override;
 
-	Mesh GetMesh();
-	Material* GetMaterial();
+	const Mesh* GetMesh() const;
+	const Material* GetMaterial() const;
+	void SetMaterial(const char* filepath);
 
 private:
 	Mesh* mesh = nullptr;

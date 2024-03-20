@@ -125,7 +125,7 @@ bool Material::LoadFromJSON(const char* filepathInit)
    return true;
 }
 
-const char* Material::GetFilePath()
+const char* Material::GetFilePath() const
 {
 	return filepath;
 }

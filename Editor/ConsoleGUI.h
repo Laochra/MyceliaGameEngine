@@ -22,7 +22,7 @@ namespace ConsoleGUI
 
 		ConsoleLog(LogType typeInit, string messageInit) : type(typeInit), message(messageInit) { }
 	};
-	std::vector<ConsoleLog> logs;
+	inline std::vector<ConsoleLog> logs;
 
 	inline void Draw();
 }

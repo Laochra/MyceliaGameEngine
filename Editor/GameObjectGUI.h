@@ -11,7 +11,6 @@ class GameObjectGUI
 public:
 	GameObject* target;
 	virtual void Draw();
-	
 	GameObjectGUI(GameObject* targetInit);
 
 protected:

@@ -3,7 +3,7 @@
 //#include "GameObject2D.h"
 #include "GameObject3D.h"
 
-#include "MemoryManagement.h"
+#include "GeneralMacros.h"
 
 GameObjectManager* gameObjectManager;
 

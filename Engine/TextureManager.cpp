@@ -1,6 +1,13 @@
 #include "TextureManager.h"
 
+using std::pair;
+
 TextureManager* textureManager;
+
+TextureManager::~TextureManager()
+{
+   for (pair<string, Texture*> texturePair : loadedTextures) { del(texturePair.second); }
+}
 
 Texture* TextureManager::GetTexture(const char* filepath)
 {

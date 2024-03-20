@@ -62,6 +62,10 @@ void Mesh::Initialise(unsigned int vertexCount, const Vertex* vertices, unsigned
 
 void Mesh::InitialiseQuad()
 {
+	filepath = new char[15];
+	const char* newFilepath = "ProceduralQuad";
+	for (int i = 0; i < 15; i++) { filepath[i] = newFilepath[i]; }
+
 	Vertex vertices[4]{};
 	vertices[0].position = { -0.5f,  0,  0.5f, 1 };
 	vertices[1].position = {  0.5f,  0,  0.5f, 1 };
@@ -88,6 +92,10 @@ void Mesh::InitialiseQuad()
 
 void Mesh::InitialiseCube()
 {
+	filepath = new char[15];
+	const char* newFilepath = "ProceduralCube";
+	for (int i = 0; i < 15; i++) { filepath[i] = newFilepath[i]; }
+
 	Vertex vertices[24]{};
 
 	for (int i = 0; i < 3; i++)
@@ -176,6 +184,11 @@ void Mesh::InitialiseCube()
 	};
 
 	this->Initialise(24, vertices, 36, indices);
+}
+
+const char* Mesh::GetFilePath() const
+{
+	return filepath;
 }
 
 void Mesh::Draw()

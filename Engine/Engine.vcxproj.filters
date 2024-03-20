@@ -128,9 +128,6 @@
     <ClInclude Include="MathIncludes.h">
       <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="MemoryManagement.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
     <ClInclude Include="StringIncludes.h">
       <Filter>Utility</Filter>
     </ClInclude>
@@ -193,6 +190,9 @@
     </ClInclude>
     <ClInclude Include="TextureManager.h">
       <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneralMacros.h">
+      <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

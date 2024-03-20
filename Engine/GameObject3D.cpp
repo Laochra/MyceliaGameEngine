@@ -53,7 +53,7 @@ void GameObject3D::UpdateMatrices() noexcept
 	else
 	{
 		if (parent->dirty) parent->UpdateMatrices();
-		globalMatrix = localMatrix * parent->globalMatrix;
+		globalMatrix = parent->globalMatrix * localMatrix;
 	}
 
 	dirty = false;
@@ -70,6 +70,12 @@ mat4 GameObject3D::GetLocalMatrix() noexcept
 	if (dirty) UpdateMatrices();
 
 	return localMatrix;
+}
+
+void GameObject3D::SetDirty()
+{
+	dirty = true;
+	for (GameObject3D* child : children) { child->SetDirty(); }
 }
 
 
@@ -103,14 +109,14 @@ void GameObject3D::SetPosition(vec3 newPosition) noexcept
 	{
 		position = newPosition;
 
-		if (!dirty) dirty = true;
+		if (!dirty) SetDirty();
 	}
 }
 void GameObject3D::Translate(vec3 amountToTranslate) noexcept
 {
 	position += amountToTranslate;
 
-	if (!dirty) dirty = true;
+	if (!dirty) SetDirty();
 }
 
 quat GameObject3D::GetRotation() const noexcept
@@ -124,14 +130,14 @@ void GameObject3D::SetRotation(quat newRotation) noexcept
 	{
 		rotation = newRotation;
 
-		if (!dirty) dirty = true;
+		if (!dirty) SetDirty();
 	}
 }
 void GameObject3D::Rotate(float radians, vec3 axis) noexcept
 {
 	rotation = glm::normalize(glm::rotate(rotation, radians, axis));
 
-	if (!dirty) dirty = true;
+	if (!dirty) SetDirty();
 }
 void GameObject3D::RotateTowards(quat targetRotation, float maxRadians) noexcept
 {
@@ -148,14 +154,14 @@ void GameObject3D::RotateTowards(quat targetRotation, float maxRadians) noexcept
 	
 	rotation = glm::normalize(glm::slerp(rotation, targetRotation, glm::min(radians / difference, 1.0f)));
 
-	if (!dirty) dirty = true;
+	if (!dirty) SetDirty();
 }
 void GameObject3D::LookAt(vec3 positionToLookAt) noexcept
 {
 	vec3 direction = glm::normalize(positionToLookAt + pivot - position);
 	rotation = glm::normalize(glm::quatLookAt(direction, vec3(0, 1, 0 )));
 
-	if (!dirty) dirty = true;
+	if (!dirty) SetDirty();
 }
 void GameObject3D::LookTowards(vec3 positionToLookTowards, float maxRadians) noexcept
 {
@@ -164,7 +170,7 @@ void GameObject3D::LookTowards(vec3 positionToLookTowards, float maxRadians) noe
 
 	RotateTowards(targetRotation, glm::radians(15.0f) * Time::delta);
 
-	if (!dirty) dirty = true;
+	if (!dirty) SetDirty();
 }
 
 vec3 GameObject3D::GetScale() const noexcept
@@ -178,7 +184,7 @@ void GameObject3D::SetScale(vec3 newScale) noexcept
 	{
 		scale = newScale;
 
-		if (!dirty) dirty = true;
+		if (!dirty) SetDirty();
 	}
 }
 void GameObject3D::SetScale(float newScale) noexcept
@@ -187,7 +193,7 @@ void GameObject3D::SetScale(float newScale) noexcept
 	{
 		scale = vec3(newScale);
 
-		if (!dirty) dirty = true;
+		if (!dirty) SetDirty();
 	}
 }
 void GameObject3D::Scale(vec3 amountToScale) noexcept
@@ -196,7 +202,7 @@ void GameObject3D::Scale(vec3 amountToScale) noexcept
 	scale.y *= amountToScale.y;
 	scale.z *= amountToScale.z;
 
-	if (!dirty) dirty = true;
+	if (!dirty) SetDirty();
 }
 void GameObject3D::Scale(float amountToScale) noexcept
 {
@@ -204,7 +210,7 @@ void GameObject3D::Scale(float amountToScale) noexcept
 	scale.y *= amountToScale;
 	scale.z *= amountToScale;
 
-	if (!dirty) dirty = true;
+	if (!dirty) SetDirty();
 }
 
 void GameObject3D::SetPivot(vec3 newPivot) noexcept
@@ -213,7 +219,7 @@ void GameObject3D::SetPivot(vec3 newPivot) noexcept
 	{
 		pivot = newPivot;
 
-		if (!dirty) dirty = true;
+		if (!dirty) SetDirty();
 	}
 }
 vec3 GameObject3D::GetPivot() const noexcept

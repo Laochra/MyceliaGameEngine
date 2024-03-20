@@ -1,6 +1,6 @@
 #include "Input.h"
 
-#include "MemoryManagement.h"
+#include "GeneralMacros.h"
 
 Input* input = nullptr;
 

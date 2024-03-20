@@ -3,7 +3,10 @@
 #include "TimeManager.h"
 #include "Input.h"
 #include "Updater.h"
+
 #include "ShaderManager.h"
+#include "MaterialManager.h"
+#include "TextureManager.h"
 
 bool applicationFocused = true;
 
@@ -65,6 +68,8 @@ int Application::Setup()
 
 	input = new Input();
 	shaderManager = new ShaderManager();
+	materialManager = new MaterialManager();
+	textureManager = new TextureManager();
 
 	glfwSetKeyCallback(window, KeyCallback);
 	glfwSetCursorPosCallback(window, CursorPosCallback);
@@ -126,6 +131,8 @@ void Application::Close()
 {
 	delete input;
 	delete shaderManager;
+	delete materialManager;
+	delete textureManager;
 
 	glfwTerminate();
 }

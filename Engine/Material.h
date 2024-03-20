@@ -84,7 +84,7 @@ class Material
 {
 public:
 	bool LoadFromJSON(const char* filepathInit);
-	const char* GetFilePath();
+	const char* GetFilePath() const;
 
 protected:
 	char* filepath;

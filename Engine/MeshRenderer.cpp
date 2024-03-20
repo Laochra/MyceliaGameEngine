@@ -7,7 +7,7 @@
 #include "MaterialManager.h"
 #include "TextureManager.h"
 
-#include "MemoryManagement.h"
+#include "GeneralMacros.h"
 
 void MeshRenderer::Draw()
 {
@@ -29,17 +29,14 @@ void MeshRenderer::Draw()
 
 	// Bind Transform for Lighting
 	material->shaderProgram->BindUniform("ModelMatrix", GetMatrix());
-
-	//vector<byte> texturePathRaw = material->uniforms[0].GetRaw();
-	//string texturePath; for (byte currentChar : texturePathRaw) { texturePath.push_back(currentChar); }
-	//Texture* texture = new Texture(texturePath.c_str());
 	
 	for (int i = 0; i < material->uniforms.size(); i++)
 	{
 		if (material->uniforms[i].name == "diffuseTex")
 		{
 			string filepath = material->uniforms[i].GetAsFilepath();
-			if (filepath != "None") // TODO: Finish debugging this mess
+			filepath.pop_back();
+			if (filepath != "None") 
 			{
 				textureManager->GetTexture(material->uniforms[i].GetAsFilepath().c_str())->Bind(0);
 				material->shaderProgram->BindUniform("diffuseTex", 0);
@@ -52,14 +49,19 @@ void MeshRenderer::Draw()
 	mesh->Draw();
 }
 
-Mesh MeshRenderer::GetMesh()
+const Mesh* MeshRenderer::GetMesh() const
 {
-	return *mesh;
+	return mesh;
 }
 
-Material* MeshRenderer::GetMaterial()
+const Material* MeshRenderer::GetMaterial() const
 {
 	return material;
+}
+
+void MeshRenderer::SetMaterial(const char* filepath)
+{
+	material = materialManager->GetMaterial(filepath);
 }
 
 void MeshRenderer::Initialise()

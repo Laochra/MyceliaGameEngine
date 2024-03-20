@@ -195,6 +195,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObject3D.h" />
     <ClInclude Include="GameObjectManager.h" />
+    <ClInclude Include="GeneralMacros.h" />
     <ClInclude Include="GuidGenerator.h" />
     <ClInclude Include="HashBucket.h" />
     <ClInclude Include="HashTable.h" />
@@ -208,7 +209,6 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="MaterialManager.h" />
     <ClInclude Include="MathIncludes.h" />
-    <ClInclude Include="MemoryManagement.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="OrbitalCamera.h" />

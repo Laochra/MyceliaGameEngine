@@ -8,9 +8,16 @@ using std::map;
 #include <string>
 using std::string;
 
+#include "GeneralMacros.h"
+
 class ShaderManager
 {
 public:
+	ShaderManager() = default;
+	~ShaderManager();
+	uncopyable(ShaderManager);
+	immovable(ShaderManager);
+	
 	ShaderProgram* GetProgram(const char* filepath);
 	void ReloadProgram(const char* filepath);
 

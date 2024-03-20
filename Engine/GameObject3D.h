@@ -29,6 +29,7 @@ public:
 	mat4 GetMatrix() noexcept;
 	/// <returns>The local transform matrix of the GameObject</returns>
 	mat4 GetLocalMatrix() noexcept;
+	void SetDirty();
 
 	vec3 GetGlobalPosition() const noexcept;
 	quat GetGlobalRotation() const noexcept;

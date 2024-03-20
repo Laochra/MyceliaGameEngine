@@ -1,9 +1,18 @@
 #include "MaterialManager.h"
 
+using std::pair;
+
 MaterialManager* materialManager = nullptr;
+
+MaterialManager::~MaterialManager()
+{
+   for (pair<string, Material*> materialPair : loadedMaterials) { del(materialPair.second); }
+}
 
 Material* MaterialManager::GetMaterial(const char* filepath)
 {
+   if (filepath == string("None")) return nullptr;
+
    if (loadedMaterials.count(filepath) == 0) return AddMaterial(filepath);
    else return loadedMaterials[filepath];
 }

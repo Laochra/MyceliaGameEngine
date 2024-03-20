@@ -5,7 +5,7 @@ Inspector* inspector = new Inspector();
 #include "GameObject3DGUI.h"
 #include "MeshRendererGUI.h"
 
-#include "MemoryManagement.h"
+#include "GeneralMacros.h"
 
 void Inspector::SetTarget(GameObject* target)
 {
