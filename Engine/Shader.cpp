@@ -102,7 +102,7 @@ bool Shader::LoadShader(ShaderStage stage, const char* filename)
 	delete[] source;
 
 	int success = GL_TRUE;
-	glGetShaderiv(glHandle, GL_LINK_STATUS, &success);
+	glGetShaderiv(glHandle, GL_COMPILE_STATUS, &success);
 	if (success == GL_FALSE) {
 		int infoLogLength = 0;
 		glGetShaderiv(glHandle, GL_INFO_LOG_LENGTH, &infoLogLength);
@@ -136,7 +136,7 @@ bool Shader::CreateShader(ShaderStage stageInit, const char* string)
 	glCompileShader(glHandle);
 	
 	int success = GL_TRUE;
-	glGetShaderiv(glHandle, GL_LINK_STATUS, &success);
+	glGetShaderiv(glHandle, GL_COMPILE_STATUS, &success);
 	if (success == GL_FALSE) {
 		int infoLogLength = 0;
 		glGetShaderiv(glHandle, GL_INFO_LOG_LENGTH, &infoLogLength);
