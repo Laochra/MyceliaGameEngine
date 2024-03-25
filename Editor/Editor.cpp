@@ -90,7 +90,7 @@ void Editor::Update()
 {
 	if (*object == GameObject::Active)
 	{
-		object->LookTowards(mainCamera->GetPosition(), glm::radians(15.0f) * Time::delta);
+		//object->LookTowards(mainCamera->GetPosition(), glm::radians(15.0f) * Time::delta);
 	}
 
 	if (ImGui::BeginMainMenuBar())

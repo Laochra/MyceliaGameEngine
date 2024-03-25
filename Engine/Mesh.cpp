@@ -1,17 +1,25 @@
 #include "Mesh.h"
 
+#include "GeneralMacros.h"
+
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
 Mesh::~Mesh()
 {
 	glDeleteVertexArrays(1, &vao);
 	glDeleteBuffers(1, &vbo);
 	glDeleteBuffers(1, &ibo);
+
+	del(filepath);
 }
 
-void Mesh::Initialise(unsigned int vertexCount, const Vertex* vertices, unsigned int indexCount, unsigned int* indices)
+void Mesh::Initialise(uint vertexCount, const Vertex* vertices, uint indexCount, uint* indices)
 {
 	assert(vao == 0); // Check this is the first initialisation
 
-	// Geberate Buffers
+	// Generate Buffers
 	glGenBuffers(1, &vbo);
 	glGenVertexArrays(1, &vao);
 
@@ -45,7 +53,7 @@ void Mesh::Initialise(unsigned int vertexCount, const Vertex* vertices, unsigned
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
 		// Fill Vertex Buffer
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexCount * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexCount * sizeof(uint), indices, GL_STATIC_DRAW);
 
 		triCount = indexCount / 3;
 	}
@@ -59,7 +67,6 @@ void Mesh::Initialise(unsigned int vertexCount, const Vertex* vertices, unsigned
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
-
 void Mesh::InitialiseQuad()
 {
 	filepath = new char[15];
@@ -82,14 +89,13 @@ void Mesh::InitialiseQuad()
 	vertices[2].texCoord = { 0, 0 };
 	vertices[3].texCoord = { 1, 0 };
 
-	unsigned int indices[6] =
+	uint indices[6] =
 	{
 		0, 1, 2, 2, 1, 3
 	};
 
 	this->Initialise(4, vertices, 6, indices);
 }
-
 void Mesh::InitialiseCube()
 {
 	filepath = new char[15];
@@ -171,7 +177,7 @@ void Mesh::InitialiseCube()
 	vertices[21].texCoord = { 0, 0 };
 	vertices[23].texCoord = { 1, 0 };
 
-	unsigned int indices[36] =
+	uint indices[36] =
 	{
 		0,  1,  2,  2,  1,  3,
 		4,  5,  6,  6,  5,  7,
@@ -184,6 +190,44 @@ void Mesh::InitialiseCube()
 	};
 
 	this->Initialise(24, vertices, 36, indices);
+}
+
+void Mesh::LoadFromFile(const char* filepathInit)
+{
+	Assimp::Importer importer;
+	const aiScene* file = importer.ReadFile(filepathInit, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_FlipUVs);
+	
+	if (file->mNumMeshes > 0)
+	{
+		aiMesh* mesh = file->mMeshes[0];
+	
+		Vertex* vertexData = new Vertex[mesh->mNumVertices];
+		uint* indexData = new uint[mesh->mNumFaces * 3];
+	
+		for (uint i = 0; i < mesh->mNumVertices; i++)
+		{
+			vertexData[i].position = vec4(*(vec3*)&mesh->mVertices[i], 1);
+			vertexData[i].normal = vec4(*(vec3*)&mesh->mNormals[i], 0);
+
+			vertexData[i].texCoord.x = mesh->mTextureCoords[0][i].x;
+			vertexData[i].texCoord.y = mesh->mTextureCoords[0][i].y;
+		}
+	
+		for (uint i = 0; i < mesh->mNumFaces; i++)
+		{
+			indexData[i * 3 + 0] = mesh->mFaces[i].mIndices[0];
+			indexData[i * 3 + 1] = mesh->mFaces[i].mIndices[1];
+			indexData[i * 3 + 2] = mesh->mFaces[i].mIndices[2];
+		}
+		
+		Initialise(mesh->mNumVertices, vertexData, mesh->mNumFaces * 3, indexData);
+		delete[] vertexData;
+		delete[] indexData;
+
+		uint filepathLength = strlen(filepathInit) + 1;
+		filepath = new char[filepathLength];
+		for (int i = 0; i < filepathLength; i++) { filepath[i] = filepathInit[i]; }
+	}
 }
 
 const char* Mesh::GetFilePath() const

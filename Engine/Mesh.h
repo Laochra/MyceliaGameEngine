@@ -4,15 +4,19 @@
 
 #include "Vertex.h"
 
+typedef unsigned int uint;
+
 class Mesh
 {
 public:
 	Mesh() : triCount(0), vao(0), vbo(0), ibo(0), filepath((char*)"None") { }
 	virtual ~Mesh();
 
-	void Initialise(unsigned int vertexCount, const Vertex* vertices, unsigned int indexCount = 0, unsigned int* indices = nullptr);
+	void Initialise(uint vertexCount, const Vertex* vertices, uint indexCount = 0, uint* indices = nullptr);
 	void InitialiseQuad();
 	void InitialiseCube();
+
+	void LoadFromFile(const char* filepath);
 
 	const char* GetFilePath() const;
 
