@@ -35,4 +35,5 @@ private:
 
 extern bool applicationFocused;
 void WindowFocusCallback(GLFWwindow* window, int focused);
-void ErrorCallback(int code, const char* description);
+void GLErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
+void GLFWErrorCallback(int code, const char* description);
