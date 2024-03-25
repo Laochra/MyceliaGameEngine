@@ -1,0 +1,1 @@
+powershell Expand-Archive External/assimp/assimp.zip -DestinationPath External/assimp/
