@@ -40,9 +40,17 @@ void Mesh::Initialise(uint vertexCount, const Vertex* vertices, uint indexCount,
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, normal)));
 
-	// Texture Coords
+	// Tangent
 	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, texCoord)));
+	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, tangent)));
+
+	// BiTangent
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, texCoord)));
+
+	// Texture Coords
+	glEnableVertexAttribArray(4);
+	glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, texCoord)));
 
 	// Bind Indices if there Are Any
 	if (indexCount != 0)
@@ -67,7 +75,7 @@ void Mesh::Initialise(uint vertexCount, const Vertex* vertices, uint indexCount,
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
-void Mesh::InitialiseQuad()
+void Mesh::InitialiseQuad() // Need to generate Tangents and BiTangents to Fix Lighting
 {
 	filepath = new char[15];
 	const char* newFilepath = "ProceduralQuad";
@@ -95,8 +103,8 @@ void Mesh::InitialiseQuad()
 	};
 
 	this->Initialise(4, vertices, 6, indices);
-}
-void Mesh::InitialiseCube()
+} // Need to generate Tangents and BiTangents to Fix Lighting
+void Mesh::InitialiseCube() // Need to generate Tangents and BiTangents to Fix Lighting
 {
 	filepath = new char[15];
 	const char* newFilepath = "ProceduralCube";
@@ -179,7 +187,7 @@ void Mesh::InitialiseCube()
 
 	uint indices[36] =
 	{
-		0,  1,  2,  2,  1,  3,
+		0,  2,  1,  1,  2,  3,
 		4,  5,  6,  6,  5,  7,
 
 		8,  9,  12, 12, 9,  13,
@@ -190,12 +198,12 @@ void Mesh::InitialiseCube()
 	};
 
 	this->Initialise(24, vertices, 36, indices);
-}
+} // Need to generate Tangents and BiTangents to Fix Lighting
 
 void Mesh::LoadFromFile(const char* filepathInit)
 {
 	Assimp::Importer importer;
-	const aiScene* file = importer.ReadFile(filepathInit, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_FlipUVs);
+	const aiScene* file = importer.ReadFile(filepathInit, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 	
 	if (file->mNumMeshes > 0)
 	{
@@ -207,7 +215,10 @@ void Mesh::LoadFromFile(const char* filepathInit)
 		for (uint i = 0; i < mesh->mNumVertices; i++)
 		{
 			vertexData[i].position = vec4(*(vec3*)&mesh->mVertices[i], 1);
+
 			vertexData[i].normal = vec4(*(vec3*)&mesh->mNormals[i], 0);
+			vertexData[i].tangent = vec4(*(vec3*)&mesh->mTangents[i], 0);
+			vertexData[i].biTangent = vec4(*(vec3*)&mesh->mBitangents[i], 0);
 
 			vertexData[i].texCoord.x = mesh->mTextureCoords[0][i].x;
 			vertexData[i].texCoord.y = mesh->mTextureCoords[0][i].y;

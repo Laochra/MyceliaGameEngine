@@ -1,0 +1,14 @@
+{
+  "Attributes": [],
+  "ShaderProgram": "Assets\\Shaders\\DefaultLit.gpu",
+  "Uniforms": [
+    {
+      "Data": "Assets\\Textures\\soulspear_diffuse.tga",
+      "Name": "ColourMap"
+    },
+    {
+      "Data": "Assets\\Textures\\soulspear_normal.tga",
+      "Name": "NormalMap"
+    }
+  ]
+}

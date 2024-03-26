@@ -32,17 +32,29 @@ void MeshRenderer::Draw()
 	
 	for (int i = 0; i < material->uniforms.size(); i++)
 	{
-		if (material->uniforms[i].name == "diffuseTex")
+		if (material->uniforms[i].name == "ColourMap")
 		{
 			string filepath = material->uniforms[i].GetAsFilepath();
 			filepath.pop_back();
 			if (filepath != "None") 
 			{
 				textureManager->GetTexture(material->uniforms[i].GetAsFilepath().c_str())->Bind(0);
-				material->shaderProgram->BindUniform("diffuseTex", 0);
+				material->shaderProgram->BindUniform("ColourMap", 0);
 			}
 			
-			break;
+			continue;
+		}
+		else if (material->uniforms[i].name == "NormalMap")
+		{
+			string filepath = material->uniforms[i].GetAsFilepath();
+			filepath.pop_back();
+			if (filepath != "None")
+			{
+				textureManager->GetTexture(material->uniforms[i].GetAsFilepath().c_str())->Bind(1);
+				material->shaderProgram->BindUniform("NormalMap", 1);
+			}
+
+			continue;
 		}
 	}
 
@@ -71,7 +83,7 @@ void MeshRenderer::Initialise()
 	Updater::DrawAdd(this);
 
 	mesh = new Mesh();
-	mesh->InitialiseCube();
+	mesh->LoadFromFile("Assets\\Meshes\\soulspear.obj");
 
 	material = materialManager->GetMaterial("Assets\\Materials\\Mush.mat");
 }

@@ -1,0 +1,14 @@
+{
+  "Attributes": [],
+  "ShaderProgram": "Assets\\Shaders\\DefaultLit.gpu",
+  "Uniforms": [
+    {
+      "Data": "Assets\\Textures\\Marill_BaseColor.tga",
+      "Name": "ColourMap"
+    },
+    {
+      "Data": "Assets\\Textures\\Marill_Normal.tga",
+      "Name": "NormalMap"
+    }
+  ]
+}

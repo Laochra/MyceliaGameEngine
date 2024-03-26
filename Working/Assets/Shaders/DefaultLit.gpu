@@ -2,12 +2,22 @@
   "Attributes": [
     {
       "Exposed": false,
+      "Name": "BiTangent",
+      "Type": 82
+    },
+    {
+      "Exposed": false,
       "Name": "Normal",
       "Type": 82
     },
     {
       "Exposed": false,
       "Name": "Position",
+      "Type": 82
+    },
+    {
+      "Exposed": false,
+      "Name": "Tangent",
       "Type": 82
     },
     {
@@ -48,7 +58,12 @@
     },
     {
       "Exposed": true,
-      "Name": "diffuseTex",
+      "Name": "ColourMap",
+      "Type": 94
+    },
+    {
+      "Exposed": true,
+      "Name": "NormalMap",
       "Type": 94
     }
   ],

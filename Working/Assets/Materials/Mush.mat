@@ -4,7 +4,11 @@
   "Uniforms": [
     {
       "Data": "Assets\\Textures\\shroom.png",
-      "Name": "diffuseTex"
+      "Name": "ColourMap"
+    },
+    {
+      "Data": "Assets\\Textures\\Marill_Normal.tga",
+      "Name": "NormalMap"
     }
   ]
 }
