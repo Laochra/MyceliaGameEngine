@@ -183,6 +183,7 @@
     <ClInclude Include="EditorCamera.h" />
     <ClInclude Include="EditorCameraConfig.h" />
     <ClInclude Include="EditorCameraGUI.h" />
+    <ClInclude Include="EditorStyler.h" />
     <ClInclude Include="FileLoading.h" />
     <ClInclude Include="GameObjectGUI.h" />
     <ClInclude Include="GameObject3DGUI.h" />

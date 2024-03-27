@@ -150,6 +150,9 @@
       <Filter>EditorWindows</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="EditorStyler.h">
+      <Filter>EditorWindows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\External\imgui\imgui.natstepfilter">

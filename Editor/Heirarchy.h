@@ -101,7 +101,7 @@ void Heirarchy::Draw()
 
 	if (rightClickMenu.open)
 	{
-		ImGui::SetNextWindowSize(ImVec2(150, 65));
+		ImGui::SetNextWindowSize(ImVec2(150, 75));
 		ImGui::SetNextWindowPos(rightClickMenu.position);
 		ImGui::SetNextWindowBgAlpha(0.9f);
 

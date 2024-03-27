@@ -49,4 +49,5 @@ private:
 	bool shaderProgramEditorOpen = true;
 	bool materialEditorOpen = true;
 	bool cameraSettingsOpen = true;
+	bool editorStylerOpen = true;
 };

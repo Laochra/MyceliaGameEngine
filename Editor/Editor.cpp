@@ -15,6 +15,8 @@
 
 #include "Inspector.h"
 
+#include "EditorStyler.h"
+
 #include "TimeManager.h"
 
 #include "stb/stb_image.h"
@@ -245,6 +247,10 @@ void Editor::Update()
 				{
 					cameraSettingsOpen = true;
 				}
+				if (ImGui::MenuItem("Editor Styler", (const char*)0, false, !editorStylerOpen))
+				{
+					editorStylerOpen = true;
+				}
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("Tools"))
@@ -360,14 +366,13 @@ void Editor::Update()
 		} ImGui::End();
 	}
 
-
-	//ImGui::Begin("Light Settings");
-	//	ImGui::SeparatorText("Direction");
-	//	ImGui::InputFloat("X Direction", &light.direction.x);
-	//	ImGui::InputFloat("Y Direction", &light.direction.y);
-	//	ImGui::InputFloat("Z Direction", &light.direction.z);
-	//	light.direction = glm::normalize(light.direction);
-	//ImGui::End();
+	if (editorStylerOpen)
+	{
+		ImGui::Begin("Editor Styler", &editorStylerOpen);
+		{
+			EditorStyler::Draw();
+		} ImGui::End();
+	}
 }
 
 void Editor::Draw()
