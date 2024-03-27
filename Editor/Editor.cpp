@@ -67,6 +67,110 @@ void Editor::Initialise()
 	LightingManager::ambientLight = vec3(0.25f, 0.25f, 0.25f);
 
 	input->enabled = false;
+
+
+	// ImGui Styling Setup (Serialise and load this. Hardcoding bad)
+	{
+		ImGuiStyle* style = &ImGui::GetStyle();
+
+		ImFont* odudoMono = ImGui::GetIO().Fonts->AddFontFromFileTTF("Assets\\Fonts\\OdudoMono-Regular.otf", 16);
+
+
+		style->ItemInnerSpacing = { 3.0f, 3.0f };
+		style->ItemSpacing = { 3.0f, 3.0f };
+
+		style->TabRounding = 4.0f;
+		style->TabBarBorderSize = 2.0f;
+
+		style->FrameRounding = 4.0f;
+		style->FramePadding = { 4.0f, 3.5f };
+
+		style->PopupRounding = 4.0f;
+
+		style->WindowRounding = 4.0f;
+		style->WindowPadding = { 10.0f, 10.0f };
+
+		style->SelectableRounding = 5.0f;
+
+		style->ScrollbarRounding = 4.0f;
+		style->ScrollbarSize = 16.0f;
+
+		style->Colors[ImGuiCol_Text] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		style->Colors[ImGuiCol_TextDisabled] = { 0.5f, 0.5f, 0.5f, 1.0f };
+
+		style->Colors[ImGuiCol_WindowBg] = { 0.1f, 0.1f, 0.15f, 1.0f };
+		style->Colors[ImGuiCol_ChildBg] = { 0.1f, 0.1f, 0.15f, 1.0f };
+		style->Colors[ImGuiCol_PopupBg] = { 0.1f, 0.1f, 0.15f, 1.0f };
+
+		style->Colors[ImGuiCol_Border] = { 0.05f, 0.0f, 0.1f, 1.0f };
+		style->Colors[ImGuiCol_BorderShadow] = { 0.0f, 0.0f, 0.0f, 0.0f };
+
+		style->Colors[ImGuiCol_FrameBg] = { 0.3f, 0.3f, 0.4f, 1.0f };
+		style->Colors[ImGuiCol_FrameBgHovered] = { 0.35f, 0.35f, 0.5f, 1.0f };
+		style->Colors[ImGuiCol_FrameBgActive] = { 0.4f, 0.35f, 0.55f, 1.0f };
+
+		style->Colors[ImGuiCol_TitleBg] = { 0.1f, 0.1f, 0.15f, 1.0f };
+		style->Colors[ImGuiCol_TitleBgActive] = { 0.1f, 0.05f, 0.15f, 1.0f };
+		style->Colors[ImGuiCol_TitleBgCollapsed] = { 0.1f, 0.1f, 0.15f, 1.0f };
+
+		style->Colors[ImGuiCol_MenuBarBg] = { 0.05f, 0.0f, 0.1f, 1.0f };
+
+		style->Colors[ImGuiCol_ScrollbarBg] = { 0.05f, 0.0f, 0.1f, 1.0f };
+		style->Colors[ImGuiCol_ScrollbarGrab] = { 0.15f, 0.15f, 0.2f, 1.0f };
+		style->Colors[ImGuiCol_ScrollbarGrabHovered] = { 0.25f, 0.2f, 0.3f, 1.0f };
+		style->Colors[ImGuiCol_ScrollbarGrabActive] = { 0.5f, 0.3f, 0.55f, 1.0f };
+
+		style->Colors[ImGuiCol_CheckMark] = { 0.8f, 0.6f, 0.95f, 1.0f };
+
+		//style->Colors[ImGuiCol_SliderGrab];
+		//style->Colors[ImGuiCol_SliderGrabActive];
+
+		style->Colors[ImGuiCol_Button] = { 0.5f, 0.3f, 0.55f, 1.0f };
+		style->Colors[ImGuiCol_ButtonHovered] = { 0.6f, 0.35f, 0.65f, 1.0f };
+		style->Colors[ImGuiCol_ButtonActive] = { 0.65f, 0.4f, 0.7f, 1.0f };
+
+		style->Colors[ImGuiCol_Header] = { 0.5f, 0.3f, 0.55f, 1.0f };
+		style->Colors[ImGuiCol_HeaderHovered] = { 0.6f, 0.35f, 0.65f, 1.0f };
+		style->Colors[ImGuiCol_HeaderActive] = { 0.65f, 0.4f, 0.7f, 1.0f };
+
+		style->Colors[ImGuiCol_Separator] = { 0.25f, 0.25f, 0.35f, 1.0f };
+		style->Colors[ImGuiCol_SeparatorHovered] = { 0.6f, 0.35f, 0.65f, 1.0f };
+		style->Colors[ImGuiCol_SeparatorActive] = { 0.65f, 0.4f, 0.7f, 1.0f };
+
+		style->Colors[ImGuiCol_ResizeGrip] = { 0.1f, 0.1f, 0.15f, 1.0f };
+		style->Colors[ImGuiCol_ResizeGripHovered] = { 0.6f, 0.35f, 0.65f, 1.0f };
+		style->Colors[ImGuiCol_ResizeGripActive] = { 0.65f, 0.4f, 0.7f, 1.0f };
+
+		style->Colors[ImGuiCol_Tab] = { 0.5f, 0.3f, 0.55f, 1.0f };
+		style->Colors[ImGuiCol_TabHovered] = { 0.6f, 0.35f, 0.65f, 1.0f };
+		style->Colors[ImGuiCol_TabActive] = { 0.65f, 0.4f, 0.7f, 1.0f };
+		style->Colors[ImGuiCol_TabUnfocused] = { 0.35f, 0.25f, 0.4f, 1.0f };
+		style->Colors[ImGuiCol_TabUnfocusedActive] = { 0.45f, 0.3f, 0.5f, 1.0f };
+
+		style->Colors[ImGuiCol_DockingPreview] = { 0.5f, 0.3f, 0.55f, 0.45f };
+		style->Colors[ImGuiCol_DockingEmptyBg] = { 0.05f, 0.05f, 0.1f, 1.0f };
+
+		//style->Colors[ImGuiCol_PlotLines];
+		//style->Colors[ImGuiCol_PlotLinesHovered];
+		//style->Colors[ImGuiCol_PlotHistogram];
+		//style->Colors[ImGuiCol_PlotHistogramHovered];
+
+		//style->Colors[ImGuiCol_TableHeaderBg];
+		//style->Colors[ImGuiCol_TableBorderStrong];
+		//style->Colors[ImGuiCol_TableBorderLight];
+		//style->Colors[ImGuiCol_TableRowBg];
+		//style->Colors[ImGuiCol_TableRowBgAlt];
+
+		style->Colors[ImGuiCol_TextSelectedBg] = { 0.5f, 0.3f, 0.55f, 1.0f };
+
+		style->Colors[ImGuiCol_DragDropTarget] = { 0.8f, 0.5f, 0.9f, 1.0f };
+
+		//style->Colors[ImGuiCol_NavHighlight];
+		//style->Colors[ImGuiCol_NavWindowingHighlight];
+		//style->Colors[ImGuiCol_NavWindowingDimBg];
+
+		//style->Colors[ImGuiCol_ModalWindowDimBg];
+	}
 }
 
 void Editor::OnFrameStart()
@@ -115,6 +219,7 @@ void Editor::Update()
 			}
 			ImGui::EndMenu();
 		}
+		ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
 		if (ImGui::BeginMenu("Windows"))
 		{
 			if (ImGui::MenuItem("Console", (const char*)0, false, !consoleOpen))
@@ -188,10 +293,14 @@ void Editor::Update()
 
 	if (sceneViewOpen)
 	{
+		ImVec2 oldPadding = ImGui::GetStyle().WindowPadding;
+		ImGui::GetStyle().WindowPadding = ImVec2(0.0f, 0.0f);
+
 		ImGui::Begin("Scene", &sceneViewOpen);
 		{
-			screenWidth = ImGui::GetWindowWidth() - 16;
-			screenHeight = ImGui::GetWindowHeight() - 36;
+			screenWidth = ImGui::GetWindowWidth();
+			float titleBarHeight = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2;
+			screenHeight = ImGui::GetWindowHeight() - titleBarHeight;
 			
 			if (ImGui::IsWindowHovered())
 			{
@@ -220,7 +329,9 @@ void Editor::Update()
 			}
 
 			ImGui::Image((void*)sceneViewColourBuffer, ImVec2(screenWidth, screenHeight), ImVec2(0, 1), ImVec2(1, 0));
+
 		} ImGui::End();
+		ImGui::GetStyle().WindowPadding = oldPadding;
 	}
 
 	if (shaderProgramEditorOpen)

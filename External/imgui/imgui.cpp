@@ -1230,6 +1230,7 @@ ImGuiStyle::ImGuiStyle()
     TableAngledHeadersAngle = 35.0f * (IM_PI / 180.0f); // Angle of angled headers (supported values range from -50 degrees to +50 degrees).
     ColorButtonPosition     = ImGuiDir_Right;   // Side of the color button in the ColorEdit4 widget (left/right). Defaults to ImGuiDir_Right.
     ButtonTextAlign         = ImVec2(0.5f,0.5f);// Alignment of button text when button is larger than text.
+    SelectableRounding      = 0.0f;             // Radius of selectable/menuitem corners rounding. Set to 0.0f to have rectangular selection.
     SelectableTextAlign     = ImVec2(0.0f,0.0f);// Alignment of selectable text. Defaults to (0.0f, 0.0f) (top-left aligned). It's generally important to keep this left-aligned if you want to lay multiple items on a same line.
     SeparatorTextBorderSize = 3.0f;             // Thickkness of border in SeparatorText()
     SeparatorTextAlign      = ImVec2(0.0f,0.5f);// Alignment of text within the separator. Defaults to (0.0f, 0.5f) (left aligned, center).
@@ -1281,6 +1282,7 @@ void ImGuiStyle::ScaleAllSizes(float scale_factor)
     TabMinWidthForCloseButton = (TabMinWidthForCloseButton != FLT_MAX) ? ImTrunc(TabMinWidthForCloseButton * scale_factor) : FLT_MAX;
     SeparatorTextPadding = ImTrunc(SeparatorTextPadding * scale_factor);
     DockingSeparatorSize = ImTrunc(DockingSeparatorSize * scale_factor);
+    SelectableRounding = ImFloor(SelectableRounding * scale_factor);
     DisplayWindowPadding = ImTrunc(DisplayWindowPadding * scale_factor);
     DisplaySafeAreaPadding = ImTrunc(DisplaySafeAreaPadding * scale_factor);
     MouseCursorScale = ImTrunc(MouseCursorScale * scale_factor);
@@ -3177,6 +3179,7 @@ static const ImGuiDataVarInfo GStyleVarInfo[] =
     { ImGuiDataType_Float, 1, (ImU32)offsetof(ImGuiStyle, TabRounding) },           // ImGuiStyleVar_TabRounding
     { ImGuiDataType_Float, 1, (ImU32)offsetof(ImGuiStyle, TabBarBorderSize) },      // ImGuiStyleVar_TabBarBorderSize
     { ImGuiDataType_Float, 2, (ImU32)offsetof(ImGuiStyle, ButtonTextAlign) },       // ImGuiStyleVar_ButtonTextAlign
+    { ImGuiDataType_Float, 1, (ImU32)offsetof(ImGuiStyle, SelectableRounding) },    // ImGuiStyleVar_SelectableRounding
     { ImGuiDataType_Float, 2, (ImU32)offsetof(ImGuiStyle, SelectableTextAlign) },   // ImGuiStyleVar_SelectableTextAlign
     { ImGuiDataType_Float, 1, (ImU32)offsetof(ImGuiStyle, SeparatorTextBorderSize) },// ImGuiStyleVar_SeparatorTextBorderSize
     { ImGuiDataType_Float, 2, (ImU32)offsetof(ImGuiStyle, SeparatorTextAlign) },    // ImGuiStyleVar_SeparatorTextAlign

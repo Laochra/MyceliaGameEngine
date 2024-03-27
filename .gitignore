@@ -5,7 +5,6 @@
 *.slo
 *.lo
 *.o
-*.obj
 
 # Precompiled Headers
 *.gch
@@ -44,6 +43,3 @@ x64/
 # Assimp
 External/assimp/*
 !External/assimp/assimp.zip
-
-# Assets .obj exception
-!Working/Assets/*.obj
