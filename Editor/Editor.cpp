@@ -122,7 +122,7 @@ void Editor::Initialise()
 		style->Colors[ImGuiCol_ScrollbarGrabHovered] = { 0.25f, 0.2f, 0.3f, 1.0f };
 		style->Colors[ImGuiCol_ScrollbarGrabActive] = { 0.5f, 0.3f, 0.55f, 1.0f };
 
-		style->Colors[ImGuiCol_CheckMark] = { 0.8f, 0.6f, 0.95f, 1.0f };
+		style->Colors[ImGuiCol_CheckMark] = { 0.85f, 0.65f, 1.0f, 1.0f };
 
 		//style->Colors[ImGuiCol_SliderGrab];
 		//style->Colors[ImGuiCol_SliderGrabActive];
@@ -157,15 +157,15 @@ void Editor::Initialise()
 		//style->Colors[ImGuiCol_PlotHistogram];
 		//style->Colors[ImGuiCol_PlotHistogramHovered];
 
-		//style->Colors[ImGuiCol_TableHeaderBg];
-		//style->Colors[ImGuiCol_TableBorderStrong];
-		//style->Colors[ImGuiCol_TableBorderLight];
-		//style->Colors[ImGuiCol_TableRowBg];
-		//style->Colors[ImGuiCol_TableRowBgAlt];
+		style->Colors[ImGuiCol_TableHeaderBg] = { 0.5f, 0.3f, 0.55f, 1.0f };
+		style->Colors[ImGuiCol_TableBorderStrong] = { 0.85f, 0.8f, 1.0f, 1.0f };
+		style->Colors[ImGuiCol_TableBorderLight] = { 0.85f, 0.8f, 1.0f, 0.25f };
+		style->Colors[ImGuiCol_TableRowBg] = { 0.75f, 0.7f, 1.0f, 0.25f };
+		style->Colors[ImGuiCol_TableRowBgAlt] = { 0.75f, 0.5f, 1.0f, 0.1f };
 
 		style->Colors[ImGuiCol_TextSelectedBg] = { 0.5f, 0.3f, 0.55f, 1.0f };
 
-		style->Colors[ImGuiCol_DragDropTarget] = { 0.8f, 0.5f, 0.9f, 1.0f };
+		style->Colors[ImGuiCol_DragDropTarget] = { 0.85f, 0.65f, 1.0f, 1.0f };
 
 		//style->Colors[ImGuiCol_NavHighlight];
 		//style->Colors[ImGuiCol_NavWindowingHighlight];

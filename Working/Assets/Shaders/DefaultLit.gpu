@@ -37,6 +37,11 @@
       "Type": 81
     },
     {
+      "Exposed": true,
+      "Name": "ColourMap",
+      "Type": 94
+    },
+    {
       "Exposed": false,
       "Name": "LightColour",
       "Type": 81
@@ -52,19 +57,14 @@
       "Type": 92
     },
     {
-      "Exposed": false,
-      "Name": "ProjectionViewModel",
-      "Type": 92
-    },
-    {
-      "Exposed": true,
-      "Name": "ColourMap",
-      "Type": 94
-    },
-    {
       "Exposed": true,
       "Name": "NormalMap",
       "Type": 94
+    },
+    {
+      "Exposed": false,
+      "Name": "ProjectionViewModel",
+      "Type": 92
     }
   ],
   "Vertex": "Assets\\Shaders\\Lit.vert"

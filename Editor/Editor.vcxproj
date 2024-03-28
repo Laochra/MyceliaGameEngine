@@ -196,6 +196,7 @@
     <ClInclude Include="MeshRendererGUI.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ShaderProgramGUI.h" />
+    <ClInclude Include="Table.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\External\imgui\imgui.natstepfilter" />

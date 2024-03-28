@@ -7,7 +7,7 @@
       <Filter>GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="InputEditor.cpp">
-      <Filter>EditorWindows</Filter>
+      <Filter>GUI\EditorWindows</Filter>
     </ClCompile>
     <ClCompile Include="..\External\imgui\imgui.cpp">
       <Filter>External Libraries\imgui</Filter>
@@ -34,22 +34,22 @@
       <Filter>External Libraries\imgui</Filter>
     </ClCompile>
     <ClCompile Include="GameObjectGUI.cpp">
-      <Filter>EditorWindows</Filter>
-    </ClCompile>
-    <ClCompile Include="GUI.cpp">
-      <Filter>Utility</Filter>
+      <Filter>GUI\EditorWindows</Filter>
     </ClCompile>
     <ClCompile Include="MeshRendererGUI.cpp">
-      <Filter>EditorWindows</Filter>
+      <Filter>GUI\EditorWindows</Filter>
     </ClCompile>
     <ClCompile Include="Inspector.cpp">
-      <Filter>EditorWindows</Filter>
+      <Filter>GUI\EditorWindows</Filter>
     </ClCompile>
     <ClCompile Include="GameObject3DGUI.cpp">
-      <Filter>EditorWindows</Filter>
+      <Filter>GUI\EditorWindows</Filter>
     </ClCompile>
     <ClCompile Include="EditorCameraGUI.cpp">
-      <Filter>EditorWindows</Filter>
+      <Filter>GUI\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI.cpp">
+      <Filter>GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -68,7 +68,10 @@
     <Filter Include="External Libraries\imgui">
       <UniqueIdentifier>{b21dc611-2b18-4119-ba21-fbe6d2f378f2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="EditorWindows">
+    <Filter Include="GUI">
+      <UniqueIdentifier>{a1d011d6-fa56-4ac6-8730-9e79ebaaaf96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\EditorWindows">
       <UniqueIdentifier>{6f0aaeb8-728d-45fc-b389-cc6763e8306a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -87,7 +90,7 @@
       <Filter>GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="InputEditor.h">
-      <Filter>EditorWindows</Filter>
+      <Filter>GUI\EditorWindows</Filter>
     </ClInclude>
     <ClInclude Include="..\External\imgui\imconfig.h">
       <Filter>External Libraries\imgui</Filter>
@@ -120,38 +123,41 @@
       <Filter>External Libraries\imgui</Filter>
     </ClInclude>
     <ClInclude Include="EditorCameraGUI.h">
-      <Filter>EditorWindows</Filter>
+      <Filter>GUI\EditorWindows</Filter>
     </ClInclude>
     <ClInclude Include="GameObject3DGUI.h">
-      <Filter>EditorWindows</Filter>
+      <Filter>GUI\EditorWindows</Filter>
     </ClInclude>
     <ClInclude Include="GameObjectGUI.h">
-      <Filter>EditorWindows</Filter>
+      <Filter>GUI\EditorWindows</Filter>
     </ClInclude>
     <ClInclude Include="ShaderProgramGUI.h">
-      <Filter>EditorWindows</Filter>
+      <Filter>GUI\EditorWindows</Filter>
     </ClInclude>
     <ClInclude Include="ConsoleGUI.h">
-      <Filter>EditorWindows</Filter>
+      <Filter>GUI\EditorWindows</Filter>
     </ClInclude>
     <ClInclude Include="MaterialGUI.h">
-      <Filter>EditorWindows</Filter>
+      <Filter>GUI\EditorWindows</Filter>
     </ClInclude>
     <ClInclude Include="Heirarchy.h">
-      <Filter>EditorWindows</Filter>
+      <Filter>GUI\EditorWindows</Filter>
     </ClInclude>
     <ClInclude Include="MeshRendererGUI.h">
-      <Filter>EditorWindows</Filter>
-    </ClInclude>
-    <ClInclude Include="GUI.h">
-      <Filter>Utility</Filter>
+      <Filter>GUI\EditorWindows</Filter>
     </ClInclude>
     <ClInclude Include="Inspector.h">
-      <Filter>EditorWindows</Filter>
+      <Filter>GUI\EditorWindows</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
     <ClInclude Include="EditorStyler.h">
-      <Filter>EditorWindows</Filter>
+      <Filter>GUI\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Table.h">
+      <Filter>GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

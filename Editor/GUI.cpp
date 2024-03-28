@@ -4,6 +4,8 @@
 
 #include "GameObject.h"
 
+GUI::EditorColours GUI::colours;
+
 std::string GUI::GenerateID(GameObject* gameObject)
 {
 	std::ostringstream stream;
@@ -18,4 +20,16 @@ std::string GUI::GenerateID(const char* name, GameObject* gameObject)
 	stream << name << "##" << gameObject->GetGUID();
 
 	return stream.str();
+}
+
+void GUI::Spacing(uint numberOfSpacings)
+{
+	ImGuiWindow* window = ImGui::GetCurrentWindow();
+	if (window->SkipItems)
+		return;
+
+	for (uint i = 0; i < numberOfSpacings; i++)
+	{
+		ImGui::ItemSize(ImVec2(0, 0));
+	}
 }
