@@ -1,8 +1,24 @@
 #include "ShaderManager.h"
 
+#include <iostream>
+
 using std::pair;
 
 ShaderManager* shaderManager = nullptr;
+
+ShaderManager::ShaderManager()
+{
+   ShaderProgram* defaultShaderProgram = new ShaderProgram;
+   if (defaultShaderProgram->LoadAndLinkFromJSON("Engine\\DefaultAssets\\Default.gpu"))
+   {
+      loadedPrograms.insert(std::pair(string("Default"), defaultShaderProgram));
+   }
+   else
+   {
+      std::cout << "Failed to load Default.gpu\n";
+      delete defaultShaderProgram;
+   }
+}
 
 ShaderManager::~ShaderManager()
 {
@@ -31,5 +47,9 @@ ShaderProgram* ShaderManager::AddProgram(const char* filepath)
        loadedPrograms.insert(std::pair(string(filepath), newProgram));
        return newProgram;
    }
-   else return nullptr;
+   else
+   {
+      std::cout << "Couldn't find a ShaderProgram at filepath:" << filepath << ". Set to Default.gpu" << '\n';
+      return GetProgram("Default");
+   }
 }

@@ -13,7 +13,7 @@ using std::string;
 class TextureManager
 {
 public:
-	TextureManager() = default;
+	TextureManager();
 	~TextureManager();
 	uncopyable(TextureManager);
 	immovable(TextureManager);

@@ -12,6 +12,7 @@ uniform vec3 LightColour;
 uniform vec3 LightDirection;
 
 uniform sampler2D ColourMap;
+uniform vec3 Colour;
 uniform sampler2D NormalMap;
 
 out vec4 FragColour;
@@ -27,10 +28,8 @@ void main()
 
 	vec3 textureColour = texture(ColourMap, vTexCoords).rgb;
 
-	vec3 diffuse = LightColour * lambertTerm * textureColour;
+	vec3 diffuse = LightColour * lambertTerm * textureColour * Colour;
 	vec3 ambient = AmbientColour * textureColour;
-
-	vec3 colour = vec3(0.7, 0.4, 1);
 
 	FragColour = vec4((ambient + diffuse), 1);
 }

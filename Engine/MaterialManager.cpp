@@ -4,6 +4,31 @@ using std::pair;
 
 MaterialManager* materialManager = nullptr;
 
+MaterialManager::MaterialManager()
+{
+   Material* missingMaterial = new Material;
+   if (missingMaterial->LoadFromJSON("Engine\\DefaultAssets\\Missing.mat"))
+   {
+      loadedMaterials.insert(std::pair(string("Missing"), missingMaterial));
+   }
+   else
+   {
+      std::cout << "Failed to load Missing.mat\n";
+      delete missingMaterial;
+   }
+
+   Material* defaultMaterial = new Material;
+   if (defaultMaterial->LoadFromJSON("Engine\\DefaultAssets\\Default.mat"))
+   {
+      loadedMaterials.insert(std::pair(string("Default"), defaultMaterial));
+   }
+   else
+   {
+      std::cout << "Failed to load Default.mat\n";
+      delete defaultMaterial;
+   }
+}
+
 MaterialManager::~MaterialManager()
 {
    for (pair<string, Material*> materialPair : loadedMaterials) { del(materialPair.second); }
@@ -11,8 +36,6 @@ MaterialManager::~MaterialManager()
 
 Material* MaterialManager::GetMaterial(const char* filepath)
 {
-   if (filepath == string("None")) return nullptr;
-
    if (loadedMaterials.count(filepath) == 0) return AddMaterial(filepath);
    else return loadedMaterials[filepath];
 }
@@ -33,5 +56,9 @@ Material* MaterialManager::AddMaterial(const char* filepath)
       loadedMaterials.insert(std::pair(string(filepath), newMaterial));
       return newMaterial;
    }
-   else return nullptr;
+   else
+   {
+      delete newMaterial;
+      return GetMaterial("Missing");
+   }
 }

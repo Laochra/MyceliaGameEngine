@@ -22,15 +22,14 @@ void MeshRendererGUI::DrawMeshRendererGUI(MeshRenderer* meshRenderer)
 	{
 		MaterialGUI::Initialise();
 
-		string currentFilepath;
-		if (meshRenderer->GetMaterial() == nullptr) currentFilepath = "None";
-		else currentFilepath = meshRenderer->GetMaterial()->GetFilePath();
+		string currentFilepath = meshRenderer->GetMaterial()->GetFilePath();
+		if (currentFilepath == "Engine\\DefaultAssets\\Default.mat") currentFilepath = "Default";
 
 		if (ImGui::BeginCombo("Material", currentFilepath.c_str()))
 		{
-			if (ImGui::Selectable("None", currentFilepath == "None"))
+			if (ImGui::Selectable("Default", currentFilepath == "Default"))
 			{
-				meshRenderer->SetMaterial("None");
+				meshRenderer->SetMaterial("Default");
 			}
 
 			for (int i = 0; i < MaterialGUI::materials.size(); i++)

@@ -13,7 +13,7 @@ using std::string;
 class ShaderManager
 {
 public:
-	ShaderManager() = default;
+	ShaderManager();
 	~ShaderManager();
 	uncopyable(ShaderManager);
 	immovable(ShaderManager);

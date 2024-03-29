@@ -26,7 +26,7 @@
       "Type": 80
     }
   ],
-  "Fragment": "Assets\\Shaders\\Lit.frag",
+  "Fragment": "Engine\\DefaultAssets\\Default.frag",
   "Geometry": "None",
   "TessControl": "None",
   "TessEvaluation": "None",
@@ -35,6 +35,16 @@
       "Exposed": false,
       "Name": "AmbientColour",
       "Type": 81
+    },
+    {
+      "Exposed": true,
+      "Name": "Colour",
+      "Type": 81
+    },
+    {
+      "Exposed": true,
+      "Name": "ColourMap",
+      "Type": 94
     },
     {
       "Exposed": false,
@@ -52,20 +62,15 @@
       "Type": 92
     },
     {
-      "Exposed": false,
-      "Name": "ProjectionViewModel",
-      "Type": 92
-    },
-    {
-      "Exposed": true,
-      "Name": "ColourMap",
-      "Type": 94
-    },
-    {
       "Exposed": true,
       "Name": "NormalMap",
       "Type": 94
+    },
+    {
+      "Exposed": false,
+      "Name": "ProjectionViewModel",
+      "Type": 92
     }
   ],
-  "Vertex": "Assets\\Shaders\\Lit.vert"
+  "Vertex": "Engine\\DefaultAssets\\Default.vert"
 }

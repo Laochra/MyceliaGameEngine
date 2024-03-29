@@ -17,7 +17,11 @@ bool Material::LoadFromJSON(const char* filepathInit)
 	}
 
 	ifstream materialInput(filepathInit);
-	assert(materialInput.good());
+	if (!materialInput.good())
+	{
+		std::cout << "Failed to find material with the filepath: " << filepathInit << " - Defaulted to Missing.mat\n";
+		return false;
+	}
 
 	attributes.clear();
 	uniforms.clear();
@@ -26,6 +30,7 @@ bool Material::LoadFromJSON(const char* filepathInit)
 	catch (parse_error)
 	{
 		//Log({ current.filePath, " was corrupt. All fields defaulted to \"None\".\n" }, LogType::Warning);
+		std::cout << filepathInit << " was corrupt. Defaulted to Missing.mat\n";
 
 		return false;
 	}
@@ -35,27 +40,37 @@ bool Material::LoadFromJSON(const char* filepathInit)
 	{
 		//Log({ current.filePath, " did not specify a Shader Program. Defaulted to \"None\".\n" }, LogType::Warning);
 		material["ShaderProgram"] = "None";
+		return true;
 	}
 	if (material["ShaderProgram"] == "None")
 	{
-		return false;
+		return true;
 	}
 
 	string shaderFilePath = material["ShaderProgram"];
 
 	ifstream shaderInput(shaderFilePath.c_str());
-	assert(shaderInput.good());
+	if (shaderFilePath != "Default") shaderInput = ifstream(shaderFilePath.c_str());
+	else shaderInput = ifstream("Engine\\DefaultAssets\\Default.gpu");
 
-	shaderProgram = shaderManager->GetProgram(shaderFilePath.c_str());
+	if (!shaderInput.good())
+	{
+		std::cout << "Failed to find shader program with the filepath: " << shaderFilePath << " - Defaulted to \"None\"\n";
+		material["ShaderProgram"] = "None";
+		return true;
+	}
+
+	if (shaderFilePath != "Default") shaderProgram = shaderManager->GetProgram(shaderFilePath.c_str());
+	else shaderProgram = shaderManager->GetProgram("Engine\\DefaultAssets\\Default.gpu");
 
 	json shaderProgramJSON;
 	try { shaderInput >> shaderProgramJSON; }
 	catch (parse_error)
 	{
-		//Log({ current.filePath, " was corrupt. Shader Program defaulted to \"None\"." }, LogType::Warning);
-		shaderFilePath = "None";
+		std::cout << shaderFilePath << " was corrupt. Set to \"Default\"\n";
+		shaderFilePath = "Default";
 
-		return false;
+		return true;
 	}
 
 	vector<json> attributesJSON = material["Attributes"];

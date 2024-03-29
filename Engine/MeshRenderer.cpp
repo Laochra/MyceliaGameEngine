@@ -30,17 +30,18 @@ void MeshRenderer::Draw()
 	// Bind Transform for Lighting
 	material->shaderProgram->BindUniform("ModelMatrix", GetMatrix());
 	
+	// Bind Colour and Normal Maps
 	for (int i = 0; i < material->uniforms.size(); i++)
 	{
 		if (material->uniforms[i].name == "ColourMap")
 		{
 			string filepath = material->uniforms[i].GetAsFilepath();
 			filepath.pop_back();
-			if (filepath != "None") 
-			{
-				textureManager->GetTexture(material->uniforms[i].GetAsFilepath().c_str())->Bind(0);
-				material->shaderProgram->BindUniform("ColourMap", 0);
-			}
+
+			if (filepath == "None") filepath = "DefaultColour";
+
+			textureManager->GetTexture(filepath.c_str())->Bind(0);
+			material->shaderProgram->BindUniform("ColourMap", 0);
 			
 			continue;
 		}
@@ -48,13 +49,19 @@ void MeshRenderer::Draw()
 		{
 			string filepath = material->uniforms[i].GetAsFilepath();
 			filepath.pop_back();
-			if (filepath != "None")
-			{
-				textureManager->GetTexture(material->uniforms[i].GetAsFilepath().c_str())->Bind(1);
-				material->shaderProgram->BindUniform("NormalMap", 1);
-			}
+
+			if (filepath == "None") filepath = "DefaultNormal";
+
+			textureManager->GetTexture(filepath.c_str())->Bind(1);
+			material->shaderProgram->BindUniform("NormalMap", 1);
 
 			continue;
+		}
+		else if (material->uniforms[i].name == "Colour")
+		{
+			vec3 colour;
+			material->uniforms[i].Get(&colour);
+			material->shaderProgram->BindUniform("Colour", colour);
 		}
 	}
 
@@ -83,9 +90,9 @@ void MeshRenderer::Initialise()
 	Updater::DrawAdd(this);
 
 	mesh = new Mesh();
-	mesh->LoadFromFile("Assets\\Meshes\\soulspear.obj");
+	mesh->LoadFromFile("Assets\\Meshes\\BaseToilet.fbx");
 
-	material = materialManager->GetMaterial("Assets\\Materials\\Mush.mat");
+	material = materialManager->GetMaterial("Default");
 }
 void MeshRenderer::OnDestroy()
 {
