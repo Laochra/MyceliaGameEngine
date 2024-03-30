@@ -1,6 +1,6 @@
 {
   "Attributes": [],
-  "ShaderProgram": "Default",
+  "ShaderProgram": "Engine\\DefaultAssets\\Default.gpu",
   "Uniforms": [
     {
       "Data": [
@@ -10,8 +10,8 @@
         63,
         0,
         0,
-        128,
-        63,
+        0,
+        0,
         0,
         0,
         128,
@@ -20,11 +20,11 @@
       "Name": "Colour"
     },
     {
-      "Data": "Assets\\Textures\\Soulspear_diffuse.tga",
+      "Data": "None",
       "Name": "ColourMap"
     },
     {
-      "Data": "Assets\\Textures\\Soulspear_normal.tga",
+      "Data": "None",
       "Name": "NormalMap"
     }
   ]

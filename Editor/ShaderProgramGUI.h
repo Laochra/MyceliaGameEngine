@@ -22,11 +22,11 @@ struct Fields
 {
 	string programName = "";
 	string filePath = "New File";
-	string vertShader = "None";
+	string vertShader = "Default";
 	string teseShader = "None";
 	string tescShader = "None";
 	string geomShader = "None";
-	string fragShader = "None";
+	string fragShader = "Default";
 
 	vector<ShaderInput> attributes = vector<ShaderInput>();
 	vector<ShaderInput> uniforms = vector<ShaderInput>();
@@ -55,6 +55,7 @@ inline void ValidateLinkage();
 
 inline void Draw();
 inline void DrawShaderPopup(ShaderStage stage, vector<path> shaderPaths, string& currentShader);
+inline void DrawDefaultableShaderPopup(ShaderStage stage, vector<path> shaderPaths, string& currentShader);
 }
 
 void ShaderProgramGUI::Initialise()
@@ -145,7 +146,9 @@ void ShaderProgramGUI::Load(string filePathStr)
 
 	current.filePath = filePathStr;
 
-	ifstream input(current.filePath.c_str());
+	ifstream input;
+	if (filePathStr != "Default") input = ifstream(current.filePath.c_str());
+	else input = ifstream("Engine\\DefaultAssets\\Default.gpu");
 	assert(input.good());
 	
 	path filePath = path(current.filePath);
@@ -172,14 +175,14 @@ void ShaderProgramGUI::Load(string filePathStr)
 			current.vertShader = shaderProgram["Vertex"];
 			if (current.vertShader == "")
 			{
-				current.vertShader = "None";
-				Log({ current.filePath, " had it's Vertex shader blank. Defaulted to \"None\".\n" }, LogType::Warning);
+				current.vertShader = "Default";
+				Log({ current.filePath, " had it's Vertex shader blank. Set to \"Default\".\n" }, LogType::Warning);
 			}
 		}
 		else
 		{
 			dirty = true;
-			Log({ current.filePath, " did not specify a Vertex shader. Defaulted to \"None\".\n" }, LogType::Warning);
+			Log({ current.filePath, " did not specify a Vertex shader. Set to \"Default\".\n" }, LogType::Warning);
 		}
 
 		if (shaderProgram.contains("TessEvaluation"))
@@ -232,14 +235,14 @@ void ShaderProgramGUI::Load(string filePathStr)
 			current.fragShader = shaderProgram["Fragment"];
 			if (current.fragShader == "")
 			{
-				current.fragShader = "None";
-				Log({ current.filePath, " had it's Fragment shader blank. Defaulted to \"None\".\n" }, LogType::Warning);
+				current.fragShader = "Default";
+				Log({ current.filePath, " had it's Fragment shader blank. Set to \"Default\".\n" }, LogType::Warning);
 			}
 		}
 		else
 		{
 			dirty = true;
-			Log({ current.filePath, " did not specify a Fragment shader. Defaulted to \"None\".\n" }, LogType::Warning);
+			Log({ current.filePath, " did not specify a Fragment shader. Set to \"Default\".\n" }, LogType::Warning);
 		}
 	}
 	
@@ -282,12 +285,13 @@ void ShaderProgramGUI::ValidateLinkage()
 {
 	ShaderProgram* testShaderProgram = new ShaderProgram();
 
-	if (current.vertShader != "None") testShaderProgram->LoadShader(VertexStage, current.vertShader.c_str());
+	if (current.vertShader != "Default") testShaderProgram->LoadShader(VertexStage, current.vertShader.c_str());
+	else testShaderProgram->LoadShader(VertexStage, "Engine\\DefaultAssets\\Default.vert");
 	if (current.teseShader != "None") testShaderProgram->LoadShader(TessEvaluationStage, current.teseShader.c_str());
 	if (current.tescShader != "None") testShaderProgram->LoadShader(TessControlStage, current.tescShader.c_str());
 	if (current.geomShader != "None") testShaderProgram->LoadShader(GeometryStage, current.geomShader.c_str());
-	if (current.fragShader != "None") testShaderProgram->LoadShader(FragmentStage, current.fragShader.c_str());
-
+	if (current.fragShader != "Default") testShaderProgram->LoadShader(FragmentStage, current.fragShader.c_str());
+	else testShaderProgram->LoadShader(FragmentStage, "Engine\\DefaultAssets\\Default.frag");
 	validLinkage = testShaderProgram->Link();
 
 	testShaderProgram->GetFields(current.attributes, current.uniforms);
@@ -306,6 +310,9 @@ void ShaderProgramGUI::Draw()
 			dirty = false;
 			validLinkage = false;
 			current = Fields();
+			current.vertShader = "Default";
+			current.fragShader = "Default";
+			ShaderProgramGUI::ValidateLinkage();
 		}
 
 		for (int i = 0; i < shaderPrograms.size(); i++)
@@ -376,11 +383,11 @@ void ShaderProgramGUI::Draw()
 	{
 		ImGui::SeparatorText("Shaders");
 
-		DrawShaderPopup(VertexStage, vertexShaders, current.vertShader);
+		DrawDefaultableShaderPopup(VertexStage, vertexShaders, current.vertShader);
 		DrawShaderPopup(TessEvaluationStage, tessEvaluationShaders, current.teseShader);
 		DrawShaderPopup(TessControlStage, tessEvaluationShaders, current.tescShader);
 		DrawShaderPopup(GeometryStage, geometryShaders, current.geomShader);
-		DrawShaderPopup(FragmentStage, fragmentShaders, current.fragShader);
+		DrawDefaultableShaderPopup(FragmentStage, fragmentShaders, current.fragShader);
 
 		if (!validLinkage)
 		{
@@ -444,6 +451,48 @@ void ShaderProgramGUI::DrawShaderPopup(ShaderStage stage, vector<path> shaderPat
 				ValidateLinkage();
 			}
 			if (isNone) ImGui::SetItemDefaultFocus();
+
+			for (int i = 0; i < shaderPaths.size(); i++)
+			{
+				bool isCurrent = shaderPaths[i].string() == currentShader;
+				if (ImGui::Selectable(shaderPaths[i].filename().string().c_str(), isCurrent))
+				{
+					dirty = true;
+					currentShader = shaderPaths[i].string();
+					ValidateLinkage();
+				}
+				if (isCurrent) ImGui::SetItemDefaultFocus();
+			}
+
+			ImGui::EndCombo();
+		}
+	} ImGui::EndDisabled();
+}
+
+void ShaderProgramGUI::DrawDefaultableShaderPopup(ShaderStage stage, vector<path> shaderPaths, string& currentShader)
+{
+	string stageName;
+	switch (stage)
+	{
+	case VertexStage: stageName = "Vertex"; break;
+	case TessEvaluationStage: stageName = "Tess Evaluation"; break;
+	case TessControlStage: stageName = "Tess Control"; break;
+	case GeometryStage: stageName = "Geometry"; break;
+	case FragmentStage: stageName = "Fragment"; break;
+	}
+
+	ImGui::BeginDisabled(shaderPaths.size() == 0);
+	{
+		if (ImGui::BeginCombo(stageName.c_str(), currentShader.c_str()))
+		{
+			bool isDefault = currentShader == "Default";
+			if (ImGui::Selectable("Default", isDefault))
+			{
+				dirty = true;
+				currentShader = "Default";
+				ValidateLinkage();
+			}
+			if (isDefault) ImGui::SetItemDefaultFocus();
 
 			for (int i = 0; i < shaderPaths.size(); i++)
 			{

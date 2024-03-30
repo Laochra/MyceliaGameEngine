@@ -13,7 +13,7 @@ using std::string;
 class MaterialManager
 {
 public:
-	MaterialManager() = default;
+	MaterialManager();
 	~MaterialManager();
 	uncopyable(MaterialManager);
 	immovable(MaterialManager);

@@ -20,11 +20,11 @@
       "Name": "Colour"
     },
     {
-      "Data": "Assets\\Textures\\Soulspear_diffuse.tga",
+      "Data": "None",
       "Name": "ColourMap"
     },
     {
-      "Data": "Assets\\Textures\\Soulspear_normal.tga",
+      "Data": "None",
       "Name": "NormalMap"
     }
   ]

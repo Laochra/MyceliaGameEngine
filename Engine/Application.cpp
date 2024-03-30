@@ -74,9 +74,6 @@ int Application::Setup()
 	}
 
 	input = new Input();
-	shaderManager = new ShaderManager();
-	materialManager = new MaterialManager();
-	textureManager = new TextureManager();
 
 	glfwSetKeyCallback(window, KeyCallback);
 	glfwSetCursorPosCallback(window, CursorPosCallback);
@@ -104,6 +101,10 @@ int Application::Setup()
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE); // Look into documentation for this
 	glfwSetErrorCallback(GLFWErrorCallback);
 #endif
+
+	shaderManager = new ShaderManager();
+	materialManager = new MaterialManager();
+	textureManager = new TextureManager();
 
 	return 0;
 }

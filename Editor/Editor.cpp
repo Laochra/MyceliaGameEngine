@@ -71,6 +71,12 @@ void Editor::Initialise()
 	input->enabled = false;
 
 
+	// Initialise ShaderProgramGUI
+	ShaderProgramGUI::ValidateLinkage();
+	// Initialise MaterialGUI
+	MaterialGUI::LoadShaderProgram("Default");
+	MaterialGUI::dirty = false;
+
 	// ImGui Styling Setup (Serialise and load this. Hardcoding bad)
 	{
 		ImGuiStyle* style = &ImGui::GetStyle();

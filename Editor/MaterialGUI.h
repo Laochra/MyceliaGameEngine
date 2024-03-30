@@ -26,7 +26,7 @@ struct Fields
 {
 	string materialName = "";
 	string filePath = "New File";
-	string shaderFilePath = "None";
+	string shaderFilePath = "Default";
 
 	vector<MaterialInput> attributes = vector<MaterialInput>();
 	vector<MaterialInput> uniforms = vector<MaterialInput>();
@@ -179,27 +179,24 @@ void MaterialGUI::Load(string filePathStr)
 	// Ensuring Shader Program is Valid
 	if (!material.contains("ShaderProgram"))
 	{
-		dirty = true;
-		Log({ current.filePath, " did not specify a Shader Program. Defaulted to \"None\".\n" }, LogType::Warning);
-		material["ShaderProgram"] = "None";
-	}
-	if (material["ShaderProgram"] == "None")
-	{
-		if (dirty) Save();
-		return;
+		Log({ current.filePath, " did not specify a Shader Program. Set to \"Default\".\n" }, LogType::Warning);
+		material["ShaderProgram"] = "Default";
+		Save();
 	}
 
 	current.shaderFilePath = material["ShaderProgram"];
 
-	ifstream shaderInput(current.shaderFilePath.c_str());
+	ifstream shaderInput;
+	if (current.shaderFilePath != "Default") shaderInput = ifstream(current.shaderFilePath.c_str());
+	else shaderInput = ifstream("Engine\\DefaultAssets\\Default.gpu");
 	assert(shaderInput.good());
 
 	json shaderProgram;
 	try { shaderInput >> shaderProgram; }
 	catch (parse_error)
 	{
-		Log({ current.filePath, " was corrupt. Shader Program defaulted to \"None\"." }, LogType::Warning);
-		current.shaderFilePath = "None";
+		Log({ current.filePath, " was corrupt. Shader Program set to \"Default\"." }, LogType::Warning);
+		current.shaderFilePath = "Default";
 		Save();
 
 		return;
@@ -279,7 +276,10 @@ void MaterialGUI::LoadShaderProgram(string filePathStr)
 	current.uniforms.clear();
 
 
-	ifstream input(current.shaderFilePath.c_str());
+	ifstream input;
+	input = ifstream(current.shaderFilePath.c_str());
+	if (filePathStr != "Default") input = ifstream(current.shaderFilePath.c_str());
+	else input = ifstream("Engine\\DefaultAssets\\Default.gpu");
 	assert(input.good());
 
 	json shaderProgram;
@@ -373,8 +373,9 @@ void MaterialGUI::Draw()
 	{
 		if (ImGui::Selectable("New File", current.filePath == "New File"))
 		{
-			dirty = false;
 			current = Fields();
+			LoadShaderProgram("Default");
+			dirty = false;
 		}
 
 		for (int i = 0; i < materials.size(); i++)
@@ -447,13 +448,9 @@ void MaterialGUI::Draw()
 
 		if (ImGui::BeginCombo("##Shader Program", current.shaderFilePath.c_str()))
 		{
-			if (ImGui::Selectable("None", current.shaderFilePath == "None"))
+			if (ImGui::Selectable("Default", current.shaderFilePath == "Default"))
 			{
-				dirty = true;
-				current.shaderFilePath = "None";
-
-				current.attributes.clear();
-				current.uniforms.clear();
+				LoadShaderProgram("Default");
 			}
 
 			for (int i = 0; i < shaderPrograms.size(); i++)
@@ -518,18 +515,16 @@ void MaterialGUI::DrawField(MaterialInput& field)
 			}
 			else
 			{
-				Log({ "Field didn't contain enough bytes. Value has been set to default." }, LogType::Warning);
-
 				valueStr = "None";
-				changeMade = true;
+				if (current.filePath != "New File") changeMade = true;
 			}
 
 			if (ImGui::BeginCombo("##Texture", valueStr.c_str()))
 			{
 				if (ImGui::Selectable("None", valueStr == "None"))
 				{
-					value.clear();
 					changeMade = true;
+					value.clear();
 					valueStr = "None";
 				}
 
@@ -570,32 +565,30 @@ void MaterialGUI::DrawField(MaterialInput& field)
 		case FloatGL:
 		{
 			float value;
-			if (!field.Get<float>(&value))
+			if (!field.Get(&value))
 			{
-				Log({ "Field didn't contain enough bytes. Value has been set to default." }, LogType::Warning);
-				dirty = true; value = 0.0f; field.Set<float>(value);
+				if (current.filePath != "New File") dirty = true;
+				value = 0.0f; field.Set(value);
 			}
 
-			if (ImGui::DragFloat(field.name.c_str(), &value, 0.01f))
+			if (ImGui::DragFloat("##Float", &value, 0.01f))
 			{
-				dirty = true;
-				field.Set<float>(value);
+				dirty = true; field.Set(value);
 			}
 			break;
 		}
 		case Float2GL:
 		{
 			vec2 value;
-			if (!field.Get<vec2>(&value))
+			if (!field.Get(&value))
 			{
-				Log({ "Field didn't contain enough bytes. Value has been set to default." }, LogType::Warning);
-				dirty = true; value = vec2(); field.Set<vec2>(value);
+				if (current.filePath != "New File") dirty = true; 
+				value = vec2(); field.Set(value);
 			}
 
-			if (ImGui::DragFloat2(field.name.c_str(), (float*)&value, 0.01f))
+			if (ImGui::DragFloat2("##Float2", (float*)&value, 0.01f))
 			{
-				dirty = true;
-				field.Set<vec2>(value);
+				dirty = true; field.Set(value);
 			}
 
 			break;
@@ -603,42 +596,40 @@ void MaterialGUI::DrawField(MaterialInput& field)
 		case Float3GL:
 		{
 			vec3 value;
-			if (!field.Get<vec3>(&value))
+			if (!field.Get(&value))
 			{
-				Log({"Field didn't contain enough bytes. Value has been set to default."}, LogType::Warning);
-				dirty = true; value = vec3(); field.Set<vec3>(value);
+				if (current.filePath != "New File") dirty = true;
+				value = vec3(1); field.Set(value);
 			}
 
-			if (ImGui::DragFloat3(field.name.c_str(), (float*)&value, 0.01f))
+			if (ImGui::ColorEdit3("##RGB", (float*)&value))
 			{
-				dirty = true;
-				field.Set<vec3>(value);
+				dirty = true; field.Set(value);
 			}
 			break;
 		}
 		case Float4GL:
 		{
 			vec4 value;
-			if (!field.Get<vec4>(&value))
+			if (!field.Get(&value))
 			{
-				Log({ "Field didn't contain enough bytes. Value has been set to default." }, LogType::Warning);
-				dirty = true; value = vec4(); field.Set<vec4>(value);
+				if (current.filePath != "New File") dirty = true;
+				value = vec4(1); field.Set(value);
 			}
 
-			if (ImGui::DragFloat4(field.name.c_str(), (float*)&value, 0.01f))
+			if (ImGui::ColorEdit4("##RGBA", (float*)&value))
 			{
-				dirty = true;
-				field.Set<vec4>(value);
+				dirty = true; field.Set(value);
 			}
 			break;
 		}
 		case Float2x2GL:
 		{
 			glm::mat2x2 value;
-			if (!field.Get<glm::mat2x2>(&value))
+			if (!field.Get(&value))
 			{
-				Log({ "Field didn't contain enough bytes. Value has been set to default." }, LogType::Warning);
-				dirty = true; value = glm::mat2x2(); field.Set<glm::mat2x2>(value);
+				if (current.filePath != "New File") dirty = true;
+				value = glm::mat2x2(); field.Set(value);
 			}
 
 			bool modified = false;
@@ -647,18 +638,17 @@ void MaterialGUI::DrawField(MaterialInput& field)
 
 			if (modified)
 			{
-				dirty = true;
-				field.Set<glm::mat2x2>(value);
+				dirty = true; field.Set(value);
 			}
 			break;
 		}
 		case Float3x3GL:
 		{
 			glm::mat3x3 value;
-			if (!field.Get<glm::mat3x3>(&value))
+			if (!field.Get(&value))
 			{
-				Log({ "Field didn't contain enough bytes. Value has been set to default." }, LogType::Warning);
-				dirty = true; value = glm::mat3x3(); field.Set<glm::mat3x3>(value);
+				if (current.filePath != "New File") dirty = true;
+				value = glm::mat3x3(); field.Set(value);
 			}
 
 			bool modified = false;
@@ -668,18 +658,17 @@ void MaterialGUI::DrawField(MaterialInput& field)
 
 			if (modified)
 			{
-				dirty = true;
-				field.Set<glm::mat3x3>(value);
+				dirty = true; field.Set(value);
 			}
 			break;
 		}
 		case Float4x4GL:
 		{
 			glm::mat4x4 value;
-			if (!field.Get<glm::mat4x4>(&value))
+			if (!field.Get(&value))
 			{
-				Log({ "Field didn't contain enough bytes. Value has been set to default." }, LogType::Warning);
-				dirty = true; value = glm::mat4x4(); field.Set<glm::mat4x4>(value);
+				if (current.filePath != "New File") dirty = true;
+				value = glm::mat4x4(); field.Set(value);
 			}
 
 			bool modified = false;
@@ -690,8 +679,7 @@ void MaterialGUI::DrawField(MaterialInput& field)
 
 			if (modified)
 			{
-				dirty = true;
-				field.Set<glm::mat4x4>(value);
+				dirty = true; field.Set(value);
 			}
 			break;
 		}
@@ -699,64 +687,60 @@ void MaterialGUI::DrawField(MaterialInput& field)
 		case IntGL:
 		{
 			int value;
-			if (!field.Get<int>(&value))
+			if (!field.Get(&value))
 			{
-				Log({ "Field didn't contain enough bytes. Value has been set to default." }, LogType::Warning);
-				dirty = true; value = 0; field.Set<int>(value);
+				if (current.filePath != "New File") dirty = true;
+				value = 0; field.Set(value);
 			}
 
-			if (ImGui::DragInt(field.name.c_str(), &value, 1))
+			if (ImGui::DragInt("##Int", &value, 1))
 			{
-				dirty = true;
-				field.Set<int>(value);
+				dirty = true; field.Set(value);
 			}
 			break;
 		}
 		case Int2GL:
 		{
 			glm::ivec2 value;
-			if (!field.Get<glm::ivec2>(&value))
+			if (!field.Get(&value))
 			{
-				Log({ "Field didn't contain enough bytes. Value has been set to default." }, LogType::Warning);
-				dirty = true; value = glm::ivec2(); field.Set<glm::ivec2>(value);
+				if (current.filePath != "New File") dirty = true;
+				value = glm::ivec2(); field.Set(value);
 			}
 
-			if (ImGui::DragInt2(field.name.c_str(), (int*)&value, 1))
+			if (ImGui::DragInt2("##Int2", (int*)&value, 1))
 			{
-				dirty = true;
-				field.Set<glm::ivec2>(value);
+				dirty = true; field.Set(value);
 			}
 			break;
 		}
 		case Int3GL:
 		{
 			glm::ivec3 value;
-			if (!field.Get<glm::ivec3>(&value))
+			if (!field.Get(&value))
 			{
-				Log({ "Field didn't contain enough bytes. Value has been set to default." }, LogType::Warning);
-				dirty = true; value = glm::ivec3(); field.Set<glm::ivec3>(value);
+				if (current.filePath != "New File") dirty = true;
+				value = glm::ivec3(); field.Set(value);
 			}
 
-			if (ImGui::DragInt3(field.name.c_str(), (int*)&value, 1))
+			if (ImGui::DragInt3("##Int3", (int*)&value, 1))
 			{
-				dirty = true;
-				field.Set<glm::ivec3>(value);
+				dirty = true; field.Set(value);
 			}
 			break;
 		}
 		case Int4GL:
 		{
 			glm::ivec4 value;
-			if (!field.Get<glm::ivec4>(&value))
+			if (!field.Get(&value))
 			{
-				Log({ "Field didn't contain enough bytes. Value has been set to default." }, LogType::Warning);
-				dirty = true; value = glm::ivec4(); field.Set<glm::ivec4>(value);
+				if (current.filePath != "New File") dirty = true;
+				value = glm::ivec4(); field.Set(value);
 			}
 
-			if (ImGui::DragInt4(field.name.c_str(), (int*)&value, 1))
+			if (ImGui::DragInt4("##Int4", (int*)&value, 1))
 			{
-				dirty = true;
-				field.Set<glm::ivec4>(value);
+				dirty = true; field.Set(value);
 			}
 			break;
 		}

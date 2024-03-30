@@ -26,7 +26,7 @@
       "Type": 80
     }
   ],
-  "Fragment": "Assets\\Shaders\\Lit.frag",
+  "Fragment": "Engine\\DefaultAssets\\Default.frag",
   "Geometry": "None",
   "TessControl": "None",
   "TessEvaluation": "None",
@@ -34,6 +34,11 @@
     {
       "Exposed": false,
       "Name": "AmbientColour",
+      "Type": 81
+    },
+    {
+      "Exposed": true,
+      "Name": "Colour",
       "Type": 81
     },
     {
@@ -67,5 +72,5 @@
       "Type": 92
     }
   ],
-  "Vertex": "Assets\\Shaders\\Lit.vert"
+  "Vertex": "Engine\\DefaultAssets\\Default.vert"
 }
