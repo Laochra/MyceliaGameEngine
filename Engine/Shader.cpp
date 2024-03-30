@@ -584,16 +584,41 @@ bool ShaderProgram::BindUniform(const char* name, int count, const mat4* value)
 
 bool ShaderProgram::LoadShaderFromJSON(ShaderStage stage, const char* filename)
 {
-	if (string(filename) == string("None"))
+	if (memcmp(filename, "None", 5) == 0)
 	{
 		ClearShader(stage);
 		return true;
 	}
 
-	if (LoadShader(stage, filename) == false)
+	if (memcmp(filename, "Default", 8) == 0)
 	{
-		std::cout << "\n" << filename << " is not a valid shader file\n";
-		return false;
+		switch (stage)
+		{
+			case FragmentStage:
+				if (LoadShader(stage, "Engine\\DefaultAssets\\Default.frag") == false)
+				{
+					std::cout << '\n' << filename << " is not a valid shader file\n";
+					return false;
+				}
+				break;
+			case VertexStage:
+				if (LoadShader(stage, "Engine\\DefaultAssets\\Default.vert") == false)
+				{
+					std::cout << '\n' << filename << " is not a valid shader file\n";
+					return false;
+				}
+				break;
+			default: std::cout << '\n' << "Shader stage " << stage << " has no default\n";
+				return false;
+		}
+	}
+	else
+	{
+		if (LoadShader(stage, filename) == false)
+		{
+			std::cout << '\n' << filename << " is not a valid shader file\n";
+			return false;
+		}
 	}
 
 
@@ -602,6 +627,8 @@ bool ShaderProgram::LoadShaderFromJSON(ShaderStage stage, const char* filename)
 
 bool ShaderProgram::JSONFileIsValid(const char* filename)
 {
+	if (memcmp(filename, "Default", 8) == 0) { return true; }
+
 	ifstream input(filename);
 	if (!input.good())
 	{
