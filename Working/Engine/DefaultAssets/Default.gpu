@@ -26,7 +26,7 @@
       "Type": 80
     }
   ],
-  "Fragment": "Engine\\DefaultAssets\\Default.frag",
+  "Fragment": "Default",
   "Geometry": "None",
   "TessControl": "None",
   "TessEvaluation": "None",
@@ -72,5 +72,5 @@
       "Type": 92
     }
   ],
-  "Vertex": "Engine\\DefaultAssets\\Default.vert"
+  "Vertex": "Default"
 }
