@@ -83,7 +83,6 @@ void Editor::Initialise()
 
 		ImFont* odudoMono = ImGui::GetIO().Fonts->AddFontFromFileTTF("Assets\\Fonts\\OdudoMono-Regular.otf", 16);
 
-
 		style->ItemInnerSpacing = { 3.0f, 3.0f };
 		style->ItemSpacing = { 3.0f, 3.0f };
 
@@ -103,81 +102,7 @@ void Editor::Initialise()
 		style->ScrollbarRounding = 4.0f;
 		style->ScrollbarSize = 16.0f;
 
-		style->Colors[ImGuiCol_Text] = { 1.0f, 1.0f, 1.0f, 1.0f };
-		style->Colors[ImGuiCol_TextDisabled] = { 0.5f, 0.5f, 0.5f, 1.0f };
-
-		style->Colors[ImGuiCol_WindowBg] = { 0.1f, 0.1f, 0.15f, 1.0f };
-		style->Colors[ImGuiCol_ChildBg] = { 0.1f, 0.1f, 0.15f, 1.0f };
-		style->Colors[ImGuiCol_PopupBg] = { 0.1f, 0.1f, 0.15f, 1.0f };
-
-		style->Colors[ImGuiCol_Border] = { 0.05f, 0.0f, 0.1f, 1.0f };
-		style->Colors[ImGuiCol_BorderShadow] = { 0.0f, 0.0f, 0.0f, 0.0f };
-
-		style->Colors[ImGuiCol_FrameBg] = { 0.3f, 0.3f, 0.4f, 1.0f };
-		style->Colors[ImGuiCol_FrameBgHovered] = { 0.35f, 0.35f, 0.5f, 1.0f };
-		style->Colors[ImGuiCol_FrameBgActive] = { 0.4f, 0.35f, 0.55f, 1.0f };
-
-		style->Colors[ImGuiCol_TitleBg] = { 0.1f, 0.1f, 0.15f, 1.0f };
-		style->Colors[ImGuiCol_TitleBgActive] = { 0.1f, 0.05f, 0.15f, 1.0f };
-		style->Colors[ImGuiCol_TitleBgCollapsed] = { 0.1f, 0.1f, 0.15f, 1.0f };
-
-		style->Colors[ImGuiCol_MenuBarBg] = { 0.05f, 0.0f, 0.1f, 1.0f };
-
-		style->Colors[ImGuiCol_ScrollbarBg] = { 0.05f, 0.0f, 0.1f, 1.0f };
-		style->Colors[ImGuiCol_ScrollbarGrab] = { 0.15f, 0.15f, 0.2f, 1.0f };
-		style->Colors[ImGuiCol_ScrollbarGrabHovered] = { 0.25f, 0.2f, 0.3f, 1.0f };
-		style->Colors[ImGuiCol_ScrollbarGrabActive] = { 0.5f, 0.3f, 0.55f, 1.0f };
-
-		style->Colors[ImGuiCol_CheckMark] = { 0.85f, 0.65f, 1.0f, 1.0f };
-
-		//style->Colors[ImGuiCol_SliderGrab];
-		//style->Colors[ImGuiCol_SliderGrabActive];
-
-		style->Colors[ImGuiCol_Button] = { 0.5f, 0.3f, 0.55f, 1.0f };
-		style->Colors[ImGuiCol_ButtonHovered] = { 0.6f, 0.35f, 0.65f, 1.0f };
-		style->Colors[ImGuiCol_ButtonActive] = { 0.65f, 0.4f, 0.7f, 1.0f };
-
-		style->Colors[ImGuiCol_Header] = { 0.5f, 0.3f, 0.55f, 1.0f };
-		style->Colors[ImGuiCol_HeaderHovered] = { 0.6f, 0.35f, 0.65f, 1.0f };
-		style->Colors[ImGuiCol_HeaderActive] = { 0.65f, 0.4f, 0.7f, 1.0f };
-
-		style->Colors[ImGuiCol_Separator] = { 0.25f, 0.25f, 0.35f, 1.0f };
-		style->Colors[ImGuiCol_SeparatorHovered] = { 0.6f, 0.35f, 0.65f, 1.0f };
-		style->Colors[ImGuiCol_SeparatorActive] = { 0.65f, 0.4f, 0.7f, 1.0f };
-
-		style->Colors[ImGuiCol_ResizeGrip] = { 0.1f, 0.1f, 0.15f, 1.0f };
-		style->Colors[ImGuiCol_ResizeGripHovered] = { 0.6f, 0.35f, 0.65f, 1.0f };
-		style->Colors[ImGuiCol_ResizeGripActive] = { 0.65f, 0.4f, 0.7f, 1.0f };
-
-		style->Colors[ImGuiCol_Tab] = { 0.5f, 0.3f, 0.55f, 1.0f };
-		style->Colors[ImGuiCol_TabHovered] = { 0.6f, 0.35f, 0.65f, 1.0f };
-		style->Colors[ImGuiCol_TabActive] = { 0.65f, 0.4f, 0.7f, 1.0f };
-		style->Colors[ImGuiCol_TabUnfocused] = { 0.35f, 0.25f, 0.4f, 1.0f };
-		style->Colors[ImGuiCol_TabUnfocusedActive] = { 0.45f, 0.3f, 0.5f, 1.0f };
-
-		style->Colors[ImGuiCol_DockingPreview] = { 0.5f, 0.3f, 0.55f, 0.45f };
-		style->Colors[ImGuiCol_DockingEmptyBg] = { 0.05f, 0.05f, 0.1f, 1.0f };
-
-		//style->Colors[ImGuiCol_PlotLines];
-		//style->Colors[ImGuiCol_PlotLinesHovered];
-		//style->Colors[ImGuiCol_PlotHistogram];
-		//style->Colors[ImGuiCol_PlotHistogramHovered];
-
-		style->Colors[ImGuiCol_TableHeaderBg] = { 0.5f, 0.3f, 0.55f, 1.0f };
-		style->Colors[ImGuiCol_TableBorderStrong] = { 0.85f, 0.8f, 1.0f, 1.0f };
-		style->Colors[ImGuiCol_TableBorderLight] = { 0.85f, 0.8f, 1.0f, 0.25f };
-		style->Colors[ImGuiCol_TableRowBg] = { 0.75f, 0.7f, 1.0f, 0.25f };
-		style->Colors[ImGuiCol_TableRowBgAlt] = { 0.75f, 0.5f, 1.0f, 0.1f };
-
-		style->Colors[ImGuiCol_TextSelectedBg] = { 0.5f, 0.3f, 0.55f, 1.0f };
-
-		style->Colors[ImGuiCol_DragDropTarget] = { 0.85f, 0.65f, 1.0f, 1.0f };
-
-		//style->Colors[ImGuiCol_NavHighlight];
-		//style->Colors[ImGuiCol_NavWindowingHighlight];
-		//style->Colors[ImGuiCol_NavWindowingDimBg];
-
-		//style->Colors[ImGuiCol_ModalWindowDimBg];
+		GUI::LoadStyle(GUI::currentStyle);
 	}
 }
 

@@ -74,6 +74,9 @@
     <Filter Include="GUI\EditorWindows">
       <UniqueIdentifier>{6f0aaeb8-728d-45fc-b389-cc6763e8306a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{57ffe12a-f198-499d-a7a6-93946c02816d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EditorCameraConfig.h">
@@ -149,7 +152,6 @@
     <ClInclude Include="Inspector.h">
       <Filter>GUI\EditorWindows</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h" />
     <ClInclude Include="EditorStyler.h">
       <Filter>GUI\EditorWindows</Filter>
     </ClInclude>
@@ -158,6 +160,9 @@
     </ClInclude>
     <ClInclude Include="Table.h">
       <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -171,9 +176,13 @@
     </Natvis>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Editor.rc" />
+    <ResourceCompile Include="Editor.rc">
+      <Filter>Resources</Filter>
+    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Editor.ico" />
+    <Image Include="Editor.ico">
+      <Filter>Resources</Filter>
+    </Image>
   </ItemGroup>
 </Project>

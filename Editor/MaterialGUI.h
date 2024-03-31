@@ -85,8 +85,6 @@ void MaterialGUI::Initialise()
 
 void MaterialGUI::Save()
 {
-	// save out to json file
-
 	dirty = false;
 	json material;
 

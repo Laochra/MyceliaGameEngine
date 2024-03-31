@@ -7,6 +7,9 @@ using std::string;
 #include <vector>
 using std::vector;
 using std::array;
+#include <map>
+using std::map;
+using std::pair;
 
 class GameObject;
 
@@ -16,9 +19,15 @@ namespace GUI
 
 	extern string GenerateID(GameObject* gameObject);
 	extern string GenerateID(const char* name, GameObject* gameObject);
+	extern string InvisibleName(const char* uniqueName);
 
 	extern void Spacing(uint numberOfSpacings);
 
+	extern string currentStyle;
+	extern map<string, string> styleMap;
+	extern void SaveStyle();
+	extern void LoadStyle(string styleName);
+	extern void UpdateStyle();
 	struct Colour
 	{
 		float r, g, b, a;
@@ -37,7 +46,7 @@ namespace GUI
 		Colour textDisabled			= Colour(0.5f,  0.5f,  0.5f);		// TextDisabled
 		Colour textSelection			= Colour(0.5f,  0.3f,  0.55f);	// TextSelectedBg
 
-		Colour background				= Colour(0.1f,  0.1f,  0.15f);	// TitleBg, TitleBgCollapsed, WindowBg, ChildBg, PopupBg, ResizeGrip
+		Colour background				= Colour(0.1f,  0.1f,  0.15f);	// WindowBg, ChildBg, PopupBg, TitleBg, TitleBgCollapsed, ResizeGrip
 		Colour backgroundActive		= Colour(0.1f,  0.05f, 0.15f);	// TitleBgActive
 		Colour accentBackground		= Colour(0.05f, 0.0f,  0.1f);		// MenuBarBg, ScrollbarBg
 
