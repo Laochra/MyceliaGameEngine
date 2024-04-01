@@ -10,11 +10,13 @@
 
 string GUI::currentStyle = "Orchid";
 map<string, string> GUI::styleMap = {
+	{ "Forest", "Engine\\EditorStyles\\Forest.style" },
 	{ "Igneous", "Engine\\EditorStyles\\Igneous.style" },
+	{ "Marshmellow", "Engine\\EditorStyles\\Marshmellow.style" },
 	{ "Obsidian", "Engine\\EditorStyles\\Obsidian.style" },
 	{ "Orchid", "Engine\\EditorStyles\\Orchid.style" },
 	{ "Seagrass", "Engine\\EditorStyles\\Seagrass.style" },
-	{ "World Wide Web", "Engine\\EditorStyles\\WorldWideWeb.style" },
+	{ "Kidcore", "Engine\\EditorStyles\\Kidcore.style" },
 };
 
 GUI::EditorColours GUI::colours;
