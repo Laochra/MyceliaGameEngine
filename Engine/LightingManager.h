@@ -4,12 +4,24 @@
 
 struct Light
 {
-	vec3 direction;
 	vec3 colour;
+};
+
+struct DirectionalLight : Light
+{
+	vec3 direction;
+};
+
+struct PointLight : Light
+{
+	vec3 position;
+	float range;
 };
 
 namespace LightingManager
 {
-	extern Light light;
-	extern vec3 ambientLight;
+	extern Light ambientLight;
+
+	extern DirectionalLight directionalLight;
+	extern PointLight pointLight;
 }

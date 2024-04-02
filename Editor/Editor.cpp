@@ -64,9 +64,14 @@ void Editor::Initialise()
 	GameObject3D::Instantiate<GameObject3D>(object);
 	GameObject3D::Instantiate<GameObject3D>(object);
 
-	LightingManager::light.colour = vec3(1, 0.9f, 0.8f);
-	LightingManager::light.direction = glm::normalize(vec3(0, -0.7, -0.7));
-	LightingManager::ambientLight = vec3(0.25f, 0.25f, 0.25f);
+	LightingManager::ambientLight.colour = vec3(0.3f, 0.3f, 0.3f);
+
+	LightingManager::directionalLight.colour = vec3(1.0f, 1.0f, 1.0f);
+	LightingManager::directionalLight.direction = glm::normalize(vec3(0, -0.0, -0.7));
+
+	LightingManager::pointLight.colour = vec3(0.9f, 0.8f, 1.0f);
+	LightingManager::pointLight.position = vec3(0, 5, 2);
+	LightingManager::pointLight.range = 10.0f;
 
 	input->enabled = false;
 

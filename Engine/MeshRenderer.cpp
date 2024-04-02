@@ -19,10 +19,13 @@ void MeshRenderer::Draw()
 	// Bind Shader
 	material->shaderProgram->Bind();
 
+	// Bind Camera Posiiton
+	material->shaderProgram->BindUniform("CameraPosition", mainCamera->GetGlobalPosition());
+
 	// Bind Light
-	material->shaderProgram->BindUniform("AmbientColour", LightingManager::ambientLight);
-	material->shaderProgram->BindUniform("LightColour", LightingManager::light.colour);
-	material->shaderProgram->BindUniform("LightDirection", LightingManager::light.direction);
+	material->shaderProgram->BindUniform("AmbientColour", LightingManager::ambientLight.colour);
+	material->shaderProgram->BindUniform("LightColour", LightingManager::directionalLight.colour);
+	material->shaderProgram->BindUniform("LightDirection", LightingManager::directionalLight.direction);
 
 	// Bind Transform
 	material->shaderProgram->BindUniform("ProjectionViewModel", ProjectionViewMatrix * GetMatrix());
@@ -45,6 +48,14 @@ void MeshRenderer::Draw()
 			
 			continue;
 		}
+		else if (material->uniforms[i].name == "ColourTint")
+		{
+			vec3 colourTint;
+			material->uniforms[i].Get(&colourTint);
+			material->shaderProgram->BindUniform("ColourTint", colourTint);
+
+			continue;
+		}
 		else if (material->uniforms[i].name == "NormalMap")
 		{
 			string filepath = material->uniforms[i].GetAsFilepath();
@@ -57,11 +68,25 @@ void MeshRenderer::Draw()
 
 			continue;
 		}
-		else if (material->uniforms[i].name == "Colour")
+		else if (material->uniforms[i].name == "SpecularMap")
 		{
-			vec3 colour;
-			material->uniforms[i].Get(&colour);
-			material->shaderProgram->BindUniform("Colour", colour);
+			string filepath = material->uniforms[i].GetAsFilepath();
+			filepath.pop_back();
+
+			if (filepath == "None") filepath = "DefaultColour";
+
+			textureManager->GetTexture(filepath.c_str())->Bind(2);
+			material->shaderProgram->BindUniform("SpecularMap", 2);
+
+			continue;
+		}
+		else if (material->uniforms[i].name == "SpecularGlossiness")
+		{
+			float specularGlossiness;
+			material->uniforms[i].Get(&specularGlossiness);
+			material->shaderProgram->BindUniform("SpecularGlossiness", specularGlossiness);
+
+			continue;
 		}
 	}
 
@@ -90,7 +115,7 @@ void MeshRenderer::Initialise()
 	Updater::DrawAdd(this);
 
 	mesh = new Mesh();
-	mesh->LoadFromFile("Assets\\Meshes\\BaseToilet.fbx");
+	mesh->LoadFromFile("Assets\\Meshes\\soulspear.obj");
 
 	material = materialManager->GetMaterial("Default");
 }

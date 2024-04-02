@@ -2,6 +2,8 @@
 
 namespace LightingManager
 {
-	Light light = Light();
-	vec3 ambientLight = vec3();
+	Light ambientLight = Light();
+
+	DirectionalLight directionalLight = DirectionalLight();
+	PointLight pointLight = PointLight();
 }

@@ -17,7 +17,7 @@
         128,
         63
       ],
-      "Name": "Colour"
+      "Name": "ColourTint"
     },
     {
       "Data": "Assets\\Textures\\Marill_BaseColor.tga",
@@ -26,6 +26,19 @@
     {
       "Data": "None",
       "Name": "NormalMap"
+    },
+    {
+      "Data": [
+        0,
+        64,
+        28,
+        70
+      ],
+      "Name": "SpecularGlossiness"
+    },
+    {
+      "Data": "None",
+      "Name": "SpecularMap"
     }
   ]
 }

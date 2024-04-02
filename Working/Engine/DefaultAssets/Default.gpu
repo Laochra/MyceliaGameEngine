@@ -37,8 +37,13 @@
       "Type": 81
     },
     {
+      "Exposed": false,
+      "Name": "CameraPosition",
+      "Type": 82
+    },
+    {
       "Exposed": true,
-      "Name": "Colour",
+      "Name": "ColourTint",
       "Type": 81
     },
     {
@@ -70,6 +75,16 @@
       "Exposed": false,
       "Name": "ProjectionViewModel",
       "Type": 92
+    },
+    {
+      "Exposed": true,
+      "Name": "SpecularGlossiness",
+      "Type": 6
+    },
+    {
+      "Exposed": true,
+      "Name": "SpecularMap",
+      "Type": 94
     }
   ],
   "Vertex": "Default"

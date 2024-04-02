@@ -1,23 +1,23 @@
 {
   "Attributes": [],
-  "ShaderProgram": "Engine\\DefaultAssets\\Default.gpu",
+  "ShaderProgram": "Default",
   "Uniforms": [
     {
       "Data": [
-        0,
-        0,
-        128,
+        186,
+        185,
+        57,
         63,
-        0,
-        0,
-        128,
+        186,
+        185,
+        57,
         63,
-        0,
-        0,
-        128,
+        186,
+        185,
+        57,
         63
       ],
-      "Name": "Colour"
+      "Name": "ColourTint"
     },
     {
       "Data": "None",
@@ -26,6 +26,19 @@
     {
       "Data": "None",
       "Name": "NormalMap"
+    },
+    {
+      "Data": [
+        0,
+        0,
+        128,
+        63
+      ],
+      "Name": "SpecularGlossiness"
+    },
+    {
+      "Data": "None",
+      "Name": "SpecularMap"
     }
   ]
 }

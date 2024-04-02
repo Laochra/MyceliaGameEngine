@@ -17,7 +17,7 @@
         128,
         63
       ],
-      "Name": "Colour"
+      "Name": "ColourTint"
     },
     {
       "Data": "None",
@@ -26,6 +26,19 @@
     {
       "Data": "None",
       "Name": "NormalMap"
+    },
+    {
+      "Data": [
+        0,
+        0,
+        64,
+        65
+      ],
+      "Name": "SpecularGlossiness"
+    },
+    {
+      "Data": "None",
+      "Name": "SpecularMap"
     }
   ]
 }

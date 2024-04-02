@@ -11,7 +11,7 @@ out vec3 FragPos;
 out vec3 N;
 out mat3 TBN;
 
-out vec2 vTexCoords;
+out vec2 FragTexCoords;
 
 uniform mat4 ProjectionViewModel;
 
@@ -25,8 +25,8 @@ void main()
 	vec3 T = normalize((ModelMatrix * Tangent).xyz);
 	vec3 B = normalize((ModelMatrix * BiTangent).xyz);
 	
-	TBN = transpose(mat3(T, B, N));
+	TBN = mat3(T, B, N);
 
-	vTexCoords = TexCoords;
+	FragTexCoords = TexCoords;
 	gl_Position = ProjectionViewModel * Position;
 }

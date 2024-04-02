@@ -17,15 +17,28 @@
         128,
         63
       ],
-      "Name": "Colour"
+      "Name": "ColourTint"
     },
     {
-      "Data": "Assets\\Textures\\Soulspear_diffuse.tga",
+      "Data": "Assets\\Textures\\soulspear_diffuse.tga",
       "Name": "ColourMap"
     },
     {
-      "Data": "Assets\\Textures\\Soulspear_normal.tga",
+      "Data": "Assets\\Textures\\soulspear_normal.tga",
       "Name": "NormalMap"
+    },
+    {
+      "Data": [
+        0,
+        0,
+        32,
+        65
+      ],
+      "Name": "SpecularGlossiness"
+    },
+    {
+      "Data": "Assets\\Textures\\soulspear_specular.tga",
+      "Name": "SpecularMap"
     }
   ]
 }
