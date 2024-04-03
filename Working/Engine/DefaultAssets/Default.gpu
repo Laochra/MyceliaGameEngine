@@ -53,12 +53,12 @@
     },
     {
       "Exposed": false,
-      "Name": "LightColour",
+      "Name": "DirectionalLightColour",
       "Type": 81
     },
     {
       "Exposed": false,
-      "Name": "LightDirection",
+      "Name": "DirectionalLightDirection",
       "Type": 81
     },
     {

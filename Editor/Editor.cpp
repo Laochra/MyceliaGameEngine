@@ -69,8 +69,8 @@ void Editor::Initialise()
 	LightingManager::directionalLight.colour = vec3(1.0f, 1.0f, 1.0f);
 	LightingManager::directionalLight.direction = glm::normalize(vec3(0, -0.0, -0.7));
 
-	LightingManager::pointLight.colour = vec3(0.9f, 0.8f, 1.0f);
-	LightingManager::pointLight.position = vec3(0, 5, 2);
+	LightingManager::pointLight.colour = vec3(0.9f, 0.0f, 0.0f);
+	LightingManager::pointLight.position = vec3(0, 1, 2);
 	LightingManager::pointLight.range = 10.0f;
 
 	input->enabled = false;

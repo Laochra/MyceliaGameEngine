@@ -24,8 +24,13 @@ void MeshRenderer::Draw()
 
 	// Bind Light
 	material->shaderProgram->BindUniform("AmbientColour", LightingManager::ambientLight.colour);
-	material->shaderProgram->BindUniform("LightColour", LightingManager::directionalLight.colour);
-	material->shaderProgram->BindUniform("LightDirection", LightingManager::directionalLight.direction);
+	
+	material->shaderProgram->BindUniform("DirectionalLightColour", LightingManager::directionalLight.colour);
+	material->shaderProgram->BindUniform("DirectionalLightDirection", LightingManager::directionalLight.direction);
+
+	material->shaderProgram->BindUniform("PointLightColour", LightingManager::pointLight.colour);
+	material->shaderProgram->BindUniform("PointLightPosition", LightingManager::pointLight.position);
+	material->shaderProgram->BindUniform("PointLightRange", LightingManager::pointLight.range);
 
 	// Bind Transform
 	material->shaderProgram->BindUniform("ProjectionViewModel", ProjectionViewMatrix * GetMatrix());
