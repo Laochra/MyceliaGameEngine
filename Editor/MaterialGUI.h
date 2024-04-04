@@ -98,10 +98,17 @@ void MaterialGUI::Save()
 		if (input.type == ShaderInputType::TextureGL)
 		{
 			vector<byte> bytes = input.GetRaw();
-			string data;
-			for (int i = 0; i < input.GetByteCount(); i++) { data.push_back(bytes[i]); }
-			data.pop_back();
-			attribute["Data"] = data;
+			if (bytes.size() > 0)
+			{
+				string data;
+				for (int i = 0; i < input.GetByteCount(); i++) { data.push_back(bytes[i]); }
+				data.pop_back();
+				attribute["Data"] = data;
+			}
+			else
+			{
+				attribute["Data"] = "None";
+			}
 		}
 		else attribute["Data"] = input.GetRaw();
 		
@@ -117,10 +124,17 @@ void MaterialGUI::Save()
 		if (input.type == ShaderInputType::TextureGL)
 		{
 			vector<byte> bytes = input.GetRaw();
-			string data;
-			for (int i = 0; i < input.GetByteCount(); i++) { data.push_back(bytes[i]); }
-			data.pop_back();
-			uniform["Data"] = data;
+			if (bytes.size() > 0)
+			{
+				string data;
+				for (int i = 0; i < input.GetByteCount(); i++) { data.push_back(bytes[i]); }
+				data.pop_back();
+				uniform["Data"] = data;
+			}
+			else
+			{
+				uniform["Data"] = "None";
+			}
 		}
 		else uniform["Data"] = input.GetRaw();
 
