@@ -59,6 +59,7 @@ Material* MaterialManager::AddMaterial(const char* filepath)
    else
    {
       delete newMaterial;
+      std::cout << "Couldn't find a Material at filepath: " << filepath << ". Set to Missing.mat\n";
       return GetMaterial("Missing");
    }
 }

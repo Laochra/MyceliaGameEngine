@@ -45,10 +45,11 @@ void main()
 	float specularComponentD = pow(max(dot(viewDirection, reflectionDirectionD), 0.0), SpecularGlossiness);
 	
 	vec3 pointLightDirection = normalize(FragPos - PointLightPosition);
-	float attenuation = 1.0/length(PointLightPosition - FragPos);
-	float lightDotP = dot(normal, -pointLightDirection);
+	float attenuation = PointLightRange / length(PointLightPosition - FragPos);
+	attenuation = min(attenuation, 1.0);
+	float lightDotP = dot(normal, -pointLightDirection) * attenuation;
 	vec3 reflectionDirectionP = -reflect(-pointLightDirection, normal);
-	float specularComponentP = pow(max(dot(viewDirection, reflectionDirectionP), 0.0), SpecularGlossiness);
+	float specularComponentP = pow(max(dot(viewDirection, reflectionDirectionP), 0.0) * attenuation, SpecularGlossiness);
 	
 	float diffuseComponent = clamp(lightDotD + lightDotP, 0, 1);
 	

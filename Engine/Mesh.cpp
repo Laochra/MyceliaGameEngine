@@ -11,8 +11,6 @@ Mesh::~Mesh()
 	glDeleteVertexArrays(1, &vao);
 	glDeleteBuffers(1, &vbo);
 	glDeleteBuffers(1, &ibo);
-
-	del(filepath);
 }
 
 void Mesh::Initialise(uint vertexCount, const Vertex* vertices, uint indexCount, uint* indices)
@@ -200,11 +198,13 @@ void Mesh::InitialiseCube() // Need to generate Tangents and BiTangents to Fix L
 	this->Initialise(24, vertices, 36, indices);
 } // Need to generate Tangents and BiTangents to Fix Lighting
 
-void Mesh::LoadFromFile(const char* filepathInit)
+bool Mesh::LoadFromFile(const char* filepathInit)
 {
 	Assimp::Importer importer;
 	const aiScene* file = importer.ReadFile(filepathInit, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 	
+	if (file == nullptr) return false;
+
 	if (file->mNumMeshes > 0)
 	{
 		aiMesh* mesh = file->mMeshes[0];

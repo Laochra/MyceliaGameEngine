@@ -49,7 +49,8 @@ ShaderProgram* ShaderManager::AddProgram(const char* filepath)
    }
    else
    {
-      std::cout << "Couldn't find a ShaderProgram at filepath:" << filepath << ". Set to Default.gpu" << '\n';
+      delete newProgram;
+      std::cout << "Couldn't find a ShaderProgram at filepath: " << filepath << ". Set to Default.gpu\n";
       return GetProgram("Default");
    }
 }

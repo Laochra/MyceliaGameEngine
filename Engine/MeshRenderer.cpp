@@ -6,6 +6,7 @@
 #include "ShaderManager.h"
 #include "MaterialManager.h"
 #include "TextureManager.h"
+#include "MeshManager.h"
 
 #include "GeneralMacros.h"
 
@@ -13,6 +14,7 @@ void MeshRenderer::Draw()
 {
 	if (material == nullptr) return;
 	if (material->shaderProgram == nullptr) return;
+	if (mesh == nullptr) return;
 
 	mat4 ProjectionViewMatrix = mainCamera->GetProjectionMatrix(screenWidth, screenHeight) * mainCamera->GetViewMatrix();
 
@@ -103,6 +105,11 @@ const Mesh* MeshRenderer::GetMesh() const
 	return mesh;
 }
 
+void MeshRenderer::SetMesh(const char* filepath)
+{
+	mesh = meshManager->GetMesh(filepath);
+}
+
 const Material* MeshRenderer::GetMaterial() const
 {
 	return material;
@@ -119,10 +126,8 @@ void MeshRenderer::Initialise()
 
 	Updater::DrawAdd(this);
 
-	mesh = new Mesh();
-	mesh->LoadFromFile("Assets\\Meshes\\soulspear.obj");
-
-	material = materialManager->GetMaterial("Default");
+	mesh = meshManager->GetMesh("Assets\\Meshes\\Soulspear.obj");
+	material = materialManager->GetMaterial("Assets\\Materials\\Soulspear.mat");
 }
 void MeshRenderer::OnDestroy()
 {

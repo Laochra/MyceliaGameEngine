@@ -2,7 +2,6 @@
 
 #include "Material.h"
 #include "MaterialManager.h"
-//#include "ShaderManager.h"
 
 #include "ImGuiIncludes.h"
 #include "GUI.h"
@@ -58,28 +57,27 @@ void MaterialGUI::Initialise()
 	textures.clear();
 
 	path filePath;
-	path extension;
+	string extension;
 	for (const directory_entry& entry : directory_iterator(materialsPath))
 	{
 		filePath = entry.path();
-		extension = filePath.extension();
+		extension = filePath.extension().string();
 
-		if (extension.string() == ".mat") materials.push_back(filePath);
+		if (extension == ".mat") materials.push_back(filePath);
 	}
 	for (const directory_entry& entry : directory_iterator(shadersPath))
 	{
 		filePath = entry.path();
-		extension = filePath.extension();
+		extension = filePath.extension().string();
 
-		if (extension.string() == ".gpu") shaderPrograms.push_back(filePath);
+		if (extension == ".gpu") shaderPrograms.push_back(filePath);
 	}
 	for (const directory_entry& entry : directory_iterator(texturesPath))
 	{
 		filePath = entry.path();
-		extension = filePath.extension();
+		extension = filePath.extension().string();
 
-		if (extension.string() == ".png" ||
-			extension.string() == ".tga") textures.push_back(filePath); // TODO: Refactor this to allow for multiple image formats
+		if (extension == ".png" || extension == ".tga") textures.push_back(filePath); // TODO: Refactor this to allow for more image formats
 	}
 }
 

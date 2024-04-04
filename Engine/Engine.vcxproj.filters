@@ -71,6 +71,9 @@
     <ClCompile Include="TextureManager.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="MeshManager.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -193,6 +196,9 @@
     </ClInclude>
     <ClInclude Include="GeneralMacros.h">
       <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshManager.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

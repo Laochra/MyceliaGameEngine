@@ -7,6 +7,7 @@
 #include "ShaderManager.h"
 #include "MaterialManager.h"
 #include "TextureManager.h"
+#include "MeshManager.h"
 
 bool applicationFocused = true;
 
@@ -105,6 +106,7 @@ int Application::Setup()
 	shaderManager = new ShaderManager();
 	materialManager = new MaterialManager();
 	textureManager = new TextureManager();
+	meshManager = new MeshManager();
 
 	return 0;
 }

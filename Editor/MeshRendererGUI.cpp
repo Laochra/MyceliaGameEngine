@@ -20,33 +20,62 @@ void MeshRendererGUI::DrawMeshRendererGUI(MeshRenderer* meshRenderer)
 
 	if (ImGui::CollapsingHeader(id, ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		MaterialGUI::Initialise();
+		string meshFilepath;
+		if (meshRenderer->GetMesh() == nullptr) meshFilepath = "None";
+		else meshFilepath = meshRenderer->GetMesh()->GetFilePath();
 
-		string currentFilepath = meshRenderer->GetMaterial()->GetFilePath();
-		if (currentFilepath == "Engine\\DefaultAssets\\Default.mat") currentFilepath = "Default";
-
-		if (ImGui::BeginCombo("Material", currentFilepath.c_str()))
+		vector<path> meshes;
+		for (const directory_entry& entry : directory_iterator("Assets\\Meshes"))
 		{
-			if (ImGui::Selectable("Default", currentFilepath == "Default"))
+			path filePath = entry.path();
+			string extension = filePath.extension().string();
+
+			if (extension == ".obj" || extension == ".fbx" || extension == ".gltf") meshes.push_back(filePath);
+		}
+
+		if (ImGui::BeginCombo("Mesh", meshFilepath.c_str()))
+		{
+			if (ImGui::Selectable("None", meshFilepath == "None"))
 			{
-				meshRenderer->SetMaterial("Default");
+				meshRenderer->SetMesh("None");
 			}
 
-			for (int i = 0; i < MaterialGUI::materials.size(); i++)
+			for (int i = 0; i < meshes.size(); i++)
 			{
-				bool isCurrent = MaterialGUI::materials[i].string() == currentFilepath;
-				if (ImGui::Selectable(MaterialGUI::materials[i].filename().string().c_str(), isCurrent))
+				bool isCurrent = meshes[i].string() == meshFilepath;
+				if (ImGui::Selectable(meshes[i].filename().string().c_str(), isCurrent))
 				{
-					meshRenderer->SetMaterial(MaterialGUI::materials[i].string().c_str());
+					meshRenderer->SetMesh(meshes[i].string().c_str());
 				}
 				if (isCurrent) ImGui::SetItemDefaultFocus();
 			}
 
 			ImGui::EndCombo();
 		}
+	}
 
-		ImGui::Text("Mesh:");
-		ImGui::SameLine();
-		ImGui::Text(meshRenderer->GetMesh()->GetFilePath());
+	MaterialGUI::Initialise();
+
+	string materialFilepath = meshRenderer->GetMaterial()->GetFilePath();
+	if (materialFilepath == "Engine\\DefaultAssets\\Default.mat") materialFilepath = "Default";
+
+	if (ImGui::BeginCombo("Material", materialFilepath.c_str()))
+	{
+		if (ImGui::Selectable("Default", materialFilepath == "Default"))
+		{
+			meshRenderer->SetMaterial("Default");
+		}
+
+		for (int i = 0; i < MaterialGUI::materials.size(); i++)
+		{
+			bool isCurrent = MaterialGUI::materials[i].string() == materialFilepath;
+			if (ImGui::Selectable(MaterialGUI::materials[i].filename().string().c_str(), isCurrent))
+			{
+				meshRenderer->SetMaterial(MaterialGUI::materials[i].string().c_str());
+			}
+			if (isCurrent) ImGui::SetItemDefaultFocus();
+		}
+
+		ImGui::EndCombo();
 	}
 }

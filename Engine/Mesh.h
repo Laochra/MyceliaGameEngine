@@ -16,7 +16,7 @@ public:
 	void InitialiseQuad();
 	void InitialiseCube();
 
-	void LoadFromFile(const char* filepath);
+	bool LoadFromFile(const char* filepath);
 
 	const char* GetFilePath() const;
 

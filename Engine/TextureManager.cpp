@@ -61,6 +61,7 @@ Texture* TextureManager::AddTexture(const char* filepath)
    else
    {
       delete newTexture;
+      std::cout << "Couldn't find a Texture at filepath: " << filepath << ". Set to Missing Texture\n";
       return GetTexture("Missing");
    }
 }

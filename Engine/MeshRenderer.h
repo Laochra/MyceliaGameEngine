@@ -17,6 +17,7 @@ public:
 	void Draw() override;
 
 	const Mesh* GetMesh() const;
+	void SetMesh(const char* filepath);
 	const Material* GetMaterial() const;
 	void SetMaterial(const char* filepath);
 
