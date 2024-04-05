@@ -61,9 +61,9 @@ public:
 	
 
 	/// <summary>Creates a new instance of a GameObject3D</summary> <param name="positionInit"></param> <param name="rotationInit">(default: identity)</param> <param name="scaleInit">(default: 1,1,1)</param> <param name="pivotInit">(default: 0,0,0)</param> <param name="parentInit">(default: nullptr)</param> <param name="stateInit">(default: Active)</param> <returns>A pointer to the created instance</returns>
-	template<GameObject3DClass T> static T* Instantiate(vec3 positionInit, quat rotationInit = quat(), vec3 scaleInit = vec3(1), vec3 pivotInit = vec3(), GameObject3D* parentInit = nullptr, GameObjectState stateInit = Active);
+	template<GameObject3DClass T> static T* Instantiate(vec3 positionInit, quat rotationInit = glm::identity<quat>(), vec3 scaleInit = vec3(1), vec3 pivotInit = vec3(), GameObject3D* parentInit = nullptr, GameObjectState stateInit = Active);
 	/// <summary>Creates a new instance of a GameObject3D</summary> <param name="parentInit"></param> <param name="positionInit"></param> <param name="rotationInit">(default: identity)</param> <param name="scaleInit">(default: 1,1,1)</param> <param name="pivotInit">(default: 0,0,0)</param> <param name="stateInit">(default: Active)</param> <returns>A pointer to the created instance</returns>
-	template<GameObject3DClass T> static T* Instantiate(GameObject3D* parentInit, vec3 positionInit, quat rotationInit = quat(), vec3 scaleInit = vec3(1), vec3 pivotInit = vec3(), GameObjectState stateInit = Active);
+	template<GameObject3DClass T> static T* Instantiate(GameObject3D* parentInit, vec3 positionInit, quat rotationInit = glm::identity<quat>(), vec3 scaleInit = vec3(1), vec3 pivotInit = vec3(), GameObjectState stateInit = Active);
 
 	/// <summary>Creates a new instance of a GameObject3D</summary> <param name="matrixInit"></param> <param name="parentInit">(default: nullptr)</param> <param name="stateInit">(default: Active)</param> <returns>A pointer to the created instance</returns>
 	template<GameObject3DClass T> static T* Instantiate(mat4 matrixInit, vec3 pivotInit = vec3(), GameObject3D* parentInit = nullptr, GameObjectState stateInit = Active);
@@ -115,8 +115,13 @@ template<GameObject3DClass T> inline T* GameObject3D::Instantiate(GameObject3D* 
 template<GameObject3DClass T> inline T* GameObject3D::Instantiate(mat4 matrixInit, vec3 pivotInit, GameObject3D* parentInit, GameObjectState stateInit)
 {
 	vec3 positionInit = matrixInit[3];
-	quat rotationInit = glm::quat_cast(matrixInit);
 	vec3 scaleInit = vec3(glm::length(vec3(matrixInit[0])), glm::length(vec3(matrixInit[1])), glm::length(vec3(matrixInit[2])));
+	const mat3 rotationMatrix(
+		vec3(matrixInit[0]) / scaleInit[0],
+		vec3(matrixInit[1]) / scaleInit[1],
+		vec3(matrixInit[2]) / scaleInit[2]
+	);
+	quat rotationInit = glm::quat_cast(rotationMatrix);
 
 	T* gameObject = GameObject3D::Instantiate<T>(positionInit, rotationInit, scaleInit, pivotInit, parentInit, stateInit);
 
