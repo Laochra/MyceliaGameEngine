@@ -129,9 +129,3 @@ void MeshRenderer::Initialise()
 	mesh = meshManager->GetMesh("Assets\\Meshes\\Soulspear.obj");
 	material = materialManager->GetMaterial("Assets\\Materials\\Soulspear.mat");
 }
-void MeshRenderer::OnDestroy()
-{
-	del(mesh);
-
-	GameObject3D::OnDestroy();
-}

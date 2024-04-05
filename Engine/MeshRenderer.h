@@ -13,7 +13,6 @@ public:
 	using GameObject3D::GameObject3D;
 
 	void Initialise() override;
-	void OnDestroy() override;
 	void Draw() override;
 
 	const Mesh* GetMesh() const;

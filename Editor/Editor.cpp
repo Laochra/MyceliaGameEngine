@@ -56,13 +56,32 @@ void Editor::Initialise()
 
 	Gizmos::create(100000, 10000, 0, 0);
 
-	object = GameObject3D::Instantiate<MeshRenderer>(vec3(0, 0, 0), quat(), vec3(3, 3, 3), vec3(0, -0.5f, 0));
+
+
+	MeshRenderer* m1 = GameObject3D::Instantiate<MeshRenderer>(vec3(4, 0, 0), glm::identity<quat>(), vec3(1.5f, 1.5f, 1.5f), vec3(0, -0.5f, 0));
+	m1->SetMesh("Assets\\Meshes\\Marill.fbx"); m1->SetMaterial("Assets\\Materials\\Marill.mat");
+	m1->Rotate(glm::radians(-90.0f), { 1, 0, 0 });
+	m1->SetName("Marill");
+
+	object = GameObject3D::Instantiate<MeshRenderer>(vec3(1.5f, -1.0, -0.5f), glm::identity<quat>(), vec3(0.67f, 0.67f, 0.67f), vec3(0, -0.5f, 0), m1);
+
+	object->Rotate(glm::radians(25.0f), { 0, 0, 1 });
+	object->Rotate(glm::radians(10.0f), { 0, 1, 0 });
+	object->Rotate(glm::radians(90.0f), { 1, 0, 0 });
+
+	object->SetName("Next victim");
+
+	MeshRenderer* m2 = GameObject3D::Instantiate<MeshRenderer>(vec3(-3, 2, 0), glm::identity<quat>(), vec3(1, 1, 1), vec3(0, -0.5f, 0));
+	m2->SetMesh("Assets\\Meshes\\BaseToilet.fbx"); m2->SetMaterial("Assets\\Materials\\Toilet.mat");
+	m2->Rotate(glm::radians(-90.0f), { 0, 1, 0 }); m2->Rotate(glm::radians(-90.0f), { 1, 0, 0 });
+	m2->SetName("Toilet");
+	MeshRenderer* m3 = GameObject3D::Instantiate<MeshRenderer>(vec3(0.1f, 0, -1.6f), glm::identity<quat>(), vec3(1, 1, 1), vec3(0, 8, 0), m2);
+	m3->Rotate(glm::radians(122.0f), { 0, 0, 1 });
+	m3->Rotate(glm::radians(-5.0f), { 0, 1, 0 });
+	m3->Rotate(glm::radians(-110.0f), { 1, 0, 0 });
+	m3->SetName("Soulspear in its rightful place");
 
 	inspector->SetTarget(object);
-
-	GameObject3D::Instantiate<GameObject3D>(object);
-	GameObject3D::Instantiate<GameObject3D>(object);
-	GameObject3D::Instantiate<GameObject3D>(object);
 
 	LightingManager::ambientLight.colour = vec3(0.3f, 0.3f, 0.3f);
 

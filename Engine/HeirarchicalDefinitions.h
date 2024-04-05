@@ -112,7 +112,7 @@ template<class H> int Heirarchical<H>::GetIndex() const noexcept
 {
 	if (parent == nullptr)
 	{
-		return gameObjectManager->GetIndexOf((GameObject*)this);
+		return gameObjectManager->GetIndexOf((H*)this);
 	}
 	else
 	{

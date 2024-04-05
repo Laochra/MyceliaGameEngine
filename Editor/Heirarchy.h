@@ -105,7 +105,7 @@ void Heirarchy::Draw()
 		ImGui::SetNextWindowPos(rightClickMenu.position);
 		ImGui::SetNextWindowBgAlpha(0.9f);
 
-		ImGui::Begin(rightClickMenu.target->name, (bool*)0, ImGuiWindowFlags_NoMove || ImGuiWindowFlags_NoDecoration);
+		ImGui::Begin(rightClickMenu.target->GetName(), (bool*)0, ImGuiWindowFlags_NoMove || ImGuiWindowFlags_NoDecoration);
 		
 		bool isHovered = false;
 
@@ -153,7 +153,7 @@ void Heirarchy::DrawEntry(GameObject3D* gameObject3D)
 	ImGui::PushID(GUI::GenerateID(gameObject3D).c_str());
 
 	bool isSelected = inspector->GetTarget() == gameObject3D;
-	if (ImGui::Selectable(gameObject3D->name, &isSelected))
+	if (ImGui::Selectable(gameObject3D->GetName(), &isSelected))
 	{
 		inspector->SetTarget(gameObject3D);
 	}
@@ -213,9 +213,10 @@ void Heirarchy::DragDropTarget(const char* id, GameObject3D* target, DragDropTar
 
 		if (payload->IsDataType("GameObject3D"))
 		{
-			GameObject3D** payloadObject = (GameObject3D**)payload->Data;
+			GameObject3D** payloadObjectPtr = (GameObject3D**)payload->Data;
+			GameObject3D* payloadObject = *payloadObjectPtr;
 
-			if ((*payloadObject) != target && !(*payloadObject)->ContainsChild(target, true))
+			if (payloadObject != target && !payloadObject->ContainsChild(target, true))
 			{
 				if (offset == ChildTo || offset == ChildToFront)
 				{
@@ -223,12 +224,14 @@ void Heirarchy::DragDropTarget(const char* id, GameObject3D* target, DragDropTar
 
 					if (ImGui::IsKeyReleased(ImGuiKey_MouseLeft))
 					{
-						(*payloadObject)->SetParent(target);
+						payloadObject->SetParent(target);
 
 						if (offset == ChildToFront)
 						{
-							target->MoveChildTo((*payloadObject), 0);
+							target->MoveChildTo(payloadObject, 0);
 						}
+
+						payloadObject->SetDirty();
 					}
 				}
 				else
@@ -237,11 +240,12 @@ void Heirarchy::DragDropTarget(const char* id, GameObject3D* target, DragDropTar
 
 					if (ImGui::IsKeyReleased(ImGuiKey_MouseLeft))
 					{
-						GameObject3D* cachedPayloadObject = *payloadObject;
+						if (payloadObject->GetIndex() < target->GetIndex()) offset = (DragDropTargetOffset)(offset - 1);
 
-						cachedPayloadObject->SetParent(target->GetParent());
-						cachedPayloadObject->MoveTo(target->GetIndex() + offset);
+						payloadObject->SetParent(target->GetParent());
+						payloadObject->MoveTo(target->GetIndex() + offset);
 
+						payloadObject->SetDirty();
 					}
 				}
 			}

@@ -19,7 +19,6 @@ class GameObject
 {
 public:
 	SerialiseAs(GameObject);
-	char* name;
 
 	enum GameObjectState : unsigned char
 	{
@@ -40,6 +39,8 @@ public:
 
 	/// <returns>The Globally Unique Identifier of the GameObject</returns>
 	unsigned long long int GetGUID() const noexcept;
+	const char* GetName() const noexcept;
+	void SetName(const char* newName) noexcept;
 	/// <returns>The current state of the GameObject</returns>
 	GameObjectState GetState() const noexcept;
 	virtual bool IsActive() noexcept;
@@ -71,6 +72,7 @@ protected:
 
 private:
 	unsigned long long int guid = 0;
+	char* name;
 	GameObjectState state = Active;
 
 

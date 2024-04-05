@@ -1,5 +1,7 @@
 #include "GameObject.h"
 
+#include "GeneralMacros.h"
+
 GameObject::GameObjectState GameObject::GetState() const noexcept
 {
 	return state;
@@ -23,6 +25,20 @@ void GameObject::SetState(GameObjectState value) noexcept
 unsigned long long int GameObject::GetGUID() const noexcept
 {
 	return guid;
+}
+
+const char* GameObject::GetName() const noexcept
+{
+	return name;
+}
+
+void GameObject::SetName(const char* newName) noexcept
+{
+	del(name);
+	unsigned int newNameLength = strlen(newName);
+	name = new char[newNameLength + 1];
+	name[newNameLength] = '\0';
+	memcpy(name, newName, newNameLength);
 }
 
 bool GameObject::operator==(GameObject& other) const noexcept

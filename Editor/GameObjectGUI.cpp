@@ -23,11 +23,10 @@ void GameObjectGUI::DrawGameObjectGUI(GameObject* gameObject)
 
 	if (ImGui::CollapsingHeader(id, ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		std::string tempName(gameObject->name);
+		std::string tempName(gameObject->GetName());
 		if (ImGui::InputText(" ", &tempName))
 		{
-			delete gameObject->name;
-			AssignStringToCString(gameObject->name, tempName);
+			gameObject->SetName(tempName.c_str());
 		}
 		ImGui::SameLine();
 		bool active = gameObject->GetState() == GameObject::Active;

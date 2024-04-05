@@ -24,7 +24,7 @@ GUI::EditorColours GUI::colours;
 
 std::string GUI::GenerateID(GameObject* gameObject)
 {
-	string str = gameObject->name;
+	string str = gameObject->GetName();
 	str += "##" + std::to_string(gameObject->GetGUID());
 
 	return str;

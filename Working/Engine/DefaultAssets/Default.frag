@@ -61,7 +61,7 @@ void main()
 		{
 			diffuseComponent = 0;
 			specularComponentP = 0;
-			attenuation = 0;
+			//attenuation = 0;
 		}
 		else
 		{
@@ -72,7 +72,7 @@ void main()
 	{
 		diffuseComponent = clamp(lightDotD, 0, 1);
 		specularComponentP = 0;
-		attenuation = 0;
+		//attenuation = 0;
 	}
 	
 	vec3 specularResultD = specularColour * specularComponentD * DirectionalLightColour;
