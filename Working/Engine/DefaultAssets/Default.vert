@@ -17,7 +17,7 @@ uniform mat4 ProjectionViewModel;
 
 uniform mat4 ModelMatrix;
 
-void main()
+void main() // Vertex
 {	
 	FragPos = (ModelMatrix * Position).xyz;
 	

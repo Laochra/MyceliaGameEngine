@@ -18,7 +18,6 @@ uniform vec3 PointLightColour;
 uniform vec3 PointLightPosition;
 uniform float PointLightRange;
 
-
 uniform sampler2D ColourMap;
 uniform vec3 ColourTint;
 
@@ -29,7 +28,7 @@ uniform float SpecularGlossiness;
 
 out vec4 FragColour;
 
-void main()
+void main() // Fragment
 {	
 	vec3 normal = texture(NormalMap, FragTexCoords).rgb;
 	normal = normalize(TBN * (normal * 2.0 - 1.0));
@@ -61,7 +60,6 @@ void main()
 		{
 			diffuseComponent = 0;
 			specularComponentP = 0;
-			//attenuation = 0;
 		}
 		else
 		{
@@ -72,7 +70,6 @@ void main()
 	{
 		diffuseComponent = clamp(lightDotD, 0, 1);
 		specularComponentP = 0;
-		//attenuation = 0;
 	}
 	
 	vec3 specularResultD = specularColour * specularComponentD * DirectionalLightColour;
@@ -88,4 +85,32 @@ void main()
 	
 	
 	FragColour = vec4(result, 1);
+	
+	// Display Surface Normals
+	//FragColour = vec4(N, 1);
+	
+	// Display Texture Coords
+	//FragColour = vec4(FragTexCoords, 0, 1);
+	
+	// Display Colour Map
+	//FragColour = vec4(textureColour, 1);
+	
+	// Display Normal Map
+	//FragColour = vec4(normal, 1);
+	
+	// Display Specular Map
+	//FragColour = vec4(specularColour, 1);
+	
+	// Display Diffuse Result
+	//FragColour = vec4(diffuseResult, 1);
+	
+	// Display Specular Result
+	//FragColour = vec4(specularResult, 1);
+	
+	// Display Depth
+	//float near = 0.01;
+	//float far = 10.0;
+	//float z = gl_FragCoord.z * 2.0 - 1.0;
+	//float depth = (2.0 * near * far) / (far + near - z * (far - near));
+	//FragColour = vec4(vec3(depth / far), 1);
 }
