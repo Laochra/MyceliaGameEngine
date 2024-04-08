@@ -1,4 +1,0 @@
-Vertex POW
-Raster KERPLOW
-Fragment BLAM
-woohoo! it render!

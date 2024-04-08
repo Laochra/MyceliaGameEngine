@@ -26,10 +26,10 @@ void Editor::Initialise()
 	glfwSetWindowTitle(window, "Editor");
 
 	GLFWimage icons[4];
-	icons[0].pixels = stbi_load("shroom16x16.png", &icons[0].width, &icons[0].height, 0, 4);
-	icons[1].pixels = stbi_load("shroom32x32.png", &icons[1].width, &icons[1].height, 0, 4);
-	icons[2].pixels = stbi_load("shroom48x48.png", &icons[2].width, &icons[2].height, 0, 4);
-	icons[3].pixels = stbi_load("shroom64x64.png", &icons[3].width, &icons[3].height, 0, 4);
+	icons[0].pixels = stbi_load("Engine\\Icons\\shroom16x16.png", &icons[0].width, &icons[0].height, 0, 4);
+	icons[1].pixels = stbi_load("Engine\\Icons\\shroom32x32.png", &icons[1].width, &icons[1].height, 0, 4);
+	icons[2].pixels = stbi_load("Engine\\Icons\\shroom48x48.png", &icons[2].width, &icons[2].height, 0, 4);
+	icons[3].pixels = stbi_load("Engine\\Icons\\shroom64x64.png", &icons[3].width, &icons[3].height, 0, 4);
 	glfwSetWindowIcon(window, 4, icons);
 	stbi_image_free(icons[0].pixels);
 	stbi_image_free(icons[1].pixels);
@@ -47,6 +47,8 @@ void Editor::Initialise()
 
 		ImGui_ImplGlfw_InitForOpenGL(window, /*install_callbacks:*/ true);
 		ImGui_ImplOpenGL3_Init();
+
+		ImGui::GetIO().IniFilename = "Engine\\GUIState.ini";
 	}
 
 	gameObjectManager = new GameObjectManager();
@@ -57,6 +59,10 @@ void Editor::Initialise()
 	Gizmos::create(100000, 10000, 0, 0);
 
 	object = GameObject3D::Instantiate<MeshRenderer>(vec3(0.0f, 0.0, 0.0f), glm::identity<quat>(), vec3(1.0f, 1.0f, 1.0f), vec3(0, -0.5f, 0));
+	object->Rotate(glm::radians(90.0f), vec3(-1, 0, 0));
+	object->SetMesh("Assets\\Meshes\\Marill.fbx");
+	object->SetMaterial("Assets\\Materials\\Marill.mat");
+	object->SetName("Marill");
 
 	inspector->SetTarget(object);
 
