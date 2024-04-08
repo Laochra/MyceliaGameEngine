@@ -41,10 +41,10 @@ Mesh* MeshManager::AddMesh(const char* filepath)
    else
    {
       delete newMesh;
-      if (memcmp(filepath, "None", 5) != 0)
-      {
-         std::cout << "Couldn't find a Mesh at filepath: " << filepath << ".\n";
-      }
+      //if (memcmp(filepath, "None", 5) != 0)
+      //{
+      //   std::cout << "Couldn't find a Mesh at filepath: " << filepath << ".\n";
+      //}
       return nullptr;
    }
 }

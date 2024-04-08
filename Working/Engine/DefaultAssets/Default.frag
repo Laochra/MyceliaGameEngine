@@ -44,7 +44,8 @@ void main() // Fragment
 	float specularComponentD = pow(max(dot(viewDirection, reflectionDirectionD), 0.0), SpecularGlossiness);
 	
 	vec3 pointLightDirection = normalize(FragPos - PointLightPosition);
-	float attenuation = PointLightRange / length(PointLightPosition - FragPos);
+	float distanceSquared = dot(PointLightPosition - FragPos, PointLightPosition - FragPos);
+	float attenuation = PointLightRange / distanceSquared;
 	attenuation = min(attenuation, 1.0);
 	float lightDotP = dot(normal, -pointLightDirection) * attenuation;
 	vec3 reflectionDirectionP = -reflect(-pointLightDirection, normal);
@@ -82,9 +83,9 @@ void main() // Fragment
 	vec3 ambientResult = AmbientColour * textureColour;
 	
 	vec3 result = vec3(diffuseResult + specularResult + ambientResult);
+	vec3 gammaCorrected = pow(result, vec3(0.45));
 	
-	
-	FragColour = vec4(result, 1);
+	FragColour = vec4(gammaCorrected, 1);
 	
 	// Display Surface Normals
 	//FragColour = vec4(N, 1);
@@ -106,6 +107,9 @@ void main() // Fragment
 	
 	// Display Specular Result
 	//FragColour = vec4(specularResult, 1);
+	
+	// Display Point Light Attenuation
+	//FragColour = vec4(vec3(attenuation), 1);
 	
 	// Display Depth
 	//float near = 0.01;

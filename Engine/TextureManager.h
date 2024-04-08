@@ -18,13 +18,13 @@ public:
 	uncopyable(TextureManager);
 	immovable(TextureManager);
 
-	Texture* GetTexture(const char* filepath);
+	Texture* GetTexture(const char* filepath, Texture::Linearity linearity = Texture::Linear);
 	void ReloadTexture(const char* filepath);
 
 private:
 	map<string, Texture*> loadedTextures = map<string, Texture*>();
 
-	Texture* AddTexture(const char* filepath);
+	Texture* AddTexture(const char* filepath, Texture::Linearity linearity = Texture::Linear);
 };
 
 extern TextureManager* textureManager;

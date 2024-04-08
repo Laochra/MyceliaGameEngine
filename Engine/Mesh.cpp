@@ -6,6 +6,9 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include <iostream>
+#include <fstream>
+
 Mesh::~Mesh()
 {
 	glDeleteVertexArrays(1, &vao);
@@ -203,7 +206,24 @@ bool Mesh::LoadFromFile(const char* filepathInit)
 	Assimp::Importer importer;
 	const aiScene* file = importer.ReadFile(filepathInit, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 	
-	if (file == nullptr) return false;
+	if (file == nullptr)
+	{
+		std::cout << "Attempting to open filepath: " << filepath << '\n';
+
+		if (memcmp(filepath, "None", 5) == 0) return false;
+
+		std::ifstream filestream(filepathInit);
+		if (filestream.good())
+		{
+			std::cout << "Found a mesh at filepath: " << filepath << ". But AssImp couldn't open it.\n";
+		}
+		else
+		{
+			std::cout << "Couldn't find a Mesh at filepath: " << filepath << ".\n";
+		}
+
+		return false;
+	}
 
 	if (file->mNumMeshes > 0)
 	{

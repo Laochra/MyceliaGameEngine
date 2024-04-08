@@ -13,15 +13,20 @@ public:
 		RGB,
 		RGBA
 	};
+	enum Linearity : bool
+	{
+		Linear = false, // Standard for most non-colour textures
+		NonLinear = true // Standard for most display colour textures
+	};
 
 	Texture();
-	Texture(const char* filename);
-	Texture(unsigned int widthInit, unsigned int heightInit, Format formatInit, unsigned char* pixels = nullptr);
+	Texture(const char* filename, Linearity linearity = Linear);
+	Texture(unsigned int widthInit, unsigned int heightInit, Format formatInit, unsigned char* pixels = nullptr, Linearity linearity = Linear);
 	virtual ~Texture();
 
 	// Supports .jpg, .bmp, .png and .tga
-	bool Load(const char* filename);
-	void Create(unsigned int widthInit, unsigned int heightInit, Format formatInit, unsigned char* pixels = nullptr);
+	bool Load(const char* filename, Linearity linearity = Linear);
+	void Create(unsigned int widthInit, unsigned int heightInit, Format formatInit, unsigned char* pixels = nullptr, Linearity linearity = Linear);
 
 	// Returns the filename or "none" if not loaded from a file
 	const std::string& GetFileName() const { return fileName; }

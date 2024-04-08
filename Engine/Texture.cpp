@@ -6,15 +6,15 @@
 
 Texture::Texture() : fileName("none"), width(0), height(0), glHandle(0), format(None), loadedPixels(nullptr) { }
 
-Texture::Texture(const char* fileNameInit) : fileName("none"), width(0), height(0), glHandle(0), format(None), loadedPixels(nullptr)
+Texture::Texture(const char* fileNameInit, Linearity linearity) : fileName("none"), width(0), height(0), glHandle(0), format(None), loadedPixels(nullptr)
 {
-	Load(fileNameInit);
+	Load(fileNameInit, linearity);
 }
 
-Texture::Texture(unsigned int widthInit, unsigned int heightInit, Format formatInit, unsigned char* pixels) :
+Texture::Texture(unsigned int widthInit, unsigned int heightInit, Format formatInit, unsigned char* pixels, Linearity linearity) :
 	fileName("none"), width(widthInit), height(heightInit), format(formatInit), loadedPixels(nullptr)
 {
-	Create(width, height, formatInit, pixels);
+	Create(width, height, formatInit, pixels, linearity);
 }
 
 Texture::~Texture()
@@ -23,7 +23,7 @@ Texture::~Texture()
 	if (loadedPixels != nullptr) stbi_image_free(loadedPixels);
 }
 
-bool Texture::Load(const char* filename)
+bool Texture::Load(const char* filename, Linearity linearity)
 {
 	if (glHandle != 0)
 	{
@@ -47,15 +47,15 @@ bool Texture::Load(const char* filename)
 			format = SingleChannel; break;
 		case STBI_grey_alpha: glTexImage2D(GL_TEXTURE_2D, 0, GL_RG, x, y, 0, GL_RG, GL_UNSIGNED_BYTE, loadedPixels);
 			format = DualChannel; break;
-		case STBI_rgb: glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, x, y, 0, GL_RGB, GL_UNSIGNED_BYTE, loadedPixels);
+		case STBI_rgb: glTexImage2D(GL_TEXTURE_2D, 0, linearity ? GL_SRGB : GL_RGB, x, y, 0, GL_RGB, GL_UNSIGNED_BYTE, loadedPixels);
 			format = RGB; break;
-		case STBI_rgb_alpha: glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, loadedPixels);
+		case STBI_rgb_alpha: glTexImage2D(GL_TEXTURE_2D, 0, linearity ? GL_SRGB_ALPHA : GL_RGBA, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, loadedPixels);
 			format = RGBA; break;
 		default:
 			break;
 		};
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, 0);
 		width = (unsigned int)x;
@@ -66,7 +66,7 @@ bool Texture::Load(const char* filename)
 	return false;
 }
 
-void Texture::Create(unsigned int widthInit, unsigned int heightInit, Format formatInit, unsigned char* pixels)
+void Texture::Create(unsigned int widthInit, unsigned int heightInit, Format formatInit, unsigned char* pixels, Linearity linearity)
 {
 	if (glHandle != 0) {
 		glDeleteTextures(1, &glHandle);
@@ -93,9 +93,9 @@ void Texture::Create(unsigned int widthInit, unsigned int heightInit, Format for
 		break;
 	case DualChannel: glTexImage2D(GL_TEXTURE_2D, 0, GL_RG, width, height, 0, GL_RG, GL_UNSIGNED_BYTE, pixels);
 		break;
-	case RGB: glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+	case RGB: glTexImage2D(GL_TEXTURE_2D, 0, linearity ? GL_SRGB : GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels);
 		break;
-	case RGBA: glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+	case RGBA: glTexImage2D(GL_TEXTURE_2D, 0, linearity ? GL_SRGB_ALPHA : GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 		break;
 	default:
 		break;

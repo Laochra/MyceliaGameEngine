@@ -32,9 +32,9 @@ TextureManager::~TextureManager()
    for (pair<string, Texture*> texturePair : loadedTextures) { del(texturePair.second); }
 }
 
-Texture* TextureManager::GetTexture(const char* filepath)
+Texture* TextureManager::GetTexture(const char* filepath, Texture::Linearity linearity)
 {
-   if (loadedTextures.count(filepath) == 0) return AddTexture(filepath);
+   if (loadedTextures.count(filepath) == 0) return AddTexture(filepath, linearity);
    else return loadedTextures[filepath];
 }
 
@@ -49,11 +49,11 @@ void TextureManager::ReloadTexture(const char* filepath)
    }
 }
 
-Texture* TextureManager::AddTexture(const char* filepath)
+Texture* TextureManager::AddTexture(const char* filepath, Texture::Linearity linearity)
 {
    Texture* newTexture = new Texture;
 
-   if (newTexture->Load(filepath))
+   if (newTexture->Load(filepath, linearity))
    {
       loadedTextures.insert(std::pair(string(filepath), newTexture));
       return newTexture;

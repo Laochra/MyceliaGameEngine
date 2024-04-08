@@ -50,7 +50,7 @@ void MeshRenderer::Draw()
 
 			if (filepath == "None") filepath = "DefaultColour";
 
-			textureManager->GetTexture(filepath.c_str())->Bind(0);
+			textureManager->GetTexture(filepath.c_str(), Texture::NonLinear)->Bind(0);
 			material->shaderProgram->BindUniform("ColourMap", 0);
 			
 			continue;
