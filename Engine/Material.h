@@ -48,7 +48,10 @@ struct MaterialInput
 	{
 		if (bytes.size() < sizeof(T))
 		{
-			std::cout << "\nError: Attempted to access value larger than contained bytes\n";
+			if (bytes.size() > 0) // Only give an error if a value is already initialised (this is to avoid spamming errors any time a new material file is being created)
+			{
+				std::cout << "\nError: Attempted to access value larger than contained bytes\n";
+			}
 			return false;
 		}
 		*valueOutput = *(T*)bytes.data();
@@ -66,7 +69,7 @@ struct MaterialInput
 
 	const int GetByteCount() const
 	{
-		return bytes.size();
+		return (int)bytes.size();
 	}
 
 	private:

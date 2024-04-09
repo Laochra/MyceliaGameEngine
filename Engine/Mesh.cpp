@@ -16,6 +16,27 @@ Mesh::~Mesh()
 	glDeleteBuffers(1, &ibo);
 }
 
+void GenerateTriTangBitang(Vertex& vert1, Vertex& vert2, Vertex& vert3)
+{
+	vec3 edgeA = vert2.position - vert1.position;
+	vec3 edgeB = vert3.position - vert1.position;
+	vec2 deltaTexCoordA = vert2.texCoord - vert1.texCoord;
+	vec2 deltaTexCoordB = vert3.texCoord - vert1.texCoord;
+
+	float fractionalPart = 1.0f / (deltaTexCoordA.x * deltaTexCoordB.y - deltaTexCoordB.x * deltaTexCoordA.y);
+	
+	vec4 newTang(0.0f);
+	newTang.x = fractionalPart * (deltaTexCoordB.y * edgeA.x - deltaTexCoordA.y * edgeB.x);
+	newTang.y = fractionalPart * (deltaTexCoordB.y * edgeA.y - deltaTexCoordA.y * edgeB.y);
+	newTang.z = fractionalPart * (deltaTexCoordB.y * edgeA.z - deltaTexCoordA.y * edgeB.z);
+	vert1.tangent = newTang; vert2.tangent = newTang; vert3.tangent = newTang;
+
+	vec4 newBitang(0.0f);
+	newBitang.x = fractionalPart * (-deltaTexCoordB.x * edgeA.x - -deltaTexCoordA.x * edgeB.x);
+	newBitang.y = fractionalPart * (-deltaTexCoordB.x * edgeA.y - -deltaTexCoordA.x * edgeB.y);
+	newBitang.z = fractionalPart * (-deltaTexCoordB.x * edgeA.z - -deltaTexCoordA.x * edgeB.z);
+}
+
 void Mesh::Initialise(uint vertexCount, const Vertex* vertices, uint indexCount, uint* indices)
 {
 	assert(vao == 0); // Check this is the first initialisation
@@ -88,15 +109,18 @@ void Mesh::InitialiseQuad() // Need to generate Tangents and BiTangents to Fix L
 	vertices[2].position = { -0.5f,  0, -0.5f, 1 };
 	vertices[3].position = {  0.5f,  0, -0.5f, 1 };
 
-	for (int i = 0; i < 4; i++)
-	{
-		vertices[i].normal = { 0, 1, 0, 0 };
-	}
-
 	vertices[0].texCoord = { 0, 1 };
 	vertices[1].texCoord = { 1, 1 };
 	vertices[2].texCoord = { 0, 0 };
 	vertices[3].texCoord = { 1, 0 };
+
+	vertices[0].normal = { 0, 1, 0, 0 };
+	vertices[1].normal = { 0, 1, 0, 0 };
+	vertices[2].normal = { 0, 1, 0, 0 };
+	vertices[3].normal = { 0, 1, 0, 0 };
+
+	GenerateTriTangBitang(vertices[0], vertices[1], vertices[2]);
+	GenerateTriTangBitang(vertices[2], vertices[1], vertices[3]);
 
 	uint indices[6] =
 	{
@@ -208,18 +232,16 @@ bool Mesh::LoadFromFile(const char* filepathInit)
 	
 	if (file == nullptr)
 	{
-		std::cout << "Attempting to open filepath: " << filepath << '\n';
-
 		if (memcmp(filepath, "None", 5) == 0) return false;
 
 		std::ifstream filestream(filepathInit);
 		if (filestream.good())
 		{
-			std::cout << "Found a mesh at filepath: " << filepath << ". But AssImp couldn't open it.\n";
+			std::cout << "Found a Mesh file at filepath: " << filepath << ". But AssImp couldn't open it.\n";
 		}
 		else
 		{
-			std::cout << "Couldn't find a Mesh at filepath: " << filepath << ".\n";
+			std::cout << "Couldn't find a Mesh file at filepath: " << filepath << ".\n";
 		}
 
 		return false;
@@ -255,10 +277,12 @@ bool Mesh::LoadFromFile(const char* filepathInit)
 		delete[] vertexData;
 		delete[] indexData;
 
-		uint filepathLength = strlen(filepathInit) + 1;
+		uint filepathLength = (uint)strlen(filepathInit) + 1;
 		filepath = new char[filepathLength];
-		for (int i = 0; i < filepathLength; i++) { filepath[i] = filepathInit[i]; }
+		for (uint i = 0; i < filepathLength; i++) { filepath[i] = filepathInit[i]; }
 	}
+
+	return true;
 }
 
 const char* Mesh::GetFilePath() const

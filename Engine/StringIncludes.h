@@ -5,7 +5,7 @@ using std::string;
 
 inline void AssignStringToCString(char*& destination, string& source)
 {
-	int bufferSize = source.size();
+	int bufferSize = (int)source.size();
 	destination = new char[bufferSize + 1];
 
 	for (int i = 0; i < bufferSize; i++)

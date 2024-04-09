@@ -122,7 +122,7 @@ void Application::GameLoop()
 		OnFrameStart();
 		Updater::CallOnFrameStart();
 
-		Time::Tick(glfwGetTime());
+		Time::Tick((float)glfwGetTime());
 		timeDebt += Time::delta;
 		while (timeDebt > Time::fixedStep)
 		{

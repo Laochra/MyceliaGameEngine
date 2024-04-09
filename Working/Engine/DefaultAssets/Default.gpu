@@ -3,27 +3,27 @@
     {
       "Exposed": false,
       "Name": "BiTangent",
-      "Type": 82
+      "Type": "Float4"
     },
     {
       "Exposed": false,
       "Name": "Normal",
-      "Type": 82
+      "Type": "Float4"
     },
     {
       "Exposed": false,
       "Name": "Position",
-      "Type": 82
+      "Type": "Float4"
     },
     {
       "Exposed": false,
       "Name": "Tangent",
-      "Type": 82
+      "Type": "Float4"
     },
     {
       "Exposed": false,
       "Name": "TexCoords",
-      "Type": 80
+      "Type": "Float2"
     }
   ],
   "Fragment": "Default",
@@ -34,57 +34,57 @@
     {
       "Exposed": false,
       "Name": "AmbientColour",
-      "Type": 81
+      "Type": "Float3"
     },
     {
       "Exposed": false,
       "Name": "CameraPosition",
-      "Type": 82
+      "Type": "Float3"
     },
     {
       "Exposed": true,
       "Name": "ColourTint",
-      "Type": 81
+      "Type": "Float3"
     },
     {
       "Exposed": true,
       "Name": "ColourMap",
-      "Type": 94
+      "Type": "Texture"
     },
     {
       "Exposed": false,
       "Name": "DirectionalLightColour",
-      "Type": 81
+      "Type": "Float3"
     },
     {
       "Exposed": false,
       "Name": "DirectionalLightDirection",
-      "Type": 81
+      "Type": "Float3"
     },
     {
       "Exposed": false,
       "Name": "ModelMatrix",
-      "Type": 92
+      "Type": "Float4x4"
     },
     {
       "Exposed": true,
       "Name": "NormalMap",
-      "Type": 94
+      "Type": "Texture"
     },
     {
       "Exposed": false,
       "Name": "ProjectionViewModel",
-      "Type": 92
+      "Type": "Float4x4"
     },
     {
       "Exposed": true,
       "Name": "SpecularGlossiness",
-      "Type": 6
+      "Type": "Float"
     },
     {
       "Exposed": true,
       "Name": "SpecularMap",
-      "Type": 94
+      "Type": "Texture"
     }
   ],
   "Vertex": "Default"

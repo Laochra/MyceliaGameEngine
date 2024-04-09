@@ -87,7 +87,8 @@ bool Material::LoadFromJSON(const char* filepathInit)
 				if (shaderAttribute["Name"] == attribute["Name"])
 				{
 					string name = attribute["Name"];
-					byte type = shaderAttribute["Type"];
+					string typeName = shaderAttribute["Type"];
+					uint type = GetShaderInputTypeFromName(typeName.c_str());
 
 					if (type == TextureGL) // Probably also want this for CubeMap
 					{
@@ -119,7 +120,8 @@ bool Material::LoadFromJSON(const char* filepathInit)
 				if (shaderUniform["Name"] == uniform["Name"])
 				{
 					string name = uniform["Name"];
-					byte type = shaderUniform["Type"];
+					string typeName = shaderUniform["Type"];
+					uint type = GetShaderInputTypeFromName(typeName.c_str());
 
 					if (type == TextureGL) // Probably also want this for CubeMap
 					{

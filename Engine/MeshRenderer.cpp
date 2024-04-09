@@ -16,7 +16,7 @@ void MeshRenderer::Draw()
 	if (material->shaderProgram == nullptr) return;
 	if (mesh == nullptr) return;
 
-	mat4 ProjectionViewMatrix = mainCamera->GetProjectionMatrix(screenWidth, screenHeight) * mainCamera->GetViewMatrix();
+	mat4 ProjectionViewMatrix = mainCamera->GetProjectionMatrix((float)screenWidth, (float)screenHeight) * mainCamera->GetViewMatrix();
 
 	// Bind Shader
 	material->shaderProgram->Bind();
@@ -126,6 +126,8 @@ void MeshRenderer::Initialise()
 
 	Updater::DrawAdd(this);
 
-	mesh = meshManager->GetMesh("Assets\\Meshes\\Soulspear.obj");
-	material = materialManager->GetMaterial("Assets\\Materials\\Soulspear.mat");
+	mesh = new Mesh();
+	mesh->InitialiseQuad();
+	//mesh = meshManager->GetMesh("Assets\\Meshes\\Soulspear.obj");
+	material = materialManager->GetMaterial("Assets\\Materials\\Mush.mat");
 }

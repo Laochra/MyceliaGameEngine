@@ -102,7 +102,7 @@ void ShaderProgramGUI::Save()
 	{
 		json attribute;
 		attribute["Name"] = input.name;
-		attribute["Type"] = input.type;
+		attribute["Type"] = GetShaderInputTypeName(input.type);
 		attribute["Exposed"] = input.exposed;
 		attributes.push_back(attribute);
 	}
@@ -113,7 +113,7 @@ void ShaderProgramGUI::Save()
 	{
 		json uniform;
 		uniform["Name"] = input.name;
-		uniform["Type"] = input.type;
+		uniform["Type"] = GetShaderInputTypeName(input.type);
 		uniform["Exposed"] = input.exposed;
 		uniforms.push_back(uniform);
 	}

@@ -22,7 +22,7 @@ enum ShaderStage
 };
 const int ShaderStagesCount = 6;
 
-enum ShaderInputType : unsigned char
+enum ShaderInputType : unsigned int
 {
 	UndefinedTypeGL = 0,
 
@@ -72,6 +72,7 @@ enum ShaderInputType : unsigned char
 	BoolGL4 = GL_BOOL_VEC4,
 };
 const char* GetShaderInputTypeName(ShaderInputType type);
+ShaderInputType GetShaderInputTypeFromName(const char* typeName);
 
 struct ShaderInput
 {

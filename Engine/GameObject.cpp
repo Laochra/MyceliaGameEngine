@@ -35,7 +35,7 @@ const char* GameObject::GetName() const noexcept
 void GameObject::SetName(const char* newName) noexcept
 {
 	del(name);
-	unsigned int newNameLength = strlen(newName);
+	unsigned int newNameLength = (unsigned int)strlen(newName);
 	name = new char[newNameLength + 1];
 	name[newNameLength] = '\0';
 	memcpy(name, newName, newNameLength);

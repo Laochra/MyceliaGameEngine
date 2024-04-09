@@ -58,10 +58,59 @@ const std::map<ShaderInputType, const char*> shaderInputTypeToString = {
 	{BoolGL3,  "Bool3"},
 	{BoolGL4,  "Bool4"}
 };
+const std::map<const char*, ShaderInputType> cStringToShaderInputType = {
+	{"Undefined", UndefinedTypeGL},
+	{"Texture", TextureGL},
+	{"Cubemap", CubemapGL},
 
+ 	{"Float", FloatGL},
+	{"Float2", Float2GL},
+	{"Float3", Float3GL},
+	{"Float4", Float4GL},
+	{"Float2x2", Float2x2GL},
+	{"Float2x3", Float2x3GL},
+	{"Float2x4", Float2x4GL},
+	{"Float3x2", Float3x2GL},
+	{"Float3x3", Float3x3GL},
+	{"Float3x4", Float3x4GL},
+	{"Float4x2", Float4x2GL},
+	{"Float4x3", Float4x3GL},
+	{"Float4x4", Float4x4GL},
+
+ 	{"Double", DoubleGL},
+	{"Double2", Double2GL},
+	{"Double3", Double3GL},
+	{"Double4", Double4GL},
+	{"Double2x2", Double2x2GL},
+	{"Double2x3", Double2x3GL},
+	{"Double2x4", Double2x4GL},
+	{"Double3x2", Double3x2GL},
+	{"Double3x3", Double3x3GL},
+	{"Double3x4", Double3x4GL},
+	{"Double4x2", Double4x2GL},
+	{"Double4x3", Double4x3GL},
+	{"Double4x4", Double4x4GL},
+
+ 	{"Int", IntGL},
+	{"Int2", Int2GL},
+	{"Int3", Int3GL},
+	{"Int4", Int4GL},
+	{"UInt", UIntGL},
+	{"UInt2", UInt2GL},
+	{"UInt3", UInt3GL},
+	{"UInt4", UInt4GL},
+	{"Bool", BoolGL},
+	{"Bool2", BoolGL2},
+	{"Bool3", BoolGL3},
+	{"Bool4", BoolGL4}
+};
 const char* GetShaderInputTypeName(ShaderInputType type)
 {
 	return shaderInputTypeToString.find(type)->second;
+}
+ShaderInputType GetShaderInputTypeFromName(const char* typeName)
+{
+	return cStringToShaderInputType.find(typeName)->second;
 }
 
 Shader::~Shader()
@@ -88,11 +137,14 @@ bool Shader::LoadShader(ShaderStage stage, const char* filename)
 	// open file
 	FILE* file = nullptr;
 	fopen_s(&file, filename, "rb");
+
+	if (file == nullptr) return false;
+
 	fseek(file, 0, SEEK_END);
 	unsigned int size = ftell(file);
-	char* source = new char[size + 1];
+	char* source = new char[(size + 1) * sizeof(char)];
 	fseek(file, 0, SEEK_SET);
-	fread_s(source, size + 1, sizeof(char), size, file);
+	fread_s(source, (size + 1) * sizeof(char), sizeof(char), size, file);
 	fclose(file);
 	source[size] = 0;
 
@@ -185,14 +237,16 @@ bool ShaderProgram::LoadAndLinkFromJSON(const char* filename)
 
 bool ShaderProgram::LoadShader(ShaderStage stage, const char* filename)
 {
-	assert(stage > 0 && stage < ShaderStagesCount);
+	if (stage <= 0 || stage >= ShaderStagesCount) return false;
+
 	m_shaders[stage] = std::make_shared<Shader>();
 	return m_shaders[stage]->LoadShader(stage, filename);
 }
 
 bool ShaderProgram::CreateShader(ShaderStage stage, const char* string)
 {
-	assert(stage > 0 && stage < ShaderStagesCount);
+	if (stage <= 0 || stage >= ShaderStagesCount) return false;
+
 	m_shaders[stage] = std::make_shared<Shader>();
 	return m_shaders[stage]->CreateShader(stage, string);
 }
@@ -252,7 +306,7 @@ void ShaderProgram::GetFields(vector<ShaderInput>& attributes, vector<ShaderInpu
 	char name[buffer];
 
 	glGetProgramiv(program, GL_ACTIVE_ATTRIBUTES, &count);
-	for (unsigned int i = 0; i < count; i++)
+	for (int i = 0; i < count; i++)
 	{
 		attributes.push_back(ShaderInput());
 		glGetActiveAttrib(program, i, buffer, &length, &size, (unsigned int*)&attributes.back().type, name);
@@ -262,7 +316,7 @@ void ShaderProgram::GetFields(vector<ShaderInput>& attributes, vector<ShaderInpu
 	}
 
 	glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &count);
-	for (unsigned int i = 0; i < count; i++)
+	for (int i = 0; i < count; i++)
 	{
 		uniforms.push_back(ShaderInput());
 		glGetActiveUniform(program, i, buffer, &length, &size, (unsigned int*)&uniforms.back().type, name);
