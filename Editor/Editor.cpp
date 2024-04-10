@@ -59,17 +59,13 @@ void Editor::Initialise()
 	Gizmos::create(100000, 10000, 0, 0);
 
 	object = GameObject3D::Instantiate<MeshRenderer>(vec3(0.0f, 0.0, 0.0f), glm::identity<quat>(), vec3(1.0f, 1.0f, 1.0f), vec3(0, -0.5f, 0));
-	//object->Rotate(glm::radians(90.0f), vec3(-1, 0, 0));
-	//object->SetMesh("Assets\\Meshes\\Marill.fbx");
-	//object->SetMaterial("Assets\\Materials\\Marill.mat");
-	//object->SetName("Marill");
 
 	inspector->SetTarget(object);
 
 	LightingManager::ambientLight.colour = vec3(0.1f, 0.1f, 0.1f);
 
 	LightingManager::directionalLight.colour = vec3(1.0f, 1.0f, 1.0f);
-	LightingManager::directionalLight.direction = glm::normalize(vec3(0, -0.0, -0.7));
+	LightingManager::directionalLight.direction = glm::normalize(vec3(-0.1f, -1, -1));
 
 	LightingManager::pointLight.colour = vec3(0.9f, 0.0f, 0.0f);
 	LightingManager::pointLight.position = vec3(0, 1, 2);

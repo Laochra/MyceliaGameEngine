@@ -35,6 +35,28 @@ void GenerateTriTangBitang(Vertex& vert1, Vertex& vert2, Vertex& vert3)
 	newBitang.x = fractionalPart * (-deltaTexCoordB.x * edgeA.x - -deltaTexCoordA.x * edgeB.x);
 	newBitang.y = fractionalPart * (-deltaTexCoordB.x * edgeA.y - -deltaTexCoordA.x * edgeB.y);
 	newBitang.z = fractionalPart * (-deltaTexCoordB.x * edgeA.z - -deltaTexCoordA.x * edgeB.z);
+	vert1.biTangent = newBitang; vert2.biTangent = newBitang; vert3.biTangent = newBitang;
+}
+void GenerateQuadTangBitang(Vertex& vert1, Vertex& vert2, Vertex& vert3, Vertex& vert4)
+{
+	vec3 edgeA = vert2.position - vert1.position;
+	vec3 edgeB = vert3.position - vert1.position;
+	vec2 deltaTexCoordA = vert2.texCoord - vert1.texCoord;
+	vec2 deltaTexCoordB = vert3.texCoord - vert1.texCoord;
+
+	float fractionalPart = 1.0f / (deltaTexCoordA.x * deltaTexCoordB.y - deltaTexCoordB.x * deltaTexCoordA.y);
+
+	vec4 newTang(0.0f);
+	newTang.x = fractionalPart * (deltaTexCoordB.y * edgeA.x - deltaTexCoordA.y * edgeB.x);
+	newTang.y = fractionalPart * (deltaTexCoordB.y * edgeA.y - deltaTexCoordA.y * edgeB.y);
+	newTang.z = fractionalPart * (deltaTexCoordB.y * edgeA.z - deltaTexCoordA.y * edgeB.z);
+	vert1.tangent = newTang; vert2.tangent = newTang; vert3.tangent = newTang; vert4.tangent = newTang;
+
+	vec4 newBitang(0.0f);
+	newBitang.x = fractionalPart * (-deltaTexCoordB.x * edgeA.x - -deltaTexCoordA.x * edgeB.x);
+	newBitang.y = fractionalPart * (-deltaTexCoordB.x * edgeA.y - -deltaTexCoordA.x * edgeB.y);
+	newBitang.z = fractionalPart * (-deltaTexCoordB.x * edgeA.z - -deltaTexCoordA.x * edgeB.z);
+	vert1.biTangent = newBitang; vert2.biTangent = newBitang; vert3.biTangent = newBitang; vert4.biTangent = newBitang;
 }
 
 void Mesh::Initialise(uint vertexCount, const Vertex* vertices, uint indexCount, uint* indices)
@@ -97,7 +119,7 @@ void Mesh::Initialise(uint vertexCount, const Vertex* vertices, uint indexCount,
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
-void Mesh::InitialiseQuad() // Need to generate Tangents and BiTangents to Fix Lighting
+void Mesh::InitialiseQuad()
 {
 	filepath = new char[15];
 	const char* newFilepath = "ProceduralQuad";
@@ -119,8 +141,7 @@ void Mesh::InitialiseQuad() // Need to generate Tangents and BiTangents to Fix L
 	vertices[2].normal = { 0, 1, 0, 0 };
 	vertices[3].normal = { 0, 1, 0, 0 };
 
-	GenerateTriTangBitang(vertices[0], vertices[1], vertices[2]);
-	GenerateTriTangBitang(vertices[2], vertices[1], vertices[3]);
+	GenerateQuadTangBitang(vertices[0], vertices[1], vertices[2], vertices[3]);
 
 	uint indices[6] =
 	{
@@ -128,8 +149,8 @@ void Mesh::InitialiseQuad() // Need to generate Tangents and BiTangents to Fix L
 	};
 
 	this->Initialise(4, vertices, 6, indices);
-} // Need to generate Tangents and BiTangents to Fix Lighting
-void Mesh::InitialiseCube() // Need to generate Tangents and BiTangents to Fix Lighting
+}
+void Mesh::InitialiseCube()
 {
 	filepath = new char[15];
 	const char* newFilepath = "ProceduralCube";
@@ -151,8 +172,36 @@ void Mesh::InitialiseCube() // Need to generate Tangents and BiTangents to Fix L
 		vertices[7 + 8 * i].position = { 0.5f,  0.5f, -0.5f, 1 };
 	}
 
+	// Texture Coordinates
+	vertices[0].texCoord = { 0, 0 };
+	vertices[1].texCoord = { 1, 0 };
+	vertices[2].texCoord = { 0, 1 };
+	vertices[3].texCoord = { 1, 1 };
+	vertices[4].texCoord = { 0, 1 };
+	vertices[5].texCoord = { 1, 1 };
+	vertices[6].texCoord = { 0, 0 };
+	vertices[7].texCoord = { 1, 0 };
+
+	vertices[10].texCoord = { 1, 1 };
+	vertices[11].texCoord = { 0, 1 };
+	vertices[14].texCoord = { 1, 0 };
+	vertices[15].texCoord = { 0, 0 };
+	vertices[8].texCoord = { 0, 1 };
+	vertices[9].texCoord = { 1, 1 };
+	vertices[12].texCoord = { 0, 0 };
+	vertices[13].texCoord = { 1, 0 };
+
+	vertices[16].texCoord = { 1, 1 };
+	vertices[18].texCoord = { 0, 1 };
+	vertices[20].texCoord = { 1, 0 };
+	vertices[22].texCoord = { 0, 0 };
+	vertices[17].texCoord = { 0, 1 };
+	vertices[19].texCoord = { 1, 1 };
+	vertices[21].texCoord = { 0, 0 };
+	vertices[23].texCoord = { 1, 0 };
+
 	// Normals
-	vec4 upNormal = { 0, 1, 0 , 0 };
+	vec4 upNormal = { 0, 1, 0, 0 };
 	vertices[0].normal  = -upNormal;
 	vertices[1].normal  = -upNormal;
 	vertices[2].normal  = -upNormal;
@@ -182,33 +231,15 @@ void Mesh::InitialiseCube() // Need to generate Tangents and BiTangents to Fix L
 	vertices[21].normal = rightNormal;
 	vertices[23].normal = rightNormal;
 
-	// Texture Coordinates
-	vertices[0].texCoord  = { 0, 0 };
-	vertices[1].texCoord  = { 1, 0 };
-	vertices[2].texCoord  = { 0, 1 };
-	vertices[3].texCoord  = { 1, 1 };
-	vertices[4].texCoord  = { 0, 1 };
-	vertices[5].texCoord  = { 1, 1 };
-	vertices[6].texCoord  = { 0, 0 };
-	vertices[7].texCoord  = { 1, 0 };
+	// Tangents + Bitangents
+	GenerateQuadTangBitang(vertices[0], vertices[1], vertices[2], vertices[3]);
+	GenerateQuadTangBitang(vertices[4], vertices[5], vertices[6], vertices[7]);
 
-	vertices[10].texCoord = { 1, 1 };
-	vertices[11].texCoord = { 0, 1 };
-	vertices[14].texCoord = { 1, 0 };
-	vertices[15].texCoord = { 0, 0 };
-	vertices[8].texCoord  = { 0, 1 };
-	vertices[9].texCoord  = { 1, 1 };
-	vertices[12].texCoord = { 0, 0 };
-	vertices[13].texCoord = { 1, 0 };
+	GenerateQuadTangBitang(vertices[10], vertices[11], vertices[14], vertices[15]);
+	GenerateQuadTangBitang(vertices[8], vertices[9], vertices[12], vertices[13]);
 
-	vertices[16].texCoord = { 1, 1 };
-	vertices[18].texCoord = { 0, 1 };
-	vertices[20].texCoord = { 1, 0 };
-	vertices[22].texCoord = { 0, 0 };
-	vertices[17].texCoord = { 0, 1 };
-	vertices[19].texCoord = { 1, 1 };
-	vertices[21].texCoord = { 0, 0 };
-	vertices[23].texCoord = { 1, 0 };
+	GenerateQuadTangBitang(vertices[16], vertices[18], vertices[20], vertices[22]);
+	GenerateQuadTangBitang(vertices[17], vertices[19], vertices[21], vertices[23]);
 
 	uint indices[36] =
 	{
@@ -223,7 +254,7 @@ void Mesh::InitialiseCube() // Need to generate Tangents and BiTangents to Fix L
 	};
 
 	this->Initialise(24, vertices, 36, indices);
-} // Need to generate Tangents and BiTangents to Fix Lighting
+}
 
 bool Mesh::LoadFromFile(const char* filepathInit)
 {

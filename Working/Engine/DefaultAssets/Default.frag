@@ -80,10 +80,11 @@ void main() // Fragment
 	vec3 textureColour = texture(ColourMap, FragTexCoords).rgb;
 
 	vec3 diffuseResult = (DirectionalLightColour + (PointLightColour * attenuation)) * diffuseComponent * textureColour * ColourTint;
-	vec3 ambientResult = AmbientColour * textureColour;
+	vec3 ambientResult = AmbientColour * textureColour * ColourTint;
 	
-	vec3 result = vec3(diffuseResult + specularResult + ambientResult);
-	vec3 gammaCorrected = pow(result, vec3(0.45));
+	vec3 result = vec3(diffuseResult + ambientResult);
+	if (SpecularGlossiness != 0) result += vec3(specularResult);
+	vec3 gammaCorrected = pow(result, vec3(0.45)); // Colour to the power of 1/1.22 to negate monitor gamma
 	
 	FragColour = vec4(gammaCorrected, 1);
 	

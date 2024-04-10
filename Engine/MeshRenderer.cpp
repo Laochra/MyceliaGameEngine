@@ -126,8 +126,6 @@ void MeshRenderer::Initialise()
 
 	Updater::DrawAdd(this);
 
-	mesh = new Mesh();
-	mesh->InitialiseQuad();
-	//mesh = meshManager->GetMesh("Assets\\Meshes\\Soulspear.obj");
-	material = materialManager->GetMaterial("Assets\\Materials\\Mush.mat");
+	mesh = meshManager->GetMesh("ProceduralCube");
+	material = materialManager->GetMaterial("Default");
 }

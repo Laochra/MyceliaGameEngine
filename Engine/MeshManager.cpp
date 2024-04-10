@@ -8,7 +8,13 @@ MeshManager* meshManager = nullptr;
 
 MeshManager::MeshManager()
 {
-   
+   Mesh* proceduralQuad = new Mesh();
+   proceduralQuad->InitialiseQuad();
+   loadedMeshes.insert(std::pair(string("ProceduralQuad"), proceduralQuad));
+
+   Mesh* proceduralCube = new Mesh();
+   proceduralCube->InitialiseCube();
+   loadedMeshes.insert(std::pair(string("ProceduralCube"), proceduralCube));
 }
 
 MeshManager::~MeshManager()

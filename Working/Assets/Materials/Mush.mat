@@ -30,9 +30,9 @@
     {
       "Data": [
         0,
-        64,
-        28,
-        70
+        0,
+        0,
+        0
       ],
       "Name": "SpecularGlossiness"
     },

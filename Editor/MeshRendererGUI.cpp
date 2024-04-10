@@ -40,6 +40,15 @@ void MeshRendererGUI::DrawMeshRendererGUI(MeshRenderer* meshRenderer)
 				meshRenderer->SetMesh("None");
 			}
 
+			if (ImGui::Selectable("ProceduralQuad", meshFilepath == "ProceduralQuad"))
+			{
+				meshRenderer->SetMesh("ProceduralQuad");
+			}
+			if (ImGui::Selectable("ProceduralCube", meshFilepath == "ProceduralCube"))
+			{
+				meshRenderer->SetMesh("ProceduralCube");
+			}
+
 			for (int i = 0; i < meshes.size(); i++)
 			{
 				bool isCurrent = meshes[i].string() == meshFilepath;
