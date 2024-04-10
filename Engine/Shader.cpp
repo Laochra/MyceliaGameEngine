@@ -58,7 +58,7 @@ const std::map<ShaderInputType, const char*> shaderInputTypeToString = {
 	{BoolGL3,  "Bool3"},
 	{BoolGL4,  "Bool4"}
 };
-const std::map<const char*, ShaderInputType> cStringToShaderInputType = {
+const std::map<string, ShaderInputType> cStringToShaderInputType = {
 	{"Undefined", UndefinedTypeGL},
 	{"Texture", TextureGL},
 	{"Cubemap", CubemapGL},
@@ -109,6 +109,10 @@ const char* GetShaderInputTypeName(ShaderInputType type)
 	return shaderInputTypeToString.find(type)->second;
 }
 ShaderInputType GetShaderInputTypeFromName(const char* typeName)
+{
+	return cStringToShaderInputType.find(typeName)->second;
+}
+ShaderInputType GetShaderInputTypeFromName(string typeName)
 {
 	return cStringToShaderInputType.find(typeName)->second;
 }

@@ -227,7 +227,7 @@ void MaterialGUI::Load(string filePathStr)
 				{
 					string name = attribute["Name"];
 					string typeName = shaderAttribute["Type"];
-					uint type = GetShaderInputTypeFromName(typeName.c_str());
+					uint type = GetShaderInputTypeFromName(typeName);
 
 					if (type == TextureGL) // Probably also want this for CubeMap
 					{
@@ -258,7 +258,7 @@ void MaterialGUI::Load(string filePathStr)
 				{
 					string name = uniform["Name"];
 					string typeName = shaderUniform["Type"];
-					uint type = GetShaderInputTypeFromName(typeName.c_str());
+					uint type = GetShaderInputTypeFromName(typeName);
 
 					if (type == TextureGL) // Probably also want this for CubeMap
 					{
@@ -335,7 +335,7 @@ void MaterialGUI::LoadShaderProgram(string filePathStr)
 
 				attribute.name = attributes[i]["Name"];
 				string typeName = attributes[i]["Type"];
-				attribute.type = GetShaderInputTypeFromName(typeName.c_str());
+				attribute.type = GetShaderInputTypeFromName(typeName);
 				current.attributes.push_back(attribute);
 			}
 		}
@@ -370,7 +370,7 @@ void MaterialGUI::LoadShaderProgram(string filePathStr)
 				
 				uniform.name = uniforms[i]["Name"];
 				string typeName = uniforms[i]["Type"];
-				uniform.type = GetShaderInputTypeFromName(typeName.c_str());
+				uniform.type = GetShaderInputTypeFromName(typeName);
 				current.uniforms.push_back(uniform);
 			}
 		}

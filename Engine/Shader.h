@@ -73,6 +73,7 @@ enum ShaderInputType : unsigned int
 };
 const char* GetShaderInputTypeName(ShaderInputType type);
 ShaderInputType GetShaderInputTypeFromName(const char* typeName);
+ShaderInputType GetShaderInputTypeFromName(string typeName);
 
 struct ShaderInput
 {
