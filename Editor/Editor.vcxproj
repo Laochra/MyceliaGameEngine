@@ -159,6 +159,7 @@
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="EditorCamera.cpp" />
     <ClCompile Include="EditorCameraGUI.cpp" />
+    <ClCompile Include="EditorDebug.cpp" />
     <ClCompile Include="GameObject3DGUI.cpp" />
     <ClCompile Include="GameObjectGUI.cpp" />
     <ClCompile Include="GUI.cpp" />
@@ -183,8 +184,8 @@
     <ClInclude Include="EditorCamera.h" />
     <ClInclude Include="EditorCameraConfig.h" />
     <ClInclude Include="EditorCameraGUI.h" />
+    <ClInclude Include="EditorDebug.h" />
     <ClInclude Include="EditorStyler.h" />
-    <ClInclude Include="FileLoading.h" />
     <ClInclude Include="GameObjectGUI.h" />
     <ClInclude Include="GameObject3DGUI.h" />
     <ClInclude Include="GUI.h" />

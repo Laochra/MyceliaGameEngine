@@ -1,6 +1,6 @@
 #include "ShaderManager.h"
 
-#include <iostream>
+#include "Debug.h"
 
 using std::pair;
 
@@ -15,7 +15,7 @@ ShaderManager::ShaderManager()
    }
    else
    {
-      std::cout << "Failed to load Default.gpu\n";
+      debug->Log({ "Failed to load Default.gpu" }, Debug::Warning, Debug::WRN100);
       delete defaultShaderProgram;
    }
 }
@@ -50,7 +50,7 @@ ShaderProgram* ShaderManager::AddProgram(const char* filepath)
    else
    {
       delete newProgram;
-      std::cout << "Couldn't find a ShaderProgram at filepath: " << filepath << ". Set to Default.gpu\n";
+      debug->Log({ "Failed to load a ShaderProgram from filepath: ", filepath, ". Set to Default.gpu" }, Debug::Warning, Debug::WRN100);
       return GetProgram("Default");
    }
 }

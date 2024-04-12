@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "Editor.h" // Replace with chosen application
 
 int main(char** args)

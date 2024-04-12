@@ -123,7 +123,7 @@ void GUI::LoadStyle(string styleName)
 
 	if (!input.good())
 	{
-		Log({ styleName, " style could not be found at filepath ", stylePath, ". Reverted to defaults.\n"}, LogType::Warning);
+		debug->Log({ styleName, " style could not be found at filepath ", stylePath, ". Reverted to defaults.\n"}, Debug::Warning, Debug::WRN101);
 		return;
 	}
 
@@ -132,7 +132,7 @@ void GUI::LoadStyle(string styleName)
 	try { input >> style; }
 	catch (parse_error)
 	{
-		Log({ styleName, " (", stylePath, ") was corrupt. Reverted to defaults\n" }, LogType::Error);
+		debug->Log({ styleName, " (", stylePath, ") was corrupt. Reverted to defaults\n" }, Debug::Warning, Debug::WRN102);
 		return;
 	}
 

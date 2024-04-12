@@ -5,8 +5,6 @@
 
 #include "JsonIncludes.h"
 
-#include <iostream>
-
 using std::vector;
 
 #include <map>
@@ -14,6 +12,8 @@ using std::map;
 
 typedef unsigned int uint;
 typedef unsigned char byte;
+
+#include "Debug.h"
 
 struct MaterialInput
 {
@@ -50,7 +50,7 @@ struct MaterialInput
 		{
 			if (bytes.size() > 0) // Only give an error if a value is already initialised (this is to avoid spamming errors any time a new material file is being created)
 			{
-				std::cout << "\nError: Attempted to access value larger than contained bytes\n";
+				debug->Log({ "Attempted to access a value larger than contained bytes" }, Debug::Warning, Debug::WRN151);
 			}
 			return false;
 		}

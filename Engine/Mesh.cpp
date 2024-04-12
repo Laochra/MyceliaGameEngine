@@ -6,8 +6,9 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include <iostream>
 #include <fstream>
+
+#include "Debug.h"
 
 Mesh::~Mesh()
 {
@@ -268,11 +269,11 @@ bool Mesh::LoadFromFile(const char* filepathInit)
 		std::ifstream filestream(filepathInit);
 		if (filestream.good())
 		{
-			std::cout << "Found a Mesh file at filepath: " << filepath << ". But AssImp couldn't open it.\n";
+			debug->Log({ "Found a Mesh file at filepath: ", filepath, ". But AssImp couldn't load it."}, Debug::Warning, Debug::WRN102);
 		}
 		else
 		{
-			std::cout << "Couldn't find a Mesh file at filepath: " << filepath << ".\n";
+			debug->Log({ "Couldn't find a Mesh file at filepath: ", filepath }, Debug::Warning, Debug::WRN101);
 		}
 
 		return false;

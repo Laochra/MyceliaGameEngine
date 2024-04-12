@@ -9,12 +9,18 @@
 #include "TextureManager.h"
 #include "MeshManager.h"
 
+#include "Debug.h"
+
+#include "GeneralMacros.h"
+
 bool applicationFocused = true;
 
 int Application::Run()
 {
 	isRunning = true;
 	
+	debug = new Debug();
+
 	{
 		int returnCode = Setup();
 		if (returnCode != 0) return returnCode;
@@ -24,9 +30,7 @@ int Application::Run()
 
 	if (mainCamera == nullptr)
 	{
-		std::cout <<
-			"\nNo camera was set up in Initialise(), so a default camera was created." <<
-			"Application will not behave as expected.\n";
+		debug->Log({ "No camera was set up in Initialise(), so a default camera was created. Application will not behave as expected." }, Debug::Warning, Debug::WRN001);
 		mainCamera = GameObject::Instantiate<Camera>();
 	}
 
@@ -54,7 +58,7 @@ int Application::Setup()
 {
 	if (!glfwInit())
 	{
-		std::cout << "\nGLFW failed to initialise";
+		debug->Log({ "GLFW failed to initialise" }, Debug::Error, Debug::ERR902);
 		return -1;
 	}
 
@@ -69,7 +73,7 @@ int Application::Setup()
 	window = glfwCreateWindow(1600, 900, "Window", nullptr, nullptr);
 	if (window == nullptr)
 	{
-		std::cout << "\nGLFW failed to create a window";
+		debug->Log({ "GLFW failed to create a window" }, Debug::Error, Debug::ERR902);
 		glfwTerminate();
 		return -1;
 	}
@@ -87,7 +91,7 @@ int Application::Setup()
 
 	if (!gladLoadGL())
 	{
-		std::cout << "\nGLAD failed to load OpenGL functions";
+		debug->Log({ "GLAD failed to load OpenGL functions" }, Debug::Error, Debug::ERR901);
 		return -1;
 	}
 
@@ -150,10 +154,13 @@ void Application::GameLoop()
 
 void Application::Close()
 {
-	delete input;
-	delete shaderManager;
-	delete materialManager;
-	delete textureManager;
+	del(input);
+
+	del(debug);
+
+	del(shaderManager);
+	del(materialManager);
+	del(textureManager);
 
 	glfwTerminate();
 }
@@ -204,9 +211,15 @@ const char* GLErrorSeverity(GLenum severity)
 }
 void GLErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
-	std::cout << GLErrorSource(source) << GLErrorType(type) << GLErrorSeverity(severity) << id << ": \"" << message << "\"\n";
+	Debug::LogType logType;
+	switch (severity)
+	{
+	case GL_DEBUG_SEVERITY_HIGH:		debug->Log({ "OpenGL ", GLErrorSource(source), GLErrorType(type), std::to_string(id), ": \"", message }, Debug::Error,   Debug::ERR901); break;
+	case GL_DEBUG_SEVERITY_MEDIUM:	debug->Log({ "OpenGL ", GLErrorSource(source), GLErrorType(type), std::to_string(id), ": \"", message }, Debug::Warning, Debug::WRN901); break;
+	case GL_DEBUG_SEVERITY_LOW:		debug->Log({ "OpenGL ", GLErrorSource(source), GLErrorType(type), std::to_string(id), ": \"", message }, Debug::Warning, Debug::WRN902); break;
+	}
 }
 void GLFWErrorCallback(int code, const char* description)
 {
-	std::cout << "\nERROR " << code << ": " << description << "\n";
+	debug->Log({ "GLFW ", std::to_string(code), ": ", description }, Debug::Error, Debug::ERR902);
 }

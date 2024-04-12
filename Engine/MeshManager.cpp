@@ -1,6 +1,6 @@
 #include "MeshManager.h"
 
-#include <iostream>
+#include "Debug.h"
 
 using std::pair;
 
@@ -47,6 +47,7 @@ Mesh* MeshManager::AddMesh(const char* filepath)
    else
    {
       delete newMesh;
+      debug->Log({ "Failed to load a Mesh from filepath: ", filepath, ". Set to None" }, Debug::Warning, Debug::WRN100);
       return nullptr;
    }
 }

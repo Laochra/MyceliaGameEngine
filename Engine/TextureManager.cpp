@@ -1,6 +1,5 @@
 #include "TextureManager.h"
-
-#include <iostream>
+#include "Debug.h"
 
 using std::pair;
 
@@ -61,7 +60,7 @@ Texture* TextureManager::AddTexture(const char* filepath, Texture::Linearity lin
    else
    {
       delete newTexture;
-      std::cout << "Couldn't find a Texture at filepath: " << filepath << ". Set to Missing Texture\n";
+      debug->Log({ "Failed to load a Texture from filepath: ", filepath, ". Set to Missing Texture" }, Debug::Warning, Debug::WRN100);
       return GetTexture("Missing");
    }
 }

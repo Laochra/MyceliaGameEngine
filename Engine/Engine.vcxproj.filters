@@ -17,12 +17,6 @@
     <ClCompile Include="..\External\glad\glad.c">
       <Filter>3rd Party\glad</Filter>
     </ClCompile>
-    <ClCompile Include="HashBucket.cpp">
-      <Filter>Data Structures</Filter>
-    </ClCompile>
-    <ClCompile Include="HashTable.cpp">
-      <Filter>Data Structures</Filter>
-    </ClCompile>
     <ClCompile Include="TimeManager.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
@@ -74,6 +68,9 @@
     <ClCompile Include="MeshManager.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="Debug.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -100,24 +97,6 @@
     </ClInclude>
     <ClInclude Include="..\External\stb\stb_image_write.h">
       <Filter>3rd Party\stb</Filter>
-    </ClInclude>
-    <ClInclude Include="BinaryNode.h">
-      <Filter>Data Structures</Filter>
-    </ClInclude>
-    <ClInclude Include="BinaryTree.h">
-      <Filter>Data Structures</Filter>
-    </ClInclude>
-    <ClInclude Include="HashBucket.h">
-      <Filter>Data Structures</Filter>
-    </ClInclude>
-    <ClInclude Include="HashTable.h">
-      <Filter>Data Structures</Filter>
-    </ClInclude>
-    <ClInclude Include="LinkedList.h">
-      <Filter>Data Structures</Filter>
-    </ClInclude>
-    <ClInclude Include="LinkedNode.h">
-      <Filter>Data Structures</Filter>
     </ClInclude>
     <ClInclude Include="GLIncludes.h">
       <Filter>Utility</Filter>
@@ -199,6 +178,9 @@
     </ClInclude>
     <ClInclude Include="MeshManager.h">
       <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug.h">
+      <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -10,28 +10,28 @@
       <Filter>GUI\EditorWindows</Filter>
     </ClCompile>
     <ClCompile Include="..\External\imgui\imgui.cpp">
-      <Filter>External Libraries\imgui</Filter>
+      <Filter>3rd Party\imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\External\imgui\imgui_demo.cpp">
-      <Filter>External Libraries\imgui</Filter>
+      <Filter>3rd Party\imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\External\imgui\imgui_draw.cpp">
-      <Filter>External Libraries\imgui</Filter>
+      <Filter>3rd Party\imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\External\imgui\imgui_impl_glfw.cpp">
-      <Filter>External Libraries\imgui</Filter>
+      <Filter>3rd Party\imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\External\imgui\imgui_impl_opengl3.cpp">
-      <Filter>External Libraries\imgui</Filter>
+      <Filter>3rd Party\imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\External\imgui\imgui_stdlib.cpp">
-      <Filter>External Libraries\imgui</Filter>
+      <Filter>3rd Party\imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\External\imgui\imgui_tables.cpp">
-      <Filter>External Libraries\imgui</Filter>
+      <Filter>3rd Party\imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\External\imgui\imgui_widgets.cpp">
-      <Filter>External Libraries\imgui</Filter>
+      <Filter>3rd Party\imgui</Filter>
     </ClCompile>
     <ClCompile Include="GameObjectGUI.cpp">
       <Filter>GUI\EditorWindows</Filter>
@@ -51,6 +51,9 @@
     <ClCompile Include="GUI.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
+    <ClCompile Include="EditorDebug.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="JSON Configs">
@@ -62,12 +65,6 @@
     <Filter Include="GameObjects">
       <UniqueIdentifier>{1ab21daf-0a9b-4c35-9efb-48f0a173de7f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="External Libraries">
-      <UniqueIdentifier>{36fcd552-08fd-45b6-855d-29038716cfe6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="External Libraries\imgui">
-      <UniqueIdentifier>{b21dc611-2b18-4119-ba21-fbe6d2f378f2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GUI">
       <UniqueIdentifier>{a1d011d6-fa56-4ac6-8730-9e79ebaaaf96}</UniqueIdentifier>
     </Filter>
@@ -77,13 +74,16 @@
     <Filter Include="Resources">
       <UniqueIdentifier>{57ffe12a-f198-499d-a7a6-93946c02816d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="3rd Party">
+      <UniqueIdentifier>{36fcd552-08fd-45b6-855d-29038716cfe6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rd Party\imgui">
+      <UniqueIdentifier>{b21dc611-2b18-4119-ba21-fbe6d2f378f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EditorCameraConfig.h">
       <Filter>JSON Configs</Filter>
-    </ClInclude>
-    <ClInclude Include="FileLoading.h">
-      <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="ImGuiIncludes.h">
       <Filter>Utility</Filter>
@@ -96,34 +96,34 @@
       <Filter>GUI\EditorWindows</Filter>
     </ClInclude>
     <ClInclude Include="..\External\imgui\imconfig.h">
-      <Filter>External Libraries\imgui</Filter>
+      <Filter>3rd Party\imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\External\imgui\imgui.h">
-      <Filter>External Libraries\imgui</Filter>
+      <Filter>3rd Party\imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\External\imgui\imgui_impl_glfw.h">
-      <Filter>External Libraries\imgui</Filter>
+      <Filter>3rd Party\imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\External\imgui\imgui_impl_opengl3.h">
-      <Filter>External Libraries\imgui</Filter>
+      <Filter>3rd Party\imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\External\imgui\imgui_impl_opengl3_loader.h">
-      <Filter>External Libraries\imgui</Filter>
+      <Filter>3rd Party\imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\External\imgui\imgui_internal.h">
-      <Filter>External Libraries\imgui</Filter>
+      <Filter>3rd Party\imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\External\imgui\imgui_stdlib.h">
-      <Filter>External Libraries\imgui</Filter>
+      <Filter>3rd Party\imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\External\imgui\imstb_rectpack.h">
-      <Filter>External Libraries\imgui</Filter>
+      <Filter>3rd Party\imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\External\imgui\imstb_textedit.h">
-      <Filter>External Libraries\imgui</Filter>
+      <Filter>3rd Party\imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\External\imgui\imstb_truetype.h">
-      <Filter>External Libraries\imgui</Filter>
+      <Filter>3rd Party\imgui</Filter>
     </ClInclude>
     <ClInclude Include="EditorCameraGUI.h">
       <Filter>GUI\EditorWindows</Filter>
@@ -164,15 +164,18 @@
     <ClInclude Include="resource.h">
       <Filter>Resources</Filter>
     </ClInclude>
+    <ClInclude Include="EditorDebug.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\External\imgui\imgui.natstepfilter">
-      <Filter>External Libraries\imgui</Filter>
+      <Filter>3rd Party\imgui</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\External\imgui\imgui.natvis">
-      <Filter>External Libraries\imgui</Filter>
+      <Filter>3rd Party\imgui</Filter>
     </Natvis>
   </ItemGroup>
   <ItemGroup>

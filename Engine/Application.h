@@ -1,7 +1,5 @@
 #pragma once
 
-#include <iostream>
-
 #include "Camera.h"
 
 #include "GLIncludes.h"

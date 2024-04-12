@@ -43,3 +43,4 @@ x64/
 # Assimp
 External/assimp/*
 !External/assimp/assimp.zip
+Working/Debug.log

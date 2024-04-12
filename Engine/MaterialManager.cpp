@@ -1,5 +1,7 @@
 #include "MaterialManager.h"
 
+#include "Debug.h"
+
 using std::pair;
 
 MaterialManager* materialManager = nullptr;
@@ -13,7 +15,7 @@ MaterialManager::MaterialManager()
    }
    else
    {
-      std::cout << "Failed to load Missing.mat\n";
+      debug->Log({ "Failed to load Missing.mat" }, Debug::Warning, Debug::WRN100);
       delete missingMaterial;
    }
 
@@ -24,7 +26,7 @@ MaterialManager::MaterialManager()
    }
    else
    {
-      std::cout << "Failed to load Default.mat\n";
+      debug->Log({ "Failed to load Default.mat" }, Debug::Warning, Debug::WRN100);
       delete defaultMaterial;
    }
 }
@@ -59,7 +61,8 @@ Material* MaterialManager::AddMaterial(const char* filepath)
    else
    {
       delete newMaterial;
-      std::cout << "Couldn't find a Material at filepath: " << filepath << ". Set to Missing.mat\n";
+
+      debug->Log({ "Failed to load a Material from filepath: ", filepath, ". Set to Missing.mat"}, Debug::Warning, Debug::WRN100);
       return GetMaterial("Missing");
    }
 }

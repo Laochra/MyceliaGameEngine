@@ -21,11 +21,15 @@
 
 #include "stb/stb_image.h"
 
+#include "EditorDebug.h"
+
 void Editor::Initialise()
 {
+	del(debug); debug = new EditorDebug();
+
 	glfwSetWindowTitle(window, "Editor");
 
-	GLFWimage icons[4];
+	GLFWimage icons[4]{};
 	icons[0].pixels = stbi_load("Engine\\Icons\\shroom16x16.png", &icons[0].width, &icons[0].height, 0, 4);
 	icons[1].pixels = stbi_load("Engine\\Icons\\shroom32x32.png", &icons[1].width, &icons[1].height, 0, 4);
 	icons[2].pixels = stbi_load("Engine\\Icons\\shroom48x48.png", &icons[2].width, &icons[2].height, 0, 4);
@@ -385,10 +389,12 @@ void Editor::DrawGUI()
 
 void Editor::OnClose()
 {
-	delete mainCamera;
+	del(debug);
 
-	delete gameObjectManager;
-	delete inspector;
+	del(mainCamera);
+
+	del(gameObjectManager);
+	del(inspector);
 
 	Gizmos::destroy();
 

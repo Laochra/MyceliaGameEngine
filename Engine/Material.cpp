@@ -4,6 +4,8 @@
 
 #include "TextureManager.h"
 
+#include "Debug.h"
+
 bool Material::LoadFromJSON(const char* filepathInit)
 {
    //if (!JSONFileIsValid(filename)) return false;
@@ -19,7 +21,7 @@ bool Material::LoadFromJSON(const char* filepathInit)
 	ifstream materialInput(filepathInit);
 	if (!materialInput.good())
 	{
-		std::cout << "Failed to find material with the filepath: " << filepathInit << " - Defaulted to Missing.mat\n";
+		debug->Log({ "Failed to find material with the filepath: ", filepathInit, " - Defaulted to Missing.mat" }, Debug::Warning, Debug::WRN101);
 		return false;
 	}
 
@@ -29,16 +31,13 @@ bool Material::LoadFromJSON(const char* filepathInit)
 	try { materialInput >> material; }
 	catch (parse_error)
 	{
-		//Log({ current.filePath, " was corrupt. All fields defaulted to \"None\".\n" }, LogType::Warning);
-		std::cout << filepathInit << " was corrupt. Defaulted to Missing.mat\n";
-
+		debug->Log({ filepathInit, " was corrupt. Defaulted to Missing.mat" }, Debug::Warning, Debug::WRN102);
 		return false;
 	}
 
 	// Ensuring Shader Program is Valid
 	if (!material.contains("ShaderProgram"))
 	{
-		//Log({ current.filePath, " did not specify a Shader Program. Defaulted to \"None\".\n" }, LogType::Warning);
 		material["ShaderProgram"] = "None";
 		return true;
 	}
@@ -55,7 +54,7 @@ bool Material::LoadFromJSON(const char* filepathInit)
 
 	if (!shaderInput.good())
 	{
-		std::cout << "Failed to find shader program with the filepath: " << shaderFilePath << " - Defaulted to \"None\"\n";
+		debug->Log({ "Failed to find shader program with the filepath: ", shaderFilePath, " - Defaulted to \"None\"" }, Debug::Warning, Debug::WRN101);
 		material["ShaderProgram"] = "None";
 		return true;
 	}
@@ -67,9 +66,8 @@ bool Material::LoadFromJSON(const char* filepathInit)
 	try { shaderInput >> shaderProgramJSON; }
 	catch (parse_error)
 	{
-		std::cout << shaderFilePath << " was corrupt. Set to \"Default\"\n";
+		debug->Log({ shaderFilePath, " was corrupt. Set to \"Default\"" }, Debug::Warning, Debug::WRN102);
 		shaderFilePath = "Default";
-
 		return true;
 	}
 

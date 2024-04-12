@@ -10,7 +10,7 @@ using std::string;
 #include <fstream>
 using std::ifstream;
 
-#include <iostream>
+#include "Debug.h"
 
 const std::map<ShaderInputType, const char*> shaderInputTypeToString = {
    {UndefinedTypeGL, "Undefined"},
@@ -166,6 +166,7 @@ bool Shader::LoadShader(ShaderStage stage, const char* filename)
 		delete[] lastError;
 		lastError = new char[infoLogLength];
 		glGetShaderInfoLog(glHandle, infoLogLength, 0, lastError);
+		// TODO: Get shader compilation error logging here
 		return false;
 	}
 
@@ -655,18 +656,18 @@ bool ShaderProgram::LoadShaderFromJSON(ShaderStage stage, const char* filename)
 			case FragmentStage:
 				if (LoadShader(stage, "Engine\\DefaultAssets\\Default.frag") == false)
 				{
-					std::cout << '\n' << filename << " is not a valid shader file\n";
+					debug->Log({ filename, " is not a valid shader file" }, Debug::Warning, Debug::WRN102);
 					return false;
 				}
 				break;
 			case VertexStage:
 				if (LoadShader(stage, "Engine\\DefaultAssets\\Default.vert") == false)
 				{
-					std::cout << '\n' << filename << " is not a valid shader file\n";
+					debug->Log({ filename, " is not a valid shader file" }, Debug::Warning, Debug::WRN102);
 					return false;
 				}
 				break;
-			default: std::cout << '\n' << "Shader stage " << stage << " has no default\n";
+			default: debug->Log({ "Shader stage ", std::to_string(stage), " has no default" }, Debug::Warning, Debug::WRN104);
 				return false;
 		}
 	}
@@ -674,7 +675,7 @@ bool ShaderProgram::LoadShaderFromJSON(ShaderStage stage, const char* filename)
 	{
 		if (LoadShader(stage, filename) == false)
 		{
-			std::cout << '\n' << filename << " is not a valid shader file\n";
+			debug->Log({ filename, " is not a valid shader file" }, Debug::Warning, Debug::WRN102);
 			return false;
 		}
 	}
@@ -690,7 +691,7 @@ bool ShaderProgram::JSONFileIsValid(const char* filename)
 	ifstream input(filename);
 	if (!input.good())
 	{
-		std::cout << "\nInput file " << filename << " is missing, it may have been moved, deleted, or renamed\n";
+		debug->Log({ filename, " is missing, it may have been moved, deleted, or renamed"}, Debug::Warning, Debug::WRN101);
 		return false;
 	}
 
@@ -698,34 +699,34 @@ bool ShaderProgram::JSONFileIsValid(const char* filename)
 	try { input >> shaderProgram; }
 	catch (parse_error)
 	{
-		std::cout << "\nInput file " << filename << " is corrupt\n";
+		debug->Log({ filename, " is not a valid shader file" }, Debug::Warning, Debug::WRN102);
 		return false;
 	}
 
 	bool incompleteFile = false;
 	if (!shaderProgram.contains("Vertex"))
 	{
-		std::cout << "\n" << filename << " does not specify a Vertex shader, specify \"None\" to disregard it\n";
+		debug->Log({ filename, " does not specify a Vertex shader, specify \"None\" to disregard it" }, Debug::Warning, Debug::WRN103);
 		incompleteFile = true;
 	}
 	if (!shaderProgram.contains("TessEvaluation"))
 	{
-		std::cout << "\n" << filename << " does not specify a Tess Evaluation shader, specify \"None\" to disregard it\n";
+		debug->Log({ filename, " does not specify a Tess Evaluation shader, specify \"None\" to disregard it" }, Debug::Warning, Debug::WRN103);
 		incompleteFile = true;
 	}
 	if (!shaderProgram.contains("TessControl"))
 	{
-		std::cout << "\n" << filename << " does not specify a Tess Control shader, specify \"None\" to disregard it\n";
+		debug->Log({ filename, " does not specify a Tess Control shader, specify \"None\" to disregard it" }, Debug::Warning, Debug::WRN103);
 		incompleteFile = true;
 	}
 	if (!shaderProgram.contains("Geometry"))
 	{
-		std::cout << "\n" << filename << " does not specify a Geometry shader, specify \"None\" to disregard it\n";
+		debug->Log({ filename, " does not specify a Geometry shader, specify \"None\" to disregard it" }, Debug::Warning, Debug::WRN103);
 		incompleteFile = true;
 	}
 	if (!shaderProgram.contains("Fragment"))
 	{
-		std::cout << "\n" << filename << " does not specify a Fragment shader, specify \"None\" to disregard it\n";
+		debug->Log({ filename, " does not specify a Fragment shader, specify \"None\" to disregard it" }, Debug::Warning, Debug::WRN103);
 		incompleteFile = true;
 	}
 	if (incompleteFile) return false;
