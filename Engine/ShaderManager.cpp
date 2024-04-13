@@ -15,7 +15,7 @@ ShaderManager::ShaderManager()
    }
    else
    {
-      debug->Log({ "Failed to load Default.gpu" }, Debug::Warning, Debug::WRN100);
+      debug->Log({ "Failed to load Default.gpu" }, Debug::Error, Debug::ERR101);
       delete defaultShaderProgram;
    }
 }

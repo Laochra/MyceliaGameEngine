@@ -21,65 +21,53 @@ Debug::Debug() noexcept
 {
 	outputFile = new std::ofstream("Debug.log");
 	outputFile->close();
+	outputFile->open("Debug.log", std::ios::app);
 }
 
 Debug::~Debug() noexcept
 {
+	outputFile->close();
 	delete outputFile;
 }
 
-Debug::DebugLog Debug::Log(StringParams message, LogType type, LogID id)
+Debug::DebugLog Debug::Log(const StringParams& message, const LogType type, const LogID id)
 {
-	if (id == Undefined)
+	DebugLog log(message, type, id);
+	if (log.id == Undefined)
 	{
-		switch (type)
+		switch (log.type)
 		{
-		case Warning:	id = WRN000;	break;
-		case Error:		id = ERR000;	break;
+		case Warning:	log.id = WRN000;	break;
+		case Error:		log.id = ERR000;	break;
 		}
 	}
-
-	DebugLog log;
-	log.type = type;
-	log.id = id;
-	for (string str : message) { log.message += str; }
+	const string logString = GetLogAsString(log) + '\n';
 
 #ifdef _DEBUG
 #if defined(_WIN32) || defined(_WIN64)
-	switch (type)
+	switch (log.type)
 	{
 	case Warning:	SetConsoleTextColour(YELLOW);	break;
-	case Error:		SetConsoleTextColour(RED);	break;
+	case Error:		SetConsoleTextColour(RED);		break;
 	}
 #endif
 
-	if (type == Message) { std::cout << log.message << '\n'; }
-	else { std::cout << LogIDMap[id] << ": " << log.message << '\n'; }
+	std::cout << logString;
 
 #if defined(_WIN32) || defined(_WIN64)
 	SetConsoleTextColour(LIGHTGREY);
 #endif
 #endif
 
-	outputFile->open("Debug.log", std::ios::app);
-	if (type == Message) { *outputFile << log.message << '\n'; }
-	else { *outputFile << LogIDMap[id] << ": " << log.message << '\n'; }
-	outputFile->close();
+	*outputFile << logString;
+	outputFile->flush();
 
 	return log;
 }
-Debug::DebugLog Debug::Log(LogType type, LogID id) { return Log(StringParams(), type, id); }
+Debug::DebugLog Debug::Log(const string& message, const LogType type, const LogID id) { return Log({message}, type, id); }
+Debug::DebugLog Debug::Log(const LogType type, const LogID id) { return Log(StringParams(), type, id); }
 
-string Debug::GetLogAsString(Debug::DebugLog log) noexcept
+string Debug::GetLogAsString(const Debug::DebugLog& log) noexcept
 {
-	if (debug == nullptr) return "debug is nullptr";
-
-	string result;
-	if (log.type != Message)
-	{
-		result.append(debug->LogIDMap[log.id]);
-		result.append(": ");
-	}
-	result.append(log.message);
-	return result;
+	return (log.type != Message ? debug->LogIDMap[log.id] + ": " : "") + log.message;
 }

@@ -18,26 +18,34 @@ bool applicationFocused = true;
 int Application::Run()
 {
 	isRunning = true;
-	
-	debug = new Debug();
 
 	{
+		debug->Log("Setting up application...");
 		int returnCode = Setup();
-		if (returnCode != 0) return returnCode;
+		if (returnCode != 0)
+		{
+			debug->Log("Application setup failed\n", Debug::Error, Debug::ERR001);
+			return returnCode;
+		}
+		debug->Log("Application setup successful\n");
 	}
 
+	debug->Log("Initialising application...");
 	Initialise();
+	debug->Log("Initialisation successful\n");
 
 	if (mainCamera == nullptr)
 	{
-		debug->Log({ "No camera was set up in Initialise(), so a default camera was created. Application will not behave as expected." }, Debug::Warning, Debug::WRN001);
+		debug->Log({ "No Camera was set up in Initialise(), so a default was created. Application will not behave as expected." }, Debug::Warning, Debug::WRN001);
 		mainCamera = GameObject::Instantiate<Camera>();
 	}
 
 	GameLoop();
 
+	debug->Log("Terminating application...");
 	OnClose();
 	Close();
+	debug->Log("Application termination successful\n");
 
 	return 0;
 }
@@ -88,6 +96,8 @@ int Application::Setup()
 	glfwSetWindowFocusCallback(window, WindowFocusCallback);
 
 	glfwMakeContextCurrent(window);
+
+	glfwSwapInterval(0); // Disables VSync
 
 	if (!gladLoadGL())
 	{
@@ -156,8 +166,6 @@ void Application::Close()
 {
 	del(input);
 
-	del(debug);
-
 	del(shaderManager);
 	del(materialManager);
 	del(textureManager);
@@ -211,7 +219,6 @@ const char* GLErrorSeverity(GLenum severity)
 }
 void GLErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
-	Debug::LogType logType;
 	switch (severity)
 	{
 	case GL_DEBUG_SEVERITY_HIGH:		debug->Log({ "OpenGL ", GLErrorSource(source), GLErrorType(type), std::to_string(id), ": \"", message }, Debug::Error,   Debug::ERR901); break;

@@ -49,6 +49,12 @@ public:
 
 		///   Errors   ///
 		ERR000,		// Undefined Error
+		ERR001,		// Setup Failure
+		ERR002,		// Initialisation Failure
+
+		// Files
+		ERR100,		// Failed to Load Critical File
+		ERR101,		// Failed to Load a Default Asset
 
 		// 3rd Party
 		ERR901,		// OpenGL Error
@@ -60,12 +66,25 @@ public:
 		string message;
 		LogID id;
 		LogType type;
+
+		DebugLog(LogType typeInit = LogType::Message, LogID idInit = LogID::Undefined) :
+			type(typeInit),
+			id(idInit) {}
+		DebugLog(string messageInit, LogType typeInit = LogType::Message, LogID idInit = LogID::Undefined) :
+			message(messageInit),
+			type(typeInit),
+			id(idInit) {}
+		DebugLog(StringParams messageInit, LogType typeInit = LogType::Message, LogID idInit = LogID::Undefined) :
+			type(typeInit),
+			id(idInit)
+			{ for (string str : messageInit) { message += str; } }
 	};
 
-	virtual DebugLog Log(StringParams message, LogType type = Message, LogID id = Undefined);
-	virtual DebugLog Log(LogType type, LogID id = Undefined);
+	virtual DebugLog Log(const StringParams& message, const LogType type = Message, const LogID id = Undefined);
+	virtual DebugLog Log(const string& message, const LogType type = Message, const LogID id = Undefined);
+	virtual DebugLog Log(const LogType type, const LogID id = Undefined);
 
-	static string GetLogAsString(DebugLog log) noexcept;
+	static string GetLogAsString(const DebugLog& log) noexcept;
 
 protected:
 	std::ofstream* outputFile;

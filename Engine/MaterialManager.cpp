@@ -15,7 +15,7 @@ MaterialManager::MaterialManager()
    }
    else
    {
-      debug->Log({ "Failed to load Missing.mat" }, Debug::Warning, Debug::WRN100);
+      debug->Log({ "Failed to load Missing.mat" }, Debug::Error, Debug::ERR101);
       delete missingMaterial;
    }
 
@@ -26,7 +26,7 @@ MaterialManager::MaterialManager()
    }
    else
    {
-      debug->Log({ "Failed to load Default.mat" }, Debug::Warning, Debug::WRN100);
+      debug->Log({ "Failed to load Default.mat" }, Debug::Error, Debug::ERR101);
       delete defaultMaterial;
    }
 }
@@ -62,7 +62,7 @@ Material* MaterialManager::AddMaterial(const char* filepath)
    {
       delete newMaterial;
 
-      debug->Log({ "Failed to load a Material from filepath: ", filepath, ". Set to Missing.mat"}, Debug::Warning, Debug::WRN100);
+      debug->Log({ "Failed to load a Material at: ", filepath, ". Set to Missing.mat"}, Debug::Warning, Debug::WRN100);
       return GetMaterial("Missing");
    }
 }

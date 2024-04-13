@@ -21,7 +21,7 @@ bool Material::LoadFromJSON(const char* filepathInit)
 	ifstream materialInput(filepathInit);
 	if (!materialInput.good())
 	{
-		debug->Log({ "Failed to find material with the filepath: ", filepathInit, " - Defaulted to Missing.mat" }, Debug::Warning, Debug::WRN101);
+		debug->Log({ "Failed to find a Material at: ", filepathInit, ". Set to Missing.mat" }, Debug::Warning, Debug::WRN101);
 		return false;
 	}
 
@@ -31,18 +31,14 @@ bool Material::LoadFromJSON(const char* filepathInit)
 	try { materialInput >> material; }
 	catch (parse_error)
 	{
-		debug->Log({ filepathInit, " was corrupt. Defaulted to Missing.mat" }, Debug::Warning, Debug::WRN102);
+		debug->Log({ filepathInit, " was corrupt. Set to Missing.mat" }, Debug::Warning, Debug::WRN102);
 		return false;
 	}
 
 	// Ensuring Shader Program is Valid
 	if (!material.contains("ShaderProgram"))
 	{
-		material["ShaderProgram"] = "None";
-		return true;
-	}
-	if (material["ShaderProgram"] == "None")
-	{
+		material["ShaderProgram"] = "Default";
 		return true;
 	}
 
@@ -54,13 +50,12 @@ bool Material::LoadFromJSON(const char* filepathInit)
 
 	if (!shaderInput.good())
 	{
-		debug->Log({ "Failed to find shader program with the filepath: ", shaderFilePath, " - Defaulted to \"None\"" }, Debug::Warning, Debug::WRN101);
-		material["ShaderProgram"] = "None";
+		debug->Log({ "Failed to find ShaderProgram at: ", shaderFilePath, ". Set to \"Default\"" }, Debug::Warning, Debug::WRN101);
+		material["ShaderProgram"] = "Default";
 		return true;
 	}
 
-	if (shaderFilePath != "Default") shaderProgram = shaderManager->GetProgram(shaderFilePath.c_str());
-	else shaderProgram = shaderManager->GetProgram("Engine\\DefaultAssets\\Default.gpu");
+	shaderProgram = shaderManager->GetProgram(shaderFilePath.c_str());
 
 	json shaderProgramJSON;
 	try { shaderInput >> shaderProgramJSON; }

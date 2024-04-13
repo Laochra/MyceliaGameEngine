@@ -24,13 +24,21 @@ void ConsoleGUI::Draw()
 	}
 
 	ImGui::BeginChild("Logs");
-		for (int i = 0; i < (int)logs.size(); i++)
+		ImGuiListClipper clipper; // Only draw the logs that would appear on screen
+		clipper.Begin((int)logs.size());
+		while (clipper.Step())
 		{
-			ImGui::PushStyleColor(ImGuiCol_Text, logs[i].type == Debug::Message ? IM_COL32(255, 255, 255, 255)
-				: logs[i].type == Debug::Warning ? IM_COL32(255, 255, 0, 255)
-				: IM_COL32(255, 0, 0, 255));
-			ImGui::TextWrapped(Debug::GetLogAsString(logs[i]).c_str());
-			ImGui::PopStyleColor();
+			for (int i = clipper.DisplayStart; i < clipper.DisplayEnd; i++)
+			{
+				ImGui::PushStyleColor(ImGuiCol_Text, logs[i].type == Debug::Message ? IM_COL32(255, 255, 255, 255)
+					: logs[i].type == Debug::Warning ? IM_COL32(255, 255, 0, 255)
+					: IM_COL32(255, 0, 0, 255));
+				ImGui::TextWrapped((std::to_string(i) + ". " + Debug::GetLogAsString(logs[i])).c_str());
+				ImGui::PopStyleColor();
+			}
 		}
+		clipper.End();
+
+		if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY()) ImGui::SetScrollHereY(1.0f); // If at bottom, autoscroll down in case a new log was added
 	ImGui::EndChild();
 }

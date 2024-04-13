@@ -25,8 +25,6 @@
 
 void Editor::Initialise()
 {
-	del(debug); debug = new EditorDebug();
-
 	glfwSetWindowTitle(window, "Editor");
 
 	GLFWimage icons[4]{};
@@ -111,6 +109,8 @@ void Editor::Initialise()
 
 		GUI::LoadStyle(GUI::currentStyle);
 	}
+
+	//ConsoleGUI::logs.clear();
 }
 
 void Editor::OnFrameStart()
@@ -389,8 +389,6 @@ void Editor::DrawGUI()
 
 void Editor::OnClose()
 {
-	del(debug);
-
 	del(mainCamera);
 
 	del(gameObjectManager);
