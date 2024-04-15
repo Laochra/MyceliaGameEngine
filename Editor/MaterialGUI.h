@@ -176,7 +176,7 @@ void MaterialGUI::Load(string filePathStr)
 	try { materialInput >> material; }
 	catch (parse_error)
 	{
-		debug->Log({ current.filePath, " was corrupt. All fields defaulted to \"None\".\n" }, Debug::Warning, Debug::WRN102);
+		debug->Log({ current.filePath, " was corrupt. All fields defaulted to \"None\"." locationinfo }, Debug::Warning, Debug::WRN102);
 		Save();
 		materialInput = ifstream(current.filePath.c_str());
 		assert(materialInput.good());
@@ -189,7 +189,7 @@ void MaterialGUI::Load(string filePathStr)
 	// Ensuring Shader Program is Valid
 	if (!material.contains("ShaderProgram"))
 	{
-		debug->Log({ current.filePath, " did not specify a Shader Program. Set to \"Default\".\n" }, Debug::Warning, Debug::WRN103);
+		debug->Log({ current.filePath, " did not specify a Shader Program. Set to \"Default\"." locationinfo }, Debug::Warning, Debug::WRN103);
 		material["ShaderProgram"] = "Default";
 		Save();
 	}
@@ -205,7 +205,7 @@ void MaterialGUI::Load(string filePathStr)
 	try { shaderInput >> shaderProgram; }
 	catch (parse_error)
 	{
-		debug->Log({ current.filePath, " was corrupt. Shader Program set to \"Default\"." }, Debug::Warning, Debug::WRN102);
+		debug->Log({ current.filePath, " was corrupt. Shader Program set to \"Default\"." locationinfo }, Debug::Warning, Debug::WRN102);
 		current.shaderFilePath = "Default";
 		Save();
 
@@ -298,7 +298,7 @@ void MaterialGUI::LoadShaderProgram(string filePathStr)
 	try { input >> shaderProgram; }
 	catch (parse_error)
 	{
-		debug->Log({ current.shaderFilePath, " was corrupt. All fields defaulted to \"None\".\n" }, Debug::Warning, Debug::WRN102);
+		debug->Log({ current.shaderFilePath, " was corrupt. All fields defaulted to \"None\"." locationinfo }, Debug::Warning, Debug::WRN102);
 		input = ifstream(current.filePath.c_str());
 		return;
 	}
@@ -315,7 +315,7 @@ void MaterialGUI::LoadShaderProgram(string filePathStr)
 			{
 				if (!attributes[i].contains("Exposed"))
 				{
-					debug->Log({ "Attribute ", std::to_string(i) ," in ", current.shaderFilePath, " did not specify an Exposed status.\n" }, Debug::Warning, Debug::WRN103);
+					debug->Log({ "Attribute ", std::to_string(i) ," in ", current.shaderFilePath, " did not specify an Exposed status." locationinfo }, Debug::Warning, Debug::WRN103);
 					continue;
 				}
 
@@ -323,13 +323,13 @@ void MaterialGUI::LoadShaderProgram(string filePathStr)
 
 				if (!attributes[i].contains("Name"))
 				{
-					debug->Log({ "Attribute ", std::to_string(i) ," in ", current.shaderFilePath, " did not specify a name.\n" }, Debug::Warning, Debug::WRN103);
+					debug->Log({ "Attribute ", std::to_string(i) ," in ", current.shaderFilePath, " did not specify a name." locationinfo }, Debug::Warning, Debug::WRN103);
 					continue;
 				}
 
 				if (!attributes[i].contains("Type"))
 				{
-					debug->Log({ "Attribute ", std::to_string(i) ," in ", current.shaderFilePath, " did not specify a type.\n" }, Debug::Warning, Debug::WRN103);
+					debug->Log({ "Attribute ", std::to_string(i) ," in ", current.shaderFilePath, " did not specify a type." locationinfo }, Debug::Warning, Debug::WRN103);
 					continue;
 				}
 
@@ -339,7 +339,7 @@ void MaterialGUI::LoadShaderProgram(string filePathStr)
 				current.attributes.push_back(attribute);
 			}
 		}
-		else { debug->Log({ current.shaderFilePath, " did not contain an Attributes list.\n" }, Debug::Warning, Debug::WRN103); }
+		else { debug->Log({ current.shaderFilePath, " did not contain an Attributes list." locationinfo }, Debug::Warning, Debug::WRN103); }
 	
 		if (shaderProgram.contains("Uniforms"))
 		{
@@ -350,7 +350,7 @@ void MaterialGUI::LoadShaderProgram(string filePathStr)
 			{	
 				if (!uniforms[i].contains("Exposed"))
 				{
-					debug->Log({ "Uniform ", std::to_string(i) ," in ",  current.shaderFilePath, " did not specify an Exposed status.\n" }, Debug::Warning, Debug::WRN103);
+					debug->Log({ "Uniform ", std::to_string(i) ," in ",  current.shaderFilePath, " did not specify an Exposed status." locationinfo }, Debug::Warning, Debug::WRN103);
 					continue;
 				}
 
@@ -358,13 +358,13 @@ void MaterialGUI::LoadShaderProgram(string filePathStr)
 
 				if (!uniforms[i].contains("Name"))
 				{
-					debug->Log({ "Uniform ", std::to_string(i) ," in ", current.shaderFilePath, " did not specify a name.\n" }, Debug::Warning, Debug::WRN103);
+					debug->Log({ "Uniform ", std::to_string(i) ," in ", current.shaderFilePath, " did not specify a name." locationinfo }, Debug::Warning, Debug::WRN103);
 					continue;
 				}
 
 				if (!uniforms[i].contains("Type"))
 				{
-					debug->Log({ "Uniform ", std::to_string(i) ," in ", current.shaderFilePath, " did not specify a type.\n" }, Debug::Warning, Debug::WRN103);
+					debug->Log({ "Uniform ", std::to_string(i) ," in ", current.shaderFilePath, " did not specify a type." locationinfo }, Debug::Warning, Debug::WRN103);
 					continue;
 				}
 				
@@ -374,7 +374,7 @@ void MaterialGUI::LoadShaderProgram(string filePathStr)
 				current.uniforms.push_back(uniform);
 			}
 		}
-		else { dirty = true; debug->Log({ current.shaderFilePath, " did not contain a Uniforms list.\n" }, Debug::Warning, Debug::WRN103); }
+		else { dirty = true; debug->Log({ current.shaderFilePath, " did not contain a Uniforms list." locationinfo }, Debug::Warning, Debug::WRN103); }
 	}
 
 }

@@ -6,7 +6,7 @@ Debug::DebugLog EditorDebug::Log(const StringParams& message, const LogType type
 {
    DebugLog log = Debug::Log(message, type, id);
 
-   ConsoleGUI::logs.push_back(log);
+   if (type != Debug::Subtle) ConsoleGUI::logs.push_back(log);
 
    return log;
 }

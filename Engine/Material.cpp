@@ -21,7 +21,7 @@ bool Material::LoadFromJSON(const char* filepathInit)
 	ifstream materialInput(filepathInit);
 	if (!materialInput.good())
 	{
-		debug->Log({ "Failed to find a Material at: ", filepathInit, ". Set to Missing.mat" }, Debug::Warning, Debug::WRN101);
+		debug->Log({ "Failed to find a Material at: ", filepathInit, ". Set to Missing.mat" locationinfo }, Debug::Warning, Debug::WRN101);
 		return false;
 	}
 
@@ -31,7 +31,7 @@ bool Material::LoadFromJSON(const char* filepathInit)
 	try { materialInput >> material; }
 	catch (parse_error)
 	{
-		debug->Log({ filepathInit, " was corrupt. Set to Missing.mat" }, Debug::Warning, Debug::WRN102);
+		debug->Log({ filepathInit, " was corrupt. Set to Missing.mat" locationinfo }, Debug::Warning, Debug::WRN102);
 		return false;
 	}
 
@@ -50,7 +50,7 @@ bool Material::LoadFromJSON(const char* filepathInit)
 
 	if (!shaderInput.good())
 	{
-		debug->Log({ "Failed to find ShaderProgram at: ", shaderFilePath, ". Set to \"Default\"" }, Debug::Warning, Debug::WRN101);
+		debug->Log({ "Failed to find ShaderProgram at: ", shaderFilePath, ". Set to \"Default\"" locationinfo }, Debug::Warning, Debug::WRN101);
 		material["ShaderProgram"] = "Default";
 		return true;
 	}
@@ -61,7 +61,7 @@ bool Material::LoadFromJSON(const char* filepathInit)
 	try { shaderInput >> shaderProgramJSON; }
 	catch (parse_error)
 	{
-		debug->Log({ shaderFilePath, " was corrupt. Set to \"Default\"" }, Debug::Warning, Debug::WRN102);
+		debug->Log({ shaderFilePath, " was corrupt. Set to \"Default\"" locationinfo }, Debug::Warning, Debug::WRN102);
 		shaderFilePath = "Default";
 		return true;
 	}

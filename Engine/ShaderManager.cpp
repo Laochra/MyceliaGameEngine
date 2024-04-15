@@ -15,7 +15,7 @@ ShaderManager::ShaderManager()
    }
    else
    {
-      debug->Log({ "Failed to load Default.gpu" }, Debug::Error, Debug::ERR101);
+      debug->Log("Failed to load Default.gpu" locationinfo, Debug::Error, Debug::ERR101);
       delete defaultShaderProgram;
    }
 }
@@ -50,7 +50,7 @@ ShaderProgram* ShaderManager::AddProgram(const char* filepath)
    else
    {
       delete newProgram;
-      debug->Log({ "Failed to load a ShaderProgram from filepath: ", filepath, ". Set to Default.gpu" }, Debug::Warning, Debug::WRN100);
+      debug->Log({ "Failed to load a ShaderProgram from filepath: ", filepath, ". Set to Default.gpu" locationinfo }, Debug::Warning, Debug::WRN100);
       return GetProgram("Default");
    }
 }

@@ -23,6 +23,8 @@
 
 #include "EditorDebug.h"
 
+#include "GeneralMacros.h"
+
 void Editor::Initialise()
 {
 	glfwSetWindowTitle(window, "Editor");

@@ -269,11 +269,11 @@ bool Mesh::LoadFromFile(const char* filepathInit)
 		std::ifstream filestream(filepathInit);
 		if (filestream.good())
 		{
-			debug->Log({ "Found a Mesh file at filepath: ", filepath, ". But AssImp couldn't load it."}, Debug::Warning, Debug::WRN102);
+			debug->Log({ "Found a Mesh file at filepath: ", filepath, ". But AssImp couldn't load it." locationinfo }, Debug::Warning, Debug::WRN102);
 		}
 		else
 		{
-			debug->Log({ "Couldn't find a Mesh file at filepath: ", filepath }, Debug::Warning, Debug::WRN101);
+			debug->Log({ "Couldn't find a Mesh file at filepath: ", filepath, locationinfo }, Debug::Warning, Debug::WRN101);
 		}
 
 		return false;

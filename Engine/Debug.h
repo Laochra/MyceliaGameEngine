@@ -20,8 +20,13 @@ public:
 	uncopyable(Debug)
 	immovable(Debug)
 	
-	InternalMappedEnum(LogType, unsigned char, public, Message, Warning, Error)
-	InternalMappedEnum(LogID, unsigned int, public,
+	mappedenumi(LogType, unsigned char, public,
+		Message,
+		Warning,
+		Error,
+		Subtle,
+	)
+	mappedenumi(LogID, unsigned int, public,
 		Undefined,	// Default ID
 
 

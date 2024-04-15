@@ -34,7 +34,13 @@ void ConsoleGUI::Draw()
 					: logs[i].type == Debug::Warning ? IM_COL32(255, 255, 0, 255)
 					: IM_COL32(255, 0, 0, 255));
 				ImGui::TextWrapped((std::to_string(i) + ". " + Debug::GetLogAsString(logs[i])).c_str());
+				
 				ImGui::PopStyleColor();
+
+				if (ImGui::IsItemHovered())
+				{
+					ImGui::SetTooltip(logs[i].message.c_str());
+				}
 			}
 		}
 		clipper.End();

@@ -12,7 +12,11 @@
 #define immovable(classname) classname(classname&&) = delete; classname& operator=(classname&&) = delete;
 #endif
 
-#define MappedEnum(name, type, ...)\
+#define expandedstringify(s) stringify(s)
+#define stringify(s) #s
+#define locationinfo " (" __FILE__ " " expandedstringify(__LINE__) ")"
+
+#define mappedenum(name, type, ...)\
 enum name : type { __VA_ARGS__ };\
 inline std::map<name, string> name##GenerateMap(string strings)\
 { \
@@ -36,7 +40,7 @@ inline std::map<name, string> name##GenerateMap(string strings)\
 } \
 std::map<name, string> name##Map = name##GenerateMap(#__VA_ARGS__);
 
-#define InternalMappedEnum(name, type, currentAccessibility, ...)\
+#define mappedenumi(name, type, currentAccessibility, ...)\
 enum name : type { __VA_ARGS__ };\
 protected:\
 std::map<name, string> name##GenerateMap(string strings)\

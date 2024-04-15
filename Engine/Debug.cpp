@@ -69,5 +69,5 @@ Debug::DebugLog Debug::Log(const LogType type, const LogID id) { return Log(Stri
 
 string Debug::GetLogAsString(const Debug::DebugLog& log) noexcept
 {
-	return (log.type != Message ? debug->LogIDMap[log.id] + ": " : "") + log.message;
+	return ((log.type != Message && log.type != Subtle) ? (debug->LogIDMap[log.id] + ": ") : ("")) + log.message;
 }
