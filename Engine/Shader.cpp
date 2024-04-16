@@ -167,6 +167,7 @@ bool Shader::LoadShader(ShaderStage stage, const char* filename)
 		lastError = new char[infoLogLength];
 		glGetShaderInfoLog(glHandle, infoLogLength, 0, lastError);
 		// TODO: Get shader compilation error logging here
+		debug->Log({ lastError, locationinfo }, Debug::Error, Debug::ERR901);
 		return false;
 	}
 
@@ -653,15 +654,15 @@ bool ShaderProgram::LoadShaderFromJSON(ShaderStage stage, const char* filename)
 	{
 		switch (stage)
 		{
-			case FragmentStage:
-				if (LoadShader(stage, "Engine\\DefaultAssets\\Default.frag") == false)
+			case VertexStage:
+				if (LoadShader(stage, "Engine\\DefaultAssets\\Default.vert") == false)
 				{
 					debug->Log({ filename, " is not a valid shader file" locationinfo }, Debug::Warning, Debug::WRN102);
 					return false;
 				}
 				break;
-			case VertexStage:
-				if (LoadShader(stage, "Engine\\DefaultAssets\\Default.vert") == false)
+			case FragmentStage:
+				if (LoadShader(stage, "Engine\\DefaultAssets\\Default.frag") == false)
 				{
 					debug->Log({ filename, " is not a valid shader file" locationinfo }, Debug::Warning, Debug::WRN102);
 					return false;

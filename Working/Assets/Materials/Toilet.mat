@@ -28,17 +28,8 @@
       "Name": "NormalMap"
     },
     {
-      "Data": [
-        0,
-        0,
-        200,
-        66
-      ],
-      "Name": "SpecularGlossiness"
-    },
-    {
       "Data": "None",
-      "Name": "SpecularMap"
+      "Name": "RMAOMap"
     }
   ]
 }

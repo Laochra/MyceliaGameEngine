@@ -25,14 +25,18 @@ void MeshRenderer::Draw()
 	material->shaderProgram->BindUniform("CameraPosition", mainCamera->GetGlobalPosition());
 
 	// Bind Light
-	material->shaderProgram->BindUniform("AmbientColour", LightingManager::ambientLight.colour);
+	//material->shaderProgram->BindUniform("AmbientColour", LightingManager::ambientLight.colour);
 	
-	material->shaderProgram->BindUniform("DirectionalLightColour", LightingManager::directionalLight.colour);
-	material->shaderProgram->BindUniform("DirectionalLightDirection", LightingManager::directionalLight.direction);
+	//material->shaderProgram->BindUniform(("DirectionalLights[" + std::to_string(0) + "].colour").c_str(), LightingManager::directionalLight.colour);
+	//material->shaderProgram->BindUniform(("DirectionalLights[" + std::to_string(0) + "].direction").c_str(), LightingManager::directionalLight.direction);
 
-	material->shaderProgram->BindUniform("PointLightColour", LightingManager::pointLight.colour);
-	material->shaderProgram->BindUniform("PointLightPosition", LightingManager::pointLight.position);
-	material->shaderProgram->BindUniform("PointLightRange", LightingManager::pointLight.range);
+	vector<PointLight> pointLights = LightingManager::GetClosestPointLights(GetGlobalPosition(), 4);
+	for (int i = 0; i < 4; i++)
+	{
+		material->shaderProgram->BindUniform(("PointLights[" + std::to_string(i) + "].colour").c_str(), pointLights[i].colour);
+		material->shaderProgram->BindUniform(("PointLights[" + std::to_string(i) + "].position").c_str(), pointLights[i].position);
+		material->shaderProgram->BindUniform(("PointLights[" + std::to_string(i) + "].range").c_str(), pointLights[i].range);
+	}
 
 	// Bind Transform
 	material->shaderProgram->BindUniform("ProjectionViewModel", ProjectionViewMatrix * GetMatrix());
@@ -75,23 +79,15 @@ void MeshRenderer::Draw()
 
 			continue;
 		}
-		else if (material->uniforms[i].name == "SpecularMap")
+		else if (material->uniforms[i].name == "RMAOMap")
 		{
 			string filepath = material->uniforms[i].GetAsFilepath();
 			filepath.pop_back();
 
-			if (filepath == "None") filepath = "DefaultColour";
+			if (filepath == "None") filepath = "DefaultRMAO";
 
 			textureManager->GetTexture(filepath.c_str())->Bind(2);
-			material->shaderProgram->BindUniform("SpecularMap", 2);
-
-			continue;
-		}
-		else if (material->uniforms[i].name == "SpecularGlossiness")
-		{
-			float specularGlossiness;
-			material->uniforms[i].Get(&specularGlossiness);
-			material->shaderProgram->BindUniform("SpecularGlossiness", specularGlossiness);
+			material->shaderProgram->BindUniform("RMAOMap", 2);
 
 			continue;
 		}

@@ -24,6 +24,11 @@ TextureManager::TextureManager()
    unsigned char cornflower[3] = { 127, 127, 255 };
    defaultNormal->Create(1, 1, Texture::RGB, cornflower);
    loadedTextures.insert(std::pair(string("DefaultNormal"), defaultNormal));
+
+   Texture* defaultRMAO = new Texture;
+   unsigned char grey[3] = { 127, 127, 127 };
+   defaultRMAO->Create(1, 1, Texture::RGB, grey);
+   loadedTextures.insert(std::pair(string("DefaultRMAO"), defaultRMAO));
 }
 
 TextureManager::~TextureManager()

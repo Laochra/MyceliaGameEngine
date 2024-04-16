@@ -53,16 +53,6 @@
     },
     {
       "Exposed": false,
-      "Name": "DirectionalLightColour",
-      "Type": "Float3"
-    },
-    {
-      "Exposed": false,
-      "Name": "DirectionalLightDirection",
-      "Type": "Float3"
-    },
-    {
-      "Exposed": false,
       "Name": "ModelMatrix",
       "Type": "Float4x4"
     },
@@ -78,12 +68,7 @@
     },
     {
       "Exposed": true,
-      "Name": "SpecularGlossiness",
-      "Type": "Float"
-    },
-    {
-      "Exposed": true,
-      "Name": "SpecularMap",
+      "Name": "RMAOMap",
       "Type": "Texture"
     }
   ],

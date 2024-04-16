@@ -1,5 +1,7 @@
 #version 460
 
+#define PI 3.14159265359
+
 in vec3 FragPos;
 
 in vec3 N;
@@ -9,84 +11,127 @@ in vec2 FragTexCoords;
 
 uniform vec3 CameraPosition;
 
-uniform vec3 AmbientColour;
+struct DirectionalLight
+{
+	vec3 colour;
+	vec3 direction;
+};
+uniform DirectionalLight DirectionalLights[4];
 
-uniform vec3 DirectionalLightColour;
-uniform vec3 DirectionalLightDirection;
-
-uniform vec3 PointLightColour;
-uniform vec3 PointLightPosition;
-uniform float PointLightRange;
+struct PointLight
+{
+	vec3 colour;
+	vec3 position;
+	float range;
+};
+uniform PointLight PointLights[4];
 
 uniform sampler2D ColourMap;
 uniform vec3 ColourTint;
 
 uniform sampler2D NormalMap;
 
-uniform sampler2D SpecularMap;
-uniform float SpecularGlossiness;
+uniform sampler2D RMAOMap; // Roughness, Metallic, Ambient Occlusion
 
 out vec4 FragColour;
 
+float NormalDistribution(vec3 N, vec3 H, float a) // Trowbridge-Reitz GGX Normal Distribution Approximation
+{
+	float aSqr = a * a;
+	float NdotH = max(dot(N, H), 0.0);
+	float NdotHSqr = NdotH * NdotH;
+	
+	float denominator = (NdotHSqr * (aSqr - 1.0) + 1.0);
+	denominator = PI * denominator * denominator;
+	
+	return aSqr / denominator;
+}
+
+float GeometryGGX(float NdotV, float k) // Schick-GGX Geometry Approximation
+{
+	float denominator = NdotV * (1.0 - k) + k;
+	
+	return NdotV / denominator;
+}
+float Geometry(vec3 N, vec3 V, vec3 L, float k) // Smith Geometry Approximation
+{
+	float NdotV = max(dot(N, V), 0.0);
+	float NdotL = max(dot(N, L), 0.0);
+	
+	return GeometryGGX(NdotV, k) * GeometryGGX(NdotL, k);
+}
+
+vec3 Fresnel(float cosTheta, vec3 F0) // Fresnel-Schlick Fresnel Approximation
+{
+	return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
+}
+
+vec3 ReflectanceEquation(vec3 colour, vec3 normal, float roughness, float metallic, float ao, vec3 viewDirection, vec3 lightDirection, float attenuation, vec3 lightColour, vec3 F0)
+{
+	// Calculate Per-Light Radiance
+	
+	vec3 H = normalize(viewDirection + lightDirection);
+	vec3 radiance = lightColour * attenuation;
+	
+	// Cook-Torrance BRDF
+	float NDF = NormalDistribution(normal, H, roughness);
+	float G = Geometry(normal, viewDirection, lightDirection, roughness);
+	vec3 F = Fresnel(max(dot(H, viewDirection), 0.0), F0);
+	
+	vec3 kS = F;
+	vec3 kD = vec3(1.0) - kS;
+	kD *= 1.0 - metallic;
+	
+	vec3 numerator = NDF * G * F;
+	float denominator = 4.0 * max(dot(normal, viewDirection), 0.0) * max(dot(normal, lightDirection), 0.0) + 0.0001;
+	vec3 specular = numerator / denominator;
+	
+	// Return amount to add
+	float NdotL = max(dot(normal, lightDirection), 0.0);
+	return (kD * colour / PI + specular) * radiance * NdotL;
+}
+
 void main() // Fragment
 {	
-	vec3 normal = texture(NormalMap, FragTexCoords).rgb;
-	normal = normalize(TBN * (normal * 2.0 - 1.0));
+	// Material Inputs
+	vec3 colour = texture(ColourMap, FragTexCoords).rgb * ColourTint;
+	vec3 normal = texture(NormalMap, FragTexCoords).rgb; normal = normalize(TBN * (normal * 2.0 - 1.0));
+	float roughness = texture(RMAOMap, FragTexCoords).r;
+	float metallic = texture(RMAOMap, FragTexCoords).g;
+	float ao = texture(RMAOMap, FragTexCoords).b;
 	
 	vec3 viewDirection = normalize(CameraPosition - FragPos);
-
 	
-	vec3 specularColour = texture(SpecularMap, FragTexCoords).rgb;
+	vec3 F0 = vec3(0.04);
+	F0 = mix(F0, colour, metallic);
 	
-	
-	float lightDotD = dot(normal, -DirectionalLightDirection);
-	vec3 reflectionDirectionD = -reflect(-DirectionalLightDirection, normal);
-	float specularComponentD = pow(max(dot(viewDirection, reflectionDirectionD), 0.0), SpecularGlossiness);
-	
-	vec3 pointLightDirection = normalize(FragPos - PointLightPosition);
-	float distanceSquared = dot(PointLightPosition - FragPos, PointLightPosition - FragPos);
-	float attenuation = PointLightRange / distanceSquared;
-	attenuation = min(attenuation, 1.0);
-	float lightDotP = dot(normal, -pointLightDirection) * attenuation;
-	vec3 reflectionDirectionP = -reflect(-pointLightDirection, normal);
-	float specularComponentP = pow(max(dot(viewDirection, reflectionDirectionP), 0.0) * attenuation, SpecularGlossiness);
-	
-	float diffuseComponent = clamp(lightDotD + lightDotP, 0, 1);
-	
-	if (lightDotD < 0)
+	// Reflectance Equation
+	vec3 Lo = vec3(0.0);
+	for (int i = 0; i < 4; i++) // DirectionalLights
 	{
-		specularComponentD = 0;
+		//float attenuation = (DirectionalLights[i].colour != vec3(0.0)) ? 1.0 : 0.0;
+		//Lo += ReflectanceEquation(colour, normal, roughness, metallic, ao, viewDirection, -DirectionalLights[i].direction, attenuation, DirectionalLights[i].colour, F0);
+	}
+	for (int i = 0; i < 4; i++) // PointLights
+	{
+		vec3 lightDirection = normalize(PointLights[i].position - FragPos);
+		float d = length(PointLights[i].position - FragPos);
+		float dSqr = d * d;
+		float attenuation = clamp(PointLights[i].range / dSqr, 0.0, 1.0);
 		
-		if (lightDotP < 0)
-		{
-			diffuseComponent = 0;
-			specularComponentP = 0;
-		}
-		else
-		{
-			diffuseComponent = clamp(lightDotP, 0, 1);
-		}
-	}
-	else if (lightDotP < 0)
-	{
-		diffuseComponent = clamp(lightDotD, 0, 1);
-		specularComponentP = 0;
+		if (d > PointLights[i].range) attenuation = 0.0;
+		
+		Lo += ReflectanceEquation(colour, normal, roughness, metallic, ao, viewDirection, lightDirection, attenuation, PointLights[i].colour, F0);
 	}
 	
-	vec3 specularResultD = specularColour * specularComponentD * DirectionalLightColour;
-	vec3 specularResultP = specularColour * specularComponentP * PointLightColour;
-	vec3 specularResult = specularResultD + specularResultP;
+	vec3 ambientResult = vec3(0.03) * colour * ao;
+	vec3 colourResult = ambientResult + Lo;
 	
-	vec3 textureColour = texture(ColourMap, FragTexCoords).rgb;
-
-	vec3 diffuseResult = (DirectionalLightColour + (PointLightColour * attenuation)) * diffuseComponent * textureColour * ColourTint;
-	vec3 ambientResult = AmbientColour * textureColour * ColourTint;
+	//colourResult = colourResult / (colourResult + vec3(1.0)); // Need this when doing HDR
 	
-	vec3 result = vec3(diffuseResult + ambientResult);
-	if (SpecularGlossiness != 0) result += vec3(specularResult);
-	vec3 gammaCorrected = pow(result, vec3(0.45)); // Colour to the power of 1/1.22 to negate monitor gamma
+	colourResult = pow(colourResult, vec3(0.45)); // Colour to the power of 1/1.22 to negate monitor gamma
 	
-	FragColour = vec4(gammaCorrected, 1);
+	FragColour = vec4(colourResult, 1);
 	
 	// Display Surface Normals
 	//FragColour = vec4(N, 1);

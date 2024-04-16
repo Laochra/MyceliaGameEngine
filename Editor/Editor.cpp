@@ -62,7 +62,7 @@ void Editor::Initialise()
 
 	Gizmos::create(100000, 10000, 0, 0);
 
-	object = GameObject3D::Instantiate<MeshRenderer>(vec3(0.0f, 0.0, 0.0f), glm::identity<quat>(), vec3(1.0f, 1.0f, 1.0f), vec3(0, -0.5f, 0));
+	object = GameObject3D::Instantiate<MeshRenderer>(vec3(0.0f, 0.0f, 0.0f), glm::identity<quat>(), vec3(1.0f, 1.0f, 1.0f), vec3(0.0f, -0.5f, 0.0f));
 
 	inspector->SetTarget(object);
 
@@ -71,9 +71,9 @@ void Editor::Initialise()
 	LightingManager::directionalLight.colour = vec3(1.0f, 1.0f, 1.0f);
 	LightingManager::directionalLight.direction = glm::normalize(vec3(-0.1f, -1, -1));
 
-	LightingManager::pointLight.colour = vec3(0.9f, 0.0f, 0.0f);
-	LightingManager::pointLight.position = vec3(0, 1, 2);
-	LightingManager::pointLight.range = 10.0f;
+	LightingManager::pointLights.push_back(PointLight(vec3(1, 0, 0), vec3(1.0f, 0.5f, 0.0f), 10.0f));
+	LightingManager::pointLights.push_back(PointLight(vec3(0, 1, 0), vec3(0.0f, 1.5f, 0.0f), 10.0f));
+	LightingManager::pointLights.push_back(PointLight(vec3(0, 0, 1), vec3(0.0f, 0.5f, 1.0f), 10.0f));
 
 	input->enabled = false;
 
