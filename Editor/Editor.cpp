@@ -111,7 +111,9 @@ void Editor::Initialise()
 		GUI::LoadStyle(GUI::currentStyle);
 	}
 
-	//ConsoleGUI::logs.clear();
+	hdrProgram.LoadShader(VertexStage, "Engine\\DefaultAssets\\HDR.vert");
+	hdrProgram.LoadShader(FragmentStage, "Engine\\DefaultAssets\\HDR.frag");
+	hdrProgram.Link();
 }
 
 void Editor::OnFrameStart()
@@ -273,7 +275,39 @@ void Editor::Update()
 				input->enabled = false;
 			}
 
-			ImGui::Image((void*)sceneViewColourBuffer, ImVec2(screenWidth, screenHeight), ImVec2(0, 1), ImVec2(1, 0));
+
+			int previousFramebuffer;
+			glGetIntegerv(GL_FRAMEBUFFER_BINDING, &previousFramebuffer);
+			
+			glDeleteFramebuffers(1, &sceneViewFrameBufferOutput);
+			glDeleteTextures(1, &sceneViewColourBufferOutput);
+			
+			glGenFramebuffers(1, &sceneViewFrameBufferOutput);
+			glBindFramebuffer(GL_FRAMEBUFFER, sceneViewFrameBufferOutput);
+			
+			glGenTextures(1, &sceneViewColourBufferOutput);
+			glBindTexture(GL_TEXTURE_2D, sceneViewColourBufferOutput);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screenWidth, screenHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glBindTexture(GL_TEXTURE_2D, 0);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, sceneViewColourBufferOutput, 0);
+
+			glClear(GL_COLOR_BUFFER_BIT);
+			glDisable(GL_DEPTH_TEST);
+
+			Mesh screenQuad;
+			screenQuad.InitialiseQuad();
+			hdrProgram.Bind();
+			hdrProgram.BindUniform("HDRTexture", 0);
+			glBindTexture(GL_TEXTURE_2D, sceneViewColourBufferHDR);
+			hdrProgram.BindUniform("Exposure", 1.0f);
+
+			screenQuad.Draw();
+
+			glBindFramebuffer(GL_FRAMEBUFFER, previousFramebuffer);
+
+			ImGui::Image((void*)sceneViewColourBufferOutput, ImVec2(screenWidth, screenHeight), ImVec2(0, 1), ImVec2(1, 0));
 
 		} ImGui::End();
 		ImGui::GetStyle().WindowPadding = oldPadding;
@@ -318,20 +352,20 @@ void Editor::Draw()
 {
 	if (!sceneViewOpen) return;
 
-	glDeleteFramebuffers(1, &sceneViewFrameBuffer);
-	glDeleteTextures(1, &sceneViewColourBuffer);
+	glDeleteFramebuffers(1, &sceneViewFrameBufferHDR);
+	glDeleteTextures(1, &sceneViewColourBufferHDR);
 	glDeleteRenderbuffers(1, &sceneViewDepthStencilBuffer);
 
-	glGenFramebuffers(1, &sceneViewFrameBuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, sceneViewFrameBuffer);
+	glGenFramebuffers(1, &sceneViewFrameBufferHDR);
+	glBindFramebuffer(GL_FRAMEBUFFER, sceneViewFrameBufferHDR);
 
-	glGenTextures(1, &sceneViewColourBuffer);
-	glBindTexture(GL_TEXTURE_2D, sceneViewColourBuffer);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screenWidth, screenHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glGenTextures(1, &sceneViewColourBufferHDR);
+	glBindTexture(GL_TEXTURE_2D, sceneViewColourBufferHDR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, screenWidth, screenHeight, 0, GL_RGB, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, sceneViewColourBuffer, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, sceneViewColourBufferHDR, 0);
 
 	glGenRenderbuffers(1, &sceneViewDepthStencilBuffer);
 	glBindRenderbuffer(GL_RENDERBUFFER, sceneViewDepthStencilBuffer);
@@ -372,9 +406,7 @@ void Editor::DrawGUI()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	glClearColor(0.2f, 0.1f, 0.25f, 1);
 	glEnable(GL_DEPTH_TEST);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Draw ImGui UI
 	ImGui::Render();

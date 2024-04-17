@@ -37,9 +37,13 @@ private:
 	MeshRenderer* object = nullptr;
 
 	// Scene View Buffers
-	unsigned int sceneViewFrameBuffer = 0;
-	unsigned int sceneViewColourBuffer = 0;
+	unsigned int sceneViewFrameBufferHDR = 0;
+	unsigned int sceneViewColourBufferHDR = 0;
 	unsigned int sceneViewDepthStencilBuffer = 0;
+
+	ShaderProgram hdrProgram;
+	unsigned int sceneViewFrameBufferOutput = 0;
+	unsigned int sceneViewColourBufferOutput = 0;
 
 	// Windows
 	bool consoleOpen = true;

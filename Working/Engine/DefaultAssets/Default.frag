@@ -128,7 +128,7 @@ void main() // Fragment
 	
 	vec3 ambientResult = vec3(0.03) * colour * ao;
 	vec3 colourResult = ambientResult + Lo;
-		
+	
 	colourResult = pow(colourResult, vec3(0.45)); // Colour to the power of 1/2.2 to return to non-linear space
 	
 	FragColour = vec4(colourResult, 1);
