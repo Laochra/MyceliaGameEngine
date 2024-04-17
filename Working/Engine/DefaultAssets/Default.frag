@@ -16,6 +16,7 @@ struct DirectionalLight
 	vec3 colour;
 	vec3 direction;
 };
+uniform int DirectionalLightCount;
 uniform DirectionalLight DirectionalLights[4];
 
 struct PointLight
@@ -24,6 +25,7 @@ struct PointLight
 	vec3 position;
 	float range;
 };
+uniform int PointLightCount;
 uniform PointLight PointLights[4];
 
 uniform sampler2D ColourMap;
@@ -107,12 +109,12 @@ void main() // Fragment
 	
 	// Reflectance Equation
 	vec3 Lo = vec3(0.0);
-	for (int i = 0; i < 4; i++) // DirectionalLights
+	for (int i = 0; i < min(DirectionalLightCount, 4); i++) // DirectionalLights
 	{
-		//float attenuation = (DirectionalLights[i].colour != vec3(0.0)) ? 1.0 : 0.0;
-		//Lo += ReflectanceEquation(colour, normal, roughness, metallic, ao, viewDirection, -DirectionalLights[i].direction, attenuation, DirectionalLights[i].colour, F0);
+		float attenuation = (DirectionalLights[i].colour != vec3(0.0)) ? 1.0 : 0.0;
+		Lo += ReflectanceEquation(colour, normal, roughness, metallic, ao, viewDirection, -DirectionalLights[i].direction, attenuation, DirectionalLights[i].colour, F0);
 	}
-	for (int i = 0; i < 4; i++) // PointLights
+	for (int i = 0; i < min(PointLightCount, 4); i++) // PointLights
 	{
 		vec3 lightDirection = normalize(PointLights[i].position - FragPos);
 		float d = length(PointLights[i].position - FragPos);
@@ -126,10 +128,8 @@ void main() // Fragment
 	
 	vec3 ambientResult = vec3(0.03) * colour * ao;
 	vec3 colourResult = ambientResult + Lo;
-	
-	//colourResult = colourResult / (colourResult + vec3(1.0)); // Need this when doing HDR
-	
-	colourResult = pow(colourResult, vec3(0.45)); // Colour to the power of 1/1.22 to negate monitor gamma
+		
+	colourResult = pow(colourResult, vec3(0.45)); // Colour to the power of 1/2.2 to return to non-linear space
 	
 	FragColour = vec4(colourResult, 1);
 	

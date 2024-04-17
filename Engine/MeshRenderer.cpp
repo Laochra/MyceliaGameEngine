@@ -27,11 +27,13 @@ void MeshRenderer::Draw()
 	// Bind Light
 	//material->shaderProgram->BindUniform("AmbientColour", LightingManager::ambientLight.colour);
 	
-	//material->shaderProgram->BindUniform(("DirectionalLights[" + std::to_string(0) + "].colour").c_str(), LightingManager::directionalLight.colour);
-	//material->shaderProgram->BindUniform(("DirectionalLights[" + std::to_string(0) + "].direction").c_str(), LightingManager::directionalLight.direction);
+	material->shaderProgram->BindUniform("DirectionalLightCount", (int)1);
+	material->shaderProgram->BindUniform(("DirectionalLights[" + std::to_string(0) + "].colour").c_str(), LightingManager::directionalLight.colour);
+	material->shaderProgram->BindUniform(("DirectionalLights[" + std::to_string(0) + "].direction").c_str(), LightingManager::directionalLight.direction);
 
 	vector<PointLight> pointLights = LightingManager::GetClosestPointLights(GetGlobalPosition(), 4);
-	for (int i = 0; i < 4; i++)
+	material->shaderProgram->BindUniform("PointLightCount", (int)0);
+	for (int i = 0; i < pointLights.size(); i++)
 	{
 		material->shaderProgram->BindUniform(("PointLights[" + std::to_string(i) + "].colour").c_str(), pointLights[i].colour);
 		material->shaderProgram->BindUniform(("PointLights[" + std::to_string(i) + "].position").c_str(), pointLights[i].position);

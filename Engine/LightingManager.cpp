@@ -36,12 +36,6 @@ namespace LightingManager
 			}
 		}
 
-		// Ensure at least as many lights as were requested are returned
-		while (result.size() < count)
-		{
-			result.push_back(PointLight());
-		}
-
 		return result;
 	}
 }

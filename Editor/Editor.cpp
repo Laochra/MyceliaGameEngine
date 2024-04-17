@@ -66,10 +66,9 @@ void Editor::Initialise()
 
 	inspector->SetTarget(object);
 
-	LightingManager::ambientLight.colour = vec3(0.1f, 0.1f, 0.1f);
+	LightingManager::ambientLight = Light(vec3(0.1f, 0.1f, 0.1f));
 
-	LightingManager::directionalLight.colour = vec3(1.0f, 1.0f, 1.0f);
-	LightingManager::directionalLight.direction = glm::normalize(vec3(-0.1f, -1, -1));
+	LightingManager::directionalLight = DirectionalLight(vec3(1.0f, 1.0f, 1.0f), glm::normalize(vec3(-0.1f, -1, -1)));
 
 	LightingManager::pointLights.push_back(PointLight(vec3(1, 0, 0), vec3(1.0f, 0.5f, 0.0f), 10.0f));
 	LightingManager::pointLights.push_back(PointLight(vec3(0, 1, 0), vec3(0.0f, 1.5f, 0.0f), 10.0f));
