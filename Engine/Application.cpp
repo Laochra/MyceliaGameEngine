@@ -56,8 +56,9 @@ void Application::Initialise() { }
 void Application::OnFrameStart() { }
 
 void Application::FixedUpdate() { } 
-void Application::Update() { } 
+void Application::Update() { }
 void Application::Draw() { }
+void Application::DrawPostProcess() {}
 void Application::DrawGUI() { }
 void Application::OnClose() { }
 
@@ -105,10 +106,6 @@ int Application::Setup()
 		return -1;
 	}
 
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
-	glFrontFace(GL_CCW);
-
 #if _DEBUG
 	glEnable(GL_DEBUG_OUTPUT);
 	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
@@ -155,6 +152,7 @@ void Application::GameLoop()
 		{
 			Draw();
 			Updater::CallDraw();
+			DrawPostProcess();
 			DrawGUI();
 
 			glfwSwapBuffers(window);

@@ -22,6 +22,7 @@ protected:
 	virtual void FixedUpdate();
 	virtual void Update();
 	virtual void Draw();
+	virtual void DrawPostProcess();
 	virtual void DrawGUI();
 	virtual void OnClose();
 

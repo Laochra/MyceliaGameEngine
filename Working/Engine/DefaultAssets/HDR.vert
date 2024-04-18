@@ -7,6 +7,6 @@ out vec2 FragTexCoords;
 
 void main()
 {
-	gl_Position = vec4(Position.x, Position.z, 0.0, 1.0);
+	gl_Position = vec4(Position.x * 2.0, Position.z * 2.0, 0.0, 1.0);
 	FragTexCoords = TexCoords;
 }

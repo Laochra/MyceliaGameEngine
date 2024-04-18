@@ -30,6 +30,7 @@ protected:
 	virtual void FixedUpdate() override;
 	virtual void Update() override;
 	virtual void Draw() override;
+	virtual void DrawPostProcess() override;
 	virtual void DrawGUI() override;
 	virtual void OnClose() override;
 
@@ -44,6 +45,7 @@ private:
 	ShaderProgram hdrProgram;
 	unsigned int sceneViewFrameBufferOutput = 0;
 	unsigned int sceneViewColourBufferOutput = 0;
+	float exposure = 1.0f;
 
 	// Windows
 	bool consoleOpen = true;
@@ -54,4 +56,5 @@ private:
 	bool materialEditorOpen = true;
 	bool cameraSettingsOpen = true;
 	bool editorStylerOpen = true;
+	bool postProcessingOpen = true;
 };
