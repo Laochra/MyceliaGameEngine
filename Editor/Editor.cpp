@@ -70,9 +70,9 @@ void Editor::Initialise()
 
 	LightingManager::directionalLight = DirectionalLight(vec3(1.0f, 1.0f, 1.0f), glm::normalize(vec3(-0.1f, -1, -1)));
 
-	LightingManager::pointLights.push_back(PointLight(vec3(1, 0, 0), vec3(1.0f, 0.5f, 0.0f), 10.0f));
-	LightingManager::pointLights.push_back(PointLight(vec3(0, 1, 0), vec3(0.0f, 1.5f, 0.0f), 10.0f));
-	LightingManager::pointLights.push_back(PointLight(vec3(0, 0, 1), vec3(0.0f, 0.5f, 1.0f), 10.0f));
+	//LightingManager::pointLights.push_back(PointLight(vec3(1, 0, 0), vec3(1.0f, 0.5f, 0.0f), 10.0f));
+	//LightingManager::pointLights.push_back(PointLight(vec3(0, 1, 0), vec3(0.0f, 1.5f, 0.0f), 10.0f));
+	//LightingManager::pointLights.push_back(PointLight(vec3(0, 0, 1), vec3(0.0f, 0.5f, 1.0f), 10.0f));
 
 	input->enabled = false;
 
@@ -111,9 +111,13 @@ void Editor::Initialise()
 		GUI::LoadStyle(GUI::currentStyle);
 	}
 
-	hdrProgram.LoadShader(VertexStage, "Engine\\DefaultAssets\\HDR.vert");
+	hdrProgram.LoadShader(VertexStage, "Engine\\DefaultAssets\\FullScreenQuad.vert");
 	hdrProgram.LoadShader(FragmentStage, "Engine\\DefaultAssets\\HDR.frag");
 	hdrProgram.Link();
+
+	blurProgram.LoadShader(VertexStage, "Engine\\DefaultAssets\\FullScreenQuad.vert");
+	blurProgram.LoadShader(FragmentStage, "Engine\\DefaultAssets\\BoxBlur.frag");
+	blurProgram.Link();
 }
 
 void Editor::OnFrameStart()
@@ -340,19 +344,11 @@ void Editor::Draw()
 	glFrontFace(GL_CCW);
 
 	glDeleteFramebuffers(1, &sceneViewFrameBufferHDR);
-	glDeleteTextures(1, &sceneViewColourBufferHDR);
+	glDeleteTextures(2, &sceneViewColourBufferHDR[0]);
 	glDeleteRenderbuffers(1, &sceneViewDepthStencilBuffer);
 
 	glGenFramebuffers(1, &sceneViewFrameBufferHDR);
 	glBindFramebuffer(GL_FRAMEBUFFER, sceneViewFrameBufferHDR);
-
-	glGenTextures(1, &sceneViewColourBufferHDR);
-	glBindTexture(GL_TEXTURE_2D, sceneViewColourBufferHDR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, screenWidth, screenHeight, 0, GL_RGBA, GL_FLOAT, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, sceneViewColourBufferHDR, 0);
 
 	glGenRenderbuffers(1, &sceneViewDepthStencilBuffer);
 	glBindRenderbuffer(GL_RENDERBUFFER, sceneViewDepthStencilBuffer);
@@ -360,12 +356,48 @@ void Editor::Draw()
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, sceneViewDepthStencilBuffer);
 
+	// Main Colour Textures
+	glGenTextures(2, &sceneViewColourBufferHDR[0]);
+	for (uint texId = 0; texId < 2; texId++)
+	{
+		glBindTexture(GL_TEXTURE_2D, sceneViewColourBufferHDR[texId]);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, screenWidth, screenHeight, 0, GL_RGBA, GL_FLOAT, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + texId, GL_TEXTURE_2D, sceneViewColourBufferHDR[texId], 0);
+	}
+	uint attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+	glDrawBuffers(2, attachments);
+
 	glClearColor(0, 0, 0, 0);
-	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	Gizmos::clear();
+	glViewport(0, 0, screenWidth, screenHeight);
+}
+
+void Editor::DrawPostProcess()
+{
+	// Draw Debug Gizmos Unaffected by Post Processing
+	glDeleteTextures(1, &sceneViewColourBufferGizmos);
+	glGenTextures(1, &sceneViewColourBufferGizmos);
+	glBindTexture(GL_TEXTURE_2D, sceneViewColourBufferGizmos);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screenWidth, screenHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, sceneViewColourBufferGizmos, 0);
+	uint attachment[1] = { GL_COLOR_ATTACHMENT0 };
 	
+	glDrawBuffers(1, attachment);
+
+	glEnable(GL_DEPTH_TEST);
+	glClearColor(0, 0, 0, 0);
+	glClear(GL_COLOR_BUFFER_BIT);
+	
+	Gizmos::clear();
 	Gizmos::addTransform(mat4(1));
 	
 	vec4 white(1);
@@ -374,25 +406,59 @@ void Editor::Draw()
 	for (int i = 0; i < 21; i++)
 	{
 		Gizmos::addLine(vec3(-10 + i, 0, 10), vec3(-10 + i, 0, -10), i == 10 ? white : black);
-	
 		Gizmos::addLine(vec3(-10, 0, -10 + i), vec3(10, 0, -10 + i), i == 10 ? white : black);
 	}
+	Gizmos::draw(mainCamera->GetPVMatrix());
 
-	//glfwGetFramebufferSize(window, &screenWidth, &screenHeight);
-
-	glViewport(0, 0, screenWidth, screenHeight);
-
-
-
-	mat4 ProjectionViewMatrix = mainCamera->GetProjectionMatrix((float)screenWidth, (float)screenHeight) * mainCamera->GetViewMatrix();
-
-	Gizmos::draw(ProjectionViewMatrix);
-}
-
-void Editor::DrawPostProcess()
-{
+	
+	/// Screen Post Processing
 	glDisable(GL_CULL_FACE);
+	Mesh screenQuad;
+	screenQuad.InitialiseQuad();
 
+	// Bloom Passes
+	uint blurFrameBuffer;
+	uint blurColourBuffer;
+	glGenFramebuffers(1, &blurFrameBuffer);
+	glGenTextures(1, &blurColourBuffer);
+	
+	glBindFramebuffer(GL_FRAMEBUFFER, blurFrameBuffer);
+	glBindTexture(GL_TEXTURE_2D, blurColourBuffer);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, screenWidth, screenHeight, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, blurColourBuffer, 0);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glDisable(GL_DEPTH_TEST);
+	glClearColor(0, 0, 0, 0);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	int passes = 5;
+	bool firstIteration = true;
+	blurProgram.Bind();
+	for (uint i = 0; i < passes; i++)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, blurFrameBuffer);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, firstIteration ? sceneViewColourBufferHDR[1] : blurColourBuffer);
+		blurProgram.BindUniform("BrightTexture", 0);
+
+		screenQuad.Draw();
+
+		if (firstIteration)
+		{
+			firstIteration = false;
+		}
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	// Normalising HDR for Screen
 	glDeleteFramebuffers(1, &sceneViewFrameBufferOutput);
 	glDeleteTextures(1, &sceneViewColourBufferOutput);
 
@@ -411,20 +477,27 @@ void Editor::DrawPostProcess()
 	glClear(GL_COLOR_BUFFER_BIT);
 	glDisable(GL_DEPTH_TEST);
 
-	Mesh screenQuad;
-	screenQuad.InitialiseQuad();
 	hdrProgram.Bind();
-	glActiveTexture(GL_TEXTURE0 + 0);
-	glBindTexture(GL_TEXTURE_2D, sceneViewColourBufferHDR);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, sceneViewColourBufferHDR[0]);
 	hdrProgram.BindUniform("HDRTexture", 0);
-	glActiveTexture(GL_TEXTURE0 + 1);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, blurColourBuffer);
+	hdrProgram.BindUniform("BloomTexture", 1);
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, sceneViewColourBufferGizmos);
+	hdrProgram.BindUniform("GizmosTexture", 2);
+	glActiveTexture(GL_TEXTURE3);
 	glBindTexture(GL_TEXTURE_2D, sceneViewColourBufferOutput);
-	hdrProgram.BindUniform("CurrentFramebuffer", 1);
+	hdrProgram.BindUniform("CurrentFramebuffer", 3);
 	hdrProgram.BindUniform("Exposure", exposure);
 
 	screenQuad.Draw();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glDeleteFramebuffers(1, &blurFrameBuffer);
+	glDeleteTextures(1, &blurColourBuffer);
 }
 
 void Editor::DrawGUI()

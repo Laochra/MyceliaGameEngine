@@ -39,10 +39,13 @@ private:
 
 	// Scene View Buffers
 	unsigned int sceneViewFrameBufferHDR = 0;
-	unsigned int sceneViewColourBufferHDR = 0;
+	unsigned int sceneViewColourBufferHDR[2] = { 0, 0 };
+	unsigned int sceneViewColourBufferGizmos = 0;
 	unsigned int sceneViewDepthStencilBuffer = 0;
 
+	// Post Processing
 	ShaderProgram hdrProgram;
+	ShaderProgram blurProgram;
 	unsigned int sceneViewFrameBufferOutput = 0;
 	unsigned int sceneViewColourBufferOutput = 0;
 	float exposure = 1.0f;

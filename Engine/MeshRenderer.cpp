@@ -16,7 +16,7 @@ void MeshRenderer::Draw()
 	if (material->shaderProgram == nullptr) return;
 	if (mesh == nullptr) return;
 
-	mat4 ProjectionViewMatrix = mainCamera->GetProjectionMatrix((float)screenWidth, (float)screenHeight) * mainCamera->GetViewMatrix();
+	mat4 ProjectionViewMatrix = mainCamera->GetPVMatrix();
 
 	// Bind Shader
 	material->shaderProgram->Bind();

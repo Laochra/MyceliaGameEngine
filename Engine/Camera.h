@@ -18,6 +18,7 @@ public:
 
 	virtual glm::mat4 GetViewMatrix();
 	virtual glm::mat4 GetProjectionMatrix(float w, float h);
+	glm::mat4 GetPVMatrix();
 
 	void Initialise() override;
 };

@@ -166,7 +166,6 @@ bool Shader::LoadShader(ShaderStage stage, const char* filename)
 		delete[] lastError;
 		lastError = new char[infoLogLength];
 		glGetShaderInfoLog(glHandle, infoLogLength, 0, lastError);
-		// TODO: Get shader compilation error logging here
 		debug->Log({ lastError, locationinfo }, Debug::Error, Debug::ERR901);
 		return false;
 	}
@@ -288,6 +287,7 @@ bool ShaderProgram::Link()
 		delete[] lastError;
 		lastError = new char[infoLogLength + 1];
 		glGetProgramInfoLog(program, infoLogLength, 0, lastError);
+		debug->Log({ lastError, locationinfo }, Debug::Error, Debug::ERR901);
 		return false;
 	}
 	return true;

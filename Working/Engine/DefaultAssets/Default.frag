@@ -35,7 +35,9 @@ uniform sampler2D NormalMap;
 
 uniform sampler2D RMAOMap; // Roughness, Metallic, Ambient Occlusion
 
-out vec4 FragColour;
+// Output
+layout (location = 0) out vec4 FragColour;
+layout (location = 1) out vec4 BrightColour;
 
 float NormalDistribution(vec3 N, vec3 H, float a) // Trowbridge-Reitz GGX Normal Distribution Approximation
 {
@@ -128,10 +130,12 @@ void main() // Fragment
 	
 	vec3 ambientResult = vec3(0.03) * colour * ao;
 	vec3 colourResult = ambientResult + Lo;
-	
-	//colourResult = pow(colourResult, vec3(0.45)); // Colour to the power of 1/2.2 to return to non-linear space
-	
+		
 	FragColour = vec4(colourResult, 1);
+	
+	float brightness = dot(FragColour.rgb, vec3(0.2126, 0.7152, 0.0722));
+	
+	BrightColour = vec4(brightness > 1.0 ? FragColour : vec4(0.0));
 	
 	// Display Surface Normals
 	//FragColour = vec4(N, 1);
@@ -140,22 +144,22 @@ void main() // Fragment
 	//FragColour = vec4(FragTexCoords, 0, 1);
 	
 	// Display Colour Map
-	//FragColour = vec4(textureColour, 1);
+	//FragColour = vec4(colour, 1);
 	
 	// Display Normal Map
 	//FragColour = vec4(normal, 1);
 	
-	// Display Specular Map
-	//FragColour = vec4(specularColour, 1);
+	// Display RMAO Map
+	//FragColour = vec4(roughness, metallic, ao, 1);
 	
-	// Display Diffuse Result
-	//FragColour = vec4(diffuseResult, 1);
+	// Display Ambient Result
+	//FragColour = vec4(ambientResult, 1);
 	
-	// Display Specular Result
-	//FragColour = vec4(specularResult, 1);
+	// Display Lo
+	//FragColour = vec4(Lo, 1.0);
 	
-	// Display Point Light Attenuation
-	//FragColour = vec4(vec3(attenuation), 1);
+	// Display Colour Result
+	//FragColour = vec4(colourResult, 1);
 	
 	// Display Depth
 	//float near = 0.01;
