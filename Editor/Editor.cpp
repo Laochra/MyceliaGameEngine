@@ -68,11 +68,11 @@ void Editor::Initialise()
 
 	LightingManager::ambientLight = Light(vec3(0.1f, 0.1f, 0.1f));
 
-	LightingManager::directionalLight = DirectionalLight(vec3(1.0f, 1.0f, 1.0f), glm::normalize(vec3(-0.1f, -1, -1)));
+	LightingManager::directionalLight = DirectionalLight(vec3(10.0f, 10.0f, 10.0f), glm::normalize(vec3(-0.1f, -1, -1)));
 
-	//LightingManager::pointLights.push_back(PointLight(vec3(1, 0, 0), vec3(1.0f, 0.5f, 0.0f), 10.0f));
-	//LightingManager::pointLights.push_back(PointLight(vec3(0, 1, 0), vec3(0.0f, 1.5f, 0.0f), 10.0f));
-	//LightingManager::pointLights.push_back(PointLight(vec3(0, 0, 1), vec3(0.0f, 0.5f, 1.0f), 10.0f));
+	LightingManager::pointLights.push_back(PointLight(vec3(1, 0, 0), vec3(1.0f, 0.5f, 0.0f), 10.0f));
+	LightingManager::pointLights.push_back(PointLight(vec3(0, 1, 0), vec3(0.0f, 1.5f, 0.0f), 10.0f));
+	LightingManager::pointLights.push_back(PointLight(vec3(0, 0, 1), vec3(0.0f, 0.5f, 1.0f), 10.0f));
 
 	input->enabled = false;
 
@@ -417,6 +417,8 @@ void Editor::DrawPostProcess()
 	screenQuad.InitialiseQuad();
 
 	// Bloom Passes
+	const int downResFactor = 4;
+	glViewport(0, 0, screenWidth / downResFactor, screenHeight / downResFactor);
 	uint blurFrameBuffer;
 	uint blurColourBuffer;
 	glGenFramebuffers(1, &blurFrameBuffer);
@@ -424,7 +426,7 @@ void Editor::DrawPostProcess()
 	
 	glBindFramebuffer(GL_FRAMEBUFFER, blurFrameBuffer);
 	glBindTexture(GL_TEXTURE_2D, blurColourBuffer);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, screenWidth, screenHeight, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, screenWidth / downResFactor, screenHeight / downResFactor, 0, GL_RGBA, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -438,27 +440,23 @@ void Editor::DrawPostProcess()
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	int passes = 5;
-	bool firstIteration = true;
+	int passes = 4;
 	blurProgram.Bind();
+	blurProgram.BindUniform("BrightTexture", 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindFramebuffer(GL_FRAMEBUFFER, blurFrameBuffer);
+	glBindTexture(GL_TEXTURE_2D, sceneViewColourBufferHDR[1]);
 	for (uint i = 0; i < passes; i++)
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, blurFrameBuffer);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, firstIteration ? sceneViewColourBufferHDR[1] : blurColourBuffer);
-		blurProgram.BindUniform("BrightTexture", 0);
+		if (i == 1) glBindTexture(GL_TEXTURE_2D, blurColourBuffer);
 
 		screenQuad.Draw();
-
-		if (firstIteration)
-		{
-			firstIteration = false;
-		}
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	// Normalising HDR for Screen
+	glViewport(0, 0, screenWidth, screenHeight);
 	glDeleteFramebuffers(1, &sceneViewFrameBufferOutput);
 	glDeleteTextures(1, &sceneViewColourBufferOutput);
 

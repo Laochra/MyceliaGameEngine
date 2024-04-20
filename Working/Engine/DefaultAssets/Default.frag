@@ -135,7 +135,7 @@ void main() // Fragment
 	
 	float brightness = dot(FragColour.rgb, vec3(0.2126, 0.7152, 0.0722));
 	
-	BrightColour = vec4(brightness > 1.0 ? FragColour : vec4(0.0));
+	BrightColour = vec4(brightness > 1.0 ? vec4(FragColour.xyz, min(brightness - 1.0, 1.0)) : vec4(0.0));
 	
 	// Display Surface Normals
 	//FragColour = vec4(N, 1);
