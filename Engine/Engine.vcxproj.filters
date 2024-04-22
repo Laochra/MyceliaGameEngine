@@ -182,6 +182,12 @@
     <ClInclude Include="Debug.h">
       <Filter>Utility</Filter>
     </ClInclude>
+    <ClInclude Include="LightObject.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">

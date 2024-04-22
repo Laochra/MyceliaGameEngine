@@ -68,11 +68,17 @@ void Editor::Initialise()
 
 	LightingManager::ambientLight = Light(vec3(0.1f, 0.1f, 0.1f));
 
-	LightingManager::directionalLight = DirectionalLight(vec3(10.0f, 10.0f, 10.0f), glm::normalize(vec3(-0.1f, -1, -1)));
+	LightingManager::directionalLight = DirectionalLight(vec3(1.0f, 1.0f, 1.0f), glm::normalize(vec3(-0.1f, -1, -1)));
 
-	LightingManager::pointLights.push_back(PointLight(vec3(1, 0, 0), vec3(1.0f, 0.5f, 0.0f), 10.0f));
-	LightingManager::pointLights.push_back(PointLight(vec3(0, 1, 0), vec3(0.0f, 1.5f, 0.0f), 10.0f));
-	LightingManager::pointLights.push_back(PointLight(vec3(0, 0, 1), vec3(0.0f, 0.5f, 1.0f), 10.0f));
+	LightObject* light1 = GameObject3D::Instantiate<LightObject>(vec3(1.0f, 0.5f, 0.0f));
+	light1->range = 10.0f; light1->colour = vec3(1, 0, 0); light1->intensity = 1.0f; light1->SetName("Red Light");
+	LightingManager::lightObjects.push_back(light1);
+	LightObject* light2 = GameObject3D::Instantiate<LightObject>(vec3(0.0f, 1.5f, 0.0f));
+	light2->range = 10.0f; light2->colour = vec3(0, 1, 0); light2->intensity = 1.0f; light2->SetName("Green Light");
+	LightingManager::lightObjects.push_back(light2);
+	LightObject* light3 = GameObject3D::Instantiate<LightObject>(vec3(0.0f, 0.5f, 1.0f));
+	light3->range = 10.0f; light3->colour = vec3(0, 0, 1); light3->intensity = 1.0f; light3->SetName("Blue Light");
+	LightingManager::lightObjects.push_back(light3);
 
 	input->enabled = false;
 

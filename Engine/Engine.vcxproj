@@ -202,7 +202,9 @@
     <ClInclude Include="HeirarchicalDefinitions.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="JsonIncludes.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="LightingManager.h" />
+    <ClInclude Include="LightObject.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MaterialManager.h" />
     <ClInclude Include="MathIncludes.h" />

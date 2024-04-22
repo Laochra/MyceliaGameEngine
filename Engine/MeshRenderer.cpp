@@ -31,13 +31,24 @@ void MeshRenderer::Draw()
 	material->shaderProgram->BindUniform(("DirectionalLights[" + std::to_string(0) + "].colour").c_str(), LightingManager::directionalLight.colour);
 	material->shaderProgram->BindUniform(("DirectionalLights[" + std::to_string(0) + "].direction").c_str(), LightingManager::directionalLight.direction);
 
-	vector<PointLight> pointLights = LightingManager::GetClosestPointLights(GetGlobalPosition(), 4);
-	material->shaderProgram->BindUniform("PointLightCount", (int)pointLights.size());
-	for (int i = 0; i < pointLights.size(); i++)
+	vector<LightObject*> lightObjects = LightingManager::GetClosestLightObjects(GetGlobalPosition(), 4);
+	material->shaderProgram->BindUniform("LightObjectCount", (int)lightObjects.size());
+	for (int i = 0; i < lightObjects.size(); i++)
 	{
-		material->shaderProgram->BindUniform(("PointLights[" + std::to_string(i) + "].colour").c_str(), pointLights[i].colour);
-		material->shaderProgram->BindUniform(("PointLights[" + std::to_string(i) + "].position").c_str(), pointLights[i].position);
-		material->shaderProgram->BindUniform(("PointLights[" + std::to_string(i) + "].range").c_str(), pointLights[i].range);
+		material->shaderProgram->BindUniform(("LightObjects[" + std::to_string(i) + "].colour").c_str(), lightObjects[i]->colour * lightObjects[i]->intensity);
+		material->shaderProgram->BindUniform(("LightObjects[" + std::to_string(i) + "].position").c_str(), lightObjects[i]->GetGlobalPosition());
+		if (lightObjects[i]->angle == 1.0f) // Check for no rotation. 1.0 is the cosine of 0 degrees
+		{
+			material->shaderProgram->BindUniform(("LightObjects[" + std::to_string(i) + "].direction").c_str(), vec3(0.0f));
+		}
+		else
+		{
+			const mat4& lightMatrix = lightObjects[i]->GetMatrix();
+			vec3 direction = glm::normalize(vec3(lightMatrix[2]));
+			material->shaderProgram->BindUniform(("LightObjects[" + std::to_string(i) + "].direction").c_str(), direction);
+		}
+		material->shaderProgram->BindUniform(("LightObjects[" + std::to_string(i) + "].range").c_str(), lightObjects[i]->range);
+		material->shaderProgram->BindUniform(("LightObjects[" + std::to_string(i) + "].angle").c_str(), lightObjects[i]->angle);
 	}
 
 	// Bind Transform

@@ -19,14 +19,16 @@ struct DirectionalLight
 uniform int DirectionalLightCount;
 uniform DirectionalLight DirectionalLights[4];
 
-struct PointLight
+struct LightObject
 {
 	vec3 colour;
 	vec3 position;
+	vec3 direction;
 	float range;
+	float angle;
 };
-uniform int PointLightCount;
-uniform PointLight PointLights[4];
+uniform int LightObjectCount;
+uniform LightObject LightObjects[4];
 
 uniform sampler2D ColourMap;
 uniform vec3 ColourTint;
@@ -116,16 +118,25 @@ void main() // Fragment
 		float attenuation = (DirectionalLights[i].colour != vec3(0.0)) ? 1.0 : 0.0;
 		Lo += ReflectanceEquation(colour, normal, roughness, metallic, ao, viewDirection, -DirectionalLights[i].direction, attenuation, DirectionalLights[i].colour, F0);
 	}
-	for (int i = 0; i < min(PointLightCount, 4); i++) // PointLights
+	for (int i = 0; i < min(LightObjectCount, 4); i++) // LightObjects
 	{
-		vec3 lightDirection = normalize(PointLights[i].position - FragPos);
-		float d = length(PointLights[i].position - FragPos);
+		float d = length(LightObjects[i].position - FragPos);
 		float dSqr = d * d;
-		float attenuation = clamp(PointLights[i].range / dSqr, 0.0, 1.0);
+		float attenuation = clamp(LightObjects[i].range / dSqr, 0.0, 1.0);
 		
-		if (d > PointLights[i].range) attenuation = 0.0;
+		vec3 lightDirection = normalize(LightObjects[i].position - FragPos);
+		if (LightObjects[i].angle != 1.0) // Check for no rotation. 1.0 is the cosine of 0 degrees
+		{
+			float theta = dot(LightObjects[i].direction, lightDirection);
+			if (theta <= LightObjects[i].angle)
+			{
+				attenuation = 0.0;
+			}
+		}
 		
-		Lo += ReflectanceEquation(colour, normal, roughness, metallic, ao, viewDirection, lightDirection, attenuation, PointLights[i].colour, F0);
+		if (d > LightObjects[i].range) attenuation = 0.0;
+		
+		Lo += ReflectanceEquation(colour, normal, roughness, metallic, ao, viewDirection, lightDirection, attenuation, LightObjects[i].colour, F0);
 	}
 	
 	vec3 ambientResult = vec3(0.03) * colour * ao;

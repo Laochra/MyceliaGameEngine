@@ -5,18 +5,18 @@ namespace LightingManager
 	Light ambientLight = Light();
 
 	DirectionalLight directionalLight = DirectionalLight();
-	vector<PointLight> pointLights;
+	vector<LightObject*> lightObjects;
 
-	vector<PointLight> GetClosestPointLights(const vec3 position, const int count) noexcept
+	vector<LightObject*> GetClosestLightObjects(const vec3 position, const int count) noexcept
 	{
-		vector<PointLight> result;
+		vector<LightObject*> result;
 
-		for (int pl = 0; pl < pointLights.size(); pl++)
+		for (int pl = 0; pl < lightObjects.size(); pl++)
 		{
 			// If count hasn't been reached, just add it
 			if (pl < count)
 			{
-				result.push_back(pointLights[pl]);
+				result.push_back(lightObjects[pl]);
 				continue;
 			}
 
@@ -24,15 +24,15 @@ namespace LightingManager
 			int furthestIndex = 0;
 			for (int r = 1; r < result.size(); r++)
 			{
-				if (glm::length2(result[r].position - position) > glm::length2(result[furthestIndex].position - position))
+				if (glm::length2(result[r]->GetPosition() - position) > glm::length2(result[furthestIndex]->GetPosition() - position))
 				{
 					furthestIndex = r;
 				}
 			}
 			// Swap with furthest current result if it would mean a closer light
-			if (glm::length2(pointLights[pl].position - position) < glm::length2(result[furthestIndex].position - position))
+			if (glm::length2(lightObjects[pl]->GetPosition() - position) < glm::length2(result[furthestIndex]->GetPosition() - position))
 			{
-				result[furthestIndex] = pointLights[pl];
+				result[furthestIndex] = lightObjects[pl];
 			}
 		}
 

@@ -4,6 +4,7 @@ Inspector* inspector = new Inspector();
 
 #include "GameObject3DGUI.h"
 #include "MeshRendererGUI.h"
+#include "LightObjectGUI.h"
 
 #include "GeneralMacros.h"
 
@@ -16,6 +17,7 @@ void Inspector::SetTarget(GameObject* target)
 	if (targetClassName == "GameObject")			{ targetGUI = new GameObjectGUI(target); }
 	else if (targetClassName == "GameObject3D")	{ targetGUI = new GameObject3DGUI(target); }
 	else if (targetClassName == "MeshRenderer")	{ targetGUI = new MeshRendererGUI(target); }
+	else if (targetClassName == "LightObject")	{ targetGUI = new LightObjectGUI(target); }
 }
 
 const GameObjectGUI* Inspector::GetTargetGUI()

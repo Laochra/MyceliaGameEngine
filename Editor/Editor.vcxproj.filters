@@ -54,6 +54,9 @@
     <ClCompile Include="EditorDebug.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
+    <ClCompile Include="LightObjectGUI.cpp">
+      <Filter>GUI\EditorWindows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="JSON Configs">
@@ -166,6 +169,9 @@
     </ClInclude>
     <ClInclude Include="EditorDebug.h">
       <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="LightObjectGUI.h">
+      <Filter>GUI\EditorWindows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
