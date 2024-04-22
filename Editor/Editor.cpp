@@ -68,11 +68,11 @@ void Editor::Initialise()
 
 	LightingManager::ambientLight = Light(vec3(0.1f, 0.1f, 0.1f));
 
-	LightingManager::directionalLight = DirectionalLight(vec3(10.0f, 10.0f, 10.0f), glm::normalize(vec3(-0.1f, -1, -1)));
+	LightingManager::directionalLight = DirectionalLight(vec3(1.0f, 1.0f, 1.0f), glm::normalize(vec3(-0.1f, -1, -1)));
 
-	LightingManager::pointLights.push_back(PointLight(vec3(1, 0, 0), vec3(1.0f, 0.5f, 0.0f), 10.0f));
-	LightingManager::pointLights.push_back(PointLight(vec3(0, 1, 0), vec3(0.0f, 1.5f, 0.0f), 10.0f));
-	LightingManager::pointLights.push_back(PointLight(vec3(0, 0, 1), vec3(0.0f, 0.5f, 1.0f), 10.0f));
+	LightingManager::pointLights.push_back(PointLight(vec3(5, 0, 0), vec3(1.0f, 0.5f, 0.0f), 10.0f));
+	LightingManager::pointLights.push_back(PointLight(vec3(0, 5, 0), vec3(0.0f, 1.5f, 0.0f), 10.0f));
+	LightingManager::pointLights.push_back(PointLight(vec3(0, 0, 5), vec3(0.0f, 0.5f, 1.0f), 10.0f));
 
 	input->enabled = false;
 
@@ -80,7 +80,7 @@ void Editor::Initialise()
 	// Initialise ShaderProgramGUI
 	ShaderProgramGUI::ValidateLinkage();
 	// Initialise MaterialGUI
-	MaterialGUI::LoadShaderProgram("Default");
+	MaterialGUI::LoadShaderProgram("PBRLit");
 	MaterialGUI::dirty = false;
 
 	// ImGui Styling Setup (Serialise and load this. Hardcoding bad)

@@ -22,11 +22,11 @@ struct Fields
 {
 	string programName = "";
 	string filePath = "New File";
-	string vertShader = "Default";
+	string vertShader = "Default3D";
 	string teseShader = "None";
 	string tescShader = "None";
 	string geomShader = "None";
-	string fragShader = "Default";
+	string fragShader = "PBRLit";
 
 	vector<ShaderInput> attributes = vector<ShaderInput>();
 	vector<ShaderInput> uniforms = vector<ShaderInput>();
@@ -55,7 +55,7 @@ inline void ValidateLinkage();
 
 inline void Draw();
 inline void DrawShaderPopup(ShaderStage stage, vector<path> shaderPaths, string& currentShader);
-inline void DrawDefaultableShaderPopup(ShaderStage stage, vector<path> shaderPaths, string& currentShader);
+inline void DrawDefaultableShaderPopup(ShaderStage stage, vector<path> shaderPaths, string& currentShader, StringParams defaults = StringParams());
 }
 
 void ShaderProgramGUI::Initialise()
@@ -147,8 +147,18 @@ void ShaderProgramGUI::Load(string filePathStr)
 	current.filePath = filePathStr;
 
 	ifstream input;
-	if (filePathStr != "Default") input = ifstream(current.filePath.c_str());
-	else input = ifstream("Engine\\DefaultAssets\\Default.gpu");
+	if (filePathStr == "PBRLit")
+	{
+		input = ifstream("Engine\\DefaultAssets\\PBRLit.gpu");
+	}
+	else if (filePathStr == "Unlit")
+	{
+		input = ifstream("Engine\\DefaultAssets\\Unlit.gpu");
+	}
+	else
+	{
+		input = ifstream(filePathStr.c_str());
+	}
 	assert(input.good());
 	
 	path filePath = path(current.filePath);
@@ -175,14 +185,14 @@ void ShaderProgramGUI::Load(string filePathStr)
 			current.vertShader = shaderProgram["Vertex"];
 			if (current.vertShader == "")
 			{
-				current.vertShader = "Default";
-				debug->Log({ current.filePath, " had it's Vertex shader blank. Set to \"Default\"." locationinfo }, Debug::Warning, Debug::WRN103);
+				current.vertShader = "Default3D";
+				debug->Log({ current.filePath, " had it's Vertex shader blank. Set to \"Default3D\"." locationinfo }, Debug::Warning, Debug::WRN103);
 			}
 		}
 		else
 		{
 			dirty = true;
-			debug->Log({ current.filePath, " did not specify a Vertex shader. Set to \"Default\"." locationinfo }, Debug::Warning, Debug::WRN103);
+			debug->Log({ current.filePath, " did not specify a Vertex shader. Set to \"Default3D\"." locationinfo }, Debug::Warning, Debug::WRN103);
 		}
 
 		if (shaderProgram.contains("TessEvaluation"))
@@ -235,14 +245,14 @@ void ShaderProgramGUI::Load(string filePathStr)
 			current.fragShader = shaderProgram["Fragment"];
 			if (current.fragShader == "")
 			{
-				current.fragShader = "Default";
-				debug->Log({ current.filePath, " had it's Fragment shader blank. Set to \"Default\"." locationinfo }, Debug::Warning, Debug::WRN103);
+				current.fragShader = "PBRLit";
+				debug->Log({ current.filePath, " had it's Fragment shader blank. Set to \"PBRLit\"." locationinfo }, Debug::Warning, Debug::WRN103);
 			}
 		}
 		else
 		{
 			dirty = true;
-			debug->Log({ current.filePath, " did not specify a Fragment shader. Set to \"Default\"." locationinfo }, Debug::Warning, Debug::WRN103);
+			debug->Log({ current.filePath, " did not specify a Fragment shader. Set to \"PBRLit\"." locationinfo }, Debug::Warning, Debug::WRN103);
 		}
 	}
 	
@@ -285,13 +295,25 @@ void ShaderProgramGUI::ValidateLinkage()
 {
 	ShaderProgram* testShaderProgram = new ShaderProgram();
 
-	if (current.vertShader != "Default") testShaderProgram->LoadShader(VertexStage, current.vertShader.c_str());
-	else testShaderProgram->LoadShader(VertexStage, "Engine\\DefaultAssets\\Default.vert");
+	if (current.vertShader.find('.') == string::npos)
+	{
+		testShaderProgram->LoadShader(VertexStage, ("Engine\\DefaultAssets\\" + current.vertShader + ".vert").c_str());
+	}
+	else
+	{
+		testShaderProgram->LoadShader(VertexStage, current.vertShader.c_str());
+	}
 	if (current.teseShader != "None") testShaderProgram->LoadShader(TessEvaluationStage, current.teseShader.c_str());
 	if (current.tescShader != "None") testShaderProgram->LoadShader(TessControlStage, current.tescShader.c_str());
 	if (current.geomShader != "None") testShaderProgram->LoadShader(GeometryStage, current.geomShader.c_str());
-	if (current.fragShader != "Default") testShaderProgram->LoadShader(FragmentStage, current.fragShader.c_str());
-	else testShaderProgram->LoadShader(FragmentStage, "Engine\\DefaultAssets\\Default.frag");
+	if (current.fragShader.find('.') == string::npos)
+	{
+		testShaderProgram->LoadShader(FragmentStage, ("Engine\\DefaultAssets\\" + current.fragShader + ".frag").c_str());
+	}
+	else
+	{
+		testShaderProgram->LoadShader(FragmentStage, current.fragShader.c_str());
+	}
 	validLinkage = testShaderProgram->Link();
 
 	testShaderProgram->GetFields(current.attributes, current.uniforms);
@@ -310,8 +332,8 @@ void ShaderProgramGUI::Draw()
 			dirty = false;
 			validLinkage = false;
 			current = Fields();
-			current.vertShader = "Default";
-			current.fragShader = "Default";
+			current.vertShader = "Default3D";
+			current.fragShader = "PBRLit";
 			ShaderProgramGUI::ValidateLinkage();
 		}
 
@@ -383,11 +405,11 @@ void ShaderProgramGUI::Draw()
 	{
 		ImGui::SeparatorText("Shaders");
 
-		DrawDefaultableShaderPopup(VertexStage, vertexShaders, current.vertShader);
+		DrawDefaultableShaderPopup(VertexStage, vertexShaders, current.vertShader, { "Default3D" });
 		DrawShaderPopup(TessEvaluationStage, tessEvaluationShaders, current.teseShader);
 		DrawShaderPopup(TessControlStage, tessEvaluationShaders, current.tescShader);
 		DrawShaderPopup(GeometryStage, geometryShaders, current.geomShader);
-		DrawDefaultableShaderPopup(FragmentStage, fragmentShaders, current.fragShader);
+		DrawDefaultableShaderPopup(FragmentStage, fragmentShaders, current.fragShader, { "PBRLit", "Unlit"});
 
 		if (!validLinkage)
 		{
@@ -469,7 +491,7 @@ void ShaderProgramGUI::DrawShaderPopup(ShaderStage stage, vector<path> shaderPat
 	} ImGui::EndDisabled();
 }
 
-void ShaderProgramGUI::DrawDefaultableShaderPopup(ShaderStage stage, vector<path> shaderPaths, string& currentShader)
+void ShaderProgramGUI::DrawDefaultableShaderPopup(ShaderStage stage, vector<path> shaderPaths, string& currentShader, StringParams defaults)
 {
 	string stageName;
 	switch (stage)
@@ -481,18 +503,21 @@ void ShaderProgramGUI::DrawDefaultableShaderPopup(ShaderStage stage, vector<path
 	case FragmentStage: stageName = "Fragment"; break;
 	}
 
-	ImGui::BeginDisabled(shaderPaths.size() == 0);
+	ImGui::BeginDisabled(shaderPaths.size() + defaults.size() <= 1);
 	{
 		if (ImGui::BeginCombo(stageName.c_str(), currentShader.c_str()))
 		{
-			bool isDefault = currentShader == "Default";
-			if (ImGui::Selectable("Default", isDefault))
+			for (string defaultStr : defaults)
 			{
-				dirty = true;
-				currentShader = "Default";
-				ValidateLinkage();
+				bool isSelected = currentShader == defaultStr;
+				if (ImGui::Selectable(defaultStr.c_str(), isSelected))
+				{
+					dirty = true;
+					currentShader = defaultStr;
+					ValidateLinkage();
+				}
+				if (isSelected) ImGui::SetItemDefaultFocus();
 			}
-			if (isDefault) ImGui::SetItemDefaultFocus();
 
 			for (int i = 0; i < shaderPaths.size(); i++)
 			{

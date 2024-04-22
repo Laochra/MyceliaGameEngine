@@ -8,15 +8,25 @@ ShaderManager* shaderManager = nullptr;
 
 ShaderManager::ShaderManager()
 {
-   ShaderProgram* defaultShaderProgram = new ShaderProgram;
-   if (defaultShaderProgram->LoadAndLinkFromJSON("Engine\\DefaultAssets\\Default.gpu"))
+   ShaderProgram* pbrLit = new ShaderProgram;
+   if (pbrLit->LoadAndLinkFromJSON("Engine\\DefaultAssets\\PBRLit.gpu"))
    {
-      loadedPrograms.insert(std::pair(string("Default"), defaultShaderProgram));
+      loadedPrograms.insert(std::pair(string("PBRLit"), pbrLit));
    }
    else
    {
-      debug->Log("Failed to load Default.gpu" locationinfo, Debug::Error, Debug::ERR101);
-      delete defaultShaderProgram;
+      debug->Log("Failed to load PBRLit.gpu" locationinfo, Debug::Error, Debug::ERR101);
+      delete pbrLit;
+   }
+   ShaderProgram* pbrUnlit = new ShaderProgram;
+   if (pbrUnlit->LoadAndLinkFromJSON("Engine\\DefaultAssets\\Unlit.gpu"))
+   {
+      loadedPrograms.insert(std::pair(string("Unlit"), pbrUnlit));
+   }
+   else
+   {
+      debug->Log("Failed to load Unlit.gpu" locationinfo, Debug::Error, Debug::ERR101);
+      delete pbrUnlit;
    }
 }
 
@@ -50,7 +60,7 @@ ShaderProgram* ShaderManager::AddProgram(const char* filepath)
    else
    {
       delete newProgram;
-      debug->Log({ "Failed to load a ShaderProgram from filepath: ", filepath, ". Set to Default.gpu" locationinfo }, Debug::Warning, Debug::WRN100);
-      return GetProgram("Default");
+      debug->Log({ "Failed to load a ShaderProgram from filepath: ", filepath, ". Set to PBRLit.gpu" locationinfo }, Debug::Warning, Debug::WRN100);
+      return GetProgram("PBRLit");
    }
 }

@@ -38,20 +38,30 @@ bool Material::LoadFromJSON(const char* filepathInit)
 	// Ensuring Shader Program is Valid
 	if (!material.contains("ShaderProgram"))
 	{
-		material["ShaderProgram"] = "Default";
+		material["ShaderProgram"] = "PBRLit";
 		return true;
 	}
 
 	string shaderFilePath = material["ShaderProgram"];
 
 	ifstream shaderInput(shaderFilePath.c_str());
-	if (shaderFilePath != "Default") shaderInput = ifstream(shaderFilePath.c_str());
-	else shaderInput = ifstream("Engine\\DefaultAssets\\Default.gpu");
+	if (shaderFilePath == "PBRLit")
+	{
+		shaderInput = ifstream("Engine\\DefaultAssets\\PBRLit.gpu");
+	}
+	else if (shaderFilePath == "Unlit")
+	{
+		shaderInput = ifstream("Engine\\DefaultAssets\\Unlit.gpu");
+	}
+	else
+	{
+		shaderInput = ifstream(shaderFilePath.c_str());
+	}
 
 	if (!shaderInput.good())
 	{
-		debug->Log({ "Failed to find ShaderProgram at: ", shaderFilePath, ". Set to \"Default\"" locationinfo }, Debug::Warning, Debug::WRN101);
-		material["ShaderProgram"] = "Default";
+		debug->Log({ "Failed to find ShaderProgram at: ", shaderFilePath, ". Set to \"PBRLit\"" locationinfo }, Debug::Warning, Debug::WRN101);
+		material["ShaderProgram"] = "PBRLit";
 		return true;
 	}
 
@@ -61,8 +71,8 @@ bool Material::LoadFromJSON(const char* filepathInit)
 	try { shaderInput >> shaderProgramJSON; }
 	catch (parse_error)
 	{
-		debug->Log({ shaderFilePath, " was corrupt. Set to \"Default\"" locationinfo }, Debug::Warning, Debug::WRN102);
-		shaderFilePath = "Default";
+		debug->Log({ shaderFilePath, " was corrupt. Set to \"PBRLit\"" locationinfo }, Debug::Warning, Debug::WRN102);
+		shaderFilePath = "PBRLit";
 		return true;
 	}
 
