@@ -27,7 +27,7 @@ void LightObjectGUI::DrawLightObjectGUI(LightObject* lightObject)
 
 		ImGui::DragFloat("Range", &lightObject->range, 1.0f, 0.0f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
 		float angleEulerDegrees = glm::degrees(glm::acos(lightObject->angle));
-		if (ImGui::DragFloat("Angle", &angleEulerDegrees, 1.0f, 0.0f, 180.0f, NULL, ImGuiSliderFlags_AlwaysClamp))
+		if (ImGui::DragFloat("Angle", &angleEulerDegrees, 1.0f, 0.0f, 89.0f, NULL, ImGuiSliderFlags_AlwaysClamp))
 		{
 			lightObject->angle = glm::cos(glm::radians(angleEulerDegrees));
 		}

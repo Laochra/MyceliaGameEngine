@@ -77,7 +77,7 @@ void MaterialGUI::Initialise()
 		filePath = entry.path();
 		extension = filePath.extension().string();
 
-		if (extension == ".png" || extension == ".tga") textures.push_back(filePath); // TODO: Refactor this to allow for more image formats
+		if (extension == ".png" || extension == ".tga" || extension == ".jpg") textures.push_back(filePath); // TODO: Refactor this to allow for more image formats
 	}
 }
 

@@ -59,27 +59,56 @@ void Editor::Initialise()
 	inspector = new Inspector();
 
 	mainCamera = GameObject3D::Instantiate<EditorCamera>(vec3(0.0f, 10.0f, 10.0f));
+	mainCamera->SetPosition({ -0.25, 1.0f, 1.5f });
+	((EditorCamera*)mainCamera)->xRotation = -80;
+	((EditorCamera*)mainCamera)->yRotation = -20;
 
 	Gizmos::create(100000, 10000, 0, 0);
 
-	object = GameObject3D::Instantiate<MeshRenderer>(vec3(0.0f, 0.0f, 0.0f), glm::identity<quat>(), vec3(1.0f, 1.0f, 1.0f), vec3(0.0f, -0.5f, 0.0f));
+	object = GameObject3D::Instantiate<MeshRenderer>(vec3(0.0f, 0.0f, 0.35f), glm::identity<quat>(), vec3(0.01f, 0.01f, 0.01f), vec3(0.0f, -0.5f, 0.0f));
+	object->SetName("Table");
+	object->SetMesh("Assets\\Meshes\\Table.fbx"); object->SetMaterial("Assets\\Materials\\Table.mat");
 
 	inspector->SetTarget(object);
 
 	LightingManager::ambientLight = Light(vec3(0.1f, 0.1f, 0.1f));
 
 	LightingManager::directionalLight = DirectionalLight(vec3(1.0f, 1.0f, 1.0f), glm::normalize(vec3(-0.1f, -1, -1)));
+
+	MeshRenderer* lightbox = GameObject3D::Instantiate<MeshRenderer>(vec3(0.0f, 1.5f, 0.0f), glm::identity<quat>(), vec3(0.20f, 0.05f, 0.10f), vec3(0.0f, 0.0f, 0.0f));
+	lightbox->SetName("Lightbox");
+	lightbox->SetMesh("ProceduralCube"); lightbox->SetMaterial("Assets\\Materials\\black.mat");
+	MeshRenderer* bulb = GameObject3D::Instantiate<MeshRenderer>(vec3(0.0f, -0.6f, 0.0f), glm::identity<quat>(), vec3(0.667f, 0.2f, 0.667f), vec3(0.0f, 0.0f, 0.0f), lightbox);
+	bulb->SetName("Bulb");
+	bulb->SetMesh("ProceduralCube"); bulb->SetMaterial("Assets\\Materials\\white.mat");
+	LightObject* downlight = GameObject3D::Instantiate<LightObject>(vec3(0.0f, 0.6f, 0.0f), glm::identity<quat>(), vec3(1), vec3(0), bulb);
+	downlight->SetName("Downlight");
+	downlight->LookAt({ 0, 0, 0 });
+	downlight->range = 1.0f; downlight->colour = vec3(255 / 255.0f, 228 / 255.0f, 172 / 255.0f); downlight->intensity = 2.4f; downlight->angle = glm::cos(glm::radians(28.0f));
+	LightingManager::lightObjects.push_back(downlight);
 	
-	LightObject* light1 = GameObject3D::Instantiate<LightObject>(vec3(1.0f, 0.5f, 0.0f));
-	light1->range = 10.0f; light1->colour = vec3(1, 0, 0); light1->intensity = 1.0f; light1->SetName("Red Light");
-	LightingManager::lightObjects.push_back(light1);
-	LightObject* light2 = GameObject3D::Instantiate<LightObject>(vec3(0.0f, 1.5f, 0.0f));
-	light2->range = 10.0f; light2->colour = vec3(0, 1, 0); light2->intensity = 1.0f; light2->SetName("Green Light");
-	LightingManager::lightObjects.push_back(light2);
-	LightObject* light3 = GameObject3D::Instantiate<LightObject>(vec3(0.0f, 0.5f, 1.0f));
-	light3->range = 10.0f; light3->colour = vec3(0, 0, 1); light3->intensity = 1.0f; light3->SetName("Blue Light");
-	LightingManager::lightObjects.push_back(light3);
-	
+	GameObject3D* floors = GameObject3D::Instantiate<GameObject3D>(vec3(0.0f, 0.0f, 0.0f), glm::identity<quat>(), vec3(2.00f, 1.00f, 2.00f), vec3(0.0f, -0.0025f, 0.0f));
+	floors->SetName("Floors");
+	for (int x = -1; x <= 1; x++)
+	{
+		for (int y = 0; y <= 1; y++)
+		{
+			MeshRenderer* floor = GameObject3D::Instantiate<MeshRenderer>(vec3(x, 0.0f, y), glm::identity<quat>(), vec3(1.00f, 1.00f, 1.00f), vec3(0.0f, 0.0f, 0.0f), floors);
+			floor->SetName(("Floor " + std::to_string(x) + ", " + std::to_string(y)).c_str());
+			floor->SetMesh("ProceduralQuad"); floor->SetMaterial("Assets\\Materials\\Wood Planks.mat");
+		}
+	}
+
+	GameObject3D* walls = GameObject3D::Instantiate<GameObject3D>(vec3(0.0f, 0.0f, 0.0f), glm::identity<quat>(), vec3(2.00f, 1.00f, 2.00f), vec3(0.0f, -0.0f, 0.502f));
+	walls->SetName("Walls");
+	walls->Rotate(glm::radians(90.0f), vec3(1, 0, 0));
+	for (int x = -1; x <= 1; x++)
+	{
+		MeshRenderer* wall = GameObject3D::Instantiate<MeshRenderer>(vec3(x, 0.002f, 0.0f), glm::identity<quat>(), vec3(1.00f, 1.00f, 1.00f), vec3(0.0f, 0.0f, 0.0f), walls);
+		wall->SetName(("Wall " + std::to_string(x)).c_str());
+		wall->SetMesh("ProceduralQuad"); wall->SetMaterial("Assets\\Materials\\Wallpaper.mat");
+	}
+
 	input->enabled = false;
 
 

@@ -1,0 +1,35 @@
+{
+  "Attributes": [],
+  "ShaderProgram": "PBRLit",
+  "Uniforms": [
+    {
+      "Data": [
+        0,
+        0,
+        128,
+        63,
+        0,
+        0,
+        128,
+        63,
+        0,
+        0,
+        128,
+        63
+      ],
+      "Name": "ColourTint"
+    },
+    {
+      "Data": "Assets\\Textures\\WallpaperColour.jpg",
+      "Name": "ColourMap"
+    },
+    {
+      "Data": "Assets\\Textures\\WallpaperNormal.png",
+      "Name": "NormalMap"
+    },
+    {
+      "Data": "Assets\\Textures\\WallpaperRMAO.png",
+      "Name": "RMAOMap"
+    }
+  ]
+}
