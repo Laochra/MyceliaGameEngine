@@ -97,6 +97,11 @@ vec3 ReflectanceEquation(vec3 colour, vec3 normal, float roughness, float metall
 	return (kD * colour / PI + specular) * radiance * NdotL;
 }
 
+float Remap01(float value, float vMin, float vMax)
+{
+	return (value - vMin) / (vMax - vMin);
+}
+
 void main() // Fragment
 {	
 	// Material Inputs
@@ -130,7 +135,7 @@ void main() // Fragment
 			float theta = dot(LightObjects[i].direction, lightDirection);
 			if (theta <= LightObjects[i].angle)
 			{
-				attenuation = 0.0;
+				attenuation = max(Remap01(theta, LightObjects[i].angle * LightObjects[i].angle, LightObjects[i].angle), 0.0);
 			}
 		}
 		
