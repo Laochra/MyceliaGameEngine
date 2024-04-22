@@ -650,19 +650,19 @@ bool ShaderProgram::LoadShaderFromJSON(ShaderStage stage, const char* filename)
 		return true;
 	}
 
-	if (memcmp(filename, "Default", 8) == 0)
+	if (memchr(filename, '.', strlen(filename)) == nullptr)
 	{
 		switch (stage)
 		{
 			case VertexStage:
-				if (LoadShader(stage, "Engine\\DefaultAssets\\Default.vert") == false)
+				if (LoadShader(stage, ("Engine\\DefaultAssets\\" + string(filename) + ".vert").c_str()) == false)
 				{
 					debug->Log({ filename, " is not a valid shader file" locationinfo }, Debug::Warning, Debug::WRN102);
 					return false;
 				}
 				break;
 			case FragmentStage:
-				if (LoadShader(stage, "Engine\\DefaultAssets\\Default.frag") == false)
+				if (LoadShader(stage, ("Engine\\DefaultAssets\\" + string(filename) + ".frag").c_str()) == false)
 				{
 					debug->Log({ filename, " is not a valid shader file" locationinfo }, Debug::Warning, Debug::WRN102);
 					return false;
@@ -687,7 +687,7 @@ bool ShaderProgram::LoadShaderFromJSON(ShaderStage stage, const char* filename)
 
 bool ShaderProgram::JSONFileIsValid(const char* filename)
 {
-	if (memcmp(filename, "Default", 8) == 0) { return true; }
+	if (memchr(filename, '.', strlen(filename)) == nullptr) { return true; }
 
 	ifstream input(filename);
 	if (!input.good())

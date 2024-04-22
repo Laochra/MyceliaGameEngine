@@ -25,7 +25,7 @@ struct Fields
 {
 	string materialName = "";
 	string filePath = "New File";
-	string shaderFilePath = "Default";
+	string shaderFilePath = "PBRLit";
 
 	vector<MaterialInput> attributes = vector<MaterialInput>();
 	vector<MaterialInput> uniforms = vector<MaterialInput>();
@@ -189,24 +189,34 @@ void MaterialGUI::Load(string filePathStr)
 	// Ensuring Shader Program is Valid
 	if (!material.contains("ShaderProgram"))
 	{
-		debug->Log({ current.filePath, " did not specify a Shader Program. Set to \"Default\"." locationinfo }, Debug::Warning, Debug::WRN103);
-		material["ShaderProgram"] = "Default";
+		debug->Log({ current.filePath, " did not specify a Shader Program. Set to \"PBRLit\"." locationinfo }, Debug::Warning, Debug::WRN103);
+		material["ShaderProgram"] = "PBRLit";
 		Save();
 	}
 
 	current.shaderFilePath = material["ShaderProgram"];
 
 	ifstream shaderInput;
-	if (current.shaderFilePath != "Default") shaderInput = ifstream(current.shaderFilePath.c_str());
-	else shaderInput = ifstream("Engine\\DefaultAssets\\Default.gpu");
+	if (current.shaderFilePath == "PBRLit")
+	{
+		shaderInput = ifstream("Engine\\DefaultAssets\\PBRLit.gpu");
+	}
+	else if (filePathStr == "Unlit")
+	{
+		shaderInput = ifstream("Engine\\DefaultAssets\\Unlit.gpu");
+	}
+	else
+	{
+		shaderInput = ifstream(current.shaderFilePath.c_str());
+	}
 	assert(shaderInput.good());
 
 	json shaderProgram;
 	try { shaderInput >> shaderProgram; }
 	catch (parse_error)
 	{
-		debug->Log({ current.filePath, " was corrupt. Shader Program set to \"Default\"." locationinfo }, Debug::Warning, Debug::WRN102);
-		current.shaderFilePath = "Default";
+		debug->Log({ current.filePath, " was corrupt. Shader Program set to \"PBRLit\"." locationinfo }, Debug::Warning, Debug::WRN102);
+		current.shaderFilePath = "PBRLit";
 		Save();
 
 		return;
@@ -290,8 +300,18 @@ void MaterialGUI::LoadShaderProgram(string filePathStr)
 
 	ifstream input;
 	input = ifstream(current.shaderFilePath.c_str());
-	if (filePathStr != "Default") input = ifstream(current.shaderFilePath.c_str());
-	else input = ifstream("Engine\\DefaultAssets\\Default.gpu");
+	if (filePathStr == "PBRLit")
+	{
+		input = ifstream("Engine\\DefaultAssets\\PBRLit.gpu");
+	}
+	else if (filePathStr == "Unlit")
+	{
+		input = ifstream("Engine\\DefaultAssets\\Unlit.gpu");
+	}
+	else
+	{
+		input = ifstream(current.shaderFilePath.c_str());
+	}
 	assert(input.good());
 
 	json shaderProgram;
@@ -388,7 +408,7 @@ void MaterialGUI::Draw()
 		if (ImGui::Selectable("New File", current.filePath == "New File"))
 		{
 			current = Fields();
-			LoadShaderProgram("Default");
+			LoadShaderProgram("PBRLit");
 			dirty = false;
 		}
 
@@ -462,9 +482,13 @@ void MaterialGUI::Draw()
 
 		if (ImGui::BeginCombo("##Shader Program", current.shaderFilePath.c_str()))
 		{
-			if (ImGui::Selectable("Default", current.shaderFilePath == "Default"))
+			if (ImGui::Selectable("PBRLit", current.shaderFilePath == "PBRLit"))
 			{
-				LoadShaderProgram("Default");
+				LoadShaderProgram("PBRLit");
+			}
+			if (ImGui::Selectable("Unlit", current.shaderFilePath == "Unlit"))
+			{
+				LoadShaderProgram("Unlit");
 			}
 
 			for (int i = 0; i < shaderPrograms.size(); i++)

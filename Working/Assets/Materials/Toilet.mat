@@ -1,6 +1,6 @@
 {
   "Attributes": [],
-  "ShaderProgram": "Default",
+  "ShaderProgram": "PBRLit",
   "Uniforms": [
     {
       "Data": [
