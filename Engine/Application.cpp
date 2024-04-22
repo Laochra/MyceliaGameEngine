@@ -110,7 +110,15 @@ int Application::Setup()
 	glEnable(GL_DEBUG_OUTPUT);
 	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 	glDebugMessageCallback(GLErrorCallback, nullptr);
-	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE); // Look into documentation for this
+	// Disable opengl logs of these types
+	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE);
+	// Disable opengl logs with these id's
+	const uint idCount = 1; const uint idsToIgnore[idCount] =
+	{
+		131218U, // This id alerts every time a shader gets recompiled at runtime but we want to allow this
+	};
+	glDebugMessageControl(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_PERFORMANCE, GL_DONT_CARE, idCount, idsToIgnore, GL_FALSE);
+
 	glfwSetErrorCallback(GLFWErrorCallback);
 #endif
 
