@@ -3,6 +3,10 @@
   "ShaderProgram": "PBRLit",
   "Uniforms": [
     {
+      "Data": "Assets\\Textures\\soulspear_diffuse.tga",
+      "Name": "ColourMap"
+    },
+    {
       "Data": [
         0,
         0,
@@ -20,15 +24,37 @@
       "Name": "ColourTint"
     },
     {
-      "Data": "Assets\\Textures\\Soulspear_diffuse.tga",
-      "Name": "ColourMap"
+      "Data": [
+        0,
+        0,
+        128,
+        63,
+        0,
+        0,
+        128,
+        63,
+        0,
+        0,
+        128,
+        63
+      ],
+      "Name": "EmissionColour"
     },
     {
-      "Data": "Assets\\Textures\\Soulspear_normal.tga",
+      "Data": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "Name": "EmissionIntensity"
+    },
+    {
+      "Data": "Assets\\Textures\\soulspear_normal.tga",
       "Name": "NormalMap"
     },
     {
-      "Data": "Assets\\Textures\\Soulspear_specular.tga",
+      "Data": "Assets\\Textures\\soulspear_specular.tga",
       "Name": "RMAOMap"
     }
   ]

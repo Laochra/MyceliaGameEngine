@@ -82,6 +82,7 @@ bool Texture::Load(const char* filename, Linearity linearity)
 		height = (unsigned int)y;
 		fileName = filename;
 		stbi_image_free(loadedPixels);
+		loadedPixels = nullptr;
 		return true;
 	}
 	return false;

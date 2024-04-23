@@ -104,6 +104,22 @@ void MeshRenderer::Draw()
 
 			continue;
 		}
+		else if (material->uniforms[i].name == "EmissionColour")
+		{
+			vec3 emissionColour;
+			material->uniforms[i].Get(&emissionColour);
+			material->shaderProgram->BindUniform("EmissionColour", emissionColour);
+
+			continue;
+		}
+		else if (material->uniforms[i].name == "EmissionIntensity")
+		{
+			float emissionIntensity;
+			material->uniforms[i].Get(&emissionIntensity);
+			material->shaderProgram->BindUniform("EmissionIntensity", emissionIntensity);
+
+			continue;
+		}
 	}
 
 	mesh->Draw();

@@ -36,6 +36,8 @@ uniform vec3 ColourTint;
 uniform sampler2D NormalMap;
 
 uniform sampler2D RMAOMap; // Roughness, Metallic, Ambient Occlusion
+uniform vec3 EmissionColour;
+uniform float EmissionIntensity;
 
 // Output
 layout (location = 0) out vec4 FragColour;
@@ -107,9 +109,11 @@ void main() // Fragment
 	// Material Inputs
 	vec3 colour = texture(ColourMap, FragTexCoords).rgb * ColourTint;
 	vec3 normal = texture(NormalMap, FragTexCoords).rgb; normal = normalize(TBN * (normal * 2.0 - 1.0));
-	float roughness = texture(RMAOMap, FragTexCoords).r;
-	float metallic = texture(RMAOMap, FragTexCoords).g;
-	float ao = texture(RMAOMap, FragTexCoords).b;
+	vec4 rmao = texture(RMAOMap, FragTexCoords);
+	float roughness = rmao.r;
+	float metallic = rmao.g;
+	float ao = rmao.b;
+	vec3 emission = rmao.a * EmissionColour * EmissionIntensity;
 	
 	vec3 viewDirection = normalize(CameraPosition - FragPos);
 	
@@ -146,8 +150,8 @@ void main() // Fragment
 	
 	vec3 ambientResult = vec3(0.03) * colour * ao;
 	vec3 colourResult = ambientResult + Lo;
-		
-	FragColour = vec4(colourResult, 1);
+	
+	FragColour = vec4(colourResult + emission, 1);
 	
 	float brightness = dot(FragColour.rgb, vec3(0.2126, 0.7152, 0.0722));
 	

@@ -454,20 +454,23 @@ void Editor::DrawPostProcess()
 	// Bloom Passes
 	const int downResFactor = 4;
 	glViewport(0, 0, screenWidth / downResFactor, screenHeight / downResFactor);
-	uint blurFrameBuffer;
-	uint blurColourBuffer;
-	glGenFramebuffers(1, &blurFrameBuffer);
-	glGenTextures(1, &blurColourBuffer);
+	uint blurFrameBuffers[2];
+	uint blurColourBuffers[2];
+	glGenFramebuffers(2, &blurFrameBuffers[0]);
+	glGenTextures(2, &blurColourBuffers[0]);
 	
-	glBindFramebuffer(GL_FRAMEBUFFER, blurFrameBuffer);
-	glBindTexture(GL_TEXTURE_2D, blurColourBuffer);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, screenWidth / downResFactor, screenHeight / downResFactor, 0, GL_RGBA, GL_FLOAT, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	for (int i = 0; i < 2; i++)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, blurFrameBuffers[i]);
+		glBindTexture(GL_TEXTURE_2D, blurColourBuffers[i]);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, screenWidth / downResFactor, screenHeight / downResFactor, 0, GL_RGBA, GL_FLOAT, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, blurColourBuffer, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, blurColourBuffers[i], 0);
+	}
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -478,12 +481,12 @@ void Editor::DrawPostProcess()
 	int passes = 4;
 	blurProgram.Bind();
 	blurProgram.BindUniform("BrightTexture", 0);
-	glActiveTexture(GL_TEXTURE0);
-	glBindFramebuffer(GL_FRAMEBUFFER, blurFrameBuffer);
-	glBindTexture(GL_TEXTURE_2D, sceneViewColourBufferHDR[1]);
-	for (uint i = 0; i < passes; i++)
+	for (uint p = 0; p < passes; p++)
 	{
-		if (i == 1) glBindTexture(GL_TEXTURE_2D, blurColourBuffer);
+		bool b = p % 2;
+		glActiveTexture(GL_TEXTURE0);
+		glBindFramebuffer(GL_FRAMEBUFFER, blurFrameBuffers[b]);
+		glBindTexture(GL_TEXTURE_2D, p == 0 ? sceneViewColourBufferHDR[1] : blurColourBuffers[!b]);
 
 		screenQuad.Draw();
 	}
@@ -515,7 +518,7 @@ void Editor::DrawPostProcess()
 	glBindTexture(GL_TEXTURE_2D, sceneViewColourBufferHDR[0]);
 	hdrProgram.BindUniform("HDRTexture", 0);
 	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, blurColourBuffer);
+	glBindTexture(GL_TEXTURE_2D, blurColourBuffers[passes % 2]);
 	hdrProgram.BindUniform("BloomTexture", 1);
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, sceneViewColourBufferGizmos);
@@ -529,8 +532,8 @@ void Editor::DrawPostProcess()
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	glDeleteFramebuffers(1, &blurFrameBuffer);
-	glDeleteTextures(1, &blurColourBuffer);
+	glDeleteFramebuffers(2, &blurFrameBuffers[0]);
+	glDeleteTextures(2, &blurColourBuffers[0]);
 }
 
 void Editor::DrawGUI()

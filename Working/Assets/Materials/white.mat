@@ -1,7 +1,11 @@
 {
   "Attributes": [],
-  "ShaderProgram": "Unlit",
+  "ShaderProgram": "PBRLit",
   "Uniforms": [
+    {
+      "Data": "None",
+      "Name": "ColourMap"
+    },
     {
       "Data": [
         0,
@@ -20,8 +24,38 @@
       "Name": "ColourTint"
     },
     {
+      "Data": [
+        0,
+        0,
+        128,
+        63,
+        229,
+        228,
+        100,
+        63,
+        173,
+        172,
+        44,
+        63
+      ],
+      "Name": "EmissionColour"
+    },
+    {
+      "Data": [
+        0,
+        0,
+        240,
+        65
+      ],
+      "Name": "EmissionIntensity"
+    },
+    {
       "Data": "None",
-      "Name": "ColourMap"
+      "Name": "NormalMap"
+    },
+    {
+      "Data": "None",
+      "Name": "RMAOMap"
     }
   ]
 }

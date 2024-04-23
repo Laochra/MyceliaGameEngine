@@ -3,6 +3,10 @@
   "ShaderProgram": "PBRLit",
   "Uniforms": [
     {
+      "Data": "None",
+      "Name": "ColourMap"
+    },
+    {
       "Data": [
         0,
         0,
@@ -20,8 +24,30 @@
       "Name": "ColourTint"
     },
     {
-      "Data": "None",
-      "Name": "ColourMap"
+      "Data": [
+        0,
+        0,
+        128,
+        63,
+        0,
+        0,
+        128,
+        63,
+        0,
+        0,
+        128,
+        63
+      ],
+      "Name": "EmissionColour"
+    },
+    {
+      "Data": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "Name": "EmissionIntensity"
     },
     {
       "Data": "None",
