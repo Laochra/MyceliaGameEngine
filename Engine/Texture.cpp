@@ -43,24 +43,45 @@ bool Texture::Load(const char* filename, Linearity linearity)
 		glBindTexture(GL_TEXTURE_2D, glHandle);
 		switch (comp)
 		{
-		case STBI_grey: glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, x, y, 0, GL_RED, GL_UNSIGNED_BYTE, loadedPixels);
-			format = SingleChannel; break;
-		case STBI_grey_alpha: glTexImage2D(GL_TEXTURE_2D, 0, GL_RG, x, y, 0, GL_RG, GL_UNSIGNED_BYTE, loadedPixels);
-			format = DualChannel; break;
-		case STBI_rgb: glTexImage2D(GL_TEXTURE_2D, 0, linearity ? GL_SRGB : GL_RGB, x, y, 0, GL_RGB, GL_UNSIGNED_BYTE, loadedPixels);
-			format = RGB; break;
-		case STBI_rgb_alpha: glTexImage2D(GL_TEXTURE_2D, 0, linearity ? GL_SRGB_ALPHA : GL_RGBA, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, loadedPixels);
-			format = RGBA; break;
-		default:
+		case STBI_grey:
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, x, y, 0, GL_RED, GL_UNSIGNED_BYTE, loadedPixels);
+			format = SingleChannel;
 			break;
+		}
+		case STBI_grey_alpha:
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RG, x, y, 0, GL_RG, GL_UNSIGNED_BYTE, loadedPixels);
+			format = DualChannel;
+			break;
+		}
+		case STBI_rgb:
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, linearity ? GL_SRGB : GL_RGB, x, y, 0, GL_RGB, GL_UNSIGNED_BYTE, loadedPixels);
+			format = RGB;
+			break;
+		}
+		case STBI_rgb_alpha:
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, linearity ? GL_SRGB_ALPHA : GL_RGBA, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, loadedPixels);
+			format = RGBA;
+			break;
+		}
+		default: break;
 		};
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glGenerateMipmap(GL_TEXTURE_2D);
+		float anisotropy = 0.0f;
+		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY, &anisotropy);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY, anisotropy);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glBindTexture(GL_TEXTURE_2D, 0);
 		width = (unsigned int)x;
 		height = (unsigned int)y;
 		fileName = filename;
+		stbi_image_free(loadedPixels);
 		return true;
 	}
 	return false;

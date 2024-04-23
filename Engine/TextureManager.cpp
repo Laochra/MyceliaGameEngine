@@ -26,8 +26,8 @@ TextureManager::TextureManager()
    loadedTextures.insert(std::pair(string("DefaultNormal"), defaultNormal));
 
    Texture* defaultRMAO = new Texture;
-   unsigned char grey[3] = { 127, 127, 127 };
-   defaultRMAO->Create(1, 1, Texture::RGB, grey);
+   unsigned char rmao[3] = { 127, 0, 255 };
+   defaultRMAO->Create(1, 1, Texture::RGB, rmao);
    loadedTextures.insert(std::pair(string("DefaultRMAO"), defaultRMAO));
 }
 
