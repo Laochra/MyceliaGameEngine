@@ -46,6 +46,7 @@ private:
 	// Post Processing
 	ShaderProgram hdrProgram;
 	ShaderProgram blurProgram;
+	ShaderProgram fxaaProgram;
 	unsigned int sceneViewFrameBufferOutput = 0;
 	unsigned int sceneViewColourBufferOutput = 0;
 	float exposure = 1.0f;

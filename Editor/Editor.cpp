@@ -153,6 +153,10 @@ void Editor::Initialise()
 	blurProgram.LoadShader(VertexStage, "Engine\\DefaultAssets\\FullScreenQuad.vert");
 	blurProgram.LoadShader(FragmentStage, "Engine\\DefaultAssets\\BoxBlur.frag");
 	blurProgram.Link();
+
+	fxaaProgram.LoadShader(VertexStage, "Engine\\DefaultAssets\\FullScreenQuad.vert");
+	fxaaProgram.LoadShader(FragmentStage, "Engine\\DefaultAssets\\FXAA.frag");
+	fxaaProgram.Link();
 }
 
 void Editor::OnFrameStart()
@@ -492,22 +496,22 @@ void Editor::DrawPostProcess()
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glViewport(0, 0, screenWidth, screenHeight);
+
 
 	// Normalising HDR for Screen
-	glViewport(0, 0, screenWidth, screenHeight);
-	glDeleteFramebuffers(1, &sceneViewFrameBufferOutput);
-	glDeleteTextures(1, &sceneViewColourBufferOutput);
+	unsigned int ldrFrameBuffer;
+	unsigned int ldrColourBuffer;
+	glGenFramebuffers(1, &ldrFrameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, ldrFrameBuffer);
 
-	glGenFramebuffers(1, &sceneViewFrameBufferOutput);
-	glBindFramebuffer(GL_FRAMEBUFFER, sceneViewFrameBufferOutput);
-
-	glGenTextures(1, &sceneViewColourBufferOutput);
-	glBindTexture(GL_TEXTURE_2D, sceneViewColourBufferOutput);
+	glGenTextures(1, &ldrColourBuffer);
+	glBindTexture(GL_TEXTURE_2D, ldrColourBuffer);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screenWidth, screenHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, sceneViewColourBufferOutput, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ldrColourBuffer, 0);
 
 	glClearColor(0.8f, 0.75f, 0.85f, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -524,8 +528,8 @@ void Editor::DrawPostProcess()
 	glBindTexture(GL_TEXTURE_2D, sceneViewColourBufferGizmos);
 	hdrProgram.BindUniform("GizmosTexture", 2);
 	glActiveTexture(GL_TEXTURE3);
-	glBindTexture(GL_TEXTURE_2D, sceneViewColourBufferOutput);
-	hdrProgram.BindUniform("CurrentFramebuffer", 3);
+	glBindTexture(GL_TEXTURE_2D, ldrColourBuffer);
+	hdrProgram.BindUniform("CurrentColourBuffer", 3);
 	hdrProgram.BindUniform("Exposure", exposure);
 
 	screenQuad.Draw();
@@ -534,6 +538,35 @@ void Editor::DrawPostProcess()
 
 	glDeleteFramebuffers(2, &blurFrameBuffers[0]);
 	glDeleteTextures(2, &blurColourBuffers[0]);
+
+	// FXAA
+	glDeleteFramebuffers(1, &sceneViewFrameBufferOutput);
+	glDeleteTextures(1, &sceneViewColourBufferOutput);
+
+	glGenFramebuffers(1, &sceneViewFrameBufferOutput);
+	glBindFramebuffer(GL_FRAMEBUFFER, sceneViewFrameBufferOutput);
+
+	glGenTextures(1, &sceneViewColourBufferOutput);
+	glBindTexture(GL_TEXTURE_2D, sceneViewColourBufferOutput);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, screenWidth, screenHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, sceneViewColourBufferOutput, 0);
+
+	fxaaProgram.Bind();
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, ldrColourBuffer);
+	fxaaProgram.BindUniform("AliasedTexture", 0);
+
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	screenQuad.Draw();
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glDeleteFramebuffers(1, &ldrFrameBuffer);
+	glDeleteTextures(1, &ldrColourBuffer);
 }
 
 void Editor::DrawGUI()

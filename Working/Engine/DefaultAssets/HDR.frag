@@ -3,7 +3,7 @@
 uniform sampler2D HDRTexture;
 uniform sampler2D BloomTexture;
 uniform sampler2D GizmosTexture;
-uniform sampler2D CurrentFramebuffer;
+uniform sampler2D CurrentColourBuffer;
 uniform float Exposure;
 
 in vec2 FragTexCoords;
@@ -15,7 +15,7 @@ void main() // Fragment
 	vec4 hdrColour = texture(HDRTexture, FragTexCoords);
 	vec4 bloomColour = texture(BloomTexture, FragTexCoords);
 	vec4 gizmosColour = texture(GizmosTexture, FragTexCoords);
-	vec4 currentColour = vec4(texture(CurrentFramebuffer, FragTexCoords).xyz, 1.0 - (hdrColour.w + gizmosColour.w));
+	vec4 currentColour = vec4(texture(CurrentColourBuffer, FragTexCoords).xyz, 1.0 - (hdrColour.w + gizmosColour.w));
 	hdrColour += vec4(bloomColour.xyz * bloomColour.w, bloomColour.w);
 	gizmosColour.xyz += bloomColour.xyz;
 	
