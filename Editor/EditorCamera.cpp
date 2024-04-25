@@ -60,8 +60,8 @@ void EditorCamera::Update()
 		}
 
 		// Mouse Look
-		xRotation += input->cursorMovement.x * 20 * Time::delta;
-		yRotation += -input->cursorMovement.y * 20 * Time::delta;
+		xRotation += input->cursorMovement.x * turnSpeed * Time::delta;
+		yRotation += -input->cursorMovement.y * turnSpeed * Time::delta;
 		if (yRotation > 85) yRotation = 85;
 		if (yRotation < -85) yRotation = -85;
 	}

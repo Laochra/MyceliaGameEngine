@@ -36,6 +36,8 @@ void EditorCameraGUI::DrawEditorCameraGUI(EditorCamera* camera)
 				camera->xRotation = rotation.x;
 				camera->yRotation = rotation.y;
 
+				ImGui::SeparatorText("Turn Speed");
+				ImGui::DragFloat("##Turn Speed", &(camera)->turnSpeed);
 				ImGui::SeparatorText("Fly Speed");
 				ImGui::DragFloat("Regular", &(camera)->flySpeed);
 				ImGui::DragFloat("Quick", &(camera)->quickFlySpeed);

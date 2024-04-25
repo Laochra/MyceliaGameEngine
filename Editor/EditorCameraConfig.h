@@ -39,6 +39,9 @@ namespace EditorCameraConfig
 		{
 			json movement = config["Movement"];
 
+			if (movement.contains("Turn Speed")) camera->turnSpeed = movement["Turn Speed"];
+			else config["Movement"]["Turn Speed"] = camera->turnSpeed;
+
 			if (movement.contains("Fly Speed")) camera->flySpeed = movement["Fly Speed"];
 			else config["Movement"]["Fly Speed"] = camera->flySpeed;
 
@@ -129,6 +132,7 @@ namespace EditorCameraConfig
 		newConfig["Display"]["Clipping Planes"]["Near"] = camera->nearClip;
 		newConfig["Display"]["Clipping Planes"]["Far"] = camera->farClip;
 
+		newConfig["Movement"]["Turn Speed"] = camera->turnSpeed;
 		newConfig["Movement"]["Fly Speed"] = camera->flySpeed;
 		newConfig["Movement"]["Quick Fly Speed"] = camera->quickFlySpeed;
 

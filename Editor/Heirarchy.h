@@ -146,6 +146,13 @@ void Heirarchy::Draw()
 		
 		ImGui::End();
 	}
+	else if (ImGui::IsWindowHovered())
+	{
+		if (ImGui::IsKeyPressed(ImGuiKey_Delete) || (ImGui::IsKeyPressed(ImGuiKey_KeypadDecimal)))
+		{
+			GameObject::Destroy(inspector->GetTarget());
+		}
+	}
 }
 
 void Heirarchy::DrawEntry(GameObject3D* gameObject3D)
