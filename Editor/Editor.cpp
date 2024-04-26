@@ -44,7 +44,7 @@ void Editor::Initialise()
 	{
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
-		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;		// Enable Keyboard Controls
+		//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;		// Enable Keyboard Controls
 		//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;	// Enable Gamepad Controls
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;			// Enable Docking
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;		// Enable Viewports
@@ -77,15 +77,14 @@ void Editor::Initialise()
 
 	MeshRenderer* lightbox = GameObject3D::Instantiate<MeshRenderer>(vec3(0.0f, 1.5f, 0.0f), glm::identity<quat>(), vec3(0.20f, 0.05f, 0.10f), vec3(0.0f, 0.0f, 0.0f));
 	lightbox->SetName("Lightbox");
-	lightbox->SetMesh("ProceduralCube"); lightbox->SetMaterial("Assets\\Materials\\black.mat");
+	lightbox->SetMesh("ProceduralCube"); lightbox->SetMaterial("Assets\\Materials\\Wood Planks.mat");
 	MeshRenderer* bulb = GameObject3D::Instantiate<MeshRenderer>(vec3(0.0f, -0.6f, 0.0f), glm::identity<quat>(), vec3(0.667f, 0.2f, 0.667f), vec3(0.0f, 0.0f, 0.0f), lightbox);
 	bulb->SetName("Bulb");
-	bulb->SetMesh("ProceduralCube"); bulb->SetMaterial("Assets\\Materials\\white.mat");
+	bulb->SetMesh("ProceduralCube"); bulb->SetMaterial("Assets\\Materials\\Bulb.mat");
 	LightObject* downlight = GameObject3D::Instantiate<LightObject>(vec3(0.0f, 0.6f, 0.0f), glm::identity<quat>(), vec3(1), vec3(0), bulb);
 	downlight->SetName("Downlight");
 	downlight->LookAt({ 0, 0, 0 });
-	downlight->range = 1.0f; downlight->colour = vec3(255 / 255.0f, 228 / 255.0f, 172 / 255.0f); downlight->intensity = 2.4f; downlight->angle = glm::cos(glm::radians(28.0f));
-	LightingManager::lightObjects.push_back(downlight);
+	downlight->range = 1.0f; downlight->colour = vec3(255 / 255.0f, 228 / 255.0f, 172 / 255.0f); downlight->intensity = 2.4f; downlight->angle[1] = glm::cos(glm::radians(28.0f));
 	
 	GameObject3D* floors = GameObject3D::Instantiate<GameObject3D>(vec3(0.0f, 0.0f, 0.0f), glm::identity<quat>(), vec3(2.00f, 1.00f, 2.00f), vec3(0.0f, -0.0025f, 0.0f));
 	floors->SetName("Floors");
@@ -298,27 +297,25 @@ void Editor::Update()
 			
 			if (ImGui::IsWindowHovered())
 			{
-				input->enabled = true;
-
 				if (((EditorCamera*)mainCamera)->freeCamera.pressed())
 				{
 					glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 					if (glfwRawMouseMotionSupported()) glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+					ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse; // Disables Imgui's Mouse Input
 				}
+				input->enabled = true;
 			}
 			else if (input->enabled && !((EditorCamera*)mainCamera)->freeCamera.down())
 			{
 				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-				if (glfwRawMouseMotionSupported()) glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_FALSE);
-
+				ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse; // Re-enables Imgui's Mouse Input
 				input->enabled = false;
 			}
 
 			if (((EditorCamera*)mainCamera)->freeCamera.released())
 			{
 				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-				if (glfwRawMouseMotionSupported()) glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_FALSE);
-
+				ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse; // Re-enables Imgui's Mouse Input
 				input->enabled = false;
 			}
 

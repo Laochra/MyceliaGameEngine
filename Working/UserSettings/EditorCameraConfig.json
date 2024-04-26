@@ -34,6 +34,7 @@
   },
   "Movement": {
     "Fly Speed": 2.0,
-    "Quick Fly Speed": 6.0
+    "Quick Fly Speed": 6.0,
+    "Turn Speed": 25.0
   }
 }

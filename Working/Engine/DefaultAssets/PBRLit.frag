@@ -25,7 +25,7 @@ struct LightObject
 	vec3 position;
 	vec3 direction;
 	float range;
-	float angle;
+	vec2 angle; // X component is inner angle, Y component is outer angle. 0 degree outer angle means point light
 };
 uniform int LightObjectCount;
 uniform LightObject LightObjects[4];
@@ -131,19 +131,15 @@ void main() // Fragment
 	{
 		float d = length(LightObjects[i].position - FragPos);
 		float dSqr = d * d;
-		float attenuation = clamp(LightObjects[i].range / dSqr, 0.0, 1.0);
+		float attenuation = clamp(LightObjects[i].range * (1.0 / dSqr) * (1.0 / d), 0.0, 1.0);
 		
 		vec3 lightDirection = normalize(LightObjects[i].position - FragPos);
-		if (LightObjects[i].angle != 1.0) // Check for no rotation. 1.0 is the cosine of 0 degrees
+		if (LightObjects[i].angle.y != 1.0) // Check for no angle. 1.0 is the cosine of 0 degrees
 		{
 			float theta = dot(LightObjects[i].direction, lightDirection);
-			if (theta <= LightObjects[i].angle)
-			{
-				attenuation = max(Remap01(theta, LightObjects[i].angle * LightObjects[i].angle, LightObjects[i].angle), 0.0);
-			}
+			float epsilon = LightObjects[i].angle.x - LightObjects[i].angle.y;
+			attenuation *= clamp((theta - LightObjects[i].angle.y) / epsilon, 0.0, 1.0);
 		}
-		
-		if (d > LightObjects[i].range) attenuation = 0.0;
 		
 		Lo += ReflectanceEquation(colour, normal, roughness, metallic, ao, viewDirection, lightDirection, attenuation, LightObjects[i].colour, F0);
 	}

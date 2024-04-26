@@ -71,6 +71,9 @@
     <ClCompile Include="Debug.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
+    <ClCompile Include="LightObject.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />

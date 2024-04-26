@@ -19,7 +19,7 @@ void GameObject3DGUI::DrawGameObject3DGUI(GameObject3D* gameObject3D)
 	if (ImGui::CollapsingHeader(id, ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		vec3 position = gameObject3D->GetPosition();
-		ImGui::DragFloat3("Position", (float*)&position);
+		ImGui::DragFloat3("Position", (float*)&position, 0.25f);
 		gameObject3D->SetPosition(position);
 
 

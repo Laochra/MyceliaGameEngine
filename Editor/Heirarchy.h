@@ -146,6 +146,13 @@ void Heirarchy::Draw()
 		
 		ImGui::End();
 	}
+	else if (ImGui::IsWindowHovered())
+	{
+		if (!input->enabled && (ImGui::IsKeyPressed(ImGuiKey_Delete) || (ImGui::IsKeyPressed(ImGuiKey_KeypadDecimal))))
+		{
+			GameObject::Destroy(inspector->GetTarget());
+		}
+	}
 }
 
 void Heirarchy::DrawEntry(GameObject3D* gameObject3D)
@@ -159,7 +166,7 @@ void Heirarchy::DrawEntry(GameObject3D* gameObject3D)
 	}
 	if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenOverlapped))
 	{
-		if (ImGui::IsKeyPressed(ImGuiKey_MouseRight))
+		if (!input->enabled && ImGui::IsKeyPressed(ImGuiKey_MouseRight))
 		{
 			inspector->SetTarget(gameObject3D);
 			rightClickMenu.Open(gameObject3D, ImGui::GetCursorScreenPos());

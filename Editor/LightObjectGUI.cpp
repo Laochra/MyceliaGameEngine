@@ -20,23 +20,50 @@ void LightObjectGUI::DrawLightObjectGUI(LightObject* lightObject)
 
 	if (ImGui::CollapsingHeader(id, ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::ColorEdit3("Colour", (float*)&lightObject->colour);
-		ImGui::DragFloat("Intensity", &lightObject->intensity, 0.1f, 0.0f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
-		
-		GUI::Spacing(3);
+		bool angleIs0 = lightObject->angle[1] == glm::cos(glm::radians(0.0f));
 
-		ImGui::DragFloat("Range", &lightObject->range, 1.0f, 0.0f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
-		float angleEulerDegrees = glm::degrees(glm::acos(lightObject->angle));
-		if (ImGui::DragFloat("Angle", &angleEulerDegrees, 1.0f, 0.0f, 89.0f, NULL, ImGuiSliderFlags_AlwaysClamp))
+		string preview = angleIs0 ? "Point Light" : "Spotlight";
+		if (ImGui::BeginCombo("Type", preview.c_str()))
 		{
-			lightObject->angle = glm::cos(glm::radians(angleEulerDegrees));
-		}
-		if (ImGui::IsItemHovered())
-		{
-			if (ImGui::BeginTooltip())
+			if (ImGui::Selectable("Point Light", angleIs0))
 			{
-				ImGui::Text("Leave angle as 0 degrees for point light");
-				ImGui::EndTooltip();
+				lightObject->angle = vec2(glm::cos(glm::radians(0.0f)));
+			}
+			if (ImGui::Selectable("Spotlight", !angleIs0))
+			{
+				if (angleIs0) lightObject->angle = vec2(glm::cos(glm::radians(0.0f)), glm::cos(glm::radians(25.0f)));
+			}
+			ImGui::EndCombo();
+		}
+
+		GUI::Spacing(1);
+
+		ImGui::SeparatorText("HDR Colour");
+
+		ImGui::ColorEdit3("Colour", (float*)&lightObject->colour);
+		ImGui::DragFloat("Intensity", &lightObject->intensity, 0.1f, 0.1f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
+		
+		GUI::Spacing(1);
+
+		ImGui::SeparatorText("Range");
+
+		ImGui::DragFloat("Distance", &lightObject->range, 0.1f, 0.1f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
+
+		if (!angleIs0)
+		{
+			GUI::Spacing(1);
+			vec2 angleEulerDegrees = glm::degrees(glm::acos(lightObject->angle));
+			if (ImGui::DragFloat("Inner Angle", &angleEulerDegrees[0], 0.1f, 0.0f, angleEulerDegrees[1], NULL, ImGuiSliderFlags_AlwaysClamp))
+			{
+				lightObject->angle[0] = glm::cos(glm::radians(angleEulerDegrees[0]));
+			}
+			if (ImGui::DragFloat("Outer Angle", &angleEulerDegrees[1], 0.1f, 0.1f, 89.9f, NULL, ImGuiSliderFlags_AlwaysClamp))
+			{
+				lightObject->angle[1] = glm::cos(glm::radians(angleEulerDegrees[1]));
+				if (angleEulerDegrees[0] > angleEulerDegrees[1])
+				{
+					lightObject->angle[0] = glm::cos(glm::radians(angleEulerDegrees[1]));
+				}
 			}
 		}
 

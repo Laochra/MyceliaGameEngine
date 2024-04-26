@@ -168,6 +168,7 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Keybind.cpp" />
     <ClCompile Include="LightingManager.cpp" />
+    <ClCompile Include="LightObject.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="MaterialManager.cpp" />
     <ClCompile Include="Mesh.cpp" />
