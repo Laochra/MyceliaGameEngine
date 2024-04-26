@@ -10,6 +10,9 @@ class LightObject : public GameObject3D, public Light
 	using GameObject3D::GameObject3D;
 
 public:
-	float range = 10.0f;
-	float angle = 1.0f;
+	float range = 1.0f;
+	vec2 angle = { 1.0f, 1.0f };
+
+	virtual void Initialise() override;
+	virtual void OnDestroy() override;
 };

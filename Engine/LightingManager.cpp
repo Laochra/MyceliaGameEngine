@@ -11,12 +11,14 @@ namespace LightingManager
 	{
 		vector<LightObject*> result;
 
-		for (int pl = 0; pl < lightObjects.size(); pl++)
+		for (int l = 0; l < lightObjects.size(); l++)
 		{
+			if (*lightObjects[l] != GameObject::Active) continue; // Skip inactive lights
+
 			// If count hasn't been reached, just add it
-			if (pl < count)
+			if (l < count)
 			{
-				result.push_back(lightObjects[pl]);
+				result.push_back(lightObjects[l]);
 				continue;
 			}
 
@@ -30,9 +32,9 @@ namespace LightingManager
 				}
 			}
 			// Swap with furthest current result if it would mean a closer light
-			if (glm::length2(lightObjects[pl]->GetPosition() - position) < glm::length2(result[furthestIndex]->GetPosition() - position))
+			if (glm::length2(lightObjects[l]->GetPosition() - position) < glm::length2(result[furthestIndex]->GetPosition() - position))
 			{
-				result[furthestIndex] = lightObjects[pl];
+				result[furthestIndex] = lightObjects[l];
 			}
 		}
 

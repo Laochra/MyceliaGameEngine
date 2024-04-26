@@ -37,7 +37,7 @@ void MeshRenderer::Draw()
 	{
 		material->shaderProgram->BindUniform(("LightObjects[" + std::to_string(i) + "].colour").c_str(), lightObjects[i]->colour * lightObjects[i]->intensity);
 		material->shaderProgram->BindUniform(("LightObjects[" + std::to_string(i) + "].position").c_str(), lightObjects[i]->GetGlobalPosition());
-		if (lightObjects[i]->angle == 1.0f) // Check for no rotation. 1.0 is the cosine of 0 degrees
+		if (lightObjects[i]->angle[1] == 1.0f) // Check for no angle. 1.0 is the cosine of 0 degrees
 		{
 			material->shaderProgram->BindUniform(("LightObjects[" + std::to_string(i) + "].direction").c_str(), vec3(0.0f));
 		}

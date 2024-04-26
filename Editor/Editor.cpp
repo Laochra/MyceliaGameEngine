@@ -84,8 +84,7 @@ void Editor::Initialise()
 	LightObject* downlight = GameObject3D::Instantiate<LightObject>(vec3(0.0f, 0.6f, 0.0f), glm::identity<quat>(), vec3(1), vec3(0), bulb);
 	downlight->SetName("Downlight");
 	downlight->LookAt({ 0, 0, 0 });
-	downlight->range = 1.0f; downlight->colour = vec3(255 / 255.0f, 228 / 255.0f, 172 / 255.0f); downlight->intensity = 2.4f; downlight->angle = glm::cos(glm::radians(28.0f));
-	LightingManager::lightObjects.push_back(downlight);
+	downlight->range = 1.0f; downlight->colour = vec3(255 / 255.0f, 228 / 255.0f, 172 / 255.0f); downlight->intensity = 2.4f; downlight->angle[1] = glm::cos(glm::radians(28.0f));
 	
 	GameObject3D* floors = GameObject3D::Instantiate<GameObject3D>(vec3(0.0f, 0.0f, 0.0f), glm::identity<quat>(), vec3(2.00f, 1.00f, 2.00f), vec3(0.0f, -0.0025f, 0.0f));
 	floors->SetName("Floors");
