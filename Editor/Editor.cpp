@@ -77,10 +77,10 @@ void Editor::Initialise()
 
 	MeshRenderer* lightbox = GameObject3D::Instantiate<MeshRenderer>(vec3(0.0f, 1.5f, 0.0f), glm::identity<quat>(), vec3(0.20f, 0.05f, 0.10f), vec3(0.0f, 0.0f, 0.0f));
 	lightbox->SetName("Lightbox");
-	lightbox->SetMesh("ProceduralCube"); lightbox->SetMaterial("Assets\\Materials\\black.mat");
+	lightbox->SetMesh("ProceduralCube"); lightbox->SetMaterial("Assets\\Materials\\Wood Planks.mat");
 	MeshRenderer* bulb = GameObject3D::Instantiate<MeshRenderer>(vec3(0.0f, -0.6f, 0.0f), glm::identity<quat>(), vec3(0.667f, 0.2f, 0.667f), vec3(0.0f, 0.0f, 0.0f), lightbox);
 	bulb->SetName("Bulb");
-	bulb->SetMesh("ProceduralCube"); bulb->SetMaterial("Assets\\Materials\\white.mat");
+	bulb->SetMesh("ProceduralCube"); bulb->SetMaterial("Assets\\Materials\\Bulb.mat");
 	LightObject* downlight = GameObject3D::Instantiate<LightObject>(vec3(0.0f, 0.6f, 0.0f), glm::identity<quat>(), vec3(1), vec3(0), bulb);
 	downlight->SetName("Downlight");
 	downlight->LookAt({ 0, 0, 0 });
