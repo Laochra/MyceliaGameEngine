@@ -22,6 +22,12 @@ void main() // Fragment
 	vec4 remapped = vec4(vec3(1.0) - exp(-hdrColour.xyz * Exposure), hdrColour.w);
 	remapped.xyz = pow(remapped.xyz, vec3(0.45)); // Colour to the power of 1/2.2 to return to non-linear space
 	
+	if (gizmosColour.w >= 1.0)
+	{
+		FragColour = gizmosColour;
+		return;
+	}
+	
 	FragColour = vec4(currentColour.xyz * currentColour.w, currentColour.w) +
 					 vec4(remapped.xyz * remapped.w, remapped.w) +
 					 vec4(gizmosColour.xyz * gizmosColour.w, gizmosColour.w);

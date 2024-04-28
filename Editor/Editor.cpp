@@ -49,7 +49,7 @@ void Editor::Initialise()
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;			// Enable Docking
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;		// Enable Viewports
 
-		ImGui_ImplGlfw_InitForOpenGL(window, /*install_callbacks:*/ true);
+		ImGui_ImplGlfw_InitForOpenGL(window, true);
 		ImGui_ImplOpenGL3_Init();
 
 		ImGui::GetIO().IniFilename = "Engine\\GUIState.ini";
@@ -63,8 +63,10 @@ void Editor::Initialise()
 	((EditorCamera*)mainCamera)->xRotation = -80;
 	((EditorCamera*)mainCamera)->yRotation = -20;
 
-	debug->lines.AddWorldGrid(10, vec3(0.0f), -FLT_MAX);
-
+	debug->lines.AddXYZLines(-FLT_MAX);
+	debug->lines.AddCuboid(vec3(0, 5, 0), vec3(3, 3, 3), Colour(1, 0, 0), -FLT_MAX);
+	debug->lines.AddCuboid(vec3(3, 4, 1.5f), vec3(4, 2, 1), Colour(0, 1, 0), -FLT_MAX);
+	debug->lines.AddCuboid(vec3(-1.5f, 3.5f, 1.5f), vec3(2, 1, 2), Colour(0, 0, 1), -FLT_MAX);
 
 	object = GameObject3D::Instantiate<MeshRenderer>(vec3(0.0f, 0.0f, 0.35f), glm::identity<quat>(), vec3(0.01f, 0.01f, 0.01f), vec3(0.0f, -0.5f, 0.0f));
 	object->SetName("Table");
@@ -434,6 +436,8 @@ void Editor::DrawPostProcess()
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT);
 	
+	vec3 cameraPos(mainCamera->GetPosition());
+	debug->lines.AddGrid(vec3((int)cameraPos.x, 0, (int)cameraPos.z), 50);
 	debug->lines.Draw();
 	
 	/// Screen Post Processing

@@ -53,9 +53,9 @@ void LineDrawer::Draw() noexcept
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vec3), 0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, colourBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vec3) * colours.size(), colours.data(), GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Colour) * colours.size(), colours.data(), GL_DYNAMIC_DRAW);
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vec3), 0);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Colour), 0);
 
 	// Bind Program and View Projection Matrix
 	linesProgram.Bind();
@@ -70,7 +70,7 @@ void LineDrawer::Draw() noexcept
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void LineDrawer::SetColour(vec3 colour) noexcept
+void LineDrawer::SetColour(Colour colour) noexcept
 {
 	currentColour = colour;
 }
@@ -79,7 +79,7 @@ void LineDrawer::Add(vec3 start, vec3 end, float lifetime) noexcept
 {
 	Add(start, end, currentColour, lifetime);
 }
-void LineDrawer::Add(vec3 start, vec3 end, vec3 colour, float lifetime) noexcept
+void LineDrawer::Add(vec3 start, vec3 end, Colour colour, float lifetime) noexcept
 {
 	positions.push_back(start);
 	colours.push_back(colour);
@@ -90,53 +90,75 @@ void LineDrawer::Add(vec3 start, vec3 end, vec3 colour, float lifetime) noexcept
 	lifetimes.push_back(lifetime);
 }
 
-void LineDrawer::AddWorldGrid(float size, vec3 centre, float lifetime) noexcept
+void LineDrawer::AddXYZLines(float lifetime) noexcept
 {
-	AddWorldGrid(size, centre, currentColour, lifetime);
+	Add(vec3(0), vec3(1, 0, 0), Colour(1, 0, 0), lifetime);
+	Add(vec3(0), vec3(0, 1, 0), Colour(0, 1, 0), lifetime);
+	Add(vec3(0), vec3(0, 0, 1), Colour(0, 0, 1), lifetime);
 }
-void LineDrawer::AddWorldGrid(float size, vec3 centre, vec3 colour, float lifetime) noexcept
+
+void LineDrawer::AddGrid(vec3 centre, float size, float lifetime) noexcept
 {
-	Add(vec3(0), vec3(1, 0, 0), vec3(1, 0, 0), lifetime);
-	Add(vec3(0), vec3(0, 1, 0), vec3(0, 1, 0), lifetime);
-	Add(vec3(0), vec3(0, 0, 1), vec3(0, 0, 1), lifetime);
-
+	AddGrid(centre, size, currentColour, lifetime);
+}
+void LineDrawer::AddGrid(vec3 centre, float size, Colour colour, float lifetime) noexcept
+{
 	vec3 a, b;
-	for (int x = centre.x - size; x <= centre.x + size; x++)
+	for (int x = -size; x <= size; x++)
 	{
-		if (x != 0)
-		{
-			a = centre + vec3(x, 0, -size);
-			b = centre + vec3(x, 0, size);
-			Add(a, b, colour, lifetime);
-			continue;
-		}
-		
-		a = centre + vec3(0, 0, -size);
-		b = centre;
-		Add(a, b, colour, lifetime);
-
-		a = centre + vec3(0, 0, 1);
-		b = centre + vec3(0, 0, size);
+		a = centre + vec3(x, 0, -size);
+		b = centre + vec3(x, 0, size);
 		Add(a, b, colour, lifetime);
 	}
-	for (int z = centre.z - size; z <= centre.z + size; z++)
+	for (int z = -size; z <= size; z++)
 	{
-		if (z != 0)
-		{
-			a = centre + vec3(-size, 0, z);
-			b = centre + vec3(size, 0, z);
-			Add(a, b, colour, lifetime);
-			continue;
-		}
-
-		a = centre + vec3(-size, 0, 0);
-		b = centre;
-		Add(a, b, colour, lifetime);
-
-		a = centre + vec3(1, 0, 0);
-		b = centre + vec3(size, 0, 0);
+		a = centre + vec3(-size, 0, z);
+		b = centre + vec3(size, 0, z);
 		Add(a, b, colour, lifetime);
 	}
+}
+
+void LineDrawer::AddCuboid(vec3 centre, vec3 size, float lifetime) noexcept
+{
+	AddCuboid(size, centre, currentColour, lifetime);
+}
+
+void LineDrawer::AddCuboid(vec3 centre, vec3 size, Colour colour, float lifetime) noexcept
+{
+	vec3 halfSize = size * 0.5f;
+	
+	#define PointAAA vec3(centre.x - halfSize.x, centre.y - halfSize.y, centre.z - halfSize.z)
+	#define PointAAB vec3(centre.x - halfSize.x, centre.y - halfSize.y, centre.z + halfSize.z)
+	#define PointABA vec3(centre.x - halfSize.x, centre.y + halfSize.y, centre.z - halfSize.z)
+	#define PointABB vec3(centre.x - halfSize.x, centre.y + halfSize.y, centre.z + halfSize.z)
+	#define PointBAA vec3(centre.x + halfSize.x, centre.y - halfSize.y, centre.z - halfSize.z)
+	#define PointBAB vec3(centre.x + halfSize.x, centre.y - halfSize.y, centre.z + halfSize.z)
+	#define PointBBA vec3(centre.x + halfSize.x, centre.y + halfSize.y, centre.z - halfSize.z)
+	#define PointBBB vec3(centre.x + halfSize.x, centre.y + halfSize.y, centre.z + halfSize.z)
+	
+	Add(PointAAB, PointABB, colour, lifetime);
+	Add(PointABB, PointBBB, colour, lifetime);
+	Add(PointBBB, PointBAB, colour, lifetime);
+	Add(PointBAB, PointAAB, colour, lifetime);
+
+	Add(PointAAA, PointABA, colour, lifetime);
+	Add(PointABA, PointBBA, colour, lifetime);
+	Add(PointBBA, PointBAA, colour, lifetime);
+	Add(PointBAA, PointAAA, colour, lifetime);
+
+	Add(PointAAB, PointAAA, colour, lifetime);
+	Add(PointABB, PointABA, colour, lifetime);
+	Add(PointBBB, PointBBA, colour, lifetime);
+	Add(PointBAB, PointBAA, colour, lifetime);
+
+	#undef PointAAA
+	#undef PointAAB
+	#undef PointABA
+	#undef PointABB
+	#undef PointBAA
+	#undef PointBAB
+	#undef PointBBA
+	#undef PointBBB
 }
 
 void LineDrawer::Initialise() noexcept
