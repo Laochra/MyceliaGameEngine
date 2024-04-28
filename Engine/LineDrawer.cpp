@@ -6,6 +6,8 @@
 
 #include "Camera.h"
 
+#include "Debug.h"
+
 LineDrawer::~LineDrawer() noexcept
 {
 	if (initialised)
@@ -159,6 +161,20 @@ void LineDrawer::AddCuboid(vec3 centre, vec3 size, Colour colour, float lifetime
 	#undef PointBAB
 	#undef PointBBA
 	#undef PointBBB
+}
+
+void LineDrawer::AddCone(vec3 point, vec3 direction, float range, float baseRadius, int baseSides, float lifetime) noexcept
+{
+	AddCone(point, direction, range, baseRadius, baseSides, currentColour, lifetime);
+}
+
+void LineDrawer::AddCone(vec3 point, vec3 direction, float range, float baseRadius, int baseSides, Colour colour, float lifetime) noexcept
+{
+	vec3 baseCentre = point + (direction * range);
+	Add(point, baseCentre, colour);
+	//TODO: Finish AddCone()
+
+	debug->Log("AddCone() is WIP", Debug::Warning);
 }
 
 void LineDrawer::Initialise() noexcept

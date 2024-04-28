@@ -438,6 +438,7 @@ void Editor::DrawPostProcess()
 	
 	vec3 cameraPos(mainCamera->GetPosition());
 	debug->lines.AddGrid(vec3((int)cameraPos.x, 0, (int)cameraPos.z), 50);
+	debug->lines.AddCone(vec3(0, 0, 0), glm::normalize(vec3(0, 1, 1)), 10.0f, 2.0f, 6, Colour(0.75f, 0.25f, 1.0f));
 	debug->lines.Draw();
 	
 	/// Screen Post Processing
