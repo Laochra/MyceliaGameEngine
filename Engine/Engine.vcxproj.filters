@@ -11,9 +11,6 @@
     <ClCompile Include="Keybind.cpp">
       <Filter>Input</Filter>
     </ClCompile>
-    <ClCompile Include="..\External\aie\Gizmos.cpp">
-      <Filter>3rd Party\aie</Filter>
-    </ClCompile>
     <ClCompile Include="..\External\glad\glad.c">
       <Filter>3rd Party\glad</Filter>
     </ClCompile>
@@ -68,20 +65,20 @@
     <ClCompile Include="MeshManager.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Debug.cpp">
-      <Filter>Utility</Filter>
-    </ClCompile>
     <ClCompile Include="LightObject.cpp">
       <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug.cpp">
+      <Filter>Utility\Debugging</Filter>
+    </ClCompile>
+    <ClCompile Include="LineDrawer.cpp">
+      <Filter>Utility\Debugging</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Input.h">
       <Filter>Input</Filter>
-    </ClInclude>
-    <ClInclude Include="..\External\aie\Gizmos.h">
-      <Filter>3rd Party\aie</Filter>
     </ClInclude>
     <ClInclude Include="..\External\glad\glad.h">
       <Filter>3rd Party\glad</Filter>
@@ -182,14 +179,17 @@
     <ClInclude Include="MeshManager.h">
       <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Debug.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
     <ClInclude Include="LightObject.h">
       <Filter>GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="Light.h">
       <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug.h">
+      <Filter>Utility\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="LineDrawer.h">
+      <Filter>Utility\Debugging</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -198,9 +198,6 @@
     </Filter>
     <Filter Include="3rd Party">
       <UniqueIdentifier>{4a0a98d1-620f-49a5-beca-e64854117ff2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="3rd Party\aie">
-      <UniqueIdentifier>{b64ec9b8-b105-4f8b-b2fa-33e8b2d45b16}</UniqueIdentifier>
     </Filter>
     <Filter Include="3rd Party\glad">
       <UniqueIdentifier>{e5c04dce-6479-49ab-9cf1-0c8e24197e9a}</UniqueIdentifier>
@@ -222,6 +219,9 @@
     </Filter>
     <Filter Include="GameObjects">
       <UniqueIdentifier>{fbfba128-c378-4846-8e98-d81e8ca08805}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility\Debugging">
+      <UniqueIdentifier>{19e4841b-cb28-4577-a362-7a96252a24d3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

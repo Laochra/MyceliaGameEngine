@@ -12,9 +12,13 @@ typedef std::initializer_list<string> StringParams;
 
 #include "GeneralMacros.h"
 
+#include "LineDrawer.h"
+
 class Debug
 {
 public:
+	LineDrawer lines;
+
 	Debug() noexcept;
 	~Debug() noexcept;
 	uncopyable(Debug)
@@ -26,6 +30,7 @@ public:
 		Error,
 		Subtle,
 	)
+	#pragma region LogID enum
 	mappedenumi(LogID, unsigned int, public,
 		Undefined,	// Default ID
 
@@ -65,6 +70,7 @@ public:
 		ERR901,		// OpenGL Error
 		ERR902,		// GLFW Error
 	)
+	#pragma endregion
 
 	struct DebugLog
 	{

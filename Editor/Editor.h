@@ -6,8 +6,6 @@
 
 #include "InputEditor.h"
 
-#include "Gizmos.h"
-
 #include "Texture.h"
 
 #include "Shader.h"

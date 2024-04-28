@@ -63,7 +63,8 @@ void Editor::Initialise()
 	((EditorCamera*)mainCamera)->xRotation = -80;
 	((EditorCamera*)mainCamera)->yRotation = -20;
 
-	Gizmos::create(100000, 10000, 0, 0);
+	debug->lines.AddWorldGrid(10, vec3(0.0f), -FLT_MAX);
+
 
 	object = GameObject3D::Instantiate<MeshRenderer>(vec3(0.0f, 0.0f, 0.35f), glm::identity<quat>(), vec3(0.01f, 0.01f, 0.01f), vec3(0.0f, -0.5f, 0.0f));
 	object->SetName("Table");
@@ -433,19 +434,7 @@ void Editor::DrawPostProcess()
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT);
 	
-	Gizmos::clear();
-	Gizmos::addTransform(mat4(1));
-	
-	vec4 white(1);
-	vec4 black(0, 0, 0, 1);
-	
-	for (int i = 0; i < 21; i++)
-	{
-		Gizmos::addLine(vec3(-10 + i, 0, 10), vec3(-10 + i, 0, -10), i == 10 ? white : black);
-		Gizmos::addLine(vec3(-10, 0, -10 + i), vec3(10, 0, -10 + i), i == 10 ? white : black);
-	}
-	Gizmos::draw(mainCamera->GetPVMatrix());
-
+	debug->lines.Draw();
 	
 	/// Screen Post Processing
 	glDisable(GL_CULL_FACE);
@@ -590,8 +579,6 @@ void Editor::OnClose()
 
 	del(gameObjectManager);
 	del(inspector);
-
-	Gizmos::destroy();
 
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
