@@ -170,11 +170,43 @@ void LineDrawer::AddCone(vec3 point, vec3 direction, float range, float baseRadi
 
 void LineDrawer::AddCone(vec3 point, vec3 direction, float range, float baseRadius, int baseSides, Colour colour, float lifetime) noexcept
 {
-	vec3 baseCentre = point + (direction * range);
-	Add(point, baseCentre, colour);
-	//TODO: Finish AddCone()
+	const vec3 baseCentre = point + (direction * range);
+	Add(point, baseCentre, colour, lifetime);
 
-	debug->Log("AddCone() is WIP", Debug::Warning);
+	const float phi = 2.0f * glm::pi<float>() / baseSides;
+	const float theta = std::atan(baseRadius / range);
+
+	// TODO: Wierd issue with X being flipped. Setting the up vector to -1 seems to be fixing it but not sure why?
+	const mat4 coneRotation = glm::lookAt(point, baseCentre, { 0, -1, 0 });
+
+	vec3 previousPoint, firstPoint;
+	mat4 newRotation;
+	vec3 newDirection, newPoint;
+	for (int i = 0; i < baseSides; i++)
+	{
+		newRotation = glm::rotate(coneRotation, phi * i, { 0, 0, 1 });
+		newRotation = glm::rotate(newRotation, theta, { 1, 0, 0 });
+
+		newDirection = glm::normalize(-newRotation[2]);
+		newPoint = newDirection * sqrt(range * range + baseRadius * baseRadius);
+
+		Add(point, newPoint, colour, lifetime);
+		//Add(baseCentre, newPoint, colour, lifetime);
+
+		if (i > 0)
+		{
+			Add(previousPoint, newPoint, colour, lifetime);
+			if (i == baseSides - 1)
+			{
+				Add(newPoint, firstPoint, colour, lifetime);
+			}
+		}
+		else
+		{
+			firstPoint = newPoint;
+		}
+		previousPoint = newPoint;
+	}
 }
 
 void LineDrawer::Initialise() noexcept

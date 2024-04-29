@@ -67,6 +67,7 @@ void Editor::Initialise()
 	debug->lines.AddCuboid(vec3(0, 5, 0), vec3(3, 3, 3), Colour(1, 0, 0), -FLT_MAX);
 	debug->lines.AddCuboid(vec3(3, 4, 1.5f), vec3(4, 2, 1), Colour(0, 1, 0), -FLT_MAX);
 	debug->lines.AddCuboid(vec3(-1.5f, 3.5f, 1.5f), vec3(2, 1, 2), Colour(0, 0, 1), -FLT_MAX);
+	debug->lines.AddCone(vec3(0, 0, 0), glm::normalize(vec3(1, 0, 1)), 10.0f, 2.0f, 8, Colour(0.75f, 0.25f, 1.0f), -FLT_MAX);
 
 	object = GameObject3D::Instantiate<MeshRenderer>(vec3(0.0f, 0.0f, 0.35f), glm::identity<quat>(), vec3(0.01f, 0.01f, 0.01f), vec3(0.0f, -0.5f, 0.0f));
 	object->SetName("Table");
@@ -438,7 +439,7 @@ void Editor::DrawPostProcess()
 	
 	vec3 cameraPos(mainCamera->GetPosition());
 	debug->lines.AddGrid(vec3((int)cameraPos.x, 0, (int)cameraPos.z), 50);
-	debug->lines.AddCone(vec3(0, 0, 0), glm::normalize(vec3(0, 1, 1)), 10.0f, 2.0f, 6, Colour(0.75f, 0.25f, 1.0f));
+	
 	debug->lines.Draw();
 	
 	/// Screen Post Processing
