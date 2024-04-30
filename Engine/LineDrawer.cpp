@@ -171,13 +171,11 @@ void LineDrawer::AddCone(vec3 point, vec3 direction, float range, float baseRadi
 void LineDrawer::AddCone(vec3 point, vec3 direction, float range, float baseRadius, int baseSides, Colour colour, float lifetime) noexcept
 {
 	const vec3 baseCentre = point + (direction * range);
-	Add(point, baseCentre, colour, lifetime);
 
 	const float phi = 2.0f * glm::pi<float>() / baseSides;
 	const float theta = std::atan(baseRadius / range);
 
-	// TODO: Wierd issue with X being flipped. Setting the up vector to -1 seems to be fixing it but not sure why?
-	const mat4 coneRotation = glm::lookAt(point, baseCentre, { 0, -1, 0 });
+	const mat4 coneRotation = glm::inverse(glm::lookAt(point, baseCentre, { 0, 1, 0 }));
 
 	vec3 previousPoint, firstPoint;
 	mat4 newRotation;
@@ -188,10 +186,9 @@ void LineDrawer::AddCone(vec3 point, vec3 direction, float range, float baseRadi
 		newRotation = glm::rotate(newRotation, theta, { 1, 0, 0 });
 
 		newDirection = glm::normalize(-newRotation[2]);
-		newPoint = newDirection * sqrt(range * range + baseRadius * baseRadius);
+		newPoint = point + newDirection * sqrt(range * range + baseRadius * baseRadius);
 
 		Add(point, newPoint, colour, lifetime);
-		//Add(baseCentre, newPoint, colour, lifetime);
 
 		if (i > 0)
 		{

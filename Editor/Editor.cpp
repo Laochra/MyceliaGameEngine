@@ -64,10 +64,9 @@ void Editor::Initialise()
 	((EditorCamera*)mainCamera)->yRotation = -20;
 
 	debug->lines.AddXYZLines(-FLT_MAX);
-	debug->lines.AddCuboid(vec3(0, 5, 0), vec3(3, 3, 3), Colour(1, 0, 0), -FLT_MAX);
-	debug->lines.AddCuboid(vec3(3, 4, 1.5f), vec3(4, 2, 1), Colour(0, 1, 0), -FLT_MAX);
-	debug->lines.AddCuboid(vec3(-1.5f, 3.5f, 1.5f), vec3(2, 1, 2), Colour(0, 0, 1), -FLT_MAX);
-	debug->lines.AddCone(vec3(0, 0, 0), glm::normalize(vec3(1, 0, 1)), 10.0f, 2.0f, 8, Colour(0.75f, 0.25f, 1.0f), -FLT_MAX);
+	//debug->lines.AddCuboid(vec3(0, 5, 0), vec3(3, 3, 3), Colour(1, 0, 0), -FLT_MAX);
+	//debug->lines.AddCuboid(vec3(3, 4, 1.5f), vec3(4, 2, 1), Colour(0, 1, 0), -FLT_MAX);
+	//debug->lines.AddCuboid(vec3(-1.5f, 3.5f, 1.5f), vec3(2, 1, 2), Colour(0, 0, 1), -FLT_MAX);
 
 	object = GameObject3D::Instantiate<MeshRenderer>(vec3(0.0f, 0.0f, 0.35f), glm::identity<quat>(), vec3(0.01f, 0.01f, 0.01f), vec3(0.0f, -0.5f, 0.0f));
 	object->SetName("Table");
@@ -89,7 +88,7 @@ void Editor::Initialise()
 	downlight->SetName("Downlight");
 	downlight->LookAt({ 0, 0, 0 });
 	downlight->range = 1.0f; downlight->colour = vec3(255 / 255.0f, 228 / 255.0f, 172 / 255.0f); downlight->intensity = 2.4f; downlight->angle[1] = glm::cos(glm::radians(28.0f));
-	
+
 	GameObject3D* floors = GameObject3D::Instantiate<GameObject3D>(vec3(0.0f, 0.0f, 0.0f), glm::identity<quat>(), vec3(2.00f, 1.00f, 2.00f), vec3(0.0f, -0.0025f, 0.0f));
 	floors->SetName("Floors");
 	for (int x = -1; x <= 1; x++)
