@@ -68,6 +68,8 @@ void Editor::Initialise()
 	//debug->lines.AddCuboid(vec3(3, 4, 1.5f), vec3(4, 2, 1), Colour(0, 1, 0), -FLT_MAX);
 	//debug->lines.AddCuboid(vec3(-1.5f, 3.5f, 1.5f), vec3(2, 1, 2), Colour(0, 0, 1), -FLT_MAX);
 
+	//debug->lines.AddSphere(vec3(0, 0, 0), 1.0f, 8, -FLT_MAX);
+
 	object = GameObject3D::Instantiate<MeshRenderer>(vec3(0.0f, 0.0f, 0.35f), glm::identity<quat>(), vec3(0.01f, 0.01f, 0.01f), vec3(0.0f, -0.5f, 0.0f));
 	object->SetName("Table");
 	object->SetMesh("Assets\\Meshes\\Table.fbx"); object->SetMaterial("Assets\\Materials\\Table.mat");

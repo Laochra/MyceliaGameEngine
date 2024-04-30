@@ -163,6 +163,69 @@ void LineDrawer::AddCuboid(vec3 centre, vec3 size, Colour colour, float lifetime
 	#undef PointBBB
 }
 
+void LineDrawer::AddSphere(vec3 centre, float radius, int ringSides, float lifetime) noexcept
+{
+	AddSphere(centre, radius, ringSides, currentColour, lifetime);
+}
+
+void LineDrawer::AddSphere(vec3 centre, float radius, int ringSides, Colour colour, float lifetime) noexcept
+{
+	const float phi = 2.0f * glm::pi<float>() / ringSides;
+
+	vec3 previousPoint, firstPoint;
+	mat4 newRotation;
+	vec3 newDirection, newPoint;
+
+	vec3 currentAxis = vec3(1, 0, 0);
+
+	for (int i = 0; i < ringSides; i++)
+	{
+		newRotation = glm::inverse(glm::rotate((float)i * phi, vec3(1, 0, 0)));
+		newDirection = (vec3)glm::normalize(newRotation[2]);
+		newPoint = centre + newDirection * radius;
+
+		if (i > 0)
+		{
+			Add(previousPoint, newPoint, colour, lifetime);
+			if (i == ringSides - 1) { Add(newPoint, firstPoint, colour, lifetime); }
+		}
+		else { firstPoint = newPoint; }
+		previousPoint = newPoint;
+	}
+
+	for (int i = 0; i < ringSides; i++)
+	{
+		newRotation = glm::inverse(glm::rotate((float)i * phi, vec3(0, 1, 0)));
+		newDirection = (vec3)glm::normalize(newRotation[2]);
+		newPoint = centre + newDirection * radius;
+
+		if (i > 0)
+		{
+			Add(previousPoint, newPoint, colour, lifetime);
+			if (i == ringSides - 1) { Add(newPoint, firstPoint, colour, lifetime); }
+		}
+		else { firstPoint = newPoint; }
+		previousPoint = newPoint;
+	}
+
+
+	// TODO: This doesn't do expected thing. I want it to go around the Z axis
+	for (int i = 0; i < ringSides; i++)
+	{
+		newRotation = glm::inverse(glm::rotate((float)i * phi, vec3(0, 0, 1)));
+		newDirection = (vec3)glm::normalize(newRotation[2]);
+		newPoint = centre + newDirection * radius;
+
+		if (i > 0)
+		{
+			Add(previousPoint, newPoint, colour, lifetime);
+			if (i == ringSides - 1) { Add(newPoint, firstPoint, colour, lifetime); }
+		}
+		else { firstPoint = newPoint; }
+		previousPoint = newPoint;
+	}
+}
+
 void LineDrawer::AddCone(vec3 point, vec3 direction, float range, float baseRadius, int baseSides, float lifetime) noexcept
 {
 	AddCone(point, direction, range, baseRadius, baseSides, currentColour, lifetime);
