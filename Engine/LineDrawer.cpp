@@ -178,51 +178,25 @@ void LineDrawer::AddSphere(vec3 centre, float radius, int ringSides, Colour colo
 
 	vec3 currentAxis = vec3(1, 0, 0);
 
-	for (int i = 0; i < ringSides; i++)
+	for (int axisNum = 0; axisNum < 3; axisNum++)
 	{
-		newRotation = glm::inverse(glm::rotate((float)i * phi, vec3(1, 0, 0)));
-		newDirection = (vec3)glm::normalize(newRotation[2]);
-		newPoint = centre + newDirection * radius;
-
-		if (i > 0)
+		for (int i = 0; i < ringSides; i++)
 		{
-			Add(previousPoint, newPoint, colour, lifetime);
-			if (i == ringSides - 1) { Add(newPoint, firstPoint, colour, lifetime); }
+			newRotation = glm::rotate((float)i * phi, vec3(1, 0, 0));
+			newRotation = glm::rotate(newRotation, glm::radians(90.0f), currentAxis);
+			newDirection = (vec3)glm::normalize(glm::inverse(newRotation)[2]);
+			newPoint = centre + newDirection * radius;
+
+			if (i > 0)
+			{
+				Add(previousPoint, newPoint, colour, lifetime);
+				if (i == ringSides - 1) { Add(newPoint, firstPoint, colour, lifetime); }
+			}
+			else { firstPoint = newPoint; }
+			previousPoint = newPoint;
 		}
-		else { firstPoint = newPoint; }
-		previousPoint = newPoint;
-	}
 
-	for (int i = 0; i < ringSides; i++)
-	{
-		newRotation = glm::inverse(glm::rotate((float)i * phi, vec3(0, 1, 0)));
-		newDirection = (vec3)glm::normalize(newRotation[2]);
-		newPoint = centre + newDirection * radius;
-
-		if (i > 0)
-		{
-			Add(previousPoint, newPoint, colour, lifetime);
-			if (i == ringSides - 1) { Add(newPoint, firstPoint, colour, lifetime); }
-		}
-		else { firstPoint = newPoint; }
-		previousPoint = newPoint;
-	}
-
-
-	// TODO: This doesn't do expected thing. I want it to go around the Z axis
-	for (int i = 0; i < ringSides; i++)
-	{
-		newRotation = glm::inverse(glm::rotate((float)i * phi, vec3(0, 0, 1)));
-		newDirection = (vec3)glm::normalize(newRotation[2]);
-		newPoint = centre + newDirection * radius;
-
-		if (i > 0)
-		{
-			Add(previousPoint, newPoint, colour, lifetime);
-			if (i == ringSides - 1) { Add(newPoint, firstPoint, colour, lifetime); }
-		}
-		else { firstPoint = newPoint; }
-		previousPoint = newPoint;
+		currentAxis = vec3(currentAxis.z, currentAxis.x, currentAxis.y);
 	}
 }
 

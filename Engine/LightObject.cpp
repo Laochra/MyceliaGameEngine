@@ -10,19 +10,19 @@ void LightObject::Draw()
 
 	if (angle[1] == 1.0f) // Check for no angle. 1.0 is the cosine of 0 degrees
 	{
-		// debug->lines.AddSphere(GetGlobalPosition(), range, debugColour);
+		debug->lines.AddSphere(GetGlobalPosition(), range, 32, debugColour);
 	}
 	else
 	{
 		vec3 direction = (vec3)glm::normalize(glm::inverse(GetMatrix())[2]);
 
 		float outerBaseRadius = range * tan(acos(angle[1]));
-		debug->lines.AddCone(GetGlobalPosition(), direction, range, outerBaseRadius, 8, debugColour);
+		debug->lines.AddCone(GetGlobalPosition(), direction, range, outerBaseRadius, 32, debugColour);
 
-		if (angle[0] != 1.0f && angle[0] != angle[1])
-		{
+		if (angle[0] != 1.0f && angle[0] != angle[1]) // Check for no or same angle. 1.0 is the cosine of 0 degrees
+		{ 
 			float innerBaseRadius = range * tan(acos(angle[0]));
-			debug->lines.AddCone(GetGlobalPosition(), direction, range, innerBaseRadius, 8, debugColour);
+			debug->lines.AddCone(GetGlobalPosition(), direction, range, innerBaseRadius, 32, debugColour);
 		}
 	}
 }
