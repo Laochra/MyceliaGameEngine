@@ -191,6 +191,10 @@
     <ClInclude Include="LineDrawer.h">
       <Filter>Utility\Debugging</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleSystem.h" />
+    <ClInclude Include="ComputeShader.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">

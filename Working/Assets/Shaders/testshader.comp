@@ -1,0 +1,25 @@
+#version 460
+
+#define LOCAL_WIDTH 10
+#define LOCAL_HEIGHT 10
+
+layout(local_size_x = LOCAL_WIDTH, local_size_y = LOCAL_HEIGHT, local_size_z = 1) in;
+layout(rgba32f, binding = 0) uniform image2D imgOutput;
+
+layout(location = 0) uniform float Time;
+
+void main() // Compute
+{
+    vec4 outputColour = vec4(0.0, 0.0, 0.0, 1.0);
+	 ivec2 texCoord = ivec2(gl_GlobalInvocationID.xy);
+	 
+	 float speed = 1;
+	 float width = gl_NumWorkGroups.x * LOCAL_WIDTH;
+	 float height = gl_NumWorkGroups.y * LOCAL_HEIGHT;
+	 
+	 
+	 outputColour.x = abs(float(texCoord.x * (mod(Time * speed, 2.0) - 1.0)))/(width);
+	 outputColour.y = abs(float(texCoord.y * (mod(Time * speed, 2.0) - 1.0)))/(height);
+	 
+	 imageStore(imgOutput, texCoord, outputColour);
+}

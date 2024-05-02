@@ -25,6 +25,8 @@
 
 #include "GeneralMacros.h"
 
+#include "ComputeShader.h"
+
 void Editor::Initialise()
 {
 	glfwSetWindowTitle(window, "Editor");
@@ -374,6 +376,41 @@ void Editor::Update()
 
 		} ImGui::End();
 	}
+
+	ImGui::Begin("Image Viewer");
+	{
+		const unsigned int TEXTURE_WIDTH = 150, TEXTURE_HEIGHT = 150;
+		const unsigned int LOCAL_WIDTH = 10, LOCAL_HEIGHT = 10;
+
+		static ComputeShader* computeShader;
+		static unsigned int texture;
+		if (computeShader == nullptr)
+		{
+			computeShader = new ComputeShader("Assets\\Shaders\\testshader.comp");
+
+			glGenTextures(1, &texture);
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, texture);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, TEXTURE_WIDTH, TEXTURE_HEIGHT, 0, GL_RGBA, GL_FLOAT, NULL);
+
+			glBindImageTexture(0, texture, 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA32F);
+		}
+
+		computeShader->Bind();
+		computeShader->SetUniform("Time", Time::time);
+		glDispatchCompute(TEXTURE_WIDTH / LOCAL_WIDTH, TEXTURE_HEIGHT / LOCAL_HEIGHT, 1);
+
+		glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture);
+
+		ImGui::Image((void*)texture, ImVec2(TEXTURE_WIDTH, TEXTURE_HEIGHT), ImVec2(0, 1), ImVec2(1, 0));
+	} ImGui::End();
 }
 
 void Editor::Draw()
