@@ -589,7 +589,7 @@ void MaterialGUI::DrawField(MaterialInput& field)
 				}
 				value.push_back('\0');
 
-				field.SetRaw(value.data(), value.size()); dirty = true;
+				field.SetRaw(value.data(), (int)value.size()); dirty = true;
 			}
 
 			break;

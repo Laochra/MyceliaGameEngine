@@ -296,9 +296,9 @@ void Editor::Update()
 
 		ImGui::Begin("Scene", &sceneViewOpen);
 		{
-			screenWidth = ImGui::GetWindowWidth();
+			screenWidth = (int)ImGui::GetWindowWidth();
 			float titleBarHeight = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2;
-			screenHeight = ImGui::GetWindowHeight() - titleBarHeight;
+			screenHeight = (int)(ImGui::GetWindowHeight() - titleBarHeight);
 			
 			if (ImGui::IsWindowHovered())
 			{
@@ -324,8 +324,8 @@ void Editor::Update()
 				input->enabled = false;
 			}
 
-
-			ImGui::Image((void*)sceneViewColourBufferOutput, ImVec2(screenWidth, screenHeight), ImVec2(0, 1), ImVec2(1, 0));
+			uintptr_t image = (uintptr_t)sceneViewColourBufferOutput; // Casting to a uintptr_t is required to stop a warning with converting 32bit uint to 64bit void*. ImGui::Image works regardless.
+			ImGui::Image((void*)image, ImVec2((float)screenWidth, (float)screenHeight), ImVec2(0, 1), ImVec2(1, 0));
 
 		} ImGui::End();
 		ImGui::GetStyle().WindowPadding = oldPadding;
@@ -451,8 +451,8 @@ void Editor::DrawPostProcess()
 	// Bloom Passes
 	const int downResFactor = 4;
 	glViewport(0, 0, screenWidth / downResFactor, screenHeight / downResFactor);
-	uint blurFrameBuffers[2];
-	uint blurColourBuffers[2];
+	uint blurFrameBuffers[2]{};
+	uint blurColourBuffers[2]{};
 	glGenFramebuffers(2, &blurFrameBuffers[0]);
 	glGenTextures(2, &blurColourBuffers[0]);
 	
@@ -478,7 +478,7 @@ void Editor::DrawPostProcess()
 	int passes = 4;
 	blurProgram.Bind();
 	blurProgram.BindUniform("BrightTexture", 0);
-	for (uint p = 0; p < passes; p++)
+	for (uint p = 0; p < (uint)passes; p++)
 	{
 		bool b = p % 2;
 		glActiveTexture(GL_TEXTURE0);

@@ -40,7 +40,8 @@ void LineDrawer::Draw() noexcept
 		}
 
 		lifetimes[i] -= Time::delta;
-		lifetimes[i + 1] -= Time::delta;
+		int nextI = i + 1;
+		lifetimes[nextI] -= Time::delta;
 		i += 2;
 		continue;
 	}
@@ -106,13 +107,13 @@ void LineDrawer::AddGrid(vec3 centre, float size, float lifetime) noexcept
 void LineDrawer::AddGrid(vec3 centre, float size, Colour colour, float lifetime) noexcept
 {
 	vec3 a, b;
-	for (int x = -size; x <= size; x++)
+	for (int x = (int)-size; x <= (int)size; x++)
 	{
 		a = centre + vec3(x, 0, -size);
 		b = centre + vec3(x, 0, size);
 		Add(a, b, colour, lifetime);
 	}
-	for (int z = -size; z <= size; z++)
+	for (int z = (int)-size; z <= (int)size; z++)
 	{
 		a = centre + vec3(-size, 0, z);
 		b = centre + vec3(size, 0, z);
@@ -172,9 +173,9 @@ void LineDrawer::AddSphere(vec3 centre, float radius, int ringSides, Colour colo
 {
 	const float phi = 2.0f * glm::pi<float>() / ringSides;
 
-	vec3 previousPoint, firstPoint;
-	mat4 newRotation;
-	vec3 newDirection, newPoint;
+	vec3 previousPoint{}, firstPoint{};
+	mat4 newRotation{};
+	vec3 newDirection{}, newPoint{};
 
 	vec3 currentAxis = vec3(1, 0, 0);
 
@@ -214,9 +215,9 @@ void LineDrawer::AddCone(vec3 point, vec3 direction, float range, float baseRadi
 
 	const mat4 coneRotation = glm::inverse(glm::lookAt(point, baseCentre, { 0, 1, 0 }));
 
-	vec3 previousPoint, firstPoint;
-	mat4 newRotation;
-	vec3 newDirection, newPoint;
+	vec3 previousPoint{}, firstPoint{};
+	mat4 newRotation{};
+	vec3 newDirection{}, newPoint{};
 	for (int i = 0; i < baseSides; i++)
 	{
 		newRotation = glm::rotate(coneRotation, phi * i, { 0, 0, 1 });
