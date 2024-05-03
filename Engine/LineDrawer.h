@@ -39,7 +39,7 @@ public:
 	void Add(vec3 start, vec3 end, Colour colour, float lifetime = FLT_MIN) noexcept;
 	
 	/// <summary>Adds 3 lines displaying XYZ directions coloured RGB.</summary> <param name="lifetime">= How many seconds the transform lines will stay. FLT_MIN for single frame or -FLT_MAX for indefinite.</param>
-	void AddXYZLines(float lifetime) noexcept;
+	void AddXYZLines(float lifetime = FLT_MIN) noexcept;
 	
 	/// <summary>Adds a grid with XYZ coloured RGB. <para>Uses current default colour for grid. See overload to specify a colour.</para></summary> <param name="size">= How many units to span from the specified centre.</param> <param name="lifetime">= How many seconds the line will stay. FLT_MIN for single frame or -FLT_MAX for indefinite.</param>
 	void AddGrid(vec3 centre, float size, float lifetime = FLT_MIN) noexcept;

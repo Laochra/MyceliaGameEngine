@@ -1,14 +1,14 @@
 #pragma once
 
-#ifndef del(pointer)
+#ifndef del
 #define del(pointer) if (pointer != nullptr) { delete pointer; pointer = nullptr; }
 #endif
 
-#ifndef uncopyable(classname)
+#ifndef uncopyable
 #define uncopyable(classname) classname(const classname&) = delete; classname& operator=(const classname&) = delete;
 #endif
 
-#ifndef immovable(classname)
+#ifndef immovable
 #define immovable(classname) classname(classname&&) = delete; classname& operator=(classname&&) = delete;
 #endif
 

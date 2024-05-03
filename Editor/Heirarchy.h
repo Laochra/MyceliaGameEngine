@@ -87,7 +87,7 @@ void Heirarchy::Draw()
 		}
 
 		// Drag Drop Target AFTER Last GameObject3D
-		for (int i = gameObjectManager->gameObjects.size() - 1; i >= 0; i--)
+		for (int i = (int)gameObjectManager->gameObjects.size() - 1; i >= 0; i--)
 		{
 			if (dynamic_cast<GameObject3D*>(gameObjectManager->gameObjects[i]) != nullptr)
 			{
