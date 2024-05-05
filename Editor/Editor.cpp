@@ -371,46 +371,54 @@ void Editor::Update()
 	{
 		ImGui::Begin("Post Processing", &postProcessingOpen);
 		{
-			ImGui::DragFloat("HDR Exposure", &exposure, 0.1f, 0.1f, 1000.0f);
-
-
+			ImGui::DragFloat("HDR Exposure", &exposure, 0.01f, 0.01f, 1000.0f);
 		} ImGui::End();
 	}
 
-	ImGui::Begin("Image Viewer");
 	{
-		const unsigned int TEXTURE_WIDTH = 150, TEXTURE_HEIGHT = 150;
-		const unsigned int LOCAL_WIDTH = 10, LOCAL_HEIGHT = 10;
-
-		static ComputeShader* computeShader;
-		static unsigned int texture;
-		if (computeShader == nullptr)
+		ImVec2 oldPadding = ImGui::GetStyle().WindowPadding;
+		ImGui::GetStyle().WindowPadding = ImVec2(0.0f, 0.0f);
+		ImGui::Begin("Image Viewer");
 		{
-			computeShader = new ComputeShader("Assets\\Shaders\\testshader.comp");
+			float titleBarHeight = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2;
+			const float textureWidth = ImGui::GetWindowWidth();
+			const float textureHeight = ImGui::GetWindowHeight() - titleBarHeight;
+			const uint localWidth = 10;
+			const uint localHeight = 10;
 
-			glGenTextures(1, &texture);
+			static ComputeShader* computeShader;
+			static uint texture;
+			if (computeShader == nullptr)
+			{
+				computeShader = new ComputeShader("Assets\\Shaders\\testshader.comp");
+				glGenTextures(1, &texture);
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, texture);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			}
+
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, texture);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, TEXTURE_WIDTH, TEXTURE_HEIGHT, 0, GL_RGBA, GL_FLOAT, NULL);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, textureWidth, textureHeight, 0, GL_RGBA, GL_FLOAT, NULL);
 
 			glBindImageTexture(0, texture, 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA32F);
-		}
 
-		computeShader->Bind();
-		computeShader->SetUniform("Time", Time::time);
-		glDispatchCompute(TEXTURE_WIDTH / LOCAL_WIDTH, TEXTURE_HEIGHT / LOCAL_HEIGHT, 1);
+			computeShader->Bind();
+			computeShader->SetUniform("Time", Time::time);
+			glDispatchCompute(uint(textureWidth / localWidth + (uint)textureWidth % localWidth), uint(textureHeight / localHeight + (uint)textureHeight % localHeight), 1);
 
-		glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+			glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture);
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, texture);
 
-		ImGui::Image((void*)texture, ImVec2(TEXTURE_WIDTH, TEXTURE_HEIGHT), ImVec2(0, 1), ImVec2(1, 0));
-	} ImGui::End();
+			ImGui::Image((void*)texture, ImVec2(textureWidth, textureHeight), ImVec2(0, 1), ImVec2(1, 0));
+		} ImGui::End();
+		ImGui::GetStyle().WindowPadding = oldPadding;
+	}
 }
 
 void Editor::Draw()
