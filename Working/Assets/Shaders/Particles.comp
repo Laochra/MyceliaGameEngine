@@ -1,0 +1,26 @@
+#version 460
+
+#define LocalSize 1
+
+layout(local_size_x = LocalSize, local_size_y = 1, local_size_z = 1) in;
+
+struct Particle
+{
+	vec4 Position;
+	vec4 Velocity;
+	vec4 Colour;
+	bool Active;
+};
+
+layout(std430, binding = 0) buffer Particles
+{
+	Particle particles[LocalSize];
+};
+
+void main() // Compute
+{
+	uint id = gl_GlobalInvocationID.x;
+	if (!particles[id].Active) return;
+	
+	particles[id].Position += particles[id].Velocity;
+}

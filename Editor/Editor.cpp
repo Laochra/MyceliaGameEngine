@@ -26,6 +26,7 @@
 #include "GeneralMacros.h"
 
 #include "ComputeShader.h"
+#include "ParticleSystem.h"
 
 void Editor::Initialise()
 {
@@ -163,6 +164,41 @@ void Editor::Initialise()
 	fxaaProgram.LoadShader(VertexStage, "Engine\\DefaultAssets\\FullScreenQuad.vert");
 	fxaaProgram.LoadShader(FragmentStage, "Engine\\DefaultAssets\\FXAA.frag");
 	fxaaProgram.Link();
+
+	// Testing Particle System
+	ComputeShader particleComputeShader("Assets\\Shaders\\Particles.comp");
+	ParticleSystem particleSystem(100000);
+
+	particleComputeShader.Bind();
+	particleSystem.Dispatch();
+	vector<Particle> particles = particleSystem.GetParticles();
+	ConsoleGUI::logs.clear();
+	debug->Log({"Particle Count: ", std::to_string(particles.size())});
+	for (int i = 0; i < particles.size(); i++)
+	{
+		//debug->Log({ "Particle ", std::to_string(i), (particles[i].status ? " (Active)" : " (Inactive)"), ":" });
+		//
+		//debug->Log({ "\tPosition ",
+		//	std::to_string(particles[i].position.x), ", ",
+		//	std::to_string(particles[i].position.y), ", ",
+		//	std::to_string(particles[i].position.z) });
+		//debug->Log({ "\tVelocity ",
+		//	std::to_string(particles[i].velocity.x), ", ",
+		//	std::to_string(particles[i].velocity.y), ", ",
+		//	std::to_string(particles[i].velocity.z) });
+		//debug->Log({ "\tColour ",
+		//	std::to_string(particles[i].colour.x), ", ",
+		//	std::to_string(particles[i].colour.y), ", ",
+		//	std::to_string(particles[i].colour.z) });
+
+		if (particles[i].status == Particle::Inactive) continue;
+
+		float velocityMagnitude = glm::length(particles[i].velocity);
+		vec4 normalisedVelocity = velocityMagnitude != 0.0f ? particles[i].velocity / velocityMagnitude : vec4(0.0f);
+
+		//debug->lines.AddSphere(particles[i].position, 0.05, 16, *(Colour*)&normalisedVelocity, -FLT_MAX);
+		debug->lines.Add(particles[i].position, particles[i].position + normalisedVelocity, *(Colour*)&normalisedVelocity, -FLT_MAX);
+	}
 }
 
 void Editor::OnFrameStart()
@@ -407,7 +443,7 @@ void Editor::Update()
 			glBindImageTexture(0, texture, 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA32F);
 
 			computeShader->Bind();
-			computeShader->SetUniform("Time", Time::time);
+			computeShader->BindUniform("Time", Time::time);
 			glDispatchCompute(uint(textureWidth / localWidth + (uint)textureWidth % localWidth), uint(textureHeight / localHeight + (uint)textureHeight % localHeight), 1);
 
 			glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);

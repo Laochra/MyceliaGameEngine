@@ -41,7 +41,7 @@ public:
 		if (!success)
 		{
 			int errorLogLength = 0;
-			glGetShaderiv(program, GL_INFO_LOG_LENGTH, &errorLogLength);
+			glGetShaderiv(compute, GL_INFO_LOG_LENGTH, &errorLogLength);
 			char* errorLog = new char[errorLogLength];
 			glGetShaderInfoLog(compute, errorLogLength, NULL, errorLog);
 			debug->Log({ errorLog, locationinfo }, Debug::Error, Debug::ERR901);
@@ -72,44 +72,44 @@ public:
 		glDeleteProgram(program);
 	}
 
-	void Bind()
+	void Bind() const
 	{
 		glUseProgram(program);
 	}
 
-	void SetUniform(const std::string& name, bool value) const
+	void BindUniform(const std::string& name, bool value) const
 	{
 		glUniform1i(glGetUniformLocation(program, name.c_str()), (int)value);
 	}
-	void SetUniform(const std::string& name, int value) const
+	void BindUniform(const std::string& name, int value) const
 	{
 		glUniform1i(glGetUniformLocation(program, name.c_str()), value);
 	}
-	void SetUniform(const std::string& name, float value) const
+	void BindUniform(const std::string& name, float value) const
 	{
 		glUniform1f(glGetUniformLocation(program, name.c_str()), value);
 	}
-	void SetUniform(const std::string& name, const glm::vec2& value) const
+	void BindUniform(const std::string& name, const glm::vec2& value) const
 	{
 		glUniform2fv(glGetUniformLocation(program, name.c_str()), 1, &value[0]);
 	}
-	void SetUniform(const std::string& name, const glm::vec3& value) const
+	void BindUniform(const std::string& name, const glm::vec3& value) const
 	{
 		glUniform3fv(glGetUniformLocation(program, name.c_str()), 1, &value[0]);
 	}
-	void SetUniform(const std::string& name, const glm::vec4& value) const
+	void BindUniform(const std::string& name, const glm::vec4& value) const
 	{
 		glUniform4fv(glGetUniformLocation(program, name.c_str()), 1, &value[0]);
 	}
-	void SetUniform(const std::string& name, const glm::mat2& mat) const
+	void BindUniform(const std::string& name, const glm::mat2& mat) const
 	{
 		glUniformMatrix2fv(glGetUniformLocation(program, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 	}
-	void SetUniform(const std::string& name, const glm::mat3& mat) const
+	void BindUniform(const std::string& name, const glm::mat3& mat) const
 	{
 		glUniformMatrix3fv(glGetUniformLocation(program, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 	}
-	void SetUniform(const std::string& name, const glm::mat4& mat) const
+	void BindUniform(const std::string& name, const glm::mat4& mat) const
 	{
 		glUniformMatrix4fv(glGetUniformLocation(program, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 	}
