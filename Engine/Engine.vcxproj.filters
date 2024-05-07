@@ -74,6 +74,9 @@
     <ClCompile Include="LineDrawer.cpp">
       <Filter>Utility\Debugging</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleEmitter.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -191,9 +194,14 @@
     <ClInclude Include="LineDrawer.h">
       <Filter>Utility\Debugging</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="ComputeShader.h">
       <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitter.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

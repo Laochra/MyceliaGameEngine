@@ -25,8 +25,7 @@
 
 #include "GeneralMacros.h"
 
-#include "ComputeShader.h"
-#include "ParticleSystem.h"
+#include "ParticleEmitter.h"
 
 void Editor::Initialise()
 {
@@ -166,39 +165,16 @@ void Editor::Initialise()
 	fxaaProgram.Link();
 
 	// Testing Particle System
-	ComputeShader particleComputeShader("Assets\\Shaders\\Particles.comp");
-	ParticleSystem particleSystem(100000);
+	ShaderProgram* particleShader = new ShaderProgram();
+	particleShader->LoadShader(VertexStage, "Assets\\Shaders\\Particles.vert");
+	particleShader->LoadShader(FragmentStage, "Assets\\Shaders\\Particles.frag");
 
-	particleComputeShader.Bind();
-	particleSystem.Dispatch();
-	vector<Particle> particles = particleSystem.GetParticles();
-	ConsoleGUI::logs.clear();
-	debug->Log({"Particle Count: ", std::to_string(particles.size())});
-	for (int i = 0; i < particles.size(); i++)
-	{
-		//debug->Log({ "Particle ", std::to_string(i), (particles[i].status ? " (Active)" : " (Inactive)"), ":" });
-		//
-		//debug->Log({ "\tPosition ",
-		//	std::to_string(particles[i].position.x), ", ",
-		//	std::to_string(particles[i].position.y), ", ",
-		//	std::to_string(particles[i].position.z) });
-		//debug->Log({ "\tVelocity ",
-		//	std::to_string(particles[i].velocity.x), ", ",
-		//	std::to_string(particles[i].velocity.y), ", ",
-		//	std::to_string(particles[i].velocity.z) });
-		//debug->Log({ "\tColour ",
-		//	std::to_string(particles[i].colour.x), ", ",
-		//	std::to_string(particles[i].colour.y), ", ",
-		//	std::to_string(particles[i].colour.z) });
+	ParticleEmitter* particleEmitter =
+		&(*GameObject3D::Instantiate<ParticleEmitter>({ 0, 0, 0 }))
+		.SetShaderProgram(particleShader)
+		.SetComputeShader(new ComputeShader("Assets\\Shaders\\Particles.comp"))
+		.SetParticleSystem(new ParticleSystem(1000));
 
-		if (particles[i].status == Particle::Inactive) continue;
-
-		float velocityMagnitude = glm::length(particles[i].velocity);
-		vec4 normalisedVelocity = velocityMagnitude != 0.0f ? particles[i].velocity / velocityMagnitude : vec4(0.0f);
-
-		//debug->lines.AddSphere(particles[i].position, 0.05, 16, *(Colour*)&normalisedVelocity, -FLT_MAX);
-		debug->lines.Add(particles[i].position, particles[i].position + normalisedVelocity, *(Colour*)&normalisedVelocity, -FLT_MAX);
-	}
 }
 
 void Editor::OnFrameStart()
