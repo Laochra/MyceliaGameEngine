@@ -168,12 +168,13 @@ void Editor::Initialise()
 	ShaderProgram* particleShader = new ShaderProgram();
 	particleShader->LoadShader(VertexStage, "Assets\\Shaders\\Particles.vert");
 	particleShader->LoadShader(FragmentStage, "Assets\\Shaders\\Particles.frag");
+	particleShader->Link();
 
 	ParticleEmitter* particleEmitter =
 		&(*GameObject3D::Instantiate<ParticleEmitter>({ 0, 0, 0 }))
 		.SetShaderProgram(particleShader)
 		.SetComputeShader(new ComputeShader("Assets\\Shaders\\Particles.comp"))
-		.SetParticleSystem(new ParticleSystem(1000));
+		.SetParticleSystem(new ParticleSystem(1000000));
 
 }
 

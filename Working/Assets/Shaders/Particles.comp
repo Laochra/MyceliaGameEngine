@@ -1,23 +1,28 @@
 #version 460
 
-#define LocalSize 1
+#define LocalSize 64
 
 layout(local_size_x = LocalSize, local_size_y = 1, local_size_z = 1) in;
 
-layout(std430, binding = 0) buffer Particles
+layout(std430, binding = 0) buffer PositionBuffer
 {
 	vec4 Positions[LocalSize];
-	vec4 Velocities[LocalSize];
-	vec4 Colours[LocalSize];
-	bool ActiveStatuses[LocalSize];
 };
+layout(std430, binding = 1) buffer VelocityBuffer
+{
+	vec4 Velocities[LocalSize];
+};
+//layout(std430, binding = 2) buffer ActiveStatusBuffer
+//{
+//	bool ActiveStatuses[LocalSize];
+//};
 
 uniform float Delta;
 
 void main() // Compute
 {
 	uint id = gl_GlobalInvocationID.x;
-	if (!ActiveStatuses[id]) return;
+	//if (!ActiveStatuses[id]) return;
 	
-	Positions[id] += Velocities[id] * Delta;
+	Positions[id] = vec4(Positions[id].xyz + Velocities[id].xyz * Delta, 1);
 }

@@ -23,7 +23,10 @@ public:
 	ParticleEmitter& SetComputeShader(ComputeShader* computeShaderInit);
 
 private:
-	ShaderProgram* shaderProgram;
+	// Simulation
 	ParticleSystem* particleSystem;
 	ComputeShader* computeShader;
+	// Rendering
+	ShaderProgram* shaderProgram;
+	uint vao;
 };

@@ -7,12 +7,14 @@ using std::vector;
 
 #include <cstdlib>
 
-const int particlesWorkGroupSize = 1;
+const int particlesWorkGroupSize = 64;
 
 typedef unsigned int uint;
 
 class ParticleSystem
 {
+	friend class ParticleEmitter;
+
 public:
 	ParticleSystem(uint maxParticlesInit = 100) : maxParticles(maxParticlesInit)
 	{
@@ -23,6 +25,10 @@ public:
 		glBufferData(GL_SHADER_STORAGE_BUFFER, maxParticles * sizeof(vec4), NULL, GL_DYNAMIC_DRAW);
 
 		vec4* positions = (vec4*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, maxParticles * sizeof(vec4), bufMask);
+		for (uint i = 0; i < maxParticles; i++)
+		{
+			positions[i] = vec4(vec3(0.0f), 1.0f);
+		}
 		glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
 
@@ -33,7 +39,7 @@ public:
 		vec4* velocities = (vec4*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, maxParticles * sizeof(vec4), bufMask);
 		for (uint i = 0; i < maxParticles; i++)
 		{
-			velocities[i] = vec4(((std::rand() % 100) - 50) * 0.01f, ((std::rand() % 100) - 50) * 0.01f, ((std::rand() % 100) - 50) * 0.01f, 1.0f);
+			velocities[i] = vec4(((std::rand() % 100) - 50) * 0.01f, ((std::rand() % 100) - 50) * 0.01f, ((std::rand() % 100) - 50) * 0.01f, 0.0f);
 		}
 		glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
@@ -45,21 +51,24 @@ public:
 		vec4* colours = (vec4*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, maxParticles * sizeof(vec4), bufMask);
 		for (uint i = 0; i < maxParticles; i++)
 		{
-			colours[i] = vec4(1.0f);
+			vec3 colour;
+			if (vec3(velocities[i]) == vec3(0, 0, 0)) colour = vec3(0, 0, 0);
+			else colour = glm::normalize(vec3(velocities[i]));
+			colours[i] = vec4(vec3(abs(colour.x), abs(colour.y), abs(colour.z)), 1.0f);
 		}
 		glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
 
-		glGenBuffers(1, &activeStatusBuffer);
-		glBindBuffer(GL_SHADER_STORAGE_BUFFER, activeStatusBuffer);
-		glBufferData(GL_SHADER_STORAGE_BUFFER, maxParticles * sizeof(vec4), NULL, GL_DYNAMIC_DRAW);
-
-		bool* activeStatuses = (bool*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, maxParticles * sizeof(bool), bufMask);
-		for (uint i = 0; i < maxParticles; i++)
-		{
-			activeStatuses[i] = true;
-		}
-		glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+		//glGenBuffers(1, &activeStatusBuffer);
+		//glBindBuffer(GL_SHADER_STORAGE_BUFFER, activeStatusBuffer);
+		//glBufferData(GL_SHADER_STORAGE_BUFFER, maxParticles * sizeof(vec4), NULL, GL_DYNAMIC_DRAW);
+		//
+		//bool* activeStatuses = (bool*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, maxParticles * sizeof(bool), bufMask);
+		//for (uint i = 0; i < maxParticles; i++)
+		//{
+		//	activeStatuses[i] = true;
+		//}
+		//glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
 		glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 	}
@@ -77,12 +86,11 @@ public:
 	{
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, positionBuffer);
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, velocityBuffer);
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, colourBuffer);
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, activeStatusBuffer);
+		//glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, activeStatusBuffer);
 
 		float workGroups = ceil(maxParticles / (float)particlesWorkGroupSize);
 		glDispatchCompute(workGroups, 1, 1); // Y and Z are 1 because this is just a 1 dimensional buffer
-		glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+		
 	}
 
 	const uint GetMaxParticles() const { return maxParticles; }
