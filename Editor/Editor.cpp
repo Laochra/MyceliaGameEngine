@@ -174,7 +174,7 @@ void Editor::Initialise()
 		&(*GameObject3D::Instantiate<ParticleEmitter>({ 0, 0, 0 }))
 		.SetShaderProgram(particleShader)
 		.SetComputeShader(new ComputeShader("Assets\\Shaders\\Particles.comp"))
-		.SetParticleSystem(new ParticleSystem(1000000));
+		.SetParticleSystem(new ParticleSystem(100000));
 
 }
 

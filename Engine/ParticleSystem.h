@@ -27,7 +27,9 @@ public:
 		vec4* positions = (vec4*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, maxParticles * sizeof(vec4), bufMask);
 		for (uint i = 0; i < maxParticles; i++)
 		{
-			positions[i] = vec4(vec3(0.0f), 1.0f);
+			// Active status is packed into the 4th component of position since it will otherwise always be 1.0
+			float active = 1.0f;
+			positions[i] = vec4(vec3(0.0f), active);
 		}
 		glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
@@ -39,6 +41,7 @@ public:
 		vec4* velocities = (vec4*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, maxParticles * sizeof(vec4), bufMask);
 		for (uint i = 0; i < maxParticles; i++)
 		{
+			// There is room to pack something into velocity's 4th component (compute only)
 			velocities[i] = vec4(((std::rand() % 100) - 50) * 0.01f, ((std::rand() % 100) - 50) * 0.01f, ((std::rand() % 100) - 50) * 0.01f, 0.0f);
 		}
 		glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
@@ -59,17 +62,6 @@ public:
 		glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
 
-		//glGenBuffers(1, &activeStatusBuffer);
-		//glBindBuffer(GL_SHADER_STORAGE_BUFFER, activeStatusBuffer);
-		//glBufferData(GL_SHADER_STORAGE_BUFFER, maxParticles * sizeof(vec4), NULL, GL_DYNAMIC_DRAW);
-		//
-		//bool* activeStatuses = (bool*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, maxParticles * sizeof(bool), bufMask);
-		//for (uint i = 0; i < maxParticles; i++)
-		//{
-		//	activeStatuses[i] = true;
-		//}
-		//glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-
 		glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 	}
 
@@ -78,7 +70,6 @@ public:
 		glDeleteBuffers(1, &positionBuffer);
 		glDeleteBuffers(1, &velocityBuffer);
 		glDeleteBuffers(1, &colourBuffer);
-		glDeleteBuffers(1, &activeStatusBuffer);
 	}
 
 	// Bind ShaderProgram and Uniforms First
@@ -86,7 +77,6 @@ public:
 	{
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, positionBuffer);
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, velocityBuffer);
-		//glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, activeStatusBuffer);
 
 		float workGroups = ceil(maxParticles / (float)particlesWorkGroupSize);
 		glDispatchCompute(workGroups, 1, 1); // Y and Z are 1 because this is just a 1 dimensional buffer
@@ -98,14 +88,6 @@ public:
 	const uint GetPositionBuffer() const { return positionBuffer; }
 	const uint GetVelocityBuffer() const { return velocityBuffer; }
 	const uint GetColourBuffer() const { return colourBuffer; }
-	const uint GetActiveStatusBuffer() const { return activeStatusBuffer; }
-
-	//vector<Particle> GetParticles() const
-	//{
-	//	vector<Particle> result(maxParticles);
-	//	glGetNamedBufferSubData(ssbo, 0, maxParticles * sizeof(Particle), result.data());
-	//	return result;
-	//}
 
 private:
 	uint maxParticles;
@@ -116,6 +98,4 @@ private:
 	uint velocityBuffer;
 	// vec4 buffer
 	uint colourBuffer;
-	// bool buffer
-	uint activeStatusBuffer;
 };

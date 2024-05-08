@@ -5,9 +5,7 @@
 #include "Debug.h";
 
 void ParticleEmitter::Draw()
-{
-	debug->Log({ "Attempting to draw particles"});
-	
+{	
 	// Bind Vertex Array Object
 	glBindVertexArray(vao);
 
