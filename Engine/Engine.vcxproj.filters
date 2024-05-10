@@ -77,6 +77,9 @@
     <ClCompile Include="ParticleEmitter.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />

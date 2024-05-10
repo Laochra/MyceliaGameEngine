@@ -176,6 +176,7 @@
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="OrbitalCamera.cpp" />
     <ClCompile Include="ParticleEmitter.cpp" />
+    <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="Texture.cpp" />

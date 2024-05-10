@@ -174,7 +174,7 @@ void Editor::Initialise()
 		&(*GameObject3D::Instantiate<ParticleEmitter>({ 0, 0, 0 }))
 		.SetShaderProgram(particleShader)
 		.SetComputeShader(new ComputeShader("Assets\\Shaders\\Particles.comp"))
-		.SetParticleSystem(new ParticleSystem(100000));
+		.SetParticleSystem(new ParticleSystem());
 
 }
 
@@ -388,50 +388,21 @@ void Editor::Update()
 		} ImGui::End();
 	}
 
-	{
-		ImVec2 oldPadding = ImGui::GetStyle().WindowPadding;
-		ImGui::GetStyle().WindowPadding = ImVec2(0.0f, 0.0f);
-		ImGui::Begin("Image Viewer");
-		{
-			float titleBarHeight = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2;
-			const float textureWidth = ImGui::GetWindowWidth();
-			const float textureHeight = ImGui::GetWindowHeight() - titleBarHeight;
-			const uint localWidth = 10;
-			const uint localHeight = 10;
-
-			static ComputeShader* computeShader;
-			static uint texture;
-			if (computeShader == nullptr)
-			{
-				computeShader = new ComputeShader("Assets\\Shaders\\testshader.comp");
-				glGenTextures(1, &texture);
-				glActiveTexture(GL_TEXTURE0);
-				glBindTexture(GL_TEXTURE_2D, texture);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			}
-
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, texture);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, textureWidth, textureHeight, 0, GL_RGBA, GL_FLOAT, NULL);
-
-			glBindImageTexture(0, texture, 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA32F);
-
-			computeShader->Bind();
-			computeShader->BindUniform("Time", Time::time);
-			glDispatchCompute(uint(textureWidth / localWidth + (uint)textureWidth % localWidth), uint(textureHeight / localHeight + (uint)textureHeight % localHeight), 1);
-
-			glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
-
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, texture);
-
-			ImGui::Image((void*)texture, ImVec2(textureWidth, textureHeight), ImVec2(0, 1), ImVec2(1, 0));
-		} ImGui::End();
-		ImGui::GetStyle().WindowPadding = oldPadding;
-	}
+	//{
+	//	ImVec2 oldPadding = ImGui::GetStyle().WindowPadding;
+	//	ImGui::GetStyle().WindowPadding = ImVec2(0.0f, 0.0f);
+	//	ImGui::Begin("Image Viewer");
+	//	{
+	//		//float titleBarHeight = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2;
+	//		//const float textureWidth = ImGui::GetWindowWidth();
+	//		//const float textureHeight = ImGui::GetWindowHeight() - titleBarHeight;
+	//		//const uint localWidth = 10;
+	//		//const uint localHeight = 10;
+	//
+	//		//ImGui::Image((void*)0, ImVec2(textureWidth, textureHeight), ImVec2(0, 1), ImVec2(1, 0));
+	//	} ImGui::End();
+	//	ImGui::GetStyle().WindowPadding = oldPadding;
+	//}
 }
 
 void Editor::Draw()

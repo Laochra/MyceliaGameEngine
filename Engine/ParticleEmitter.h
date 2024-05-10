@@ -18,9 +18,16 @@ public:
 	virtual void Initialise() override;
 	virtual void OnDestroy() override;
 	
-	ParticleEmitter& SetShaderProgram(ShaderProgram* shaderProgramInit);
-	ParticleEmitter& SetParticleSystem(ParticleSystem* particleSystemInit);
-	ParticleEmitter& SetComputeShader(ComputeShader* computeShaderInit);
+	const ShaderProgram& GetShaderProgram() const noexcept;
+	ParticleSystem* GetParticleSystem() noexcept;
+	const ComputeShader& GetComputeShader() const noexcept;
+
+	ParticleEmitter& SetShaderProgram(ShaderProgram* shaderProgramInit) noexcept;
+	ParticleEmitter& SetParticleSystem(ParticleSystem* particleSystemInit) noexcept;
+	ParticleEmitter& SetComputeShader(ComputeShader* computeShaderInit) noexcept;
+
+	const ParticleSystem::State GetEmissionState() const noexcept;
+	ParticleEmitter& SetEmissionState(ParticleSystem::State newState) noexcept;
 
 private:
 	// Simulation

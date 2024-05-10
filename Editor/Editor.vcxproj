@@ -182,6 +182,7 @@
     <ClCompile Include="LightObjectGUI.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MeshRendererGUI.cpp" />
+    <ClCompile Include="ParticleEmitterGUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\External\imgui\imconfig.h" />
@@ -211,6 +212,7 @@
     <ClInclude Include="MaterialGUI.h" />
     <ClInclude Include="Inspector.h" />
     <ClInclude Include="MeshRendererGUI.h" />
+    <ClInclude Include="ParticleEmitterGUI.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ShaderProgramGUI.h" />
     <ClInclude Include="Table.h" />

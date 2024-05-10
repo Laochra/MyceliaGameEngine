@@ -4,7 +4,7 @@
 layout (location = 0) in vec4 Position;
 layout (location = 1) in vec4 VertColour;
 
-uniform mat4 PVMatrix;
+uniform mat4 ProjectionViewModel;
 
 out vec4 Colour;
 
@@ -17,7 +17,7 @@ void main() // Vertex
 		return;
 	}
 
-	gl_Position = PVMatrix * vec4(Position.xyz, 1.0);
+	gl_Position = ProjectionViewModel * vec4(Position.xyz, 1.0);
 	
 	Colour = VertColour;
 }
