@@ -54,6 +54,20 @@ void GUI::Spacing(uint numberOfSpacings)
 		ImGui::ItemSize(ImVec2(0, 0));
 	}
 }
+void GUI::HSpacing(uint numberOfSpacings)
+{
+	ImGuiWindow* window = ImGui::GetCurrentWindow();
+	if (window->SkipItems) return;
+
+	for (uint i = 0; i < numberOfSpacings; i++)
+	{
+		ImGui::ItemSize(ImVec2(0, 0));
+		if (i + 1 < numberOfSpacings)
+		{
+			ImGui::SameLine();
+		}
+	}
+}
 
 void GUI::SaveStyle()
 {

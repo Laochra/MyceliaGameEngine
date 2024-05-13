@@ -21,7 +21,8 @@ namespace GUI
 	extern string GenerateID(const char* name, GameObject* gameObject);
 	extern string InvisibleName(const char* uniqueName);
 
-	extern void Spacing(uint numberOfSpacings);
+	extern void Spacing(uint numberOfSpacings = 1);
+	extern void HSpacing(uint numberOfSpacings = 1);
 
 	extern string currentStyle;
 	extern map<string, string> styleMap;
