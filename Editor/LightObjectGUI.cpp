@@ -15,8 +15,6 @@ void LightObjectGUI::DrawLightObjectGUI(LightObject* lightObject)
 
 	GameObject3DGUI::DrawGameObject3DGUI(lightObject);
 
-	lightObject->Draw();
-
 	std::string idStr = GUI::GenerateID("LightObject", lightObject);
 	const char* id = idStr.c_str();
 

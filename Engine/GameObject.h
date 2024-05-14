@@ -52,6 +52,7 @@ public:
 	virtual void FixedUpdate();
 	virtual void Update();
 	virtual void Draw();
+	virtual void DrawDebug();
 	virtual void Initialise();
 	virtual void OnDestroy();
 

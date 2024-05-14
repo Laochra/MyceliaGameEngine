@@ -80,6 +80,11 @@ void GameObject::Draw()
 
 }
 
+void GameObject::DrawDebug()
+{
+
+}
+
 void GameObject::Initialise()
 {
 	Updater::UpdateAdd(this);

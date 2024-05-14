@@ -17,13 +17,27 @@ class ParticleSystem
 
 public:
 	enum State { Stopped, Playing, Paused, };
-
+	enum class Shape { Sphere, Cone, Box, Quad, Circle };
 	struct Properties
 	{
-		uint maxCount = 10000;
-		uint startingCount = 10000;
+		// System Settings
+		bool autoplay;
+		float duration;
+		float delay;
+		uint maxCount = 100000;
+		float gravity;
 
-		bool autoPlay;
+		// Particle Settings
+		float sizeRange[2] = { 1.0f, 1.0f };
+		float lifetimeRange[2] = { 1.0f, 1.0f };
+		float speedRange[2] = { 1.0f, 1.0f };
+		float colour[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+
+		// Emission Settings
+		bool emitOverTime;
+		uint particlesPerSecond;
+		Shape shape;
+		float shapeData[3];
 	};
 	Properties properties;
 

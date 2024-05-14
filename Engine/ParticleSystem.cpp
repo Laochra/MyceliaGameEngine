@@ -1,10 +1,12 @@
 #include "ParticleSystem.h"
 
+#include "RandomGen.h"
+
 ParticleSystem::ParticleSystem(Properties propertiesInit) noexcept
 {
 	properties = propertiesInit;
 
-	if (properties.autoPlay)
+	if (properties.autoplay)
 	{
 		state = Playing;
 		Start();
@@ -29,8 +31,39 @@ void ParticleSystem::Start() noexcept
 	for (uint i = 0; i < properties.maxCount; i++)
 	{
 		// Active status is packed into the 4th component of position since it will otherwise always be 1.0
-		float active = i < properties.startingCount;
-		positions[i] = vec4(vec3(0.0f), active);
+		float active = true;
+		vec3 pos(1.0f);
+		switch (properties.shape)
+		{
+		case Shape::Sphere:
+		{
+			// set to random point in sphere
+			break;
+		}
+		case Shape::Cone:
+		{
+			// set to random point in cone
+			break;
+		}
+		case Shape::Box:
+		{
+			pos.x = Random::Float(-properties.shapeData[0] * 0.5f, properties.shapeData[0] * 0.5f);
+			pos.y = Random::Float(-properties.shapeData[1] * 0.5f, properties.shapeData[1] * 0.5f);
+			pos.z = Random::Float(-properties.shapeData[2] * 0.5f, properties.shapeData[2] * 0.5f);
+			break;
+		}
+		case Shape::Quad:
+		{
+			// set to random point on an oriented quad
+			break;
+		}
+		case Shape::Circle:
+		{
+			// set to random point on an oriented circle
+			break;
+		}
+		}
+		positions[i] = vec4(pos, active);
 	}
 	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
@@ -43,7 +76,7 @@ void ParticleSystem::Start() noexcept
 	for (uint i = 0; i < properties.maxCount; i++)
 	{
 		// There is room to pack something into velocity's 4th component (compute only)
-		velocities[i] = vec4(((std::rand() % 100) - 50) * 0.01f, ((std::rand() % 100) - 50) * 0.01f, ((std::rand() % 100) - 50) * 0.01f, 0.0f);
+		velocities[i] = vec4(glm::normalize(vec3(positions[i])) * Random::Float(properties.speedRange[0], properties.speedRange[1]), 0.0f);
 	}
 	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
@@ -55,10 +88,7 @@ void ParticleSystem::Start() noexcept
 	vec4* colours = (vec4*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, properties.maxCount * sizeof(vec4), bufMask);
 	for (uint i = 0; i < properties.maxCount; i++)
 	{
-		vec3 colour;
-		if (vec3(velocities[i]) == vec3(0, 0, 0)) colour = vec3(0, 0, 0);
-		else colour = glm::normalize(vec3(velocities[i]));
-		colours[i] = vec4(vec3(abs(colour.x), abs(colour.y), abs(colour.z)), 1.0f);
+		colours[i] = *(vec4*)&properties.colour;
 	}
 	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 

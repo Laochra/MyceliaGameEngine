@@ -4,7 +4,7 @@
 
 #include "Debug.h"
 
-void LightObject::Draw()
+void LightObject::DrawDebug()
 {
 	Colour debugColour = Colour(colour.x, colour.y, colour.z);
 

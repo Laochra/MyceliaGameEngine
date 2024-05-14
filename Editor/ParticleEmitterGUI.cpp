@@ -57,72 +57,100 @@ void ParticleEmitterGUI::DrawParticleEmitterGUI(ParticleEmitter* particleEmitter
 		ImGui::Indent();
 		{
 			ParticleSystem::Properties& properties = particleEmitter->GetParticleSystem()->properties;
+			typedef ParticleSystem::Shape Shape;
 
 			if (ImGui::CollapsingHeader("System Settings", ImGuiTreeNodeFlags_DefaultOpen))
 			{
-				static bool autoplay = false;
-				ImGui::Checkbox("Autoplay?", &autoplay);
+				ImGui::Checkbox("Autoplay?", &properties.autoplay);
 				ImGui::PushItemWidth(ImGui::CalcItemWidth() / 3);
 
-				static float duration = 0.0f;
-				ImGui::DragFloat("Duration", &duration, 0.1f, 0.0f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
-				ImGui::SameLine();
-				GUI::HSpacing(3);
-				ImGui::SameLine();
-				static float delay = 0.0f;
-				ImGui::DragFloat("Delay", &delay, 0.01f, -FLT_MAX, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
+				ImGui::BeginDisabled();
+				ImGui::DragFloat("Duration", &properties.duration, 0.1f, 0.0f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
+				ImGui::DragFloat("Delay", &properties.delay, 0.01f, -FLT_MAX, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
+				ImGui::EndDisabled();
 
 				GUI::Spacing(3);
 
-				if (ImGui::DragInt("Max Count", (int*)&properties.maxCount, 1, 0, 10'000'000, NULL, ImGuiSliderFlags_AlwaysClamp))
-				{
-					properties.startingCount = properties.maxCount;
-				}
+				ImGui::DragInt("Max Count", (int*)&properties.maxCount, 1, 0, 10'000'000, NULL, ImGuiSliderFlags_AlwaysClamp);
 
 				GUI::Spacing(3);
 
-				static float gravity = 0.0f;
-				ImGui::DragFloat("Gravity", &gravity, 0.01f, -FLT_MAX, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
+				ImGui::BeginDisabled();
+				ImGui::DragFloat("Gravity", &properties.gravity, 0.01f, -FLT_MAX, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
 				ImGui::PopItemWidth();
+				ImGui::EndDisabled();
 			}
 			if (ImGui::CollapsingHeader("Particle Settings", ImGuiTreeNodeFlags_DefaultOpen))
 			{
 				ImGui::PushItemWidth(ImGui::CalcItemWidth() / 3);
-				static float size = 0.0f;
-				ImGui::DragFloat("Size", &size, 0.1f, 0.0f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
-				static float lifetime = 0.0f;
-				ImGui::DragFloat("Lifetime", &lifetime, 0.1f, 0.0f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
+				ImGui::BeginDisabled();
+				if (ImGui::DragFloat("##Size Min", &properties.sizeRange[0], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
+				{
+					if (properties.sizeRange[0] > properties.sizeRange[1]) properties.sizeRange[1] = properties.sizeRange[0];
+				}
+				ImGui::SameLine();
+				if (ImGui::DragFloat("##Size Max", &properties.sizeRange[1], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
+				{
+					if (properties.sizeRange[1] < properties.sizeRange[0]) properties.sizeRange[0] = properties.sizeRange[1];
+				}
+				ImGui::SameLine();
+				ImGui::Text("Size Range");
+				ImGui::EndDisabled();
+
+				if (ImGui::DragFloat("##Speed Min", &properties.speedRange[0], 0.01f, 0.0f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
+				{
+					if (properties.speedRange[0] > properties.speedRange[1]) properties.speedRange[1] = properties.speedRange[0];
+				}
+				ImGui::SameLine();
+				if (ImGui::DragFloat("##Speed Max", &properties.speedRange[1], 0.01f, 0.0f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
+				{
+					if (properties.speedRange[1] < properties.speedRange[0]) properties.speedRange[0] = properties.speedRange[1];
+				}
+				ImGui::SameLine();
+				ImGui::Text("Speed Range");
+
+				ImGui::BeginDisabled();
+				if (ImGui::DragFloat("##Lifetime Min", &properties.lifetimeRange[0], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
+				{
+					if (properties.lifetimeRange[0] > properties.lifetimeRange[1]) properties.lifetimeRange[1] = properties.lifetimeRange[0];
+				}
+				ImGui::SameLine();
+				if (ImGui::DragFloat("##Lifetime Max", &properties.lifetimeRange[1], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
+				{
+					if (properties.lifetimeRange[1] < properties.lifetimeRange[0]) properties.lifetimeRange[0] = properties.lifetimeRange[1];
+				}
+				ImGui::SameLine();
+				ImGui::Text("Lifetime Range");
 				ImGui::PopItemWidth();
-				static float colour[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-				ImGui::ColorEdit4("Colour", &colour[0], ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview);
+				ImGui::EndDisabled();
+				ImGui::ColorEdit4("Colour", &properties.colour[0], ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview);
 			}
 			if (ImGui::CollapsingHeader("Emission Settings", ImGuiTreeNodeFlags_DefaultOpen))
 			{
-				static bool emitOverTime = false;
-				ImGui::Checkbox("Emit over time?", &emitOverTime);
-				if (emitOverTime)
+				ImGui::BeginDisabled();
+				ImGui::Checkbox("Emit over time?", &properties.emitOverTime);
+				if (properties.emitOverTime)
 				{
 					ImGui::PushItemWidth(ImGui::CalcItemWidth() / 4);
 					ImGui::SameLine();
 					GUI::HSpacing(3);
 					ImGui::SameLine();
-					static int particlesPerSecond = 1;
-					ImGui::DragInt("Particles Per Second", &particlesPerSecond, 1, 1, INT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
+					ImGui::DragInt("Particles Per Second", (int*)&properties.particlesPerSecond, 1, 1, INT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
 					ImGui::PopItemWidth();
 				}
 
+				ImGui::EndDisabled();
+
 				GUI::Spacing(3);
 
-				enum class Shape { Sphere, Cone, Box, Quad, Circle };
 				const char* shapeNames[] { "Sphere", "Cone", "Box", "Quad", "Circle" };
-				static Shape shape = Shape::Sphere;
-				if (ImGui::BeginCombo("Shape", shapeNames[(int)shape]))
+				if (ImGui::BeginCombo("Shape", shapeNames[(int)properties.shape]))
 				{
 					for (int i = 0; i < 5; i++)
 					{
-						if (ImGui::Selectable(shapeNames[i], shape == (Shape)i))
+						if (ImGui::Selectable(shapeNames[i], properties.shape == (Shape)i))
 						{
-							shape = (Shape)i;
+							properties.shape = (Shape)i;
 						}
 					}
 
@@ -130,87 +158,86 @@ void ParticleEmitterGUI::DrawParticleEmitterGUI(ParticleEmitter* particleEmitter
 				}
 
 				ImGui::PushItemWidth(ImGui::CalcItemWidth() / 3);
-				static float shapeData[3]{};
-				switch (shape)
+				switch (properties.shape)
 				{
 				case Shape::Sphere:
 				{
-					if (ImGui::DragFloat("##Inner Radius", &shapeData[0], 0.01f, 0.0f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
+					if (ImGui::DragFloat("##Inner Radius", &properties.shapeData[0], 0.01f, 0.0f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
 					{
-						if (shapeData[0] > shapeData[1]) shapeData[1] = shapeData[0];
+						if (properties.shapeData[0] > properties.shapeData[1]) properties.shapeData[1] = properties.shapeData[0];
 					}
 					ImGui::SameLine();
-					if (shapeData[1] < 0.01f) shapeData[1] = 0.01f;
-					if (ImGui::DragFloat("##Outer Radius", &shapeData[1], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
+					if (properties.shapeData[1] < 0.01f) properties.shapeData[1] = 1.0f;
+					if (ImGui::DragFloat("##Outer Radius", &properties.shapeData[1], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
 					{
-						if (shapeData[1] < shapeData[0]) shapeData[0] = shapeData[1];
+						if (properties.shapeData[1] < properties.shapeData[0]) properties.shapeData[0] = properties.shapeData[1];
 					}
 					ImGui::SameLine();
 					ImGui::Text("Inner/Outer Radius");
 
-					shapeData[2] = 0.0f;
+					properties.shapeData[2] = 0.0f;
 					break;
 				}
 				case Shape::Cone:
 				{
-					if (ImGui::DragFloat("##Inner Radius", &shapeData[0], 0.01f, 0.0f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
+					if (ImGui::DragFloat("##Inner Radius", &properties.shapeData[0], 0.01f, 0.0f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
 					{
-						if (shapeData[0] > shapeData[1]) shapeData[1] = shapeData[0];
+						if (properties.shapeData[0] > properties.shapeData[1]) properties.shapeData[1] = properties.shapeData[0];
 					}
 					ImGui::SameLine();
-					if (shapeData[1] < 0.01f) shapeData[1] = 0.01f;
-					if (ImGui::DragFloat("##Outer Radius", &shapeData[1], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
+					if (properties.shapeData[1] < 0.01f) properties.shapeData[1] = 1.0f;
+					if (ImGui::DragFloat("##Outer Radius", &properties.shapeData[1], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
 					{
-						if (shapeData[1] < shapeData[0]) shapeData[0] = shapeData[1];
+						if (properties.shapeData[1] < properties.shapeData[0]) properties.shapeData[0] = properties.shapeData[1];
 					}
 					ImGui::SameLine();
 					ImGui::Text("Inner/Outer Radius");
 
-					ImGui::DragFloat("Angle", &shapeData[2], 0.1f, 0.0f, 89.9f, NULL, ImGuiSliderFlags_AlwaysClamp);
+					ImGui::DragFloat("Angle", &properties.shapeData[2], 0.1f, 0.0f, 89.9f, NULL, ImGuiSliderFlags_AlwaysClamp);
 					break;
 				}
 				case Shape::Box:
 				{
-					if (shapeData[0] < 0.01f) shapeData[0] = 0.01f;
-					ImGui::DragFloat("##Width", &shapeData[0], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
+					if (properties.shapeData[0] < 0.01f) properties.shapeData[0] = 1.0f;
+					ImGui::DragFloat("##Width", &properties.shapeData[0], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
 					ImGui::SameLine();
-					if (shapeData[1] < 0.01f) shapeData[1] = 0.01f;
-					ImGui::DragFloat("##Height", &shapeData[1], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
+					if (properties.shapeData[1] < 0.01f) properties.shapeData[1] = 1.0f;
+					ImGui::DragFloat("##Height", &properties.shapeData[1], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
 					ImGui::SameLine();
-					if (shapeData[2] < 0.01f) shapeData[2] = 0.01f;
-					ImGui::DragFloat("##Depth", &shapeData[2], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
+					if (properties.shapeData[2] < 0.01f) properties.shapeData[2] = 1.0f;
+					ImGui::DragFloat("##Depth", &properties.shapeData[2], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
 					ImGui::SameLine();
 					ImGui::Text("Size");
 					break;
 				}
 				case Shape::Quad:
 				{
-					if (shapeData[0] < 0.01f) shapeData[0] = 0.01f;
-					ImGui::DragFloat("##Width", &shapeData[0], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
+					if (properties.shapeData[0] < 0.01f) properties.shapeData[0] = 1.0f;
+					ImGui::DragFloat("##Width", &properties.shapeData[0], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
 					ImGui::SameLine();
-					if (shapeData[1] < 0.01f) shapeData[1] = 0.01f;
-					ImGui::DragFloat("##Height", &shapeData[1], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
-					shapeData[2] = 0.0f;
+					if (properties.shapeData[1] < 0.01f) properties.shapeData[1] = 1.0f;
+					ImGui::DragFloat("##Height", &properties.shapeData[1], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
+					properties.shapeData[2] = 0.0f;
 					ImGui::SameLine();
 					ImGui::Text("Size");
 					break;
 				}
 				case Shape::Circle:
 				{
-					if (ImGui::DragFloat("##Inner Radius", &shapeData[0], 0.01f, 0.0f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
+					if (ImGui::DragFloat("##Inner Radius", &properties.shapeData[0], 0.01f, 0.0f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
 					{
-						if (shapeData[0] > shapeData[1]) shapeData[1] = shapeData[0];
+						if (properties.shapeData[0] > properties.shapeData[1]) properties.shapeData[1] = properties.shapeData[0];
 					}
 					ImGui::SameLine();
-					if (shapeData[1] < 0.01f) shapeData[1] = 0.01f;
-					if (ImGui::DragFloat("##Outer Radius", &shapeData[1], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
+					if (properties.shapeData[1] < 0.01f) properties.shapeData[1] = 1.0f;
+					if (ImGui::DragFloat("##Outer Radius", &properties.shapeData[1], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
 					{
-						if (shapeData[1] < shapeData[0]) shapeData[0] = shapeData[1];
+						if (properties.shapeData[1] < properties.shapeData[0]) properties.shapeData[0] = properties.shapeData[1];
 					}
 					ImGui::SameLine();
 					ImGui::Text("Inner/Outer Radius");
 
-					shapeData[2] = 0.0f;
+					properties.shapeData[2] = 0.0f;
 					break;
 				}
 				}

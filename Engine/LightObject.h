@@ -13,7 +13,7 @@ public:
 	float range = 1.0f;
 	vec2 angle = { 1.0f, 1.0f };
 
-	virtual void Draw() override;
+	virtual void DrawDebug() override;
 
 	virtual void Initialise() override;
 	virtual void OnDestroy() override;

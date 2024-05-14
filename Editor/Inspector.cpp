@@ -41,6 +41,7 @@ void Inspector::Draw()
 	if (targetGUI == nullptr) return;
 
 	targetGUI->Draw();
+	targetGUI->target->DrawDebug();
 }
 
 Inspector::~Inspector()

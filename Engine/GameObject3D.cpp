@@ -1,5 +1,7 @@
 #include "GameObject3D.h"
 
+#include "Debug.h"
+
 void GameObject3D::OnDestroy()
 {
 	for (GameObject3D* child : children)
@@ -10,6 +12,11 @@ void GameObject3D::OnDestroy()
 	if (parent != nullptr) SetParent(nullptr);
 	
 	GameObject::OnDestroy();
+}
+
+void GameObject3D::DrawDebug()
+{
+	debug->lines.AddSphere(GetGlobalPosition(), glm::length(GetGlobalScale()) * 0.5f * 0.1f, 32);
 }
 
 

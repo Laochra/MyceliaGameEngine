@@ -80,6 +80,9 @@
     <ClCompile Include="ParticleSystem.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="RandomGen.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -205,6 +208,9 @@
     </ClInclude>
     <ClInclude Include="ParticleSystem.h">
       <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="RandomGen.h">
+      <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
