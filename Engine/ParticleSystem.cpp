@@ -1,5 +1,6 @@
 #include "ParticleSystem.h"
 
+#include "GeneralMacros.h"
 #include "RandomGen.h"
 
 ParticleSystem::ParticleSystem(Properties propertiesInit) noexcept
@@ -38,11 +39,31 @@ void ParticleSystem::Start() noexcept
 		case Shape::Sphere:
 		{
 			// set to random point in sphere
+			float theta = std::acos(Random::Float(-1, 1));
+			float phi = Random::Float(0, glm::pi<float>() * 2.0f);
+			pos.x = std::sin(theta) * std::cos(phi);
+			pos.y = std::sin(theta) * std::sin(phi);
+			pos.z = std::cos(theta);
+
+			pos *= Random::Float(properties.shapeData[0], properties.shapeData[1]);
 			break;
 		}
 		case Shape::Cone:
 		{
 			// set to random point in cone
+			float theta = Random::Float(-properties.shapeData[2], properties.shapeData[2]);
+			float phi = Random::Float(0, glm::pi<float>() * 2.0f);
+			pos.x = std::sin(theta) * std::cos(phi);
+			pos.y = std::sin(theta) * std::sin(phi);
+			pos.z = std::cos(theta);
+
+			float innerBaseRadius = properties.shapeData[0] * tan(theta);
+			float outerBaseRadius = properties.shapeData[1] * tan(theta);
+
+			float distanceMin = sqrt(sqr(properties.shapeData[0]) + sqr(innerBaseRadius));
+			float distanceMax = sqrt(sqr(properties.shapeData[1]) + sqr(outerBaseRadius));
+
+			pos *= Random::Float(distanceMin, distanceMax);
 			break;
 		}
 		case Shape::Box:

@@ -34,6 +34,50 @@ void ParticleEmitter::Draw()
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
+void ParticleEmitter::DrawDebug()
+{
+	typedef ParticleSystem::Shape Shape;
+	ParticleSystem::Properties* properties = &particleSystem->properties;
+
+	switch (particleSystem->properties.shape)
+	{
+	case Shape::Sphere:
+	{
+		debug->lines.AddSphere(GetGlobalPosition(), properties->shapeData[0], 32);
+		debug->lines.AddSphere(GetGlobalPosition(), properties->shapeData[1], 32);
+		break;
+	}
+	case Shape::Cone:
+	{
+		vec3 direction = (vec3)glm::normalize(glm::inverse(GetMatrix())[2]);
+
+		debug->lines.AddConicalFrustum(
+			GetGlobalPosition(),
+			direction,
+			properties->shapeData[0],
+			properties->shapeData[1],
+			properties->shapeData[2],
+			32
+		);
+		break;
+	}
+	case Shape::Box:
+	{
+		debug->lines.AddCuboid(GetGlobalPosition(), as(vec3)properties->shapeData);
+		break;
+	}
+	case Shape::Quad:
+	{
+		GameObject3D::DrawDebug();
+		break;
+	}
+	case Shape::Circle:
+	{
+		GameObject3D::DrawDebug();
+		break;
+	}
+	}
+}
 void ParticleEmitter::Update()
 {
 	if (*this != Active) return;

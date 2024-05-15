@@ -148,10 +148,12 @@ void ParticleEmitterGUI::DrawParticleEmitterGUI(ParticleEmitter* particleEmitter
 				{
 					for (int i = 0; i < 5; i++)
 					{
+						if (i > 2) ImGui::BeginDisabled();
 						if (ImGui::Selectable(shapeNames[i], properties.shape == (Shape)i))
 						{
 							properties.shape = (Shape)i;
 						}
+						if (i > 2) ImGui::EndDisabled();
 					}
 
 					ImGui::EndCombo();
@@ -193,7 +195,11 @@ void ParticleEmitterGUI::DrawParticleEmitterGUI(ParticleEmitter* particleEmitter
 					ImGui::SameLine();
 					ImGui::Text("Inner/Outer Radius");
 
-					ImGui::DragFloat("Angle", &properties.shapeData[2], 0.1f, 0.0f, 89.9f, NULL, ImGuiSliderFlags_AlwaysClamp);
+					float coneAngle = glm::degrees(properties.shapeData[2]);
+					if (ImGui::DragFloat("Angle", &coneAngle, 0.1f, 0.0f, 89.9f, NULL, ImGuiSliderFlags_AlwaysClamp))
+					{
+						properties.shapeData[2] = glm::radians(coneAngle);
+					}
 					break;
 				}
 				case Shape::Box:

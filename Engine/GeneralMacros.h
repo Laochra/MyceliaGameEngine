@@ -4,6 +4,14 @@
 #define del(pointer) if (pointer != nullptr) { delete pointer; pointer = nullptr; }
 #endif
 
+#ifndef as
+#define as(type) *(type*)&
+#endif
+
+#ifndef sqr
+#define sqr(x) (x*x)
+#endif
+
 #ifndef uncopyable
 #define uncopyable(classname) classname(const classname&) = delete; classname& operator=(const classname&) = delete;
 #endif

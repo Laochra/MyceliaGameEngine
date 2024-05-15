@@ -123,7 +123,7 @@ void LineDrawer::AddGrid(vec3 centre, float size, Colour colour, float lifetime)
 
 void LineDrawer::AddCuboid(vec3 centre, vec3 size, float lifetime) noexcept
 {
-	AddCuboid(size, centre, currentColour, lifetime);
+	AddCuboid(centre, size, currentColour, lifetime);
 }
 
 void LineDrawer::AddCuboid(vec3 centre, vec3 size, Colour colour, float lifetime) noexcept
@@ -213,6 +213,7 @@ void LineDrawer::AddCone(vec3 point, vec3 direction, float range, float baseRadi
 	const float phi = 2.0f * glm::pi<float>() / baseSides;
 	const float theta = std::atan(baseRadius / range);
 
+	//TODO: This isn't actually facing the correct way it turns out. Not sure if its this or the light thats set up wrong
 	const mat4 coneRotation = glm::inverse(glm::lookAt(point, baseCentre, { 0, 1, 0 }));
 
 	vec3 previousPoint{}, firstPoint{};
@@ -241,6 +242,54 @@ void LineDrawer::AddCone(vec3 point, vec3 direction, float range, float baseRadi
 			firstPoint = newPoint;
 		}
 		previousPoint = newPoint;
+	}
+}
+
+void LineDrawer::AddConicalFrustum(vec3 point, vec3 direction, float innerRange, float outerRange, float angle, int baseSides, float lifetime) noexcept
+{
+	AddConicalFrustum(point, direction, innerRange, outerRange, angle, baseSides, currentColour, lifetime);
+}
+
+void LineDrawer::AddConicalFrustum(vec3 point, vec3 direction, float innerRange, float outerRange, float angle, int baseSides, Colour colour, float lifetime) noexcept
+{
+	const float innerBaseRadius = innerRange * tan(angle);
+	const float outerBaseRadius = outerRange * tan(angle);
+
+	const float phi = 2.0f * glm::pi<float>() / baseSides;
+	const float theta = angle;
+
+	const mat4 coneRotation = glm::lookAt(point, point + direction, { 0, 1, 0 });
+
+	vec3 previousInnerPoint{}, firstInnerPoint{};
+	vec3 previousOuterPoint{}, firstOuterPoint{};
+	for (int i = 0; i < baseSides; i++)
+	{
+		mat4 newRotation = glm::rotate(coneRotation, phi * i, { 0, 0, 1 });
+		newRotation = glm::rotate(newRotation, theta, { 1, 0, 0 });
+
+		vec3 newDirection = glm::normalize(-newRotation[2]);
+		vec3 newInnerPoint = point + newDirection * sqrt(sqr(innerRange) + sqr(innerBaseRadius));
+		vec3 newOuterPoint = point + newDirection * sqrt(sqr(outerRange) + sqr(outerBaseRadius));
+
+		Add(newInnerPoint, newOuterPoint, colour, lifetime);
+
+		if (i > 0)
+		{
+			Add(previousInnerPoint, newInnerPoint, colour, lifetime);
+			Add(previousOuterPoint, newOuterPoint, colour, lifetime);
+			if (i == baseSides - 1)
+			{
+				Add(newInnerPoint, firstInnerPoint, colour, lifetime);
+				Add(newOuterPoint, firstOuterPoint, colour, lifetime);
+			}
+		}
+		else
+		{
+			firstInnerPoint = newInnerPoint;
+			firstOuterPoint = newOuterPoint;
+		}
+		previousInnerPoint = newInnerPoint;
+		previousOuterPoint = newOuterPoint;
 	}
 }
 

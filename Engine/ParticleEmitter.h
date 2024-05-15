@@ -13,6 +13,7 @@ class ParticleEmitter : public GameObject3D
 public:
 	
 	virtual void Draw() override;
+	virtual void DrawDebug() override;
 	virtual void Update() override;
 
 	virtual void Initialise() override;
