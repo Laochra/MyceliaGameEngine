@@ -2,6 +2,8 @@
 
 #include "GUI.h"
 
+#include <format>
+
 void ParticleEmitterGUI::Draw()
 {
 	DrawParticleEmitterGUI((ParticleEmitter*)target);
@@ -18,10 +20,16 @@ void ParticleEmitterGUI::DrawParticleEmitterGUI(ParticleEmitter* particleEmitter
 
 	if (ImGui::CollapsingHeader(id, ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::BeginDisabled(particleEmitter->GetEmissionState() == ParticleSystem::Playing);
-		if (ImGui::Button("Play"))
+		ParticleSystem::Properties& properties = particleEmitter->GetParticleSystem()->properties;
+
+		ImGui::BeginDisabled(particleEmitter->GetEmissionState() == ParticleSystem::Playing ||
+									particleEmitter->GetEmissionState() == ParticleSystem::Playing);
 		{
-			particleEmitter->SetEmissionState(ParticleSystem::Playing);
+			if (ImGui::Button("Play"))
+			{
+				if (properties.delay > 0.0f) particleEmitter->SetEmissionState(ParticleSystem::WaitingToStart);
+				else particleEmitter->SetEmissionState(ParticleSystem::Playing);
+			}
 		}
 		ImGui::EndDisabled();
 
@@ -47,7 +55,17 @@ void ParticleEmitterGUI::DrawParticleEmitterGUI(ParticleEmitter* particleEmitter
 			if (ImGui::Button("Restart"))
 			{
 				particleEmitter->SetEmissionState(ParticleSystem::Stopped);
-				particleEmitter->SetEmissionState(ParticleSystem::Playing);
+				if (properties.delay > 0.0f) particleEmitter->SetEmissionState(ParticleSystem::WaitingToStart);
+				else particleEmitter->SetEmissionState(ParticleSystem::Playing);
+			}
+
+			if (particleEmitter->GetEmissionState() == ParticleSystem::Playing ||
+				 particleEmitter->GetEmissionState() == ParticleSystem::WaitingToStart)
+			{
+				ImGui::SameLine();
+				float elapsedTime = particleEmitter->GetParticleSystem()->GetElapsedTime() - properties.delay;
+				string text = std::format("{:.2f}", elapsedTime) + " / " + std::format("{:.2f}", properties.duration) + "s";
+				ImGui::Text(text.c_str());
 			}
 		}
 		ImGui::EndDisabled();
@@ -56,18 +74,17 @@ void ParticleEmitterGUI::DrawParticleEmitterGUI(ParticleEmitter* particleEmitter
 
 		ImGui::Indent();
 		{
-			ParticleSystem::Properties& properties = particleEmitter->GetParticleSystem()->properties;
 			typedef ParticleSystem::Shape Shape;
 
 			if (ImGui::CollapsingHeader("System Settings", ImGuiTreeNodeFlags_DefaultOpen))
 			{
 				ImGui::Checkbox("Autoplay?", &properties.autoplay);
+				ImGui::SameLine();
+				ImGui::Checkbox("Loop?", &properties.loop);
 				ImGui::PushItemWidth(ImGui::CalcItemWidth() / 3);
 
-				ImGui::BeginDisabled();
 				ImGui::DragFloat("Duration", &properties.duration, 0.1f, 0.0f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
 				ImGui::DragFloat("Delay", &properties.delay, 0.01f, -FLT_MAX, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
-				ImGui::EndDisabled();
 
 				GUI::Spacing(3);
 
@@ -75,10 +92,8 @@ void ParticleEmitterGUI::DrawParticleEmitterGUI(ParticleEmitter* particleEmitter
 
 				GUI::Spacing(3);
 
-				ImGui::BeginDisabled();
 				ImGui::DragFloat("Gravity", &properties.gravity, 0.01f, -FLT_MAX, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
 				ImGui::PopItemWidth();
-				ImGui::EndDisabled();
 			}
 			if (ImGui::CollapsingHeader("Particle Settings", ImGuiTreeNodeFlags_DefaultOpen))
 			{
@@ -109,7 +124,6 @@ void ParticleEmitterGUI::DrawParticleEmitterGUI(ParticleEmitter* particleEmitter
 				ImGui::SameLine();
 				ImGui::Text("Speed Range");
 
-				ImGui::BeginDisabled();
 				if (ImGui::DragFloat("##Lifetime Min", &properties.lifetimeRange[0], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
 				{
 					if (properties.lifetimeRange[0] > properties.lifetimeRange[1]) properties.lifetimeRange[1] = properties.lifetimeRange[0];
@@ -122,7 +136,6 @@ void ParticleEmitterGUI::DrawParticleEmitterGUI(ParticleEmitter* particleEmitter
 				ImGui::SameLine();
 				ImGui::Text("Lifetime Range");
 				ImGui::PopItemWidth();
-				ImGui::EndDisabled();
 				ImGui::ColorEdit4("Colour", &properties.colour[0], ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview);
 			}
 			if (ImGui::CollapsingHeader("Emission Settings", ImGuiTreeNodeFlags_DefaultOpen))

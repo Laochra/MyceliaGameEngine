@@ -9,8 +9,8 @@ ParticleSystem::ParticleSystem(Properties propertiesInit) noexcept
 
 	if (properties.autoplay)
 	{
-		state = Playing;
-		Start();
+		if (properties.delay > 0.0f) state = WaitingToStart;
+		else Start();
 	}
 }
 ParticleSystem::~ParticleSystem() noexcept
@@ -22,6 +22,8 @@ ParticleSystem::~ParticleSystem() noexcept
 
 void ParticleSystem::Start() noexcept
 {
+	state = Playing;
+
 	int bufMask = GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT;
 
 	glGenBuffers(1, &positionBuffer);
@@ -38,39 +40,37 @@ void ParticleSystem::Start() noexcept
 		{
 		case Shape::Sphere:
 		{
-			// set to random point in sphere
 			float theta = std::acos(Random::Float(-1, 1));
 			float phi = Random::Float(0, glm::pi<float>() * 2.0f);
 			pos.x = std::sin(theta) * std::cos(phi);
 			pos.y = std::sin(theta) * std::sin(phi);
 			pos.z = std::cos(theta);
 
-			pos *= Random::Float(properties.shapeData[0], properties.shapeData[1]);
+			pos *= Random::Float(properties.InnerRadius(), properties.OuterRadius());
 			break;
 		}
 		case Shape::Cone:
 		{
-			// set to random point in cone
-			float theta = Random::Float(-properties.shapeData[2], properties.shapeData[2]);
+			float theta = Random::Float(-properties.ConeAngle(), properties.ConeAngle());
 			float phi = Random::Float(0, glm::pi<float>() * 2.0f);
 			pos.x = std::sin(theta) * std::cos(phi);
 			pos.y = std::sin(theta) * std::sin(phi);
 			pos.z = std::cos(theta);
 
-			float innerBaseRadius = properties.shapeData[0] * tan(theta);
-			float outerBaseRadius = properties.shapeData[1] * tan(theta);
+			float innerBaseRadius = properties.InnerRadius() * tan(theta);
+			float outerBaseRadius = properties.OuterRadius() * tan(theta);
 
-			float distanceMin = sqrt(sqr(properties.shapeData[0]) + sqr(innerBaseRadius));
-			float distanceMax = sqrt(sqr(properties.shapeData[1]) + sqr(outerBaseRadius));
+			float distanceMin = sqrt(sqr(properties.InnerRadius()) + sqr(innerBaseRadius));
+			float distanceMax = sqrt(sqr(properties.OuterRadius()) + sqr(outerBaseRadius));
 
 			pos *= Random::Float(distanceMin, distanceMax);
 			break;
 		}
 		case Shape::Box:
 		{
-			pos.x = Random::Float(-properties.shapeData[0] * 0.5f, properties.shapeData[0] * 0.5f);
-			pos.y = Random::Float(-properties.shapeData[1] * 0.5f, properties.shapeData[1] * 0.5f);
-			pos.z = Random::Float(-properties.shapeData[2] * 0.5f, properties.shapeData[2] * 0.5f);
+			pos.x = Random::Float(-properties.Width()  * 0.5f, properties.Width()  * 0.5f);
+			pos.y = Random::Float(-properties.Height() * 0.5f, properties.Height() * 0.5f);
+			pos.z = Random::Float(-properties.Depth()  * 0.5f, properties.Depth()  * 0.5f);
 			break;
 		}
 		case Shape::Quad:
@@ -96,8 +96,9 @@ void ParticleSystem::Start() noexcept
 	vec4* velocities = (vec4*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, properties.maxCount * sizeof(vec4), bufMask);
 	for (uint i = 0; i < properties.maxCount; i++)
 	{
-		// There is room to pack something into velocity's 4th component (compute only)
-		velocities[i] = vec4(glm::normalize(vec3(positions[i])) * Random::Float(properties.speedRange[0], properties.speedRange[1]), 0.0f);
+		// Lifetime is packed into the 4th component of velocity since it will otherwise always be 0.0
+		float lifetime = Random::Float(properties.lifetimeRange[0], properties.lifetimeRange[1]);
+		velocities[i] = vec4(glm::normalize(vec3(positions[i])) * Random::Float(properties.speedRange[0], properties.speedRange[1]), lifetime);
 	}
 	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
@@ -119,6 +120,9 @@ void ParticleSystem::Start() noexcept
 
 void ParticleSystem::Stop() noexcept
 {
+	state = Stopped;
+	elapsedTime = 0.0f;
+
 	glDeleteBuffers(1, &positionBuffer);
 	glDeleteBuffers(1, &velocityBuffer);
 	glDeleteBuffers(1, &colourBuffer);
@@ -131,6 +135,11 @@ void ParticleSystem::Dispatch() const noexcept
 
 	float workGroups = ceil(properties.maxCount / (float)particlesWorkGroupSize);
 	glDispatchCompute(workGroups, 1, 1); // Y and Z are 1 because this is just a 1 dimensional buffer
+}
+
+const float ParticleSystem::GetElapsedTime() const noexcept
+{
+	return elapsedTime;
 }
 
 const uint ParticleSystem::GetPositionBuffer() const noexcept

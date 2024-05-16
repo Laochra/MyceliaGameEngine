@@ -7,6 +7,7 @@
 void ParticleEmitter::Draw()
 {	
 	if (*this != Active) return;
+	if (GetEmissionState() == ParticleSystem::WaitingToStart) return;
 	if (GetEmissionState() == ParticleSystem::Stopped) return;
 
 	// Bind Vertex Array Object
@@ -81,10 +82,49 @@ void ParticleEmitter::DrawDebug()
 void ParticleEmitter::Update()
 {
 	if (*this != Active) return;
-	if (GetEmissionState() != ParticleSystem::Playing) return;
+	switch (GetEmissionState())
+	{
+	case ParticleSystem::Paused:  return;
+	case ParticleSystem::Stopped: return;
+	case ParticleSystem::WaitingToStart:
+	{
+		if (particleSystem->elapsedTime > particleSystem->properties.delay)
+		{
+			SetEmissionState(ParticleSystem::Playing);
+		}
+		else
+		{
+			particleSystem->elapsedTime += Time::delta;
+		}
+		return;
+	}
+	case ParticleSystem::Playing:
+	{
+		if (particleSystem->elapsedTime > particleSystem->properties.duration + particleSystem->properties.delay)
+		{
+			SetEmissionState(ParticleSystem::Stopped);
+			if (particleSystem->properties.loop)
+			{
+				if (particleSystem->properties.delay > 0.0f)
+				{
+					SetEmissionState(ParticleSystem::WaitingToStart);
+				}
+				else
+				{
+					SetEmissionState(ParticleSystem::Playing);
+				}
+			}
+			return;
+		}
+		particleSystem->elapsedTime += Time::delta;
+		break;
+	}
+	}
 
 	computeShader->Bind();
 	computeShader->BindUniform("Delta", Time::delta);
+	computeShader->BindUniform("Gravity", particleSystem->properties.gravity);
+	computeShader->BindUniform("UpVector", (vec3)glm::normalize(glm::inverse(GetMatrix())[1]));
 	particleSystem->Dispatch();
 }
 
@@ -144,6 +184,10 @@ const ParticleSystem::State ParticleEmitter::GetEmissionState() const noexcept
 ParticleEmitter& ParticleEmitter::SetEmissionState(ParticleSystem::State newState) noexcept
 {
 	if (particleSystem->state == ParticleSystem::Stopped && newState == ParticleSystem::Playing)
+	{
+		particleSystem->Start();
+	}
+	else if (particleSystem->state == ParticleSystem::WaitingToStart && newState == ParticleSystem::Playing)
 	{
 		particleSystem->Start();
 	}
