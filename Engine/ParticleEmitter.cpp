@@ -9,7 +9,7 @@ void ParticleEmitter::Draw()
 	if (*this != Active) return;
 	if (GetEmissionState() == ParticleSystem::WaitingToStart) return;
 	if (GetEmissionState() == ParticleSystem::Stopped) return;
-
+	glDisable(GL_CULL_FACE);
 	// Bind Vertex Array Object
 	glBindVertexArray(vao);
 
@@ -27,6 +27,8 @@ void ParticleEmitter::Draw()
 	// Bind Program and View Projection Matrix
 	shaderProgram->Bind();
 	shaderProgram->BindUniform("ProjectionViewModel", mainCamera->GetPVMatrix() * GetMatrix());
+	shaderProgram->BindUniform("CameraPosition", mainCamera->GetGlobalPosition());
+	shaderProgram->BindUniform("CameraUp", (vec3)glm::inverse(mainCamera->GetMatrix())[1]);
 
 	// Draw the Particles!
 	glDrawArrays(GL_POINTS, 0, particleSystem->properties.maxCount);

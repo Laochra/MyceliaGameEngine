@@ -167,6 +167,7 @@ void Editor::Initialise()
 	// Testing Particle System
 	ShaderProgram* particleShader = new ShaderProgram();
 	particleShader->LoadShader(VertexStage, "Assets\\Shaders\\Particles.vert");
+	particleShader->LoadShader(GeometryStage, "Assets\\Shaders\\Particles.geom");
 	particleShader->LoadShader(FragmentStage, "Assets\\Shaders\\Particles.frag");
 	particleShader->Link();
 
