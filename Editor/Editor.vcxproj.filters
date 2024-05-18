@@ -57,6 +57,9 @@
     <ClCompile Include="LightObjectGUI.cpp">
       <Filter>GUI\EditorWindows</Filter>
     </ClCompile>
+    <ClCompile Include="LevelEditorCamera.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="JSON Configs">
@@ -172,6 +175,12 @@
     </ClInclude>
     <ClInclude Include="LightObjectGUI.h">
       <Filter>GUI\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelEditor.h">
+      <Filter>GUI\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelEditorCamera.h">
+      <Filter>GameObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -25,6 +25,8 @@
 
 #include "GeneralMacros.h"
 
+#include "LevelEditor.h"
+
 void Editor::Initialise()
 {
 	glfwSetWindowTitle(window, "Editor");
@@ -48,6 +50,7 @@ void Editor::Initialise()
 		//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;	// Enable Gamepad Controls
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;			// Enable Docking
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;		// Enable Viewports
+		ImGui::GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
 
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
 		ImGui_ImplOpenGL3_Init();
@@ -330,6 +333,19 @@ void Editor::Update()
 		} ImGui::End();
 		ImGui::GetStyle().WindowPadding = oldPadding;
 	}
+	
+	// Level Editor
+	{
+		ImVec2 oldPadding = ImGui::GetStyle().WindowPadding;
+		ImGui::GetStyle().WindowPadding = ImVec2(0.0f, 0.0f);
+
+		ImGui::Begin("LevelEditor");
+		{
+			LevelEditor::Draw();
+		} ImGui::End();
+
+		ImGui::GetStyle().WindowPadding = oldPadding;
+	}
 
 	if (shaderProgramEditorOpen)
 	{
@@ -421,6 +437,7 @@ void Editor::Draw()
 
 void Editor::DrawPostProcess()
 {
+	if (!sceneViewOpen) return;
 	// Draw Debug Gizmos Unaffected by Post Processing
 	glDeleteTextures(1, &sceneViewColourBufferGizmos);
 	glGenTextures(1, &sceneViewColourBufferGizmos);
