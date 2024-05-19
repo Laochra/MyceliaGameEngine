@@ -91,7 +91,7 @@ void Mesh::Initialise(uint vertexCount, const Vertex* vertices, uint indexCount,
 
 	// BiTangent
 	glEnableVertexAttribArray(3);
-	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, texCoord)));
+	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, biTangent)));
 
 	// Texture Coords
 	glEnableVertexAttribArray(4);

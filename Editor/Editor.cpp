@@ -67,54 +67,15 @@ void Editor::Initialise()
 	((EditorCamera*)mainCamera)->yRotation = -20;
 
 	debug->lines.AddXYZLines(-FLT_MAX);
-	//debug->lines.AddCuboid(vec3(0, 5, 0), vec3(3, 3, 3), Colour(1, 0, 0), -FLT_MAX);
-	//debug->lines.AddCuboid(vec3(3, 4, 1.5f), vec3(4, 2, 1), Colour(0, 1, 0), -FLT_MAX);
-	//debug->lines.AddCuboid(vec3(-1.5f, 3.5f, 1.5f), vec3(2, 1, 2), Colour(0, 0, 1), -FLT_MAX);
 
-	//debug->lines.AddSphere(vec3(0, 0, 0), 1.0f, 8, -FLT_MAX);
+	LevelEditor::levelRoot = GameObject3D::Instantiate<GameObject3D>(vec3(0, 0, 0));
+	LevelEditor::levelRoot->SetName("LevelRoot");
 
-	object = GameObject3D::Instantiate<MeshRenderer>(vec3(0.0f, 0.0f, 0.35f), glm::identity<quat>(), vec3(0.01f, 0.01f, 0.01f), vec3(0.0f, -0.5f, 0.0f));
-	object->SetName("Table");
-	object->SetMesh("Assets\\Meshes\\Table.fbx"); object->SetMaterial("Assets\\Materials\\Table.mat");
-
-	inspector->SetTarget(object);
+	inspector->SetTarget(LevelEditor::levelRoot);
 
 	LightingManager::ambientLight = Light(vec3(0.1f, 0.1f, 0.1f));
 
 	LightingManager::directionalLight = DirectionalLight(vec3(1.0f, 1.0f, 1.0f), glm::normalize(vec3(-0.1f, -1, -1)));
-
-	MeshRenderer* lightbox = GameObject3D::Instantiate<MeshRenderer>(vec3(0.0f, 1.5f, 0.0f), glm::identity<quat>(), vec3(0.20f, 0.05f, 0.10f), vec3(0.0f, 0.0f, 0.0f));
-	lightbox->SetName("Lightbox");
-	lightbox->SetMesh("ProceduralCube"); lightbox->SetMaterial("Assets\\Materials\\Wood Planks.mat");
-	MeshRenderer* bulb = GameObject3D::Instantiate<MeshRenderer>(vec3(0.0f, -0.6f, 0.0f), glm::identity<quat>(), vec3(0.667f, 0.2f, 0.667f), vec3(0.0f, 0.0f, 0.0f), lightbox);
-	bulb->SetName("Bulb");
-	bulb->SetMesh("ProceduralCube"); bulb->SetMaterial("Assets\\Materials\\Bulb.mat");
-	LightObject* downlight = GameObject3D::Instantiate<LightObject>(vec3(0.0f, 0.6f, 0.0f), glm::identity<quat>(), vec3(1), vec3(0), bulb);
-	downlight->SetName("Downlight");
-	downlight->LookAt({ 0, 0, 0 });
-	downlight->range = 1.0f; downlight->colour = vec3(255 / 255.0f, 228 / 255.0f, 172 / 255.0f); downlight->intensity = 2.4f; downlight->angle[1] = glm::cos(glm::radians(28.0f));
-
-	GameObject3D* floors = GameObject3D::Instantiate<GameObject3D>(vec3(0.0f, 0.0f, 0.0f), glm::identity<quat>(), vec3(2.00f, 1.00f, 2.00f), vec3(0.0f, -0.0025f, 0.0f));
-	floors->SetName("Floors");
-	for (int x = -1; x <= 1; x++)
-	{
-		for (int y = 0; y <= 1; y++)
-		{
-			MeshRenderer* floor = GameObject3D::Instantiate<MeshRenderer>(vec3(x, 0.0f, y), glm::identity<quat>(), vec3(1.00f, 1.00f, 1.00f), vec3(0.0f, 0.0f, 0.0f), floors);
-			floor->SetName(("Floor " + std::to_string(x) + ", " + std::to_string(y)).c_str());
-			floor->SetMesh("ProceduralQuad"); floor->SetMaterial("Assets\\Materials\\Wood Planks.mat");
-		}
-	}
-
-	GameObject3D* walls = GameObject3D::Instantiate<GameObject3D>(vec3(0.0f, 0.0f, 0.0f), glm::identity<quat>(), vec3(2.00f, 1.00f, 2.00f), vec3(0.0f, -0.0f, 0.502f));
-	walls->SetName("Walls");
-	walls->Rotate(glm::radians(90.0f), vec3(1, 0, 0));
-	for (int x = -1; x <= 1; x++)
-	{
-		MeshRenderer* wall = GameObject3D::Instantiate<MeshRenderer>(vec3(x, 0.002f, 0.0f), glm::identity<quat>(), vec3(1.00f, 1.00f, 1.00f), vec3(0.0f, 0.0f, 0.0f), walls);
-		wall->SetName(("Wall " + std::to_string(x)).c_str());
-		wall->SetMesh("ProceduralQuad"); wall->SetMaterial("Assets\\Materials\\Wallpaper.mat");
-	}
 
 	input->enabled = false;
 
@@ -185,11 +146,6 @@ void Editor::FixedUpdate()
 
 void Editor::Update()
 {
-	if (*object == GameObject::Active)
-	{
-		//object->LookTowards(mainCamera->GetPosition(), glm::radians(15.0f) * Time::delta);
-	}
-
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))

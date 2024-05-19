@@ -15,6 +15,8 @@ namespace LevelEditor
 	inline Camera* camera;
 	inline LineDrawer lineDrawer;
 
+	inline GameObject3D* levelRoot;
+
 	struct LevelTile
 	{
 		bool isOpen = false;
@@ -195,6 +197,71 @@ void LevelEditor::DrawLines() noexcept
 			vec3((hoveredTileX + 0) * TILE_WIDTH, (hoveredTileY - 0) * TILE_HEIGHT, 0),
 			Colour(0.7f, 0.2f, 0.9f)
 		);
+
+		if (ImGui::IsKeyPressed(ImGuiKey::ImGuiKey_Enter))
+		{
+			vector<GameObject3D*>* levelChildren = levelRoot->GetChildren();
+			while (levelChildren->size() > 0)
+			{
+				GameObject3D::Destroy((*levelChildren)[0]);
+			}
+			levelChildren->clear();
+
+			for (int y = 1; y <= tileCountSqrt; y++)
+			{
+				float yPos = y - halfCountSqrt;
+
+				for (int x = 0; x < tileCountSqrt; x++)
+				{
+					float xPos = x - halfCountSqrt;
+
+					bool thisIsOpen  = tiles[( x ) + ( y ) * tileCountSqrt].isOpen;
+
+					bool downIsOpen  = y != 1						&& tiles[( x ) + (y-1) * tileCountSqrt].isOpen;
+					bool upIsOpen    = y != tileCountSqrt		&& tiles[( x ) + (y+1) * tileCountSqrt].isOpen;
+					bool leftIsOpen  = x != 0						&& tiles[(x-1) + ( y ) * tileCountSqrt].isOpen;
+					bool rightIsOpen = x != tileCountSqrt - 1 && tiles[(x+1) + ( y ) * tileCountSqrt].isOpen;
+
+					if (thisIsOpen)
+					{
+						MeshRenderer* floor = GameObject3D::Instantiate<MeshRenderer>(vec3(xPos, 0.0f, -yPos), glm::identity<quat>(), vec3(1.00f, 1.00f, 1.00f), vec3(-0.5f, 0.0f, -0.5f), levelRoot);
+						floor->SetName(("Floor " + std::to_string(xPos) + ", " + std::to_string(yPos)).c_str());
+						floor->SetMesh("ProceduralQuad"); floor->SetMaterial("Assets\\Materials\\Wood Planks.mat");
+
+						if (!downIsOpen)
+						{
+							MeshRenderer* wall = GameObject3D::Instantiate<MeshRenderer>(vec3(xPos, 0.0f, -yPos + 1), glm::identity<quat>(), vec3(1.00f, 1.00f, 1.00f), vec3(0.5f, 0.0f, -0.5f), levelRoot);
+							wall->Rotate(glm::radians(-90.0f), vec3(0, 0, 1));
+							wall->Rotate(glm::radians(-90.0f), vec3(1, 0, 0));
+							wall->SetName(("Wall " + std::to_string(xPos) + ", " + std::to_string(yPos)).c_str());
+							wall->SetMesh("ProceduralQuad"); wall->SetMaterial("Assets\\Materials\\Wallpaper.mat");
+						}
+						if (!upIsOpen)
+						{
+							MeshRenderer* wall = GameObject3D::Instantiate<MeshRenderer>(vec3(xPos, 0.0f, -yPos), glm::identity<quat>(), vec3(1.00f, 1.00f, 1.00f), vec3(-0.5f, 0.0f, -0.5f), levelRoot);
+							wall->Rotate(glm::radians(90.0f), vec3(0, 0, 1));
+							wall->Rotate(glm::radians(90.0f), vec3(1, 0, 0));
+							wall->SetName(("Wall " + std::to_string(xPos) + ", " + std::to_string(yPos)).c_str());
+							wall->SetMesh("ProceduralQuad"); wall->SetMaterial("Assets\\Materials\\Wallpaper.mat");
+						}
+						if (!leftIsOpen)
+						{
+							MeshRenderer* wall = GameObject3D::Instantiate<MeshRenderer>(vec3(xPos, 0.0f, -yPos), glm::identity<quat>(), vec3(1.00f, 1.00f, 1.00f), vec3(0.5f, 0.0f, -0.5f), levelRoot);
+							wall->Rotate(glm::radians(-90.0f), vec3(0, 0, 1));
+							wall->SetName(("Wall " + std::to_string(xPos) + ", " + std::to_string(yPos)).c_str());
+							wall->SetMesh("ProceduralQuad"); wall->SetMaterial("Assets\\Materials\\Wallpaper.mat");
+						}
+						if (!rightIsOpen)
+						{
+							MeshRenderer* wall = GameObject3D::Instantiate<MeshRenderer>(vec3(xPos + 1, 0.0f, -yPos), glm::identity<quat>(), vec3(1.00f, 1.00f, 1.00f), vec3(-0.5f, 0.0f, -0.5f), levelRoot);
+							wall->Rotate(glm::radians(90.0f), vec3(0, 0, 1));
+							wall->SetName(("Wall " + std::to_string(xPos) + ", " + std::to_string(yPos)).c_str());
+							wall->SetMesh("ProceduralQuad"); wall->SetMaterial("Assets\\Materials\\Wallpaper.mat");
+						}
+					}
+				}
+			}
+		}
 
 		switch (editMode)
 		{

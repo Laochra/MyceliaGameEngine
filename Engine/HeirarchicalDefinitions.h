@@ -35,6 +35,10 @@ template<class H> const vector<H*>* Heirarchical<H>::GetChildren() const noexcep
 {
 	return &children;
 }
+template<class H> vector<H*>* Heirarchical<H>::GetChildren() noexcept
+{
+	return &children;
+}
 template<class H> void Heirarchical<H>::AddChild(H* child) noexcept
 {
 	children.push_back(child);

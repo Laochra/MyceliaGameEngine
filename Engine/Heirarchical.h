@@ -12,6 +12,7 @@ public:
 	void SetParent(H* parentInit) noexcept;
 
 	const vector<H*>* GetChildren() const noexcept;
+	vector<H*>* GetChildren() noexcept;
 	void AddChild(H* child) noexcept;
 	void RemoveChild(H* child) noexcept;
 
