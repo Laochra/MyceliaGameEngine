@@ -57,6 +57,9 @@
     <ClCompile Include="LightObjectGUI.cpp">
       <Filter>GUI\EditorWindows</Filter>
     </ClCompile>
+    <ClCompile Include="MeshCooker.cpp">
+      <Filter>GUI\EditorWindows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="JSON Configs">
@@ -171,6 +174,9 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="LightObjectGUI.h">
+      <Filter>GUI\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshCooker.h">
       <Filter>GUI\EditorWindows</Filter>
     </ClInclude>
   </ItemGroup>

@@ -282,7 +282,7 @@ bool Mesh::LoadFromFile(const char* filepathInit)
 	if (file->mNumMeshes > 0)
 	{
 		aiMesh* mesh = file->mMeshes[0];
-	
+		
 		Vertex* vertexData = new Vertex[mesh->mNumVertices];
 		uint* indexData = new uint[mesh->mNumFaces * 3];
 	

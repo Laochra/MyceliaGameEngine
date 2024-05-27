@@ -10,6 +10,8 @@
 #include "ShaderProgramGUI.h"
 #include "MaterialGUI.h"
 
+#include "MeshCooker.h"
+
 #include "ConsoleGUI.h"
 #include "Heirarchy.h"
 
@@ -161,6 +163,8 @@ void Editor::Initialise()
 	fxaaProgram.LoadShader(VertexStage, "Engine\\DefaultAssets\\FullScreenQuad.vert");
 	fxaaProgram.LoadShader(FragmentStage, "Engine\\DefaultAssets\\FXAA.frag");
 	fxaaProgram.Link();
+
+	MeshCooker::Cook("Assets\\Meshes\\Marill.fbx");
 }
 
 void Editor::OnFrameStart()

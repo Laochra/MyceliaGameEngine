@@ -181,6 +181,7 @@
     <ClCompile Include="Inspector.cpp" />
     <ClCompile Include="LightObjectGUI.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MeshCooker.cpp" />
     <ClCompile Include="MeshRendererGUI.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -210,6 +211,7 @@
     <ClInclude Include="LightObjectGUI.h" />
     <ClInclude Include="MaterialGUI.h" />
     <ClInclude Include="Inspector.h" />
+    <ClInclude Include="MeshCooker.h" />
     <ClInclude Include="MeshRendererGUI.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ShaderProgramGUI.h" />

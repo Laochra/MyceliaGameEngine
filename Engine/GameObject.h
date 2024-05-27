@@ -13,7 +13,7 @@
 class GameObject;
 template<class T> concept GameObjectClass = std::is_base_of<GameObject, T>::value;
 
-#define SerialiseAs(nameInit) virtual const char* ClassName() noexcept { return #nameInit; }
+#define SerialiseAs(nameInit) virtual const char* ClassName() const noexcept { return #nameInit; }
 
 class GameObject
 {
