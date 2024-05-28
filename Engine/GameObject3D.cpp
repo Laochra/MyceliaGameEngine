@@ -4,33 +4,54 @@ void GameObject3D::SerialiseTo(json& jsonObject) const
 {
 	GameObject::SerialiseTo(jsonObject);
 	
-	vector<float> position(3);
-	memcpy(position.data(), &position[0], 3 * sizeof(float));;
-	jsonObject["Position"] = position;
+	vector<float> positionData(3);
+	memcpy(positionData.data(), &position[0], 3 * sizeof(float));
+	jsonObject["Position"] = positionData;
 	
-	vector<float> rotation(4);
-	memcpy(rotation.data(), &rotation[0], 4 * sizeof(float));;
-	jsonObject["Rotation"] = rotation;
+	vector<float> rotationData(4);
+	memcpy(rotationData.data(), &rotation[0], 4 * sizeof(float));
+	jsonObject["Rotation"] = rotationData;
 	
-	vector<float> scale(3);
-	memcpy(scale.data(), &scale[0], 3 * sizeof(float));;
-	jsonObject["Scale"] = scale;
+	vector<float> scaleData(3);
+	memcpy(scaleData.data(), &scale[0], 3 * sizeof(float));
+	jsonObject["Scale"] = scaleData;
 	
-	vector<float> pivot(3);
-	memcpy(pivot.data(), &pivot[0], 3 * sizeof(float));;
-	jsonObject["Pivot"] = pivot;
+	vector<float> pivotData(3);
+	memcpy(pivotData.data(), &pivot[0], 3 * sizeof(float));
+	jsonObject["Pivot"] = pivotData;
 	
-	vector<json> children;
+	vector<json> childrenData;
 	for (int i = 0; i < children.size(); i++)
 	{
 		json child = children[i];
-		children.push_back(child);
+		childrenData.push_back(child);
 	}
-	jsonObject["Children"] = children;
+	jsonObject["Children"] = childrenData;
 }
 void GameObject3D::DeserialiseFrom(const json& jsonObject)
 {
 	GameObject::DeserialiseFrom(jsonObject);
+
+	vector<float> positionData = jsonObject["Position"];
+	memcpy(&position[0], positionData.data(), 3 * sizeof(float));
+
+	vector<float> rotationData = jsonObject["Rotation"];
+	memcpy(&rotation[0], rotationData.data(), 4 * sizeof(float));
+
+	vector<float> scaleData = jsonObject["Scale"];
+	memcpy(&scale[0], scaleData.data(), 3 * sizeof(float));
+
+	vector<float> pivotData = jsonObject["Pivot"];
+	memcpy(&pivot[0], pivotData.data(), 3 * sizeof(float));
+
+	vector<json> childrenData = jsonObject["Children"];
+	for (int i = 0; i < childrenData.size(); i++)
+	{
+		// ToDo: Get type checking working with ClassID() to create children
+		
+		//GameObject3D* child = new  childrenData[i];
+		//children.push_back(child);
+	}
 
 	// Deserialise 3D Stuff
 }

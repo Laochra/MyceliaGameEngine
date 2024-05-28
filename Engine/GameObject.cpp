@@ -2,6 +2,24 @@
 
 #include "GeneralMacros.h"
 
+void GameObject::SerialiseTo(json& jsonObject) const
+{
+	jsonObject["Name"] = name;
+	jsonObject["GUID"] = guid;
+	jsonObject["Active"] = state == Active;
+	jsonObject["Type"] = ClassName();
+}
+void GameObject::DeserialiseFrom(const json& jsonObject)
+{
+	string nameStr = string(jsonObject["Name"]);
+	name = new char[nameStr.size() + 1];
+	memcpy(name, nameStr.c_str(), nameStr.size() + 1);
+
+	guid = jsonObject["GUID"];
+
+	state = bool(jsonObject["Active"]) ? GameObject::Active : GameObject::Inactive;
+}
+
 GameObject::GameObjectState GameObject::GetState() const noexcept
 {
 	return state;
@@ -39,25 +57,6 @@ void GameObject::SetName(const char* newName) noexcept
 	name = new char[newNameLength + 1];
 	name[newNameLength] = '\0';
 	memcpy(name, newName, newNameLength);
-}
-
-void GameObject::SerialiseTo(json& jsonObject) const
-{
-	jsonObject["Name"] = name;
-	jsonObject["GUID"] = guid;
-	jsonObject["Active"] = state == Active;
-	jsonObject["Type"] = ClassName();
-}
-
-void GameObject::DeserialiseFrom(const json& jsonObject)
-{
-	string nameStr = string(jsonObject["Name"]);
-	name = new char[nameStr.size() + 1];
-	memcpy(name, nameStr.c_str(), nameStr.size() + 1);
-
-	guid = jsonObject["GUID"];
-
-	state = bool(jsonObject["Active"]) ? GameObject::Active : GameObject::Inactive;
 }
 
 GameObject::GameObject(const json& jsonObject)

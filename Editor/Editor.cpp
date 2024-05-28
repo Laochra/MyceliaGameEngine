@@ -166,14 +166,16 @@ void Editor::Initialise()
 
 	MeshCooker::Cook("Assets\\Meshes\\Marill.fbx");
 
-	GameObject3D* go = GameObject::Instantiate<GameObject3D>();
+	GameObject* go = GameObject::Instantiate<GameObject>();
 	go->SetName("weewooweewoo");
 	json jgo;
 	jgo["GameObject"] = go;
-	GameObject3D* go2 = GameObject::Instantiate<GameObject3D>();
+	GameObject* go2 = GameObject::Instantiate<GameObject>();
 	go2->DeserialiseFrom(jgo["GameObject"]);
 	go->SetName("dfsf");
 
+
+	debug->Log(std::to_string(go->ClassID()));
 }
 
 void Editor::OnFrameStart()

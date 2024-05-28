@@ -16,7 +16,62 @@ using nlohmann::json;
 class GameObject;
 template<class T> concept GameObjectClass = std::is_base_of<GameObject, T>::value;
 
-#define SerialiseAs(nameInit) virtual const char* ClassName() const noexcept { return #nameInit; }
+consteval unsigned long long AlphanumericToIDPart(const char a)
+{
+	unsigned long long result;
+	switch (a)
+	{
+	default:				 result = 0b00000; break;
+	case 'a': case'A': result = 0b00001; break;
+	case 'b': case'B': result = 0b00010; break;
+	case 'c': case'C': result = 0b00011; break;
+	case 'd': case'D': result = 0b00100; break;
+	case 'e': case'E': result = 0b00101; break;
+	case 'f': case'F': result = 0b00110; break;
+	case 'g': case'G': result = 0b00111; break;
+	case 'h': case'H': result = 0b01000; break;
+	case 'i': case'I': result = 0b01001; break;
+	case 'j': case'J': result = 0b01010; break;
+	case 'k': case'K': result = 0b01011; break;
+	case 'l': case'L': result = 0b01100; break;
+	case 'm': case'M': result = 0b01101; break;
+	case 'n': case'N': result = 0b01110; break;
+	case 'o': case'O': result = 0b01111; break;
+	case 'p': case'P': result = 0b10000; break;
+	case 'q': case'Q': result = 0b10001; break;
+	case 'r': case'R': result = 0b10010; break;
+	case 's': case'S': result = 0b10011; break;
+	case 't': case'T': result = 0b10100; break;
+	case 'u': case'U': result = 0b10101; break;
+	case 'v': case'V': result = 0b10110; break;
+	case 'w': case'W': result = 0b10111; break;
+	case 'x': case'X': result = 0b11000; break;
+	case 'y': case'Y': result = 0b11001; break;
+	case 'z': case'Z': result = 0b11010; break;
+	case '0':			 result = 0b11011; break;
+	case '2':			 result = 0b11100; break;
+	case '3':			 result = 0b11101; break;
+	}
+
+	return result;
+}
+
+consteval unsigned long long AlphanumericStringToID(const char* const string)
+{
+	unsigned long long id = 0;
+
+	for (int i = 0; i < 12; i++)
+	{
+		if (string[i] == '\0') break;
+		id |= AlphanumericToIDPart(string[i]) << (5 * i);
+	}
+
+	return id;
+}
+
+#define SerialiseAs(nameInit) \
+virtual const char* ClassName() const noexcept { return #nameInit; } \
+static consteval unsigned long long ClassID() noexcept { return AlphanumericStringToID(#nameInit); }
 
 class GameObject
 {
