@@ -30,7 +30,7 @@ void MeshRendererGUI::DrawMeshRendererGUI(MeshRenderer* meshRenderer)
 			path filePath = entry.path();
 			string extension = filePath.extension().string();
 
-			if (extension == ".obj" || extension == ".fbx" || extension == ".gltf") meshes.push_back(filePath);
+			if (extension == ".mesh") meshes.push_back(filePath);
 		}
 
 		if (ImGui::BeginCombo("Mesh", meshFilepath.c_str()))

@@ -74,7 +74,7 @@ void Editor::Initialise()
 
 	object = GameObject3D::Instantiate<MeshRenderer>(vec3(0.0f, 0.0f, 0.35f), glm::identity<quat>(), vec3(0.01f, 0.01f, 0.01f), vec3(0.0f, -0.5f, 0.0f));
 	object->SetName("Table");
-	object->SetMesh("Assets\\Meshes\\Table.fbx"); object->SetMaterial("Assets\\Materials\\Table.mat");
+	object->SetMesh("Assets\\Meshes\\Table.mesh"); object->SetMaterial("Assets\\Materials\\Table.mat");
 
 	inspector->SetTarget(object);
 
