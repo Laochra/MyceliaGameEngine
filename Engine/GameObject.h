@@ -10,6 +10,9 @@
 
 #include <type_traits>
 
+#include "json.hpp"
+using nlohmann::json;
+
 class GameObject;
 template<class T> concept GameObjectClass = std::is_base_of<GameObject, T>::value;
 
@@ -26,6 +29,12 @@ public:
 		Inactive,	// The GameObject cannot recieve updates
 		Destroyed	// The GameObject has been destroyed and should no longer be referenced
 	};
+
+	// JSON
+	virtual void SerialiseTo(json& jsonObject) const;
+	virtual void DeserialiseFrom(const json& jsonObject);
+	GameObject(const json& jsonObject);
+	void operator=(const json& jsonObject);
 
 	/// <summary>Check if GameObjects are equal based on their GUIDs</summary> <returns>True if GameObjects are equal</returns>
 	bool operator==(GameObject& other) const noexcept;
@@ -78,6 +87,9 @@ private:
 
 	// Friends
 	friend class GameObjectManager;
+
+	friend void to_json(json& jsonObject, const GameObject* gameObject) noexcept;
+	friend void from_json(const json& jsonObject, GameObject* gameObject) noexcept;
 };
 
 

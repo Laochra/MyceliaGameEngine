@@ -1,5 +1,40 @@
 #include "GameObject3D.h"
 
+void GameObject3D::SerialiseTo(json& jsonObject) const
+{
+	GameObject::SerialiseTo(jsonObject);
+	
+	vector<float> position(3);
+	memcpy(position.data(), &position[0], 3 * sizeof(float));;
+	jsonObject["Position"] = position;
+	
+	vector<float> rotation(4);
+	memcpy(rotation.data(), &rotation[0], 4 * sizeof(float));;
+	jsonObject["Rotation"] = rotation;
+	
+	vector<float> scale(3);
+	memcpy(scale.data(), &scale[0], 3 * sizeof(float));;
+	jsonObject["Scale"] = scale;
+	
+	vector<float> pivot(3);
+	memcpy(pivot.data(), &pivot[0], 3 * sizeof(float));;
+	jsonObject["Pivot"] = pivot;
+	
+	vector<json> children;
+	for (int i = 0; i < children.size(); i++)
+	{
+		json child = children[i];
+		children.push_back(child);
+	}
+	jsonObject["Children"] = children;
+}
+void GameObject3D::DeserialiseFrom(const json& jsonObject)
+{
+	GameObject::DeserialiseFrom(jsonObject);
+
+	// Deserialise 3D Stuff
+}
+
 void GameObject3D::OnDestroy()
 {
 	for (GameObject3D* child : children)
@@ -226,3 +261,38 @@ vec3 GameObject3D::GetPivot() const noexcept
 {
 	return pivot;
 }
+
+//void to_json(json& jsonObject, const GameObject3D& gameObject3D) noexcept
+//{
+//	to_json(jsonObject, *(GameObject*)&gameObject3D);
+//
+//	vector<float> position(3);
+//	memcpy(position.data(), &gameObject3D.position[0], 3 * sizeof(float));;
+//	jsonObject["Position"] = position;
+//
+//	vector<float> rotation(4);
+//	memcpy(rotation.data(), &gameObject3D.rotation[0], 4 * sizeof(float));;
+//	jsonObject["Rotation"] = rotation;
+//
+//	vector<float> scale(3);
+//	memcpy(scale.data(), &gameObject3D.scale[0], 3 * sizeof(float));;
+//	jsonObject["Scale"] = scale;
+//
+//	vector<float> pivot(3);
+//	memcpy(pivot.data(), &gameObject3D.pivot[0], 3 * sizeof(float));;
+//	jsonObject["Pivot"] = pivot;
+//
+//	vector<json> children;
+//	for (int i = 0; i < gameObject3D.children.size(); i++)
+//	{
+//		json child = *gameObject3D.children[i];
+//		children.push_back(child);
+//	}
+//	jsonObject["Children"] = children;
+//}
+//void from_json(const json& jsonObject, GameObject3D& gameObject3D) noexcept
+//{
+//	from_json(jsonObject, *(GameObject*)&gameObject3D);
+//
+//	//extra 3d things
+//}

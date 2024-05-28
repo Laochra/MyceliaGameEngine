@@ -19,6 +19,10 @@ public:
 
 	using GameObject::GameObject;
 
+	// JSON
+	virtual void SerialiseTo(json& jsonObject) const override;
+	virtual void DeserialiseFrom(const json& jsonObject) override;
+
 	virtual void OnDestroy() override;
 
 	bool IsActive() noexcept override;
@@ -79,6 +83,11 @@ private:
 	mat4 globalMatrix = mat4();
 	mat4 localMatrix = mat4();
 	bool dirty = true;
+
+
+	// Friends
+	//friend void to_json(json& jsonObject, const GameObject3D& gameObject) noexcept;
+	//friend void from_json(const json& jsonObject, GameObject3D& gameObject) noexcept;
 };
 
 

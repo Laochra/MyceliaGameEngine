@@ -165,6 +165,15 @@ void Editor::Initialise()
 	fxaaProgram.Link();
 
 	MeshCooker::Cook("Assets\\Meshes\\Marill.fbx");
+
+	GameObject3D* go = GameObject::Instantiate<GameObject3D>();
+	go->SetName("weewooweewoo");
+	json jgo;
+	jgo["GameObject"] = go;
+	GameObject3D* go2 = GameObject::Instantiate<GameObject3D>();
+	go2->DeserialiseFrom(jgo["GameObject"]);
+	go->SetName("dfsf");
+
 }
 
 void Editor::OnFrameStart()

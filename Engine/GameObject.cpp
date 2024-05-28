@@ -41,6 +41,34 @@ void GameObject::SetName(const char* newName) noexcept
 	memcpy(name, newName, newNameLength);
 }
 
+void GameObject::SerialiseTo(json& jsonObject) const
+{
+	jsonObject["Name"] = name;
+	jsonObject["GUID"] = guid;
+	jsonObject["Active"] = state == Active;
+	jsonObject["Type"] = ClassName();
+}
+
+void GameObject::DeserialiseFrom(const json& jsonObject)
+{
+	string nameStr = string(jsonObject["Name"]);
+	name = new char[nameStr.size() + 1];
+	memcpy(name, nameStr.c_str(), nameStr.size() + 1);
+
+	guid = jsonObject["GUID"];
+
+	state = bool(jsonObject["Active"]) ? GameObject::Active : GameObject::Inactive;
+}
+
+GameObject::GameObject(const json& jsonObject)
+{
+	from_json(jsonObject, this);
+}
+void GameObject::operator=(const json& jsonObject)
+{
+	from_json(jsonObject, this);
+}
+
 bool GameObject::operator==(GameObject& other) const noexcept
 {
 	return guid == other.guid;
@@ -96,4 +124,14 @@ void GameObject::OnActivate()
 void GameObject::OnDeactivate()
 {
 
+}
+
+// Friends
+void to_json(json& jsonObject, const GameObject* gameObject) noexcept
+{
+	gameObject->SerialiseTo(jsonObject);
+}
+void from_json(const json& jsonObject, GameObject* gameObject) noexcept
+{
+	gameObject->DeserialiseFrom(jsonObject);
 }
