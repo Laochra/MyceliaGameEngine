@@ -12,12 +12,13 @@ void Inspector::SetTarget(GameObject* target)
 {
 	del(targetGUI);
 
-	const char* targetClassName = target->ClassName();
-
-	if (targetClassName == "GameObject")			{ targetGUI = new GameObjectGUI(target); }
-	else if (targetClassName == "GameObject3D")	{ targetGUI = new GameObject3DGUI(target); }
-	else if (targetClassName == "MeshRenderer")	{ targetGUI = new MeshRendererGUI(target); }
-	else if (targetClassName == "LightObject")	{ targetGUI = new LightObjectGUI(target); }
+	switch (target->GetClassID())
+	{
+	case GameObject::classID:	 targetGUI = new GameObjectGUI(target);	break;
+	case GameObject3D::classID: targetGUI = new GameObject3DGUI(target); break;
+	case MeshRenderer::classID: targetGUI = new MeshRendererGUI(target); break;
+	case LightObject::classID:  targetGUI = new LightObjectGUI(target);  break;
+	}
 }
 
 const GameObjectGUI* Inspector::GetTargetGUI()

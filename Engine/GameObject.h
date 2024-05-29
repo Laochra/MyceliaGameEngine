@@ -10,68 +10,60 @@
 
 #include <type_traits>
 
+#include "GeneralMacros.h"
+
 #include "json.hpp"
 using nlohmann::json;
 
 class GameObject;
 template<class T> concept GameObjectClass = std::is_base_of<GameObject, T>::value;
 
-consteval unsigned long long AlphanumericToIDPart(const char a)
+consteval unsigned long long HashIDBits(const char a)
 {
-	unsigned long long result;
+	unsigned long long bits;
 	switch (a)
 	{
-	default:				 result = 0b00000; break;
-	case 'a': case'A': result = 0b00001; break;
-	case 'b': case'B': result = 0b00010; break;
-	case 'c': case'C': result = 0b00011; break;
-	case 'd': case'D': result = 0b00100; break;
-	case 'e': case'E': result = 0b00101; break;
-	case 'f': case'F': result = 0b00110; break;
-	case 'g': case'G': result = 0b00111; break;
-	case 'h': case'H': result = 0b01000; break;
-	case 'i': case'I': result = 0b01001; break;
-	case 'j': case'J': result = 0b01010; break;
-	case 'k': case'K': result = 0b01011; break;
-	case 'l': case'L': result = 0b01100; break;
-	case 'm': case'M': result = 0b01101; break;
-	case 'n': case'N': result = 0b01110; break;
-	case 'o': case'O': result = 0b01111; break;
-	case 'p': case'P': result = 0b10000; break;
-	case 'q': case'Q': result = 0b10001; break;
-	case 'r': case'R': result = 0b10010; break;
-	case 's': case'S': result = 0b10011; break;
-	case 't': case'T': result = 0b10100; break;
-	case 'u': case'U': result = 0b10101; break;
-	case 'v': case'V': result = 0b10110; break;
-	case 'w': case'W': result = 0b10111; break;
-	case 'x': case'X': result = 0b11000; break;
-	case 'y': case'Y': result = 0b11001; break;
-	case 'z': case'Z': result = 0b11010; break;
-	case '0':			 result = 0b11011; break;
-	case '2':			 result = 0b11100; break;
-	case '3':			 result = 0b11101; break;
+	default:							bits = 0b0000; break;
+	cases('a', 'A', 'j', 'J')	bits = 0b0001; break;
+	cases('c', 'C', 'y', 'Y')	bits = 0b0010; break;
+	cases('d', 'D', 'b', 'B')	bits = 0b0011; break;
+	cases('e', 'E', 'z', 'Z')	bits = 0b0100; break;
+	cases('i', 'I', 'x', 'X')	bits = 0b0101; break;
+	cases('l', 'L', 'k', 'K')	bits = 0b0110; break;
+	cases('m', 'M') 		 		bits = 0b0111; break;
+	cases('n', 'N', 'f', 'F')	bits = 0b1000; break;
+	cases('o', 'O', 'v', 'V')	bits = 0b1001; break;
+	cases('r', 'R') 		 		bits = 0b1010; break;
+	cases('s', 'S', 'w', 'W')	bits = 0b1011; break;
+	cases('t', 'T', 'h', 'H')	bits = 0b1100; break;
+	cases('u', 'U', 'q', 'Q')	bits = 0b1101; break;
+	cases('2', 'g', 'G')			bits = 0b1110; break;
+	cases('3', 'p', 'P')			bits = 0b1111; break;
 	}
 
-	return result;
+	return bits;
 }
 
-consteval unsigned long long AlphanumericStringToID(const char* const string)
+consteval unsigned long long HashID(const char* const string)
 {
-	unsigned long long id = 0;
+	unsigned long long strLength = 0;
+	for (strLength = 0; strLength < 128 && string[strLength] != '\0'; strLength++) { }
 
-	for (int i = 0; i < 12; i++)
+	unsigned long long id = 0;
+	unsigned long long offset = strLength >= 16 ? strLength - 16 : 0;
+	for (unsigned long long i = 0; i < strLength - offset; i++)
 	{
-		if (string[i] == '\0') break;
-		id |= AlphanumericToIDPart(string[i]) << (5 * i);
+		id |= HashIDBits(string[offset + i]) << (4 * i);
 	}
 
 	return id;
 }
 
 #define SerialiseAs(nameInit) \
-virtual const char* ClassName() const noexcept { return #nameInit; } \
-static consteval unsigned long long ClassID() noexcept { return AlphanumericStringToID(#nameInit); }
+static constexpr const char* const className = #nameInit; \
+virtual const char* GetClassName() const noexcept { return #nameInit; } \
+static constexpr const unsigned long long classID = HashID(#nameInit); \
+virtual const unsigned long long GetClassID() const noexcept { return nameInit::classID; }
 
 class GameObject
 {
@@ -155,7 +147,7 @@ template<GameObjectClass T> inline T* GameObject::Instantiate(GameObjectState st
 	gameObject->guid = GuidGenerator::NewGuid();
 	gameObject->state = stateInit;
 
-	std::string className = gameObject->ClassName();
+	std::string className = gameObject->GetClassName();
 	AssignStringToCString(gameObject->name, className);
 
 	gameObjectManager->Add(gameObject);

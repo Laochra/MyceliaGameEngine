@@ -115,15 +115,17 @@ void Heirarchy::Draw()
 
 			if (dynamic_cast<GameObject3D*>(rightClickMenu.target) != nullptr)
 			{
-				if (ImGui::MenuItem("GameObject3D"))
+				if (ImGui::MenuItem(GameObject3D::className))
 				{
-					GameObject3D::Instantiate<GameObject3D>((GameObject3D*)rightClickMenu.target);
-					rightClickMenu.Close();
+					GameObject3D::Instantiate<GameObject3D>((GameObject3D*)rightClickMenu.target); rightClickMenu.Close();
 				}
-				if (ImGui::MenuItem("MeshRenderer"))
+				if (ImGui::MenuItem(MeshRenderer::className))
 				{
-					GameObject3D::Instantiate<MeshRenderer>((GameObject3D*)rightClickMenu.target);
-					rightClickMenu.Close();
+					GameObject3D::Instantiate<MeshRenderer>((GameObject3D*)rightClickMenu.target); rightClickMenu.Close();
+				}
+				if (ImGui::MenuItem(LightObject::className)) 
+				{
+					GameObject3D::Instantiate<LightObject>((GameObject3D*)rightClickMenu.target); rightClickMenu.Close();
 				}
 			}
 			ImGui::EndMenu();
@@ -178,7 +180,7 @@ void Heirarchy::DrawEntry(GameObject3D* gameObject3D)
 		if (ImGui::IsDragDropPayloadBeingAccepted())
 		{
 			std::stringstream tooltip;
-			tooltip << "Move " << gameObject3D->ClassName() << " here?";
+			tooltip << "Move " << gameObject3D->GetClassName() << " here?";
 
 			ImGui::Text(tooltip.str().c_str());
 		}

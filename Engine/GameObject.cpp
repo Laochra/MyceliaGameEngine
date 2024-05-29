@@ -7,7 +7,7 @@ void GameObject::SerialiseTo(json& jsonObject) const
 	jsonObject["Name"] = name;
 	jsonObject["GUID"] = guid;
 	jsonObject["Active"] = state == Active;
-	jsonObject["Type"] = ClassName();
+	jsonObject["TypeID"] = GetClassID();
 }
 void GameObject::DeserialiseFrom(const json& jsonObject)
 {

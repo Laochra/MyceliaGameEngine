@@ -175,7 +175,7 @@ void Editor::Initialise()
 	go->SetName("dfsf");
 
 
-	debug->Log(std::to_string(go->ClassID()));
+	debug->Log(std::to_string(GameObject3D::classID));
 }
 
 void Editor::OnFrameStart()

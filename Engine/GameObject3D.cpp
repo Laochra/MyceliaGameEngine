@@ -1,5 +1,8 @@
 #include "GameObject3D.h"
 
+#include "MeshRenderer.h"
+#include "LightObject.h"
+
 void GameObject3D::SerialiseTo(json& jsonObject) const
 {
 	GameObject::SerialiseTo(jsonObject);
@@ -46,11 +49,19 @@ void GameObject3D::DeserialiseFrom(const json& jsonObject)
 
 	vector<json> childrenData = jsonObject["Children"];
 	for (int i = 0; i < childrenData.size(); i++)
-	{
-		// ToDo: Get type checking working with ClassID() to create children
-		
-		//GameObject3D* child = new  childrenData[i];
-		//children.push_back(child);
+	{		
+		GameObject3D* child;
+
+		unsigned long long childClassID = childrenData[i]["TypeID"];
+		switch (childClassID)
+		{
+		case GameObject3D::classID: child = new GameObject3D(childrenData[i]); break;
+		case MeshRenderer::classID: child = new MeshRenderer(childrenData[i]); break;
+		case LightObject::classID: child = new LightObject(childrenData[i]); break;
+		}
+
+		children.push_back(child);
+		child->parent = this;
 	}
 
 	// Deserialise 3D Stuff
