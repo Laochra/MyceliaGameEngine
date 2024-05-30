@@ -10,6 +10,23 @@
 
 #include "GeneralMacros.h"
 
+void MeshRenderer::SerialiseTo(json& jsonObj) const
+{
+	GameObject3D::SerialiseTo(jsonObj);
+
+	jsonObj["Mesh"] = mesh->GetFilePath();
+	jsonObj["Material"] = material->GetFilePath();
+}
+void MeshRenderer::DeserialiseFrom(const json& jsonObj)
+{
+	GameObject3D::DeserialiseFrom(jsonObj);
+
+	string meshFilePath = jsonObj["Mesh"];
+	mesh = meshManager->GetMesh(meshFilePath.c_str());
+	string materialFilePath = jsonObj["Material"];
+	material = materialManager->GetMaterial(materialFilePath.c_str());
+}
+
 void MeshRenderer::Draw()
 {
 	if (material == nullptr) return;

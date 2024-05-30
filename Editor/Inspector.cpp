@@ -18,6 +18,18 @@ void Inspector::SetTarget(GameObject* target)
 	case GameObject3D::classID: targetGUI = new GameObject3DGUI(target); break;
 	case MeshRenderer::classID: targetGUI = new MeshRendererGUI(target); break;
 	case LightObject::classID:  targetGUI = new LightObjectGUI(target);  break;
+	default:
+		targetGUI = new GameObjectGUI(target);
+		debug->Log(
+			{
+				target->GetClassName(), " "
+				"was not accounted for when selecting inspector display.",
+				"Editable fields will be limited."
+				locationinfo
+			},
+			Debug::Error, Debug::ERR151
+		);
+		break;
 	}
 }
 

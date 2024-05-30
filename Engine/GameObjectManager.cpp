@@ -2,8 +2,12 @@
 
 //#include "GameObject2D.h"
 #include "GameObject3D.h"
+#include "MeshRenderer.h"
+#include "LightObject.h"
 
 #include "GeneralMacros.h"
+
+#include "Debug.h"
 
 GameObjectManager* gameObjectManager;
 
@@ -45,9 +49,7 @@ void GameObjectManager::Move(GameObject* gameObject, int newIndex) noexcept
 
 	if (i == newIndex) return;
 
-	char direction;
-	if (i < newIndex) direction = 1;
-	else direction = -1;
+	char direction = (i < newIndex) ? 1 : -1;
 
 	GameObject* current;
 	while (i != newIndex)
@@ -65,7 +67,7 @@ void GameObjectManager::Delete(GameObject* gameObject)
 {
 	if (gameObject == nullptr) return;
 
-	if (*gameObject != GameObject::Destroyed)
+	if (gameObject != GameObject::Destroyed)
 	{
 		GameObject::Destroy(gameObject);
 	}

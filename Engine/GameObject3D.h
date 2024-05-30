@@ -19,10 +19,6 @@ public:
 
 	using GameObject::GameObject;
 
-	// JSON
-	virtual void SerialiseTo(json& jsonObject) const override;
-	virtual void DeserialiseFrom(const json& jsonObject) override;
-
 	virtual void OnDestroy() override;
 
 	bool IsActive() noexcept override;
@@ -102,7 +98,7 @@ template<GameObject3DClass T> inline T* GameObject3D::Instantiate(vec3 positionI
 	//gameObject->guid = GuidGenerator::NewGuid();
 	//gameObject->state = stateInit;
 	//
-	//if (parentInit == nullptr) gameObjectManager->Add(gameObject);
+	//if (parentInit is nullptr) gameObjectManager->Add(gameObject);
 	//
 	//gameObject->Initialise();
 

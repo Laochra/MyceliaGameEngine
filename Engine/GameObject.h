@@ -63,7 +63,9 @@ consteval unsigned long long HashID(const char* const string)
 static constexpr const char* const className = #nameInit; \
 virtual const char* GetClassName() const noexcept { return #nameInit; } \
 static constexpr const unsigned long long classID = HashID(#nameInit); \
-virtual const unsigned long long GetClassID() const noexcept { return nameInit::classID; }
+virtual const unsigned long long GetClassID() const noexcept { return nameInit::classID; } \
+virtual void SerialiseTo(json& serialisedObject) const; \
+virtual void DeserialiseFrom(const json& serialisedObject);
 
 class GameObject
 {
@@ -76,12 +78,6 @@ public:
 		Inactive,	// The GameObject cannot recieve updates
 		Destroyed	// The GameObject has been destroyed and should no longer be referenced
 	};
-
-	// JSON
-	virtual void SerialiseTo(json& jsonObject) const;
-	virtual void DeserialiseFrom(const json& jsonObject);
-	GameObject(const json& jsonObject);
-	void operator=(const json& jsonObject);
 
 	/// <summary>Check if GameObjects are equal based on their GUIDs</summary> <returns>True if GameObjects are equal</returns>
 	bool operator==(GameObject& other) const noexcept;
@@ -114,6 +110,8 @@ public:
 
 	/// <summary>Creates a new instance of a GameObject</summary> <param name="stateInit">(default: Active)</param> <returns>A pointer to the created instance</returns>
 	template<GameObjectClass T> static T* Instantiate(GameObjectState stateInit = Active);
+	/// <summary>Creates a new instance of a GameObject by deserialising from json</summary> <returns>A pointer to the created instance</returns>
+	static GameObject* InstantiateFrom(json serialisedObject) noexcept;
 	/// <summary>Calls OnDestroy() on the GameObject instance and permanently sets its state to Destroyed</summary> <param name="gameObject"></param>
 	static void Destroy(GameObject* gameObject);
 
@@ -135,6 +133,8 @@ private:
 	// Friends
 	friend class GameObjectManager;
 
+	friend bool operator==(GameObject* gameObject, GameObjectState state) noexcept;
+	friend bool operator!=(GameObject* gameObject, GameObjectState state) noexcept;
 	friend void to_json(json& jsonObject, const GameObject* gameObject) noexcept;
 	friend void from_json(const json& jsonObject, GameObject* gameObject) noexcept;
 };
@@ -159,7 +159,7 @@ template<GameObjectClass T> inline T* GameObject::Instantiate(GameObjectState st
 inline void GameObject::Destroy(GameObject* gameObject)
 {
 	if (gameObject == nullptr) return;
-	if (*gameObject == Destroyed) return;
+	if (gameObject == Destroyed) return;
 
 	gameObject->OnDestroy();
 

@@ -1,23 +1,60 @@
 #include "GameObject.h"
+#include "GameObject3D.h"
+#include "MeshRenderer.h"
+#include "LightObject.h"
 
 #include "GeneralMacros.h"
 
-void GameObject::SerialiseTo(json& jsonObject) const
+#include "Debug.h"
+
+GameObject* GameObject::InstantiateFrom(json jsonObj) noexcept
 {
-	jsonObject["Name"] = name;
-	jsonObject["GUID"] = guid;
-	jsonObject["Active"] = state == Active;
-	jsonObject["TypeID"] = GetClassID();
+	GameObject* gameObject;
+	const unsigned long long typeID = jsonObj["TypeID"];
+	switch (typeID)
+	{
+	case GameObject::classID: gameObject = new GameObject(); break;
+	case GameObject3D::classID: gameObject = new GameObject3D(); break;
+	case MeshRenderer::classID: gameObject = new MeshRenderer(); break;
+	case LightObject::classID: gameObject = new LightObject(); break;
+	default:
+		gameObject = new GameObject();
+		debug->Log(
+			{
+				"TypeID '", std::to_string(typeID), "' "
+				"was not accounted for when loading. "
+				"DO NOT SAVE! Data will be lost. "
+				locationinfo
+			},
+			Debug::Error, Debug::ERR151
+		);
+		break;
+	}
+
+	from_json(jsonObj, gameObject);
+
+	gameObjectManager->Add(gameObject);
+	gameObject->Initialise();
+
+	return gameObject;
 }
-void GameObject::DeserialiseFrom(const json& jsonObject)
+
+void GameObject::SerialiseTo(json& jsonObj) const
 {
-	string nameStr = string(jsonObject["Name"]);
+	jsonObj["Name"] = name;
+	jsonObj["GUID"] = guid;
+	jsonObj["Active"] = state == Active;
+	jsonObj["TypeID"] = GetClassID();
+}
+void GameObject::DeserialiseFrom(const json& jsonObj)
+{
+	string nameStr = string(jsonObj["Name"]);
 	name = new char[nameStr.size() + 1];
 	memcpy(name, nameStr.c_str(), nameStr.size() + 1);
 
-	guid = jsonObject["GUID"];
+	guid = jsonObj["GUID"];
 
-	state = bool(jsonObject["Active"]) ? GameObject::Active : GameObject::Inactive;
+	state = bool(jsonObj["Active"]) ? GameObject::Active : GameObject::Inactive;
 }
 
 GameObject::GameObjectState GameObject::GetState() const noexcept
@@ -27,16 +64,16 @@ GameObject::GameObjectState GameObject::GetState() const noexcept
 
 bool GameObject::IsActive() noexcept
 {
-	return *this == Active;
+	return this == Active;
 }
 
-void GameObject::SetState(GameObjectState value) noexcept
+void GameObject::SetState(GameObjectState newState) noexcept
 {
-	if (state == Destroyed || value == Destroyed) return;
+	if (state == Destroyed || newState == Destroyed) return;
 	
-	state = value;
+	state = newState;
 	
-	if (value == Active) OnActivate();
+	if (newState == Active) OnActivate();
 	else OnDeactivate();
 }
 
@@ -57,15 +94,6 @@ void GameObject::SetName(const char* newName) noexcept
 	name = new char[newNameLength + 1];
 	name[newNameLength] = '\0';
 	memcpy(name, newName, newNameLength);
-}
-
-GameObject::GameObject(const json& jsonObject)
-{
-	from_json(jsonObject, this);
-}
-void GameObject::operator=(const json& jsonObject)
-{
-	from_json(jsonObject, this);
 }
 
 bool GameObject::operator==(GameObject& other) const noexcept
@@ -123,6 +151,15 @@ void GameObject::OnActivate()
 void GameObject::OnDeactivate()
 {
 
+}
+
+bool operator==(GameObject* gameObject, GameObject::GameObjectState state) noexcept
+{
+	return gameObject->state == state;
+}
+bool operator!=(GameObject* gameObject, GameObject::GameObjectState state) noexcept
+{
+	return gameObject->state != state;
 }
 
 // Friends

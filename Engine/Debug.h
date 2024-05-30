@@ -66,6 +66,10 @@ public:
 		ERR100,		// Failed to Load Critical File
 		ERR101,		// Failed to Load a Default Asset
 
+		// Data & Serialisation
+		ERR150,		// Fatal Data Failure
+		ERR151,		// Unspecified Case for TypeID
+
 		// 3rd Party
 		ERR901,		// OpenGL Error
 		ERR902,		// GLFW Error

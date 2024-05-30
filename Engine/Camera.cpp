@@ -4,6 +4,23 @@ Camera* mainCamera = nullptr;
 int screenWidth = 0;
 int screenHeight = 0;
 
+void Camera::SerialiseTo(json& jsonObj) const
+{
+	GameObject3D::SerialiseTo(jsonObj);
+
+	jsonObj["FOV"] = fov;
+	jsonObj["NearClip"] = nearClip;
+	jsonObj["FarClip"] = farClip;
+}
+void Camera::DeserialiseFrom(const json& jsonObj)
+{
+	GameObject3D::DeserialiseFrom(jsonObj);
+
+	fov = jsonObj["FOV"];
+	nearClip = jsonObj["NearClip"];
+	farClip = jsonObj["FarClip"];
+}
+
 glm::mat4 Camera::GetViewMatrix()
 {
 	return glm::mat4();

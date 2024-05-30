@@ -166,16 +166,16 @@ void Editor::Initialise()
 
 	MeshCooker::Cook("Assets\\Meshes\\Marill.fbx");
 
-	GameObject* go = GameObject::Instantiate<GameObject>();
-	go->SetName("weewooweewoo");
-	json jgo;
-	jgo["GameObject"] = go;
-	GameObject* go2 = GameObject::Instantiate<GameObject>();
-	go2->DeserialiseFrom(jgo["GameObject"]);
-	go->SetName("dfsf");
+	GameObject3D* original = GameObject3D::Instantiate<GameObject3D>(vec3(1,2,3));
+	MeshRenderer* meshRenderer = GameObject3D::Instantiate<MeshRenderer>(original, vec3(4,5,6));
+	meshRenderer->SetMesh("ProceduralCube"); meshRenderer->SetMaterial("Default");
+	GameObject3D::Instantiate<LightObject>(original, vec3(7,8,9));
 
+	json prefab = original;
 
-	debug->Log(std::to_string(GameObject3D::classID));
+	GameObject* clone = GameObject::InstantiateFrom(prefab);
+
+	debug->Log(clone->GetClassName());
 }
 
 void Editor::OnFrameStart()
@@ -197,7 +197,7 @@ void Editor::FixedUpdate()
 
 void Editor::Update()
 {
-	if (*object == GameObject::Active)
+	if (object == GameObject::Active)
 	{
 		//object->LookTowards(mainCamera->GetPosition(), glm::radians(15.0f) * Time::delta);
 	}

@@ -11,7 +11,7 @@ void MeshRendererGUI::Draw()
 
 void MeshRendererGUI::DrawMeshRendererGUI(MeshRenderer* meshRenderer)
 {
-	if (meshRenderer == nullptr || *meshRenderer == GameObject::Destroyed) return;
+	if (meshRenderer == nullptr || meshRenderer == GameObject::Destroyed) return;
 
 	GameObject3DGUI::DrawGameObject3DGUI(meshRenderer);
 

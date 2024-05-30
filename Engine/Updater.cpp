@@ -39,7 +39,7 @@ namespace Updater
 			{
 				onFrameStartList[i]->OnFrameStart();
 			}
-			else if (*onFrameStartList[i] == GameObject::Destroyed)
+			else if (onFrameStartList[i] == GameObject::Destroyed)
 			{
 				onFrameStartList.erase(onFrameStartList.begin() + i);
 				continue;
@@ -57,7 +57,7 @@ namespace Updater
 			{
 				fixedUpdateList[i]->FixedUpdate();
 			}
-			else if (*fixedUpdateList[i] == GameObject::Destroyed)
+			else if (fixedUpdateList[i] == GameObject::Destroyed)
 			{
 				fixedUpdateList.erase(fixedUpdateList.begin() + i);
 				continue;
@@ -75,7 +75,7 @@ namespace Updater
 			{
 				updateList[i]->Update();
 			}
-			else if (*updateList[i] == GameObject::Destroyed)
+			else if (updateList[i] == GameObject::Destroyed)
 			{
 				updateList.erase(updateList.begin() + i);
 				continue;
@@ -93,7 +93,7 @@ namespace Updater
 			{
 				drawList[i]->Draw();
 			}
-			else if (*drawList[i] == GameObject::Destroyed)
+			else if (drawList[i] == GameObject::Destroyed)
 			{
 				drawList.erase(drawList.begin() + i);
 				continue;

@@ -3,25 +3,25 @@
 #include "MeshRenderer.h"
 #include "LightObject.h"
 
-void GameObject3D::SerialiseTo(json& jsonObject) const
+void GameObject3D::SerialiseTo(json& jsonObj) const
 {
-	GameObject::SerialiseTo(jsonObject);
+	GameObject::SerialiseTo(jsonObj);
 	
 	vector<float> positionData(3);
 	memcpy(positionData.data(), &position[0], 3 * sizeof(float));
-	jsonObject["Position"] = positionData;
+	jsonObj["Position"] = positionData;
 	
 	vector<float> rotationData(4);
 	memcpy(rotationData.data(), &rotation[0], 4 * sizeof(float));
-	jsonObject["Rotation"] = rotationData;
+	jsonObj["Rotation"] = rotationData;
 	
 	vector<float> scaleData(3);
 	memcpy(scaleData.data(), &scale[0], 3 * sizeof(float));
-	jsonObject["Scale"] = scaleData;
+	jsonObj["Scale"] = scaleData;
 	
 	vector<float> pivotData(3);
 	memcpy(pivotData.data(), &pivot[0], 3 * sizeof(float));
-	jsonObject["Pivot"] = pivotData;
+	jsonObj["Pivot"] = pivotData;
 	
 	vector<json> childrenData;
 	for (int i = 0; i < children.size(); i++)
@@ -29,42 +29,31 @@ void GameObject3D::SerialiseTo(json& jsonObject) const
 		json child = children[i];
 		childrenData.push_back(child);
 	}
-	jsonObject["Children"] = childrenData;
+	jsonObj["Children"] = childrenData;
 }
-void GameObject3D::DeserialiseFrom(const json& jsonObject)
+void GameObject3D::DeserialiseFrom(const json& jsonObj)
 {
-	GameObject::DeserialiseFrom(jsonObject);
+	GameObject::DeserialiseFrom(jsonObj);
 
-	vector<float> positionData = jsonObject["Position"];
+	vector<float> positionData = jsonObj["Position"];
 	memcpy(&position[0], positionData.data(), 3 * sizeof(float));
 
-	vector<float> rotationData = jsonObject["Rotation"];
+	vector<float> rotationData = jsonObj["Rotation"];
 	memcpy(&rotation[0], rotationData.data(), 4 * sizeof(float));
 
-	vector<float> scaleData = jsonObject["Scale"];
+	vector<float> scaleData = jsonObj["Scale"];
 	memcpy(&scale[0], scaleData.data(), 3 * sizeof(float));
 
-	vector<float> pivotData = jsonObject["Pivot"];
+	vector<float> pivotData = jsonObj["Pivot"];
 	memcpy(&pivot[0], pivotData.data(), 3 * sizeof(float));
 
-	vector<json> childrenData = jsonObject["Children"];
+	vector<json> childrenData = jsonObj["Children"];
 	for (int i = 0; i < childrenData.size(); i++)
-	{		
-		GameObject3D* child;
-
-		unsigned long long childClassID = childrenData[i]["TypeID"];
-		switch (childClassID)
-		{
-		case GameObject3D::classID: child = new GameObject3D(childrenData[i]); break;
-		case MeshRenderer::classID: child = new MeshRenderer(childrenData[i]); break;
-		case LightObject::classID: child = new LightObject(childrenData[i]); break;
-		}
-
+	{
+		GameObject3D* child = (GameObject3D*)GameObject::InstantiateFrom(childrenData[i]);
 		children.push_back(child);
 		child->parent = this;
 	}
-
-	// Deserialise 3D Stuff
 }
 
 void GameObject3D::OnDestroy()
@@ -83,8 +72,8 @@ void GameObject3D::OnDestroy()
 
 bool GameObject3D::IsActive() noexcept
 {
-	if (parent == nullptr) { return *this == Active; }
-	else { return *this == Active && parent->IsActive(); }
+	if (parent == nullptr) { return this == Active; }
+	else { return this == Active && parent->IsActive(); }
 }
 
 
