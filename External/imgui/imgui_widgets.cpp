@@ -6352,7 +6352,7 @@ bool ImGui::TreeNodeBehavior(ImGuiID id, ImGuiTreeNodeFlags flags, const char* l
         if (hovered || selected)
         {
             const ImU32 bg_col = GetColorU32((held && hovered) ? ImGuiCol_HeaderActive : hovered ? ImGuiCol_HeaderHovered : ImGuiCol_Header);
-            RenderFrame(frame_bb.Min, frame_bb.Max, bg_col, false);
+            RenderFrame(frame_bb.Min, frame_bb.Max, bg_col, false, style.SelectableRounding);
         }
         RenderNavHighlight(frame_bb, id, nav_highlight_flags);
         if (flags & ImGuiTreeNodeFlags_Bullet)
