@@ -60,6 +60,9 @@
     <ClCompile Include="MeshCooker.cpp">
       <Filter>GUI\EditorWindows</Filter>
     </ClCompile>
+    <ClCompile Include="Heirarchy.cpp">
+      <Filter>GUI\EditorWindows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="JSON Configs">

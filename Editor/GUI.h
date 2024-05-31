@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ImGuiIncludes.h"
+#include "imgui_stdlib.h"
 
 #include <string>
 using std::string;

@@ -177,6 +177,7 @@
     <ClCompile Include="GameObject3DGUI.cpp" />
     <ClCompile Include="GameObjectGUI.cpp" />
     <ClCompile Include="GUI.cpp" />
+    <ClCompile Include="Heirarchy.cpp" />
     <ClCompile Include="InputEditor.cpp" />
     <ClCompile Include="Inspector.cpp" />
     <ClCompile Include="LightObjectGUI.cpp" />
