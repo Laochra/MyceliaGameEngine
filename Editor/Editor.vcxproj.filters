@@ -63,6 +63,18 @@
     <ClCompile Include="Heirarchy.cpp">
       <Filter>GUI\EditorWindows</Filter>
     </ClCompile>
+    <ClCompile Include="ConsoleGUI.cpp">
+      <Filter>GUI\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorStyler.cpp">
+      <Filter>GUI\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialGUI.cpp">
+      <Filter>GUI\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderProgramGUI.cpp">
+      <Filter>GUI\EditorWindows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="JSON Configs">
