@@ -30,27 +30,15 @@ namespace Heirarchy
 
 	void Heirarchy::Draw()
 	{
+		ImGui::BeginDisabled();
 		if (ImGui::CollapsingHeader("2D"))
 		{
-			ImGui::Spacing();
+
 		}
+		ImGui::EndDisabled();
 
-		if (ImGui::CollapsingHeader("3D"))
+		if (ImGui::CollapsingHeader("3D", ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			// Drag Drop Target BEFORE First GameObject3D
-			for (GameObject* gameObject : gameObjectManager->gameObjects)
-			{
-				if (dynamic_cast<GameObject3D*>(gameObject) != nullptr)
-				{
-					//if (ImGui::IsDragDropActive())
-					{
-						ImGui::SeparatorEx(ImGuiSeparatorFlags_Horizontal, dragDropLineWidth);
-						DragDropTarget("GameObject3D", (GameObject3D*)gameObject, Before);
-					}
-					break;
-				}
-			}
-
 			// Draw 3D Heirarchy
 			for (GameObject* gameObject : gameObjectManager->gameObjects)
 			{
@@ -65,11 +53,8 @@ namespace Heirarchy
 			{
 				if (dynamic_cast<GameObject3D*>(gameObjectManager->gameObjects[i]) != nullptr)
 				{
-					//if (ImGui::IsDragDropActive())
-					{
-						ImGui::SeparatorEx(ImGuiSeparatorFlags_Horizontal, dragDropLineWidth);
-						DragDropTarget("GameObject3D", (GameObject3D*)gameObjectManager->gameObjects[i], After);
-					}
+					ImGui::SeparatorEx(ImGuiSeparatorFlags_Horizontal, dragDropLineWidth);
+					DragDropTarget("GameObject3D", (GameObject3D*)gameObjectManager->gameObjects[i], After);
 					break;
 				}
 			}
@@ -147,25 +132,15 @@ namespace Heirarchy
 		}
 	}
 
-	void BeginPayload(GameObject3D* gameObject3D)
-	{
-		ImGui::SetDragDropPayload("GameObject3D", &gameObject3D, sizeof(GameObject3D**));
-		if (ImGui::IsDragDropPayloadBeingAccepted())
-		{
-			std::stringstream tooltip;
-			tooltip << "Move " << gameObject3D->GetClassName() << " here?";
-
-			ImGui::Text(tooltip.str().c_str());
-		}
-		else
-		{
-			ImGui::TextColored({ 255, 0, 0, 1 }, "Invalid target");
-		}
-	}
-
 	void Heirarchy::DrawEntry(GameObject3D* gameObject3D)
 	{
 		ImGui::PushID(GUI::GenerateID(gameObject3D).c_str());
+
+		if (gameObject3D->GetIndex() == 0)
+		{
+			ImGui::SeparatorEx(ImGuiSeparatorFlags_Horizontal, dragDropLineWidth);
+			DragDropTarget("GameObject3D", gameObject3D, Before);
+		}
 
 		bool isSelected = inspector->GetTarget() == gameObject3D;
 		bool isLeaf = gameObject3D->GetChildren()->size() == 0;
@@ -212,7 +187,7 @@ namespace Heirarchy
 			DragDropTarget("GameObject3D", gameObject3D);
 		}
 
-		if (isLeaf /*&& ImGui::IsDragDropActive()*/)
+		if (isLeaf)
 		{
 			ImGui::SeparatorEx(ImGuiSeparatorFlags_Horizontal, dragDropLineWidth);
 			DragDropTarget("GameObject3D", gameObject3D, After);
@@ -280,5 +255,21 @@ namespace Heirarchy
 			inspector->SetTarget(gameObject3D);
 			rightClickMenu.Open(gameObject3D, ImGui::GetCursorScreenPos());
 		}
+	}
+}
+
+void Heirarchy::BeginPayload(GameObject3D* gameObject3D)
+{
+	ImGui::SetDragDropPayload("GameObject3D", &gameObject3D, sizeof(GameObject3D**));
+	if (ImGui::IsDragDropPayloadBeingAccepted())
+	{
+		std::stringstream tooltip;
+		tooltip << "Move " << gameObject3D->GetName() << " here?";
+
+		ImGui::Text(tooltip.str().c_str());
+	}
+	else
+	{
+		ImGui::TextColored({ 255, 0, 0, 1 }, "Invalid target");
 	}
 }
