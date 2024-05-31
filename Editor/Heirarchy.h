@@ -130,12 +130,20 @@ void Heirarchy::Draw()
 			}
 			ImGui::EndMenu();
 		}
-		ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1), "Duplicate (WIP)");
-		//if (ImGui::MenuItem("Duplicate (WIP)"))
-		//{
-		//	// TODO: Add Code For Cloning GameObjects and Call it Here
-		//	rightClickMenu.Close();
-		//}
+		if (ImGui::MenuItem("Duplicate"))
+		{
+			GameObject3D* original = (GameObject3D*)rightClickMenu.target;
+			GameObject3D* parent = original->GetParent();
+
+			json prefab = rightClickMenu.target;
+
+			GameObject3D* clone = (GameObject3D*)GameObject::InstantiateFrom(prefab, GuidGeneration::New);
+			gameObjectManager->Add(clone);
+			clone->SetParent(parent);
+			clone->MoveTo(original->GetIndex() + 1);
+
+			rightClickMenu.Close();
+		}
 		if (ImGui::MenuItem("Delete"))
 		{
 			GameObject::Destroy(rightClickMenu.target);

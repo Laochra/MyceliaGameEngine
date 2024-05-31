@@ -17,9 +17,9 @@ void MeshRenderer::SerialiseTo(json& jsonObj) const
 	jsonObj["Mesh"] = mesh->GetFilePath();
 	jsonObj["Material"] = material->GetFilePath();
 }
-void MeshRenderer::DeserialiseFrom(const json& jsonObj)
+void MeshRenderer::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptions)
 {
-	GameObject3D::DeserialiseFrom(jsonObj);
+	GameObject3D::DeserialiseFrom(jsonObj, guidOptions);
 
 	string meshFilePath = jsonObj["Mesh"];
 	mesh = meshManager->GetMesh(meshFilePath.c_str());
@@ -168,6 +168,6 @@ void MeshRenderer::Initialise()
 
 	Updater::DrawAdd(this);
 
-	mesh = meshManager->GetMesh("ProceduralCube");
-	material = materialManager->GetMaterial("Default");
+	if (mesh == nullptr) mesh = meshManager->GetMesh("ProceduralCube");
+	if (material == nullptr) material = materialManager->GetMaterial("Default");
 }

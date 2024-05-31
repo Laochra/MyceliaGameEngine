@@ -12,9 +12,9 @@ void Camera::SerialiseTo(json& jsonObj) const
 	jsonObj["NearClip"] = nearClip;
 	jsonObj["FarClip"] = farClip;
 }
-void Camera::DeserialiseFrom(const json& jsonObj)
+void Camera::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptions)
 {
-	GameObject3D::DeserialiseFrom(jsonObj);
+	GameObject3D::DeserialiseFrom(jsonObj, guidOptions);
 
 	fov = jsonObj["FOV"];
 	nearClip = jsonObj["NearClip"];

@@ -31,9 +31,9 @@ void GameObject3D::SerialiseTo(json& jsonObj) const
 	}
 	jsonObj["Children"] = childrenData;
 }
-void GameObject3D::DeserialiseFrom(const json& jsonObj)
+void GameObject3D::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptions)
 {
-	GameObject::DeserialiseFrom(jsonObj);
+	GameObject::DeserialiseFrom(jsonObj, guidOptions);
 
 	vector<float> positionData = jsonObj["Position"];
 	memcpy(&position[0], positionData.data(), 3 * sizeof(float));
@@ -50,7 +50,7 @@ void GameObject3D::DeserialiseFrom(const json& jsonObj)
 	vector<json> childrenData = jsonObj["Children"];
 	for (int i = 0; i < childrenData.size(); i++)
 	{
-		GameObject3D* child = (GameObject3D*)GameObject::InstantiateFrom(childrenData[i]);
+		GameObject3D* child = (GameObject3D*)GameObject::InstantiateFrom(childrenData[i], guidOptions);
 		children.push_back(child);
 		child->parent = this;
 	}

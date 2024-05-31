@@ -7,7 +7,7 @@
 
 #include "Debug.h"
 
-GameObject* GameObject::InstantiateFrom(json jsonObj) noexcept
+GameObject* GameObject::InstantiateFrom(json jsonObj, GuidGeneration guidOptions) noexcept
 {
 	GameObject* gameObject;
 	const unsigned long long typeID = jsonObj["TypeID"];
@@ -31,9 +31,8 @@ GameObject* GameObject::InstantiateFrom(json jsonObj) noexcept
 		break;
 	}
 
-	from_json(jsonObj, gameObject);
+	gameObject->DeserialiseFrom(jsonObj, guidOptions);
 
-	gameObjectManager->Add(gameObject);
 	gameObject->Initialise();
 
 	return gameObject;
@@ -46,13 +45,14 @@ void GameObject::SerialiseTo(json& jsonObj) const
 	jsonObj["Active"] = state == Active;
 	jsonObj["TypeID"] = GetClassID();
 }
-void GameObject::DeserialiseFrom(const json& jsonObj)
+void GameObject::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptions)
 {
 	string nameStr = string(jsonObj["Name"]);
 	name = new char[nameStr.size() + 1];
 	memcpy(name, nameStr.c_str(), nameStr.size() + 1);
 
-	guid = jsonObj["GUID"];
+	if (guidOptions == GuidGeneration::Keep) guid = jsonObj["GUID"];
+	else guid = GuidGenerator::NewGuid();
 
 	state = bool(jsonObj["Active"]) ? GameObject::Active : GameObject::Inactive;
 }

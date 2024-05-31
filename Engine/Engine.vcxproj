@@ -164,6 +164,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObject3D.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
+    <ClCompile Include="GuidGenerator.cpp" />
     <ClCompile Include="KeyAxis.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Input.cpp" />

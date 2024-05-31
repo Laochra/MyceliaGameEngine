@@ -18,9 +18,9 @@ void LightObject::SerialiseTo(json& jsonObj) const
 	memcpy(hdrColourData.data(), &colour[0], 4 * sizeof(float));
 	jsonObj["HDRColour"] = hdrColourData;
 }
-void LightObject::DeserialiseFrom(const json& jsonObj)
+void LightObject::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptions)
 {
-	GameObject3D::DeserialiseFrom(jsonObj);
+	GameObject3D::DeserialiseFrom(jsonObj, guidOptions);
 
 	range = jsonObj["Range"];
 

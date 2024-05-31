@@ -164,18 +164,9 @@ void Editor::Initialise()
 	fxaaProgram.LoadShader(FragmentStage, "Engine\\DefaultAssets\\FXAA.frag");
 	fxaaProgram.Link();
 
-	MeshCooker::Cook("Assets\\Meshes\\Marill.fbx");
+	//MeshCooker::Cook("Assets\\Meshes\\Marill.fbx");
 
-	GameObject3D* original = GameObject3D::Instantiate<GameObject3D>(vec3(1,2,3));
-	MeshRenderer* meshRenderer = GameObject3D::Instantiate<MeshRenderer>(original, vec3(4,5,6));
-	meshRenderer->SetMesh("ProceduralCube"); meshRenderer->SetMaterial("Default");
-	GameObject3D::Instantiate<LightObject>(original, vec3(7,8,9));
-
-	json prefab = original;
-
-	GameObject* clone = GameObject::InstantiateFrom(prefab);
-
-	debug->Log(clone->GetClassName());
+	
 }
 
 void Editor::OnFrameStart()

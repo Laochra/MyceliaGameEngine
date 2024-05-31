@@ -65,7 +65,9 @@ virtual const char* GetClassName() const noexcept { return #nameInit; } \
 static constexpr const unsigned long long classID = HashID(#nameInit); \
 virtual const unsigned long long GetClassID() const noexcept { return nameInit::classID; } \
 virtual void SerialiseTo(json& serialisedObject) const; \
-virtual void DeserialiseFrom(const json& serialisedObject);
+virtual void DeserialiseFrom(const json& serialisedObject, GuidGeneration guidOptions = GuidGeneration::Keep);
+
+enum class GuidGeneration : bool { New = true, Keep = false };
 
 class GameObject
 {
@@ -111,7 +113,7 @@ public:
 	/// <summary>Creates a new instance of a GameObject</summary> <param name="stateInit">(default: Active)</param> <returns>A pointer to the created instance</returns>
 	template<GameObjectClass T> static T* Instantiate(GameObjectState stateInit = Active);
 	/// <summary>Creates a new instance of a GameObject by deserialising from json</summary> <returns>A pointer to the created instance</returns>
-	static GameObject* InstantiateFrom(json serialisedObject) noexcept;
+	static GameObject* InstantiateFrom(json serialisedObject, GuidGeneration guidOptions = GuidGeneration::Keep) noexcept;
 	/// <summary>Calls OnDestroy() on the GameObject instance and permanently sets its state to Destroyed</summary> <param name="gameObject"></param>
 	static void Destroy(GameObject* gameObject);
 
