@@ -76,7 +76,13 @@ namespace SceneGUI
 	}
 	bool OpenScene() noexcept
 	{
-		const char* const filePath = tinyfd_openFileDialog(nullptr, nullptr, 0, nullptr, nullptr, false);
+		const char* const windowTitle = "Open Scene";
+		const uint defaultPathLength = 15;
+		const char defaultPath[defaultPathLength] = "Assets\\Scenes\\";
+		const uint filterPatternCount = 1;
+		const char* const filterPatterns[filterPatternCount] = { "*.scene" };
+
+		const char* const filePath = tinyfd_openFileDialog(windowTitle, defaultPath, filterPatternCount, filterPatterns, nullptr, false);
 		if (filePath == nullptr) return false;
 		const uint filePathLength = (uint)strlen(filePath);
 
@@ -192,7 +198,7 @@ namespace SceneGUI
 		const uint defaultPathLength = 23;
 		const char defaultPath[defaultPathLength] = "Assets\\Scenes\\NewScene";
 		const uint filterPatternCount = 1;
-		const char* const filterPatterns[filterPatternCount] = { ".scene" };
+		const char* const filterPatterns[filterPatternCount] = { "*.scene" };
 
 		const char* const filePath = tinyfd_saveFileDialog(windowTitle, defaultPath, filterPatternCount, filterPatterns, nullptr);
 		if (filePath == nullptr) return false;
