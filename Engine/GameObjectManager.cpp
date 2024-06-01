@@ -4,6 +4,7 @@
 #include "GameObject3D.h"
 #include "MeshRenderer.h"
 #include "LightObject.h"
+#include "Camera.h"
 
 #include "GeneralMacros.h"
 
@@ -13,15 +14,7 @@ GameObjectManager* gameObjectManager;
 
 GameObjectManager::~GameObjectManager() noexcept
 {
-	for (int i = 0; i < gameObjects.size(); i++)
-	{
-		GameObject::Destroy(gameObjects[i]);
-	}
-	for (int i = 0; i < graveyard.size(); i++)
-	{
-		Delete(graveyard[i]);
-		graveyard.erase(graveyard.begin() + i);
-	}
+	Clear();
 }
 
 void GameObjectManager::Add(GameObject* gameObject) noexcept
@@ -86,4 +79,24 @@ int GameObjectManager::GetIndexOf(GameObject* gameObject) const noexcept
 	}
 
 	return -1;
+}
+
+void GameObjectManager::Clear() noexcept
+{
+	Updater::onFrameStartList.clear();
+	Updater::fixedUpdateList.clear();
+	Updater::updateList.clear();
+	Updater::drawList.clear();
+
+	if (mainCamera != nullptr) Updater::updateList.push_back(mainCamera);
+
+	while (gameObjects.size() > 0)
+	{
+		GameObject::Destroy(gameObjects[0]);
+	}
+	while (graveyard.size() > 0)
+	{
+		Delete(graveyard[0]);
+		graveyard.erase(graveyard.begin() + 0);
+	}
 }

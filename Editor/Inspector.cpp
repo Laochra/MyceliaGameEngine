@@ -12,6 +12,8 @@ void Inspector::SetTarget(GameObject* target)
 {
 	del(targetGUI);
 
+	if (target == nullptr) return;
+
 	switch (target->GetClassID())
 	{
 	case GameObject::classID:	 targetGUI = new GameObjectGUI(target);	break;
@@ -40,6 +42,7 @@ const GameObjectGUI* Inspector::GetTargetGUI()
 
 GameObject* Inspector::GetTarget()
 {
+	if (targetGUI == nullptr) return nullptr;
 	return targetGUI->target;
 }
 

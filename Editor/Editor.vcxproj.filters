@@ -75,6 +75,12 @@
     <ClCompile Include="ShaderProgramGUI.cpp">
       <Filter>GUI\EditorWindows</Filter>
     </ClCompile>
+    <ClCompile Include="..\External\tinyfiledialogs\tinyfiledialogs.cpp">
+      <Filter>3rd Party\tinyfiledialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGUI.cpp">
+      <Filter>GUI\EditorWindows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="JSON Configs">
@@ -100,6 +106,9 @@
     </Filter>
     <Filter Include="3rd Party\imgui">
       <UniqueIdentifier>{b21dc611-2b18-4119-ba21-fbe6d2f378f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rd Party\tinyfiledialogs">
+      <UniqueIdentifier>{c5bfb596-71a4-4cbd-b761-7f14c6abcd6b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -192,6 +201,12 @@
       <Filter>GUI\EditorWindows</Filter>
     </ClInclude>
     <ClInclude Include="MeshCooker.h">
+      <Filter>GUI\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\External\tinyfiledialogs\tinyfiledialogs.h">
+      <Filter>3rd Party\tinyfiledialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGUI.h">
       <Filter>GUI\EditorWindows</Filter>
     </ClInclude>
   </ItemGroup>

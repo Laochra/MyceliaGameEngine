@@ -25,6 +25,8 @@ public:
 
 	int GetIndexOf(GameObject* gameObject) const noexcept;
 
+	void Clear() noexcept;
+
 private:
 	vector<GameObject*> graveyard = vector<GameObject*>();
 

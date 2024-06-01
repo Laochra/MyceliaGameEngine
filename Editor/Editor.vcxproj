@@ -104,7 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);EDITOR</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)External/imgui</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External/imgui; $(SolutionDir)External/tinyfiledialogs</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <UseFullPaths>true</UseFullPaths>
@@ -133,7 +133,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);EDITOR</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)External/imgui</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External/imgui; $(SolutionDir)External/tinyfiledialogs</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <UseFullPaths>true</UseFullPaths>
@@ -170,6 +170,7 @@
     <ClCompile Include="..\External\imgui\imgui_stdlib.cpp" />
     <ClCompile Include="..\External\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\External\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="..\External\tinyfiledialogs\tinyfiledialogs.cpp" />
     <ClCompile Include="ConsoleGUI.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="EditorCamera.cpp" />
@@ -187,6 +188,7 @@
     <ClCompile Include="MaterialGUI.cpp" />
     <ClCompile Include="MeshCooker.cpp" />
     <ClCompile Include="MeshRendererGUI.cpp" />
+    <ClCompile Include="SceneGUI.cpp" />
     <ClCompile Include="ShaderProgramGUI.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -200,6 +202,7 @@
     <ClInclude Include="..\External\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\External\imgui\imstb_textedit.h" />
     <ClInclude Include="..\External\imgui\imstb_truetype.h" />
+    <ClInclude Include="..\External\tinyfiledialogs\tinyfiledialogs.h" />
     <ClInclude Include="ConsoleGUI.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="EditorCamera.h" />
@@ -219,6 +222,7 @@
     <ClInclude Include="MeshCooker.h" />
     <ClInclude Include="MeshRendererGUI.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="SceneGUI.h" />
     <ClInclude Include="ShaderProgramGUI.h" />
     <ClInclude Include="Table.h" />
   </ItemGroup>

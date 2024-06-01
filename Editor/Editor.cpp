@@ -15,6 +15,8 @@
 #include "ConsoleGUI.h"
 #include "Heirarchy.h"
 
+#include "SceneGUI.h"
+
 #include "Inspector.h"
 
 #include "EditorStyler.h"
@@ -197,22 +199,7 @@ void Editor::Update()
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::MenuItem("New Scene", "Ctrl+N"))
-			{
-
-			}
-			if (ImGui::MenuItem("Open Scene", "Ctrl+O"))
-			{
-
-			}
-			if (ImGui::MenuItem("Save Scene", "Ctrl+S"))
-			{
-
-			}
-			if (ImGui::MenuItem("Save Scene As", "Ctrl+Shift+S"))
-			{
-
-			}
+			SceneGUI::DrawFileDropdown();
 			ImGui::EndMenu();
 		}
 		ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();

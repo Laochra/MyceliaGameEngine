@@ -73,35 +73,35 @@
 		currentAccessibility##:
 #endif
 
-#ifndef expandmacro
-	#define expandmacro(macro) macro
+#ifndef exindent
+	#define exindent(x) x
 #endif
 
 #ifndef foreachf
 	#define foreachf_it0(function)
-	#define foreachf_it1(function, current)		 function(current)
-	#define foreachf_it2(function, current, ...) function(current) expandmacro(foreachf_it1(function, __VA_ARGS__))
-	#define foreachf_it3(function, current, ...) function(current) expandmacro(foreachf_it2(function, __VA_ARGS__))
-	#define foreachf_it4(function, current, ...) function(current) expandmacro(foreachf_it3(function, __VA_ARGS__))
-	#define foreachf_it5(function, current, ...) function(current) expandmacro(foreachf_it4(function, __VA_ARGS__))
-	#define foreachf_it6(function, current, ...) function(current) expandmacro(foreachf_it5(function, __VA_ARGS__))
-	#define foreachf_it7(function, current, ...) function(current) expandmacro(foreachf_it6(function, __VA_ARGS__))
-	#define foreachf_it8(function, current, ...) function(current) expandmacro(foreachf_it7(function, __VA_ARGS__))
-	#define foreachf_it9(function, current, ...) function(current) expandmacro(foreachf_it8(function, __VA_ARGS__))
+	#define foreachf_it1(function, current)		function(current)
+	#define foreachf_it2(function, current, ...) function(current) exindent(foreachf_it1(function, __VA_ARGS__))
+	#define foreachf_it3(function, current, ...) function(current) exindent(foreachf_it2(function, __VA_ARGS__))
+	#define foreachf_it4(function, current, ...) function(current) exindent(foreachf_it3(function, __VA_ARGS__))
+	#define foreachf_it5(function, current, ...) function(current) exindent(foreachf_it4(function, __VA_ARGS__))
+	#define foreachf_it6(function, current, ...) function(current) exindent(foreachf_it5(function, __VA_ARGS__))
+	#define foreachf_it7(function, current, ...) function(current) exindent(foreachf_it6(function, __VA_ARGS__))
+	#define foreachf_it8(function, current, ...) function(current) exindent(foreachf_it7(function, __VA_ARGS__))
+	#define foreachf_it9(function, current, ...) function(current) exindent(foreachf_it8(function, __VA_ARGS__))
 	//... repeat if needed
 	#define foreachf_getmacro(_0,_1,_2,_3,_4,_5,_6,_7,_8,_9,NAME,...) NAME 
 	#define foreachf(action,...) \
-				expandmacro(foreachf_getmacro(_0, __VA_ARGS__, \
-				expandmacro(foreachf_it9),	\
-				expandmacro(foreachf_it8),	\
-				expandmacro(foreachf_it7),	\
-				expandmacro(foreachf_it6),	\
-				expandmacro(foreachf_it5),	\
-				expandmacro(foreachf_it4),	\
-				expandmacro(foreachf_it3),	\
-				expandmacro(foreachf_it2),	\
-				expandmacro(foreachf_it1),	\
-				expandmacro(foreachf_it0))	\
+				exindent(foreachf_getmacro(_0, __VA_ARGS__, \
+				exindent(foreachf_it9),	\
+				exindent(foreachf_it8),	\
+				exindent(foreachf_it7),	\
+				exindent(foreachf_it6),	\
+				exindent(foreachf_it5),	\
+				exindent(foreachf_it4),	\
+				exindent(foreachf_it3),	\
+				exindent(foreachf_it2),	\
+				exindent(foreachf_it1),	\
+				exindent(foreachf_it0))	\
 				(action,__VA_ARGS__))
 #endif
 

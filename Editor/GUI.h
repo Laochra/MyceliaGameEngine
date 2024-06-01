@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ImGuiIncludes.h"
+#include "tinyfiledialogs.h"
 
 #include <string>
 using std::string;
