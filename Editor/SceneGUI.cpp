@@ -28,19 +28,19 @@ namespace SceneGUI
 
 	void SceneGUI::DrawFileDropdown() noexcept
 	{
-		if (ImGui::MenuItem("New Scene", "Ctrl+N"))
+		if (ImGui::MenuItem(" New Scene", "Ctrl+N"))
 		{
 			NewScene();
 		}
-		if (ImGui::MenuItem("Open Scene", "Ctrl+O"))
+		if (ImGui::MenuItem(" Open Scene", "Ctrl+O"))
 		{
 			OpenScene();
 		}
-		if (ImGui::MenuItem("Save Scene", "Ctrl+S"))
+		if (ImGui::MenuItem(" Save Scene", "Ctrl+S"))
 		{
 			SaveScene();
 		}
-		if (ImGui::MenuItem("Save Scene As", "Ctrl+Shift+S"))
+		if (ImGui::MenuItem(" Save Scene As", "Ctrl+Shift+S"))
 		{
 			SaveSceneAs();
 		}

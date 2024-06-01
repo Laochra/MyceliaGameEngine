@@ -17,7 +17,7 @@ public:
 	void Draw();
 
 private:
-	GameObjectGUI* targetGUI;
+	GameObjectGUI* targetGUI = nullptr;
 };
 
 extern Inspector* inspector;

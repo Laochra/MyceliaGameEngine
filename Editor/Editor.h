@@ -33,30 +33,10 @@ protected:
 	virtual void OnClose() override;
 
 private:
-	MeshRenderer* object = nullptr;
-
-	// Scene View Buffers
-	unsigned int sceneViewFrameBufferHDR = 0;
-	unsigned int sceneViewColourBufferHDR[2] = { 0, 0 };
-	unsigned int sceneViewColourBufferGizmos = 0;
-	unsigned int sceneViewDepthStencilBuffer = 0;
 
 	// Post Processing
 	ShaderProgram hdrProgram;
 	ShaderProgram blurProgram;
 	ShaderProgram fxaaProgram;
-	unsigned int sceneViewFrameBufferOutput = 0;
-	unsigned int sceneViewColourBufferOutput = 0;
-	float exposure = 1.0f;
-
-	// Windows
-	bool consoleOpen = true;
-	bool heirarchyOpen = true;
-	bool inspectorOpen = true;
-	bool sceneViewOpen = true;
-	bool shaderProgramEditorOpen = true;
-	bool materialEditorOpen = true;
-	bool cameraSettingsOpen = true;
-	bool editorStylerOpen = true;
-	bool postProcessingOpen = true;
 };
+inline float exposure = 1.0f;

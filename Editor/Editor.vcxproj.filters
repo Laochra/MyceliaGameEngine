@@ -81,6 +81,9 @@
     <ClCompile Include="SceneGUI.cpp">
       <Filter>GUI\EditorWindows</Filter>
     </ClCompile>
+    <ClCompile Include="EditorGUI.cpp">
+      <Filter>GUI\EditorWindows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="JSON Configs">
@@ -207,6 +210,9 @@
       <Filter>3rd Party\tinyfiledialogs</Filter>
     </ClInclude>
     <ClInclude Include="SceneGUI.h">
+      <Filter>GUI\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorGUI.h">
       <Filter>GUI\EditorWindows</Filter>
     </ClInclude>
   </ItemGroup>
