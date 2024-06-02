@@ -2,6 +2,15 @@
 
 #include "GUI.h"
 
+void EditorCameraGUI::DrawEditorCameraGUI(const char* const name, bool& open)
+{
+	ImGui::Begin(name, &open);
+
+	DrawEditorCameraGUI((EditorCamera*)mainCamera);
+
+	ImGui::End();
+}
+
 void EditorCameraGUI::DrawEditorCameraGUI(EditorCamera* camera)
 {
 	std::string idStr = GUI::GenerateID("Editor Camera", camera);

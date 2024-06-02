@@ -28,8 +28,10 @@ namespace Heirarchy
 		target = nullptr;
 	}
 
-	void Heirarchy::Draw()
+	void Heirarchy::Draw(const char* const name, bool& open)
 	{
+		ImGui::Begin(name, &open);
+
 		ImGui::BeginDisabled();
 		if (ImGui::CollapsingHeader("2D"))
 		{
@@ -133,6 +135,8 @@ namespace Heirarchy
 				}
 			}
 		}
+
+		ImGui::End();
 	}
 
 	void Heirarchy::DrawEntry(GameObject3D* gameObject3D)

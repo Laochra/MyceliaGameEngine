@@ -84,6 +84,9 @@
     <ClCompile Include="EditorGUI.cpp">
       <Filter>GUI\EditorWindows</Filter>
     </ClCompile>
+    <ClCompile Include="PostProcessingGUI.cpp">
+      <Filter>GUI\EditorWindows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="JSON Configs">
@@ -213,6 +216,9 @@
       <Filter>GUI\EditorWindows</Filter>
     </ClInclude>
     <ClInclude Include="EditorGUI.h">
+      <Filter>GUI\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="PostProcessingGUI.h">
       <Filter>GUI\EditorWindows</Filter>
     </ClInclude>
   </ItemGroup>

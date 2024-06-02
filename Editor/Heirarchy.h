@@ -27,7 +27,7 @@ namespace Heirarchy
 		void Close();
 	};
 
-	extern void Draw();
+	extern void Draw(const char* const name, bool& open);
 	extern void DrawEntry(GameObject3D* gameObject3D);
 	extern void DragDropTarget(const char* id, GameObject3D* target, DragDropTargetOffset offset = ChildTo);
 	extern void BeginPayload(GameObject3D* gameObject3D);

@@ -15,8 +15,10 @@ namespace MeshCooker
 	vector<string> fileQueue;
 	uint current;
 
-	void MeshCooker::Draw() noexcept
+	void MeshCooker::Draw(const char* const name, bool& open) noexcept
 	{
+		ImGui::Begin(name, &open);
+
 		string currentString = fileQueue.size() > 0 ? fileQueue[current] : "No files open";
 		const uint relativeOffset = currentString.find("Assets\\");
 		if (relativeOffset != (uint)string::npos) currentString.erase(0, relativeOffset);
@@ -30,13 +32,13 @@ namespace MeshCooker
 		ImGui::SameLine();
 		{
 			ImGui::BeginDisabled(current == 0);
-			if (ImGui::Button("<")) { current--; }
+			if (ImGui::Button(" < ")) { current--; }
 			ImGui::EndDisabled();
 		}
 		ImGui::SameLine();
 		{
 			ImGui::BeginDisabled(fileQueue.size() == 0 || current >= fileQueue.size() - 1);
-			if (ImGui::Button(">")) { current++; }
+			if (ImGui::Button(" > ")) { current++; }
 			ImGui::EndDisabled();
 		}
 
@@ -60,6 +62,7 @@ namespace MeshCooker
 					{
 						fileQueue.push_back(str);
 						str.clear();
+						continue;
 					}
 					str.push_back(filePaths[i]);
 				}
@@ -86,6 +89,8 @@ namespace MeshCooker
 			if (ImGui::Button("Cook"))
 			{
 				Cook(fileQueue[current].c_str());
+				fileQueue.erase(fileQueue.begin() + current);
+				if (current > 0 && current >= fileQueue.size()) current--;
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Cook All"))
@@ -98,6 +103,8 @@ namespace MeshCooker
 				fileQueue.clear();
 			}
 		}
+
+		ImGui::End();
 	}
 
 	void MeshCooker::Cook(const char* filepath) noexcept

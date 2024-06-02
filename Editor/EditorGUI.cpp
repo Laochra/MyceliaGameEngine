@@ -1,13 +1,14 @@
 #include "EditorGUI.h"
 
-#include "ShaderProgramGUI.h"
-#include "MaterialGUI.h"
 #include "ConsoleGUI.h"
 #include "Heirarchy.h"
 #include "SceneGUI.h"
 #include "Inspector.h"
-#include "EditorStyler.h"
+#include "ShaderProgramGUI.h"
+#include "MaterialGUI.h"
 #include "MeshCooker.h"
+#include "EditorStyler.h"
+#include "PostProcessingGUI.h"
 
 #include "MeshRendererGUI.h"
 #include "EditorCameraGUI.h"
@@ -15,7 +16,7 @@
 
 #include "stb/stb_image.h"
 
-extern float exposure; // TODO: This sucks. Move this once post-processing has its own place
+#include <algorithm>
 
 namespace EditorGUI
 {
@@ -27,17 +28,8 @@ namespace EditorGUI
 	unsigned int sceneViewFrameBufferOutput = 0;
 	unsigned int sceneViewColourBufferOutput = 0;
 
-	// Editor Windows
-	bool consoleOpen = true;
-	bool heirarchyOpen = true;
-	bool inspectorOpen = true;
-	bool sceneViewOpen = true;
-	bool shaderProgramEditorOpen = true;
-	bool materialEditorOpen = true;
-	bool meshCookerOpen = true;
-	bool cameraSettingsOpen = true;
-	bool editorStylerOpen = true;
-	bool postProcessingOpen = true;
+	vector<EditorWindow> editorWindows;
+	map<string, uint> windowIndices;
 
 	void EditorGUI::Initialise() noexcept
 	{
@@ -81,6 +73,32 @@ namespace EditorGUI
 		MaterialGUI::LoadShaderProgram("PBRLit");
 		MaterialGUI::dirty = false;
 
+		editorWindows =
+		{
+			EditorWindow("Console", ConsoleGUI::Draw),
+			EditorWindow("Heirarchy", Heirarchy::Draw),
+			EditorWindow("Inspector", Inspector::Draw),
+			EditorWindow("Scene", SceneGUI::DrawScene),
+			EditorWindow("Shader Program Editor", ShaderProgramGUI::Draw),
+			EditorWindow("Material Editor", MaterialGUI::Draw),
+			EditorWindow("Mesh Cooker", MeshCooker::Draw),
+			EditorWindow("Camera", EditorCameraGUI::DrawEditorCameraGUI),
+			EditorWindow("Editor Styler", EditorStyler::Draw),
+			EditorWindow("Post Processing", PostProcessingGUI::Draw),
+		};
+		map<string, uint> windowIndices;
+
+		ifstream editorSettingsFile("UserSettings\\EditorSettings.json");
+
+		json editorSettings;
+		editorSettingsFile >> editorSettings;
+		vector<string> windows = editorSettings["OpenWindows"];
+		
+		for (int i = 0; i < editorWindows.size(); i++)
+		{
+			editorWindows[i].open = std::find(windows.begin(), windows.end(), editorWindows[i].name) != windows.end();
+		}
+
 		// Styling
 		{
 			ImGuiStyle* style = &ImGui::GetStyle();
@@ -110,7 +128,23 @@ namespace EditorGUI
 
 	bool EditorGUI::CleanUp() noexcept
 	{
-		if (!SceneGUI::ClearScene()) return false;
+		bool isForceCloseComboPressed =
+			ImGui::IsKeyPressed(ImGuiKey_LeftCtrl) &&
+			ImGui::IsKeyPressed(ImGuiKey_LeftShift);
+		if (!isForceCloseComboPressed && !SceneGUI::ClearScene()) return false;
+
+		json editorSettings;
+		vector<string> windows;
+
+		for (int i = 0; i < editorWindows.size(); i++)
+		{
+			if (editorWindows[i].open) windows.push_back(editorWindows[i].name);
+		}
+
+		editorSettings["OpenWindows"] = windows;
+
+		ofstream output("UserSettings\\EditorSettings.json");
+		output << std::setw(2) << editorSettings;
 
 		del(inspector);
 
@@ -136,48 +170,52 @@ namespace EditorGUI
 			GUI::Spacing(4);
 			if (ImGui::BeginMenu("Windows"))
 			{
-				if (ImGui::MenuItem(" Console", (const char*)0, false, !consoleOpen))
+				if (ImGui::MenuItem(" Console", (const char*)0, false, !GetWindow("Console").open))
 				{
-					consoleOpen = true;
+					GetWindow("Console").open = true;
 				}
-				if (ImGui::MenuItem(" Heirarchy", (const char*)0, false, !heirarchyOpen))
+				if (ImGui::MenuItem(" Heirarchy", (const char*)0, false, !GetWindow("Heirarchy").open))
 				{
-					heirarchyOpen = true;
+					GetWindow("Heirarchy").open = true;
 				}
-				if (ImGui::MenuItem(" Inspector", (const char*)0, false, !inspectorOpen))
+				if (ImGui::MenuItem(" Inspector", (const char*)0, false, !GetWindow("Inspector").open))
 				{
-					inspectorOpen = true;
+					GetWindow("Inspector").open = true;
 				}
-				if (ImGui::MenuItem(" Scene View", (const char*)0, false, !sceneViewOpen))
+				if (ImGui::MenuItem(" Scene View", (const char*)0, false, !GetWindow("Scene").open))
 				{
-					sceneViewOpen = true;
+					GetWindow("Scene").open = true;
 				}
 
 				if (ImGui::BeginMenu(" Settings"))
 				{
-					if (ImGui::MenuItem(" Camera", (const char*)0, false, !cameraSettingsOpen))
+					if (ImGui::MenuItem(" Camera", (const char*)0, false, !GetWindow("Camera").open))
 					{
-						cameraSettingsOpen = true;
+						GetWindow("Camera").open = true;
 					}
-					if (ImGui::MenuItem(" Post Processing", (const char*)0, false, !postProcessingOpen))
+					if (ImGui::MenuItem(" Post Processing", (const char*)0, false, !GetWindow("Post Processing").open))
 					{
-						postProcessingOpen = true;
+						GetWindow("Post Processing").open = true;
 					}
-					if (ImGui::MenuItem(" Editor Styler", (const char*)0, false, !editorStylerOpen))
+					if (ImGui::MenuItem(" Editor Styler", (const char*)0, false, !GetWindow("Editor Styler").open))
 					{
-						editorStylerOpen = true;
+						GetWindow("Editor Styler").open = true;
 					}
 					ImGui::EndMenu();
 				}
 				if (ImGui::BeginMenu(" Tools"))
 				{
-					if (ImGui::MenuItem(" Shader Program Editor", (const char*)0, false, !shaderProgramEditorOpen))
+					if (ImGui::MenuItem(" Shader Program Editor", (const char*)0, false, !GetWindow("Shader Program Editor").open))
 					{
-						shaderProgramEditorOpen = true;
+						GetWindow("Shader Program Editor").open = true;
 					}
-					if (ImGui::MenuItem(" Material Editor", (const char*)0, false, !materialEditorOpen))
+					if (ImGui::MenuItem(" Material Editor", (const char*)0, false, !GetWindow("Material Editor").open))
 					{
-						materialEditorOpen = true;
+						GetWindow("Material Editor").open = true;
+					}
+					if (ImGui::MenuItem(" Mesh Cooker", (const char*)0, false, !GetWindow("Mesh Cooker").open))
+					{
+						GetWindow("Mesh Cooker").open = true;
 					}
 					ImGui::EndMenu();
 				}
@@ -209,99 +247,9 @@ namespace EditorGUI
 
 		DrawMenuBar();
 
-		if (consoleOpen)
+		for (int i = 0; i < editorWindows.size(); i++)
 		{
-			ImGui::Begin("Console", &consoleOpen);
-
-			ConsoleGUI::Draw();
-
-			ImGui::End();
-		}
-
-		if (heirarchyOpen)
-		{
-			ImGui::Begin("Heirarchy", &heirarchyOpen);
-
-			Heirarchy::Draw();
-
-			ImGui::End();
-		}
-
-		if (inspectorOpen)
-		{
-			ImGui::Begin("Inspector", &inspectorOpen);
-
-			inspector->Draw();
-
-			ImGui::End();
-		}
-
-		if (sceneViewOpen)
-		{
-			ImVec2 oldPadding = ImGui::GetStyle().WindowPadding;
-			ImGui::GetStyle().WindowPadding = ImVec2(0.0f, 0.0f);
-
-			ImGui::Begin("Scene", &sceneViewOpen);
-			
-			SceneGUI::DrawScene();
-
-			ImGui::End();
-
-			ImGui::GetStyle().WindowPadding = oldPadding;
-		}
-
-		if (shaderProgramEditorOpen)
-		{
-			ImGui::Begin("Shader Program Editor", &shaderProgramEditorOpen, ImGuiWindowFlags_UnsavedDocument * ShaderProgramGUI::dirty);
-			
-			ShaderProgramGUI::Draw();
-			
-			ImGui::End();
-		}
-
-		if (materialEditorOpen)
-		{
-			ImGui::Begin("Material Editor", &materialEditorOpen, ImGuiWindowFlags_UnsavedDocument * MaterialGUI::dirty);
-			
-			MaterialGUI::Draw();
-			
-			ImGui::End();
-		}
-
-		if (meshCookerOpen)
-		{
-			ImGui::Begin("Mesh Cooker", &meshCookerOpen);
-			
-			MeshCooker::Draw();
-
-			ImGui::End();
-		}
-
-		if (cameraSettingsOpen)
-		{
-			ImGui::Begin("Camera", &cameraSettingsOpen);
-			
-			EditorCameraGUI::DrawEditorCameraGUI((EditorCamera*)mainCamera);
-			
-			ImGui::End();
-		}
-
-		if (editorStylerOpen)
-		{
-			ImGui::Begin("Editor Styler", &editorStylerOpen);
-			
-			EditorStyler::Draw();
-			
-			ImGui::End();
-		}
-
-		if (postProcessingOpen)
-		{
-			ImGui::Begin("Post Processing", &postProcessingOpen);
-			
-			ImGui::DragFloat("HDR Exposure", &exposure, 0.1f, 0.1f, 1000.0f);
-
-			ImGui::End();
+			editorWindows[i].Draw();
 		}
 	}
 
@@ -325,6 +273,11 @@ namespace EditorGUI
 		}
 	}
 
+	EditorWindow& EditorGUI::GetWindow(string name) noexcept
+	{
+		return editorWindows[windowIndices[name]];
+	}
+
 	static bool CheckIfStringContains(string& str, StringParams tests)
 	{
 		for (string test : tests)
@@ -337,7 +290,7 @@ namespace EditorGUI
 		return false;
 	}
 
-	void EditorGUI::FileDropCallback(GLFWwindow* window, int count, const char** filepaths)
+	void EditorGUI::FileDropCallback(GLFWwindow* window, int count, const char** filepaths) noexcept
 	{
 		vector<string> files;
 
@@ -348,7 +301,7 @@ namespace EditorGUI
 
 		for (int i = 0; i < files.size(); i++)
 		{
-			if (CheckIfStringContains(files[i], { ".fbx", ".obj", ".gltf" }) != string::npos)
+			if (CheckIfStringContains(files[i], { ".fbx", ".obj", ".gltf" }))
 			{
 				MeshCooker::fileQueue.push_back(files[i]);
 			}

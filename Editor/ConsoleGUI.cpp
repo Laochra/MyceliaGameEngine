@@ -4,8 +4,10 @@ namespace ConsoleGUI
 {
 	std::vector<Debug::DebugLog> logs;
 
-	void ConsoleGUI::Draw()
+	void ConsoleGUI::Draw(const char* const name, bool& open)
 	{
+		ImGui::Begin(name, &open);
+
 		if (ImGui::Button("Clear"))
 		{
 			logs.clear();
@@ -35,5 +37,7 @@ namespace ConsoleGUI
 
 		if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY()) ImGui::SetScrollHereY(1.0f); // If at bottom, autoscroll down in case a new log was added
 		ImGui::EndChild();
+
+		ImGui::End();
 	}
 }

@@ -8,8 +8,8 @@ namespace EditorStyler
 
 	extern bool dirty;
 
-	extern void Draw();
+	extern void Draw(const char* const name, bool& open) noexcept;
 
-	extern void DrawColourEdit3(const char* name, GUI::Colour& colour, bool* changeMade, ImGuiColorEditFlags flags);
-	extern void DrawColourEdit4(const char* name, GUI::Colour& colour, bool* changeMade, ImGuiColorEditFlags flags);
+	extern void DrawColourEdit3(const char* name, GUI::Colour& colour, bool* changeMade, ImGuiColorEditFlags flags) noexcept;
+	extern void DrawColourEdit4(const char* name, GUI::Colour& colour, bool* changeMade, ImGuiColorEditFlags flags) noexcept;
 }

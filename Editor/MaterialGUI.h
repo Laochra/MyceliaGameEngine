@@ -35,6 +35,6 @@ namespace MaterialGUI
 	extern void Load(string filePathStr);
 	extern void LoadShaderProgram(string filePathStr);
 	
-	extern void Draw();
+	extern void Draw(const char* const name, bool& open);
 	extern void DrawField(MaterialInput& field);
 }

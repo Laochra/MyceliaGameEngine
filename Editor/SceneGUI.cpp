@@ -29,9 +29,14 @@ namespace SceneGUI
 	constexpr uint currentFormatVersion = (VMillions << 6) + (VThousands << 3) + (VHundreds);
 	bool dirty = false;
 
-	void DrawScene() noexcept
+	void DrawScene(const char* const name, bool& open) noexcept
 	{
 		GLFWwindow* window = glfwGetCurrentContext();
+
+		ImVec2 oldPadding = ImGui::GetStyle().WindowPadding;
+		ImGui::GetStyle().WindowPadding = ImVec2(0.0f, 0.0f);
+
+		ImGui::Begin(name, &open);
 
 		screenWidth = (int)ImGui::GetWindowWidth();
 		float titleBarHeight = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2;
@@ -63,6 +68,10 @@ namespace SceneGUI
 
 		uintptr_t image = (uintptr_t)EditorGUI::sceneViewColourBufferOutput; // Casting to a uintptr_t is required to stop a warning with converting 32bit uint to 64bit void*. ImGui::Image works regardless.
 		ImGui::Image((void*)image, ImVec2((float)screenWidth, (float)screenHeight), ImVec2(0, 1), ImVec2(1, 0));
+		
+		ImGui::End();
+
+		ImGui::GetStyle().WindowPadding = oldPadding;
 	}
 
 	void SceneGUI::DrawFileDropdown() noexcept

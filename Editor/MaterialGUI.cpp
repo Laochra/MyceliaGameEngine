@@ -371,8 +371,10 @@ namespace MaterialGUI
 
 	}
 
-	void MaterialGUI::Draw()
+	void MaterialGUI::Draw(const char* const name, bool& open)
 	{
+		ImGui::Begin(name, &open, ImGuiWindowFlags_UnsavedDocument * dirty);
+
 		Initialise();
 
 		if (ImGui::BeginCombo("Current File", current.filePath.c_str()))
@@ -503,6 +505,8 @@ namespace MaterialGUI
 			ImGui::Spacing(); ImGui::Spacing();
 
 		} ImGui::EndChild();
+
+		ImGui::End();
 	}
 
 	void MaterialGUI::DrawField(MaterialInput& field)

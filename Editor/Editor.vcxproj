@@ -189,6 +189,7 @@
     <ClCompile Include="MaterialGUI.cpp" />
     <ClCompile Include="MeshCooker.cpp" />
     <ClCompile Include="MeshRendererGUI.cpp" />
+    <ClCompile Include="PostProcessingGUI.cpp" />
     <ClCompile Include="SceneGUI.cpp" />
     <ClCompile Include="ShaderProgramGUI.cpp" />
   </ItemGroup>
@@ -223,6 +224,7 @@
     <ClInclude Include="Inspector.h" />
     <ClInclude Include="MeshCooker.h" />
     <ClInclude Include="MeshRendererGUI.h" />
+    <ClInclude Include="PostProcessingGUI.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SceneGUI.h" />
     <ClInclude Include="ShaderProgramGUI.h" />

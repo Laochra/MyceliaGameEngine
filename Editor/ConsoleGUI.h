@@ -12,5 +12,5 @@ namespace ConsoleGUI
 {
 	extern std::vector<Debug::DebugLog> logs;
 
-	extern void Draw();
+	extern void Draw(const char* const name, bool& open);
 }

@@ -49,7 +49,7 @@ extern void Load(string filePathStr);
 extern bool validLinkage;
 extern void ValidateLinkage();
 
-extern void Draw();
+extern void Draw(const char* const name, bool& open);
 extern void DrawShaderPopup(ShaderStage stage, vector<path> shaderPaths, string& currentShader);
 extern void DrawDefaultableShaderPopup(ShaderStage stage, vector<path> shaderPaths, string& currentShader, StringParams defaults = StringParams());
 }

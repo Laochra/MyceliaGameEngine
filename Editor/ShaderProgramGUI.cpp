@@ -278,8 +278,10 @@ namespace ShaderProgramGUI
 		delete testShaderProgram;
 	}
 
-	void ShaderProgramGUI::Draw()
+	void ShaderProgramGUI::Draw(const char* const name, bool& open)
 	{
+		ImGui::Begin(name, &open, ImGuiWindowFlags_UnsavedDocument * dirty);
+
 		Initialise();
 
 		if (ImGui::BeginCombo("Current File", current.filePath.c_str()))
@@ -404,6 +406,8 @@ namespace ShaderProgramGUI
 				}
 			}
 		} ImGui::EndChild();
+
+		ImGui::End();
 	}
 
 	void ShaderProgramGUI::DrawShaderPopup(ShaderStage stage, vector<path> shaderPaths, string& currentShader)

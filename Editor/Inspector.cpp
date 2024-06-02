@@ -46,11 +46,16 @@ GameObject* Inspector::GetTarget()
 	return targetGUI->target;
 }
 
-void Inspector::Draw()
+void Inspector::Draw(const char* const name, bool& open)
 {
-	if (targetGUI == nullptr) return;
+	ImGui::Begin(name, &open);
 
-	targetGUI->Draw();
+	if (inspector->targetGUI != nullptr)
+	{
+		inspector->targetGUI->Draw();
+	}
+
+	ImGui::End();
 }
 
 Inspector::~Inspector()

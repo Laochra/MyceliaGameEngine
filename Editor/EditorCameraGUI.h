@@ -9,5 +9,6 @@
 class EditorCameraGUI
 {
 public:
+	static void DrawEditorCameraGUI(const char* const name, bool& open);
 	static void DrawEditorCameraGUI(EditorCamera* camera);
 };

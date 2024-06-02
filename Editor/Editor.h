@@ -35,4 +35,3 @@ private:
 	ShaderProgram blurProgram;
 	ShaderProgram fxaaProgram;
 };
-inline float exposure = 1.0f;
