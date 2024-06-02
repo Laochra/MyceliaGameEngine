@@ -11,7 +11,7 @@ void LightObjectGUI::Draw()
 
 void LightObjectGUI::DrawLightObjectGUI(LightObject* lightObject)
 {
-	if (lightObject == nullptr || *lightObject == GameObject::Destroyed) return;
+	if (lightObject == nullptr || lightObject == GameObject::Destroyed) return;
 
 	GameObject3DGUI::DrawGameObject3DGUI(lightObject);
 

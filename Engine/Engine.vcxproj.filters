@@ -74,6 +74,9 @@
     <ClCompile Include="LineDrawer.cpp">
       <Filter>Utility\Debugging</Filter>
     </ClCompile>
+    <ClCompile Include="GuidGenerator.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />

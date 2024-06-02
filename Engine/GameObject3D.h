@@ -79,6 +79,11 @@ private:
 	mat4 globalMatrix = mat4();
 	mat4 localMatrix = mat4();
 	bool dirty = true;
+
+
+	// Friends
+	//friend void to_json(json& jsonObject, const GameObject3D& gameObject) noexcept;
+	//friend void from_json(const json& jsonObject, GameObject3D& gameObject) noexcept;
 };
 
 
@@ -93,7 +98,7 @@ template<GameObject3DClass T> inline T* GameObject3D::Instantiate(vec3 positionI
 	//gameObject->guid = GuidGenerator::NewGuid();
 	//gameObject->state = stateInit;
 	//
-	//if (parentInit == nullptr) gameObjectManager->Add(gameObject);
+	//if (parentInit is nullptr) gameObjectManager->Add(gameObject);
 	//
 	//gameObject->Initialise();
 

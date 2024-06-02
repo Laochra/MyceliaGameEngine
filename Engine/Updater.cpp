@@ -4,15 +4,9 @@
 
 namespace Updater
 {
-	std::vector<GameObject*> onFrameStartList;
 	std::vector<GameObject*> fixedUpdateList;
 	std::vector<GameObject*> updateList;
 	std::vector<GameObject*> drawList;
-
-	void OnFrameStartAdd(GameObject* gameObject)
-	{
-		onFrameStartList.push_back(gameObject);
-	}
 
 	void FixedUpdateAdd(GameObject* gameObject)
 	{
@@ -30,24 +24,6 @@ namespace Updater
 	}
 
 
-	void CallOnFrameStart()
-	{
-		int i = 0;
-		while (i < onFrameStartList.size())
-		{
-			if (onFrameStartList[i]->IsActive())
-			{
-				onFrameStartList[i]->OnFrameStart();
-			}
-			else if (*onFrameStartList[i] == GameObject::Destroyed)
-			{
-				onFrameStartList.erase(onFrameStartList.begin() + i);
-				continue;
-			}
-
-			i++;
-		}
-	}
 	void CallFixedUpdate()
 	{
 		int i = 0;
@@ -57,7 +33,7 @@ namespace Updater
 			{
 				fixedUpdateList[i]->FixedUpdate();
 			}
-			else if (*fixedUpdateList[i] == GameObject::Destroyed)
+			else if (fixedUpdateList[i] == GameObject::Destroyed)
 			{
 				fixedUpdateList.erase(fixedUpdateList.begin() + i);
 				continue;
@@ -75,7 +51,7 @@ namespace Updater
 			{
 				updateList[i]->Update();
 			}
-			else if (*updateList[i] == GameObject::Destroyed)
+			else if (updateList[i] == GameObject::Destroyed)
 			{
 				updateList.erase(updateList.begin() + i);
 				continue;
@@ -93,7 +69,7 @@ namespace Updater
 			{
 				drawList[i]->Draw();
 			}
-			else if (*drawList[i] == GameObject::Destroyed)
+			else if (drawList[i] == GameObject::Destroyed)
 			{
 				drawList.erase(drawList.begin() + i);
 				continue;

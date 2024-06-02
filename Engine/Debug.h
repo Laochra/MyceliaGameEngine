@@ -47,10 +47,14 @@ public:
 		WRN102,		// File Invalid
 		WRN103,		// File Missing Data
 		WRN104,		// Requested Default Doesn't Exist
+		WRN105,		// Invalid Load Path Given
+		WRN120,		// Failed to Save File
+		WRN121,		// Invalid Save Path Given
 
 		// Data & Serialisation
 		WRN150,		// Data Failure
 		WRN151,		// POD Data Size Mismatch
+		WRN152,		// Unknown Data Format Version
 
 		// 3rd Party
 		WRN901,		// OpenGL Warning
@@ -65,6 +69,10 @@ public:
 		// Files
 		ERR100,		// Failed to Load Critical File
 		ERR101,		// Failed to Load a Default Asset
+
+		// Data & Serialisation
+		ERR150,		// Fatal Data Failure
+		ERR151,		// Unspecified Case for TypeID
 
 		// 3rd Party
 		ERR901,		// OpenGL Error

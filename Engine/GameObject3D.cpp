@@ -1,5 +1,61 @@
 #include "GameObject3D.h"
 
+#include "MeshRenderer.h"
+#include "LightObject.h"
+
+void GameObject3D::SerialiseTo(json& jsonObj) const
+{
+	GameObject::SerialiseTo(jsonObj);
+	
+	vector<float> positionData(3);
+	memcpy(positionData.data(), &position[0], 3 * sizeof(float));
+	jsonObj["Position"] = positionData;
+	
+	vector<float> rotationData(4);
+	memcpy(rotationData.data(), &rotation[0], 4 * sizeof(float));
+	jsonObj["Rotation"] = rotationData;
+	
+	vector<float> scaleData(3);
+	memcpy(scaleData.data(), &scale[0], 3 * sizeof(float));
+	jsonObj["Scale"] = scaleData;
+	
+	vector<float> pivotData(3);
+	memcpy(pivotData.data(), &pivot[0], 3 * sizeof(float));
+	jsonObj["Pivot"] = pivotData;
+	
+	vector<json> childrenData;
+	for (int i = 0; i < children.size(); i++)
+	{
+		json child = children[i];
+		childrenData.push_back(child);
+	}
+	jsonObj["Children"] = childrenData;
+}
+void GameObject3D::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptions)
+{
+	GameObject::DeserialiseFrom(jsonObj, guidOptions);
+
+	vector<float> positionData = jsonObj["Position"];
+	memcpy(&position[0], positionData.data(), 3 * sizeof(float));
+
+	vector<float> rotationData = jsonObj["Rotation"];
+	memcpy(&rotation[0], rotationData.data(), 4 * sizeof(float));
+
+	vector<float> scaleData = jsonObj["Scale"];
+	memcpy(&scale[0], scaleData.data(), 3 * sizeof(float));
+
+	vector<float> pivotData = jsonObj["Pivot"];
+	memcpy(&pivot[0], pivotData.data(), 3 * sizeof(float));
+
+	vector<json> childrenData = jsonObj["Children"];
+	for (int i = 0; i < childrenData.size(); i++)
+	{
+		GameObject3D* child = (GameObject3D*)GameObject::InstantiateFrom(childrenData[i], guidOptions);
+		children.push_back(child);
+		child->parent = this;
+	}
+}
+
 void GameObject3D::OnDestroy()
 {
 	for (GameObject3D* child : children)
@@ -16,8 +72,8 @@ void GameObject3D::OnDestroy()
 
 bool GameObject3D::IsActive() noexcept
 {
-	if (parent == nullptr) { return *this == Active; }
-	else { return *this == Active && parent->IsActive(); }
+	if (parent == nullptr) { return this == Active; }
+	else { return this == Active && parent->IsActive(); }
 }
 
 
@@ -226,3 +282,38 @@ vec3 GameObject3D::GetPivot() const noexcept
 {
 	return pivot;
 }
+
+//void to_json(json& jsonObject, const GameObject3D& gameObject3D) noexcept
+//{
+//	to_json(jsonObject, *(GameObject*)&gameObject3D);
+//
+//	vector<float> position(3);
+//	memcpy(position.data(), &gameObject3D.position[0], 3 * sizeof(float));;
+//	jsonObject["Position"] = position;
+//
+//	vector<float> rotation(4);
+//	memcpy(rotation.data(), &gameObject3D.rotation[0], 4 * sizeof(float));;
+//	jsonObject["Rotation"] = rotation;
+//
+//	vector<float> scale(3);
+//	memcpy(scale.data(), &gameObject3D.scale[0], 3 * sizeof(float));;
+//	jsonObject["Scale"] = scale;
+//
+//	vector<float> pivot(3);
+//	memcpy(pivot.data(), &gameObject3D.pivot[0], 3 * sizeof(float));;
+//	jsonObject["Pivot"] = pivot;
+//
+//	vector<json> children;
+//	for (int i = 0; i < gameObject3D.children.size(); i++)
+//	{
+//		json child = *gameObject3D.children[i];
+//		children.push_back(child);
+//	}
+//	jsonObject["Children"] = children;
+//}
+//void from_json(const json& jsonObject, GameObject3D& gameObject3D) noexcept
+//{
+//	from_json(jsonObject, *(GameObject*)&gameObject3D);
+//
+//	//extra 3d things
+//}
