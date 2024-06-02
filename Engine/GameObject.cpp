@@ -2,6 +2,7 @@
 #include "GameObject3D.h"
 #include "MeshRenderer.h"
 #include "LightObject.h"
+#include "ParticleEmitter.h"
 
 #include "GeneralMacros.h"
 
@@ -17,6 +18,7 @@ GameObject* GameObject::InstantiateFrom(json jsonObj, GuidGeneration guidOptions
 	case GameObject3D::classID: gameObject = new GameObject3D(); break;
 	case MeshRenderer::classID: gameObject = new MeshRenderer(); break;
 	case LightObject::classID: gameObject = new LightObject(); break;
+	case ParticleEmitter::classID: gameObject = new ParticleEmitter(); break;
 	default:
 		gameObject = new GameObject();
 		debug->Log(

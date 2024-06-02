@@ -13,6 +13,7 @@
 #include "MeshRendererGUI.h"
 #include "EditorCameraGUI.h"
 #include "LightObjectGUI.h"
+#include "ParticleEmitter.h"
 
 #include "stb/stb_image.h"
 
@@ -233,6 +234,7 @@ namespace EditorGUI
 					if (ImGui::MenuItem(" GameObject3D")) { GameObject::Instantiate<GameObject3D>(); }
 					if (ImGui::MenuItem(" MeshRenderer")) { GameObject::Instantiate<MeshRenderer>(); }
 					if (ImGui::MenuItem(" LightObject")) { GameObject::Instantiate<LightObject>(); }
+					if (ImGui::MenuItem(" ParticleEmitter")) { GameObject::Instantiate<ParticleEmitter>(); }
 					ImGui::EndMenu();
 				}
 				ImGui::EndMenu();

@@ -5,6 +5,7 @@
 #include "GameObject3D.h"
 #include "MeshRenderer.h"
 #include "LightObject.h"
+#include "ParticleEmitter.h"
 
 #include "Inspector.h"
 
@@ -94,6 +95,11 @@ namespace Heirarchy
 					if (ImGui::MenuItem(LightObject::className))
 					{
 						GameObject3D::Instantiate<LightObject>(target);
+						rightClickMenu.Close();
+					}
+					if (ImGui::MenuItem(ParticleEmitter::className))
+					{
+						GameObject3D::Instantiate<ParticleEmitter>(target);
 						rightClickMenu.Close();
 					}
 				}

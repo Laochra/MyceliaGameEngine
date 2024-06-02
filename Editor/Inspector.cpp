@@ -17,11 +17,11 @@ void Inspector::SetTarget(GameObject* target)
 
 	switch (target->GetClassID())
 	{
-	case GameObject::classID:	 targetGUI = new GameObjectGUI(target);	break;
+	case GameObject::classID: targetGUI = new GameObjectGUI(target); break;
 	case GameObject3D::classID: targetGUI = new GameObject3DGUI(target); break;
 	case MeshRenderer::classID: targetGUI = new MeshRendererGUI(target); break;
-	case LightObject::classID:  targetGUI = new LightObjectGUI(target);  break;
-	case ParticleEmitter::classID targetGUI = new ParticleEmitterGUI(target); break;
+	case LightObject::classID: targetGUI = new LightObjectGUI(target); break;
+	case ParticleEmitter::classID: targetGUI = new ParticleEmitterGUI(target); break;
 	default:
 		targetGUI = new GameObjectGUI(target);
 		debug->Log(
@@ -55,6 +55,7 @@ void Inspector::Draw(const char* const name, bool& open)
 	if (inspector->targetGUI != nullptr)
 	{
 		inspector->targetGUI->Draw();
+		inspector->targetGUI->target->DrawDebug();
 	}
 
 	ImGui::End();

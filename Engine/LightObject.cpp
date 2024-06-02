@@ -32,7 +32,7 @@ void LightObject::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOption
 	memcpy(&colour[0], hdrColourData.data(), 4 * sizeof(float));
 }
 
-void LightObject::Draw()
+void LightObject::DrawDebug()
 {
 	Colour debugColour = Colour(colour.x, colour.y, colour.z);
 

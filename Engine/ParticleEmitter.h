@@ -6,11 +6,10 @@
 
 class ParticleEmitter : public GameObject3D
 {
+public:
 	SerialiseAs(ParticleEmitter);
 
 	using GameObject3D::GameObject3D;
-
-public:
 	
 	virtual void Draw() override;
 	virtual void DrawDebug() override;

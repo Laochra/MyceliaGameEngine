@@ -4,6 +4,19 @@
 
 #include "Debug.h";
 
+void ParticleEmitter::SerialiseTo(json& jsonObj) const
+{
+	GameObject3D::SerialiseTo(jsonObj);
+
+	// TODO: Add Particle Emitter Stuff
+}
+void ParticleEmitter::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptions)
+{
+	GameObject3D::DeserialiseFrom(jsonObj, guidOptions);
+
+	// TODO: Add Particle Emitter Stuff
+}
+
 void ParticleEmitter::Draw()
 {	
 	if (*this != Active) return;
