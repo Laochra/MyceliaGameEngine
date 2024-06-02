@@ -7,6 +7,7 @@
 #include "SceneGUI.h"
 #include "Inspector.h"
 #include "EditorStyler.h"
+#include "MeshCooker.h"
 
 #include "MeshRendererGUI.h"
 #include "EditorCameraGUI.h"
@@ -33,6 +34,7 @@ namespace EditorGUI
 	bool sceneViewOpen = true;
 	bool shaderProgramEditorOpen = true;
 	bool materialEditorOpen = true;
+	bool meshCookerOpen = true;
 	bool cameraSettingsOpen = true;
 	bool editorStylerOpen = true;
 	bool postProcessingOpen = true;
@@ -115,15 +117,15 @@ namespace EditorGUI
 		return true;
 	}
 
-	void EditorGUI::Draw() noexcept
+	void ReadyImGui() noexcept
 	{
-		GLFWwindow* window = glfwGetCurrentContext();
-
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 		ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
-
+	}
+	void DrawMenuBar() noexcept
+	{
 		if (ImGui::BeginMainMenuBar())
 		{
 			if (ImGui::BeginMenu("File"))
@@ -199,6 +201,13 @@ namespace EditorGUI
 			}
 			ImGui::EndMainMenuBar();
 		}
+	}
+
+	void EditorGUI::Draw() noexcept
+	{
+		ReadyImGui();
+
+		DrawMenuBar();
 
 		if (consoleOpen)
 		{
@@ -233,84 +242,66 @@ namespace EditorGUI
 			ImGui::GetStyle().WindowPadding = ImVec2(0.0f, 0.0f);
 
 			ImGui::Begin("Scene", &sceneViewOpen);
-			{
-				screenWidth = (int)ImGui::GetWindowWidth();
-				float titleBarHeight = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2;
-				screenHeight = (int)(ImGui::GetWindowHeight() - titleBarHeight);
+			
+			SceneGUI::DrawScene();
 
-				if (ImGui::IsWindowHovered())
-				{
-					if (((EditorCamera*)mainCamera)->freeCamera.pressed())
-					{
-						glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-						if (glfwRawMouseMotionSupported()) glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
-						ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse; // Disables Imgui's Mouse Input
-					}
-					input->enabled = true;
-				}
-				else if (input->enabled && !((EditorCamera*)mainCamera)->freeCamera.down())
-				{
-					glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-					ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse; // Re-enables Imgui's Mouse Input
-					input->enabled = false;
-				}
+			ImGui::End();
 
-				if (((EditorCamera*)mainCamera)->freeCamera.released())
-				{
-					glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-					ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse; // Re-enables Imgui's Mouse Input
-					input->enabled = false;
-				}
-
-				uintptr_t image = (uintptr_t)sceneViewColourBufferOutput; // Casting to a uintptr_t is required to stop a warning with converting 32bit uint to 64bit void*. ImGui::Image works regardless.
-				ImGui::Image((void*)image, ImVec2((float)screenWidth, (float)screenHeight), ImVec2(0, 1), ImVec2(1, 0));
-
-			} ImGui::End();
 			ImGui::GetStyle().WindowPadding = oldPadding;
 		}
 
 		if (shaderProgramEditorOpen)
 		{
-			if (ShaderProgramGUI::dirty == false) ImGui::Begin("Shader Program Editor", &shaderProgramEditorOpen);
-			else ImGui::Begin("Shader Program Editor", &shaderProgramEditorOpen, ImGuiWindowFlags_UnsavedDocument);
-			{
-				ShaderProgramGUI::Draw();
-			} ImGui::End();
+			ImGui::Begin("Shader Program Editor", &shaderProgramEditorOpen, ImGuiWindowFlags_UnsavedDocument * ShaderProgramGUI::dirty);
+			
+			ShaderProgramGUI::Draw();
+			
+			ImGui::End();
 		}
 
 		if (materialEditorOpen)
 		{
-			if (MaterialGUI::dirty == false) ImGui::Begin("Material Editor", &materialEditorOpen);
-			else ImGui::Begin("Material Editor", &materialEditorOpen, ImGuiWindowFlags_UnsavedDocument);
-			{
-				MaterialGUI::Draw();
-			} ImGui::End();
+			ImGui::Begin("Material Editor", &materialEditorOpen, ImGuiWindowFlags_UnsavedDocument * MaterialGUI::dirty);
+			
+			MaterialGUI::Draw();
+			
+			ImGui::End();
+		}
+
+		if (meshCookerOpen)
+		{
+			ImGui::Begin("Mesh Cooker", &meshCookerOpen);
+			
+			MeshCooker::Draw();
+
+			ImGui::End();
 		}
 
 		if (cameraSettingsOpen)
 		{
 			ImGui::Begin("Camera", &cameraSettingsOpen);
-			{
-				EditorCameraGUI::DrawEditorCameraGUI((EditorCamera*)mainCamera);
-			} ImGui::End();
+			
+			EditorCameraGUI::DrawEditorCameraGUI((EditorCamera*)mainCamera);
+			
+			ImGui::End();
 		}
 
 		if (editorStylerOpen)
 		{
 			ImGui::Begin("Editor Styler", &editorStylerOpen);
-			{
-				EditorStyler::Draw();
-			} ImGui::End();
+			
+			EditorStyler::Draw();
+			
+			ImGui::End();
 		}
 
 		if (postProcessingOpen)
 		{
 			ImGui::Begin("Post Processing", &postProcessingOpen);
-			{
-				ImGui::DragFloat("HDR Exposure", &exposure, 0.1f, 0.1f, 1000.0f);
+			
+			ImGui::DragFloat("HDR Exposure", &exposure, 0.1f, 0.1f, 1000.0f);
 
-
-			} ImGui::End();
+			ImGui::End();
 		}
 	}
 
@@ -331,6 +322,36 @@ namespace EditorGUI
 			ImGui::UpdatePlatformWindows();
 			ImGui::RenderPlatformWindowsDefault();
 			glfwMakeContextCurrent(window);
+		}
+	}
+
+	static bool CheckIfStringContains(string& str, StringParams tests)
+	{
+		for (string test : tests)
+		{
+			if (str.find(test) != string::npos)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	void EditorGUI::FileDropCallback(GLFWwindow* window, int count, const char** filepaths)
+	{
+		vector<string> files;
+
+		for (int i = 0; i < count; i++)
+		{
+			files.push_back(filepaths[i]);
+		}
+
+		for (int i = 0; i < files.size(); i++)
+		{
+			if (CheckIfStringContains(files[i], { ".fbx", ".obj", ".gltf" }) != string::npos)
+			{
+				MeshCooker::fileQueue.push_back(files[i]);
+			}
 		}
 	}
 }

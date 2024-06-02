@@ -1,5 +1,8 @@
 #include "SceneGUI.h"
 
+#include "EditorGUI.h"
+#include "EditorCamera.h"
+
 #include "JsonIncludes.h"
 #include "Inspector.h"
 #include "GameObjectManager.h"
@@ -25,6 +28,42 @@ namespace SceneGUI
 	const char* currentScenePath = nullptr;
 	constexpr uint currentFormatVersion = (VMillions << 6) + (VThousands << 3) + (VHundreds);
 	bool dirty = false;
+
+	void DrawScene() noexcept
+	{
+		GLFWwindow* window = glfwGetCurrentContext();
+
+		screenWidth = (int)ImGui::GetWindowWidth();
+		float titleBarHeight = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2;
+		screenHeight = (int)(ImGui::GetWindowHeight() - titleBarHeight);
+
+		if (ImGui::IsWindowHovered())
+		{
+			if (((EditorCamera*)mainCamera)->freeCamera.pressed())
+			{
+				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+				if (glfwRawMouseMotionSupported()) glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+				ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse; // Disables Imgui's Mouse Input
+			}
+			input->enabled = true;
+		}
+		else if (input->enabled && !((EditorCamera*)mainCamera)->freeCamera.down())
+		{
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse; // Re-enables Imgui's Mouse Input
+			input->enabled = false;
+		}
+
+		if (((EditorCamera*)mainCamera)->freeCamera.released())
+		{
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse; // Re-enables Imgui's Mouse Input
+			input->enabled = false;
+		}
+
+		uintptr_t image = (uintptr_t)EditorGUI::sceneViewColourBufferOutput; // Casting to a uintptr_t is required to stop a warning with converting 32bit uint to 64bit void*. ImGui::Image works regardless.
+		ImGui::Image((void*)image, ImVec2((float)screenWidth, (float)screenHeight), ImVec2(0, 1), ImVec2(1, 0));
+	}
 
 	void SceneGUI::DrawFileDropdown() noexcept
 	{

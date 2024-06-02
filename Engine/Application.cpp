@@ -138,7 +138,6 @@ void Application::GameLoop()
 		{
 			input->Update();
 			glfwPollEvents();
-			OnPollEvents();
 
 			Time::Tick((float)glfwGetTime());
 			timeDebt += Time::delta;

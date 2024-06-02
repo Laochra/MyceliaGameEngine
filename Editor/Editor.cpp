@@ -11,6 +11,7 @@
 void Editor::Initialise()
 {
 	EditorGUI::Initialise();
+	glfwSetDropCallback(window, EditorGUI::FileDropCallback);
 
 	gameObjectManager = new GameObjectManager();
 	

@@ -19,6 +19,7 @@ namespace EditorGUI
 	extern bool inspectorOpen;
 	extern bool shaderProgramEditorOpen;
 	extern bool materialEditorOpen;
+	extern bool meshCookerOpen;
 	extern bool cameraSettingsOpen;
 	extern bool editorStylerOpen;
 	extern bool postProcessingOpen;
@@ -27,4 +28,6 @@ namespace EditorGUI
 	extern bool CleanUp() noexcept;
 	extern void Draw() noexcept;
 	extern void RenderGUI() noexcept;
+
+	extern void FileDropCallback(GLFWwindow* window, int count, const char** filepaths);
 }

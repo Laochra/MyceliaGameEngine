@@ -11,6 +11,7 @@ namespace SceneGUI
 	extern const uint currentFormatVersion;
 	extern bool dirty;
 
+	extern void DrawScene() noexcept;
 	extern void DrawFileDropdown() noexcept;
 
 	extern bool NewScene() noexcept;
