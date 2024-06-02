@@ -24,8 +24,7 @@ namespace EditorGUI
 	extern bool postProcessingOpen;
 
 	extern void Initialise() noexcept;
-	extern void CleanUp() noexcept;
-	extern void ReadyImGui() noexcept;
+	extern bool CleanUp() noexcept;
 	extern void Draw() noexcept;
 	extern void RenderGUI() noexcept;
 }

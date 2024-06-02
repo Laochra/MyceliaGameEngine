@@ -32,4 +32,5 @@ namespace Heirarchy
 	extern void DragDropTarget(const char* id, GameObject3D* target, DragDropTargetOffset offset = ChildTo);
 	extern void BeginPayload(GameObject3D* gameObject3D);
 	extern void AcceptInputFor(GameObject3D* gameObject3D);
+	extern void Duplicate(GameObject3D* gameObject3D) noexcept;
 }

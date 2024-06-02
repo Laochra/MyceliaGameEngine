@@ -24,16 +24,12 @@ public:
 
 protected:
 	virtual void Initialise() override;
-	virtual void OnFrameStart() override;
 	virtual void FixedUpdate() override;
 	virtual void Update() override;
 	virtual void Draw() override;
-	virtual void DrawPostProcess() override;
-	virtual void DrawGUI() override;
-	virtual void OnClose() override;
+	virtual bool OnClose() override;
 
 private:
-
 	// Post Processing
 	ShaderProgram hdrProgram;
 	ShaderProgram blurProgram;

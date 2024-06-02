@@ -99,15 +99,7 @@ namespace Heirarchy
 			}
 			if (ImGui::MenuItem("Duplicate"))
 			{
-				GameObject3D* original = (GameObject3D*)rightClickMenu.target;
-				GameObject3D* parent = original->GetParent();
-
-				json prefab = rightClickMenu.target;
-
-				GameObject3D* clone = (GameObject3D*)GameObject::InstantiateFrom(prefab, GuidGeneration::New);
-				gameObjectManager->Add(clone);
-				clone->SetParent(parent);
-				clone->MoveTo(original->GetIndex() + 1);
+				Duplicate((GameObject3D*)rightClickMenu.target);
 
 				rightClickMenu.Close();
 			}
@@ -125,9 +117,20 @@ namespace Heirarchy
 		}
 		else if (ImGui::IsWindowHovered())
 		{
-			if (!input->enabled && (ImGui::IsKeyPressed(ImGuiKey_Delete) || (ImGui::IsKeyPressed(ImGuiKey_KeypadDecimal))))
+			if (!input->enabled)
 			{
-				GameObject::Destroy(inspector->GetTarget());
+				if (ImGui::IsKeyPressed(ImGuiKey_Delete) || ImGui::IsKeyPressed(ImGuiKey_KeypadDecimal))
+				{
+					GameObject::Destroy(inspector->GetTarget());
+				}
+
+				if (ImGui::IsKeyPressed(ImGuiKey_LeftCtrl) || ImGui::IsKeyPressed(ImGuiKey_RightCtrl))
+				{
+					if (ImGui::IsKeyPressed(ImGuiKey_D) && dynamic_cast<GameObject3D*>(rightClickMenu.target) != nullptr)
+					{
+						Duplicate((GameObject3D*)inspector->GetTarget());
+					}
+				}
 			}
 		}
 	}
@@ -272,4 +275,16 @@ void Heirarchy::BeginPayload(GameObject3D* gameObject3D)
 	{
 		ImGui::TextColored({ 255, 0, 0, 1 }, "Invalid target");
 	}
+}
+
+void Heirarchy::Duplicate(GameObject3D* gameObject3D) noexcept
+{
+	GameObject3D* parent = gameObject3D->GetParent();
+
+	json prefab = rightClickMenu.target;
+
+	GameObject3D* clone = (GameObject3D*)GameObject::InstantiateFrom(prefab, GuidGeneration::New);
+	gameObjectManager->Add(clone);
+	clone->SetParent(parent);
+	clone->MoveTo(gameObject3D->GetIndex() + 1);
 }

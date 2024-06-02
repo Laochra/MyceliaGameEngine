@@ -83,7 +83,6 @@ int GameObjectManager::GetIndexOf(GameObject* gameObject) const noexcept
 
 void GameObjectManager::Clear() noexcept
 {
-	Updater::onFrameStartList.clear();
 	Updater::fixedUpdateList.clear();
 	Updater::updateList.clear();
 	Updater::drawList.clear();

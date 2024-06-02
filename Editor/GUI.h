@@ -20,8 +20,6 @@ namespace GUI
 {
 	typedef unsigned int uint;
 
-	extern void Close();
-
 	extern string GenerateID(GameObject* gameObject);
 	extern string GenerateID(const char* name, GameObject* gameObject);
 	extern string InvisibleName(const char* uniqueName);

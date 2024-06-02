@@ -106,22 +106,23 @@ namespace EditorGUI
 		}
 	}
 
-	void EditorGUI::CleanUp() noexcept
+	bool EditorGUI::CleanUp() noexcept
 	{
-		del(inspector);
-	}
+		if (!SceneGUI::ClearScene()) return false;
 
-	void EditorGUI::ReadyImGui() noexcept
-	{
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-		ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+		del(inspector);
+
+		return true;
 	}
 
 	void EditorGUI::Draw() noexcept
 	{
 		GLFWwindow* window = glfwGetCurrentContext();
+
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+		ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
 		if (ImGui::BeginMainMenuBar())
 		{
