@@ -1,0 +1,464 @@
+{
+  "FormatVersion": 1,
+  "GameObjects": [
+    {
+      "Active": true,
+      "Children": [],
+      "GUID": 3820639481518720089,
+      "Material": "Assets\\Materials\\Table.mat",
+      "Mesh": "Assets\\Meshes\\Table.mesh",
+      "Name": "Table",
+      "Pivot": [
+        0.0,
+        -0.5,
+        0.0
+      ],
+      "Position": [
+        0.0,
+        0.0,
+        0.3499999940395355
+      ],
+      "Rotation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "Scale": [
+        0.009999999776482582,
+        0.009999999776482582,
+        0.009999999776482582
+      ],
+      "TypeID": 181025226017607
+    },
+    {
+      "Active": true,
+      "Children": [
+        {
+          "Active": true,
+          "Children": [
+            {
+              "Active": true,
+              "Angle": [
+                1.0,
+                0.882947564125061
+              ],
+              "Children": [],
+              "GUID": 9901662755810778854,
+              "HDRColour": [
+                1.0,
+                0.8941176533699036,
+                0.6745098233222961,
+                2.4000000953674316
+              ],
+              "Name": "Downlight",
+              "Pivot": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "Position": [
+                0.0,
+                0.6000000238418579,
+                0.0
+              ],
+              "Range": 1.0,
+              "Rotation": [
+                0.7071067690849304,
+                -0.7071067690849304,
+                -0.0,
+                0.0
+              ],
+              "Scale": [
+                1.0,
+                1.0,
+                1.0
+              ],
+              "TypeID": 13349087399510
+            }
+          ],
+          "GUID": 8609263897389029404,
+          "Material": "Assets\\Materials\\Bulb.mat",
+          "Mesh": "ProceduralCube",
+          "Name": "Bulb",
+          "Pivot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Position": [
+            0.0,
+            -0.6000000238418579,
+            0.0
+          ],
+          "Rotation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Scale": [
+            0.6669999957084656,
+            0.20000000298023224,
+            0.6669999957084656
+          ],
+          "TypeID": 181025226017607
+        }
+      ],
+      "GUID": 9841404754253384433,
+      "Material": "Assets\\Materials\\Wood Planks.mat",
+      "Mesh": "ProceduralCube",
+      "Name": "Lightbox",
+      "Pivot": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "Position": [
+        0.0,
+        1.5,
+        0.0
+      ],
+      "Rotation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "Scale": [
+        0.20000000298023224,
+        0.05000000074505806,
+        0.10000000149011612
+      ],
+      "TypeID": 181025226017607
+    },
+    {
+      "Active": true,
+      "Children": [
+        {
+          "Active": true,
+          "Children": [],
+          "GUID": 13051423995666173158,
+          "Material": "Assets\\Materials\\Wood Planks.mat",
+          "Mesh": "ProceduralQuad",
+          "Name": "Floor -1, 0",
+          "Pivot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Position": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "Rotation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "TypeID": 181025226017607
+        },
+        {
+          "Active": true,
+          "Children": [],
+          "GUID": 5653839137444622568,
+          "Material": "Assets\\Materials\\Wood Planks.mat",
+          "Mesh": "ProceduralQuad",
+          "Name": "Floor -1, 1",
+          "Pivot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Position": [
+            -1.0,
+            0.0,
+            1.0
+          ],
+          "Rotation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "TypeID": 181025226017607
+        },
+        {
+          "Active": true,
+          "Children": [],
+          "GUID": 3925926555004386488,
+          "Material": "Assets\\Materials\\Wood Planks.mat",
+          "Mesh": "ProceduralQuad",
+          "Name": "Floor 0, 0",
+          "Pivot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Rotation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "TypeID": 181025226017607
+        },
+        {
+          "Active": true,
+          "Children": [],
+          "GUID": 14132180993139641314,
+          "Material": "Assets\\Materials\\Wood Planks.mat",
+          "Mesh": "ProceduralQuad",
+          "Name": "Floor 0, 1",
+          "Pivot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Position": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "Rotation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "TypeID": 181025226017607
+        },
+        {
+          "Active": true,
+          "Children": [],
+          "GUID": 7131489797926011143,
+          "Material": "Assets\\Materials\\Wood Planks.mat",
+          "Mesh": "ProceduralQuad",
+          "Name": "Floor 1, 0",
+          "Pivot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Position": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "Rotation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "TypeID": 181025226017607
+        },
+        {
+          "Active": true,
+          "Children": [],
+          "GUID": 17549387985407427036,
+          "Material": "Assets\\Materials\\Wood Planks.mat",
+          "Mesh": "ProceduralQuad",
+          "Name": "Floor 1, 1",
+          "Pivot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Position": [
+            1.0,
+            0.0,
+            1.0
+          ],
+          "Rotation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "TypeID": 181025226017607
+        }
+      ],
+      "GUID": 1860656150321157867,
+      "Name": "Floors",
+      "Pivot": [
+        0.0,
+        -0.0024999999441206455,
+        0.0
+      ],
+      "Position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "Rotation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "Scale": [
+        2.0,
+        1.0,
+        2.0
+      ],
+      "TypeID": 70103550478110
+    },
+    {
+      "Active": true,
+      "Children": [
+        {
+          "Active": true,
+          "Children": [],
+          "GUID": 12130089938362510396,
+          "Material": "Assets\\Materials\\Wallpaper.mat",
+          "Mesh": "ProceduralQuad",
+          "Name": "Wall -1",
+          "Pivot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Position": [
+            -1.0,
+            0.0020000000949949026,
+            0.0
+          ],
+          "Rotation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "TypeID": 181025226017607
+        },
+        {
+          "Active": true,
+          "Children": [],
+          "GUID": 1682724981958248360,
+          "Material": "Assets\\Materials\\Wallpaper.mat",
+          "Mesh": "ProceduralQuad",
+          "Name": "Wall 0",
+          "Pivot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Position": [
+            0.0,
+            0.0020000000949949026,
+            0.0
+          ],
+          "Rotation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "TypeID": 181025226017607
+        },
+        {
+          "Active": true,
+          "Children": [],
+          "GUID": 11615754079014060558,
+          "Material": "Assets\\Materials\\Wallpaper.mat",
+          "Mesh": "ProceduralQuad",
+          "Name": "Wall 1",
+          "Pivot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Position": [
+            1.0,
+            0.0020000000949949026,
+            0.0
+          ],
+          "Rotation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "TypeID": 181025226017607
+        }
+      ],
+      "GUID": 9068525561206205278,
+      "Name": "Walls",
+      "Pivot": [
+        0.0,
+        -0.0,
+        0.5019999742507935
+      ],
+      "Position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "Rotation": [
+        0.7071068286895752,
+        0.7071068286895752,
+        0.0,
+        0.0
+      ],
+      "Scale": [
+        2.0,
+        1.0,
+        2.0
+      ],
+      "TypeID": 70103550478110
+    }
+  ]
+}

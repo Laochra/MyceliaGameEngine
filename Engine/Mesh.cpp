@@ -2,10 +2,6 @@
 
 #include "GeneralMacros.h"
 
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-
 #include <fstream>
 
 #include "Debug.h"
@@ -259,60 +255,33 @@ void Mesh::InitialiseCube()
 
 bool Mesh::LoadFromFile(const char* filepathInit)
 {
-	Assimp::Importer importer;
-	const aiScene* file = importer.ReadFile(filepathInit, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
-	
-	if (file == nullptr)
+	assert(string(filepathInit).find(".mesh") != string::npos);
+
+	std::ifstream filestream(filepathInit, std::ios::binary);
+
+	if (!filestream.good())
 	{
-		if (memcmp(filepath, "None", 5) == 0) return false;
-
-		std::ifstream filestream(filepathInit);
-		if (filestream.good())
-		{
-			debug->Log({ "Found a Mesh file at filepath: ", filepath, ". But AssImp couldn't load it." locationinfo }, Debug::Warning, Debug::WRN102);
-		}
-		else
-		{
-			debug->Log({ "Couldn't find a Mesh file at filepath: ", filepath, locationinfo }, Debug::Warning, Debug::WRN101);
-		}
-
+		debug->Log({ "Couldn't find a Mesh file at filepath: ", filepath, locationinfo }, Debug::Warning, Debug::WRN101);
 		return false;
 	}
 
-	if (file->mNumMeshes > 0)
-	{
-		aiMesh* mesh = file->mMeshes[0];
-	
-		Vertex* vertexData = new Vertex[mesh->mNumVertices];
-		uint* indexData = new uint[mesh->mNumFaces * 3];
-	
-		for (uint i = 0; i < mesh->mNumVertices; i++)
-		{
-			vertexData[i].position = vec4(*(vec3*)&mesh->mVertices[i], 1);
+	uint vertexCount;
+	filestream.read((char*)&vertexCount, sizeof(uint));
 
-			vertexData[i].normal = vec4(*(vec3*)&mesh->mNormals[i], 0);
-			vertexData[i].tangent = vec4(*(vec3*)&mesh->mTangents[i], 0);
-			vertexData[i].biTangent = vec4(*(vec3*)&mesh->mBitangents[i], 0);
+	Vertex* vertices = new Vertex[vertexCount];
+	filestream.read((char*)&vertices->position[0], vertexCount * sizeof(Vertex));
 
-			vertexData[i].texCoord.x = mesh->mTextureCoords[0][i].x;
-			vertexData[i].texCoord.y = mesh->mTextureCoords[0][i].y;
-		}
-	
-		for (uint i = 0; i < mesh->mNumFaces; i++)
-		{
-			indexData[i * 3 + 0] = mesh->mFaces[i].mIndices[0];
-			indexData[i * 3 + 1] = mesh->mFaces[i].mIndices[1];
-			indexData[i * 3 + 2] = mesh->mFaces[i].mIndices[2];
-		}
-		
-		Initialise(mesh->mNumVertices, vertexData, mesh->mNumFaces * 3, indexData);
-		delete[] vertexData;
-		delete[] indexData;
+	uint indexCount;
+	filestream.read((char*)&indexCount, sizeof(uint));
 
-		uint filepathLength = (uint)strlen(filepathInit) + 1;
-		filepath = new char[filepathLength];
-		for (uint i = 0; i < filepathLength; i++) { filepath[i] = filepathInit[i]; }
-	}
+	uint* indices = new uint[indexCount];
+	filestream.read((char*)&indices[0], indexCount * sizeof(uint));
+
+	Initialise(vertexCount, vertices, indexCount, indices);
+
+	uint filepathLength = (uint)strlen(filepathInit) + 1;
+	filepath = new char[filepathLength];
+	memcpy(filepath, filepathInit, filepathLength);
 
 	return true;
 }

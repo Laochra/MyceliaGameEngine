@@ -13,7 +13,7 @@ namespace LightingManager
 
 		for (int l = 0; l < lightObjects.size(); l++)
 		{
-			if (*lightObjects[l] != GameObject::Active) continue; // Skip inactive lights
+			if (lightObjects[l] != GameObject::Active) continue; // Skip inactive lights
 
 			// If count hasn't been reached, just add it
 			if (l < count)
