@@ -131,6 +131,7 @@ public:
 
 	void Bind();
 
+	const char* const GetFilepath() const noexcept;
 	unsigned int GetGLHandle() const { return program; }
 
 	void GetFields(vector<ShaderInput>& attributes, vector<ShaderInput>& uniforms);
@@ -176,6 +177,7 @@ private:
 	unsigned int program;
 	std::shared_ptr<Shader> m_shaders[ShaderStagesCount];
 	char* lastError;
+	char* filepath;
 
 	bool LoadShaderFromJSON(ShaderStage stage, const char* filename);
 	bool JSONFileIsValid(const char* filename);

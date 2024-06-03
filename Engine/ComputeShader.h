@@ -12,18 +12,23 @@ class ComputeShader
 {
 public:
 	unsigned int program;
+	char* filepath;
 
-	ComputeShader(const char* filepath)
+	ComputeShader(const char* filepathInit)
 	{
 		string computeCode;
 		std::ifstream file;
 
-		file.open(filepath);
+		file.open(filepathInit);
 		if (!file.good())
 		{
-			debug->Log({ "Compute shader file not found at: ", filepath, locationinfo }, Debug::Warning, Debug::WRN101);
+			debug->Log({ "Compute shader file not found at: ", filepathInit, locationinfo }, Debug::Warning, Debug::WRN101);
 			return;
 		}
+
+		uint filepathLength = (uint)strlen(filepathInit);
+		filepath = new char[filepathLength + 1];
+		memcpy(filepath, filepathInit, filepathLength + 1);
 
 		std::stringstream filestream;
 		filestream << file.rdbuf();

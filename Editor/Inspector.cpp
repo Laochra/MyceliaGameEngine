@@ -54,8 +54,15 @@ void Inspector::Draw(const char* const name, bool& open)
 
 	if (inspector->targetGUI != nullptr)
 	{
-		inspector->targetGUI->Draw();
-		inspector->targetGUI->target->DrawDebug();
+		if (inspector->targetGUI->target == nullptr || inspector->targetGUI->target != GameObject::Destroyed)
+		{
+			inspector->targetGUI->Draw();
+			inspector->targetGUI->target->DrawDebug();
+		}
+		else
+		{
+			del(inspector->targetGUI);
+		}
 	}
 
 	ImGui::End();

@@ -8,18 +8,86 @@ void ParticleEmitter::SerialiseTo(json& jsonObj) const
 {
 	GameObject3D::SerialiseTo(jsonObj);
 
-	// TODO: Add Particle Emitter Stuff
+	// Particle Properties
+	{
+		json properties;
+
+		properties["Autoplay"] = particleSystem->properties.autoplay;
+		properties["Loop"] = particleSystem->properties.loop;
+		properties["Duration"] = particleSystem->properties.duration;
+		properties["Delay"] = particleSystem->properties.delay;
+		properties["MaxCount"] = particleSystem->properties.maxCount;
+		properties["Gravity"] = particleSystem->properties.gravity;
+
+		float* sizeRange = particleSystem->properties.sizeRange;
+		properties["SizeRange"] = vector{ sizeRange[0], sizeRange[1] };
+		float* lifetimeRange = particleSystem->properties.lifetimeRange;
+		properties["LifetimeRange"] = vector{ lifetimeRange[0], lifetimeRange[1] };
+		float* speedRange = particleSystem->properties.speedRange;
+		properties["SpeedRange"] = vector{ speedRange[0], speedRange[1] };
+		float* colour = particleSystem->properties.colour;
+		properties["Colour"] = vector{ colour[0], colour[1], colour[2], colour[3] };
+
+		properties["EmitOverTime"] = particleSystem->properties.emitOverTime;
+		properties["ParticlesPerSecond"] = particleSystem->properties.particlesPerSecond;
+		properties["ShapeID"] = (uint)particleSystem->properties.shape;
+		float* shapeData = particleSystem->properties.shapeData;
+		properties["ShapeData"] = vector{ shapeData[0], shapeData[1], shapeData[2] };
+
+		jsonObj["ParticleProperties"] = properties;
+	}
+
+	jsonObj["ComputeShader"] = computeShader->filepath;
+	
+	jsonObj["ShaderProgram"] = shaderProgram->GetFilepath();
 }
 void ParticleEmitter::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptions)
 {
 	GameObject3D::DeserialiseFrom(jsonObj, guidOptions);
 
-	// TODO: Add Particle Emitter Stuff
+	// Particle Properties
+	{
+		json properties = jsonObj["ParticleProperties"];
+		del(particleSystem);
+		particleSystem = new ParticleSystem();
+		particleSystem->properties.autoplay = properties["Autoplay"];
+		particleSystem->properties.loop = properties["Loop"];
+		particleSystem->properties.duration = properties["Duration"];
+		particleSystem->properties.delay = properties["Delay"];
+		particleSystem->properties.maxCount = properties["MaxCount"];
+		particleSystem->properties.gravity = properties["Gravity"];
+
+		vector<float> sizeRange = properties["SizeRange"];
+		memcpy(particleSystem->properties.sizeRange, sizeRange.data(), sizeRange.size());
+		vector<float> lifetimeRange = properties["LifetimeRange"];
+		memcpy(particleSystem->properties.lifetimeRange, lifetimeRange.data(), lifetimeRange.size());
+		vector<float> speedRange = properties["SpeedRange"];
+		memcpy(particleSystem->properties.speedRange, speedRange.data(), speedRange.size());
+		vector<float> colour = properties["SizeRange"];
+		memcpy(particleSystem->properties.colour, colour.data(), colour.size());
+
+		particleSystem->properties.emitOverTime = properties["EmitOverTime"];
+		particleSystem->properties.particlesPerSecond = properties["ParticlesPerSecond"];
+		particleSystem->properties.shape = (ParticleSystem::Shape)(uint)properties["ShapeID"];
+		vector<float> shapeData = properties["ShapeData"];
+		memcpy(particleSystem->properties.shapeData, shapeData.data(), shapeData.size());
+	}
+
+	string computeShaderFilepath = jsonObj["ComputeShader"];
+	del(computeShader);
+	computeShader = new ComputeShader(computeShaderFilepath.c_str());
+	computeShader->filepath = new char[computeShaderFilepath.size() + 1];
+	memcpy(computeShader->filepath, computeShaderFilepath.c_str(), computeShaderFilepath.size() + 1);
+
+	string shaderProgramFilepath = jsonObj["ShaderProgram"];
+	del(shaderProgram);
+	shaderProgram = new ShaderProgram();
+	shaderProgram->LoadAndLinkFromJSON(shaderProgramFilepath.c_str());
 }
 
 void ParticleEmitter::Draw()
 {	
-	if (*this != Active) return;
+	if (this != Active) return;
 	if (GetEmissionState() == ParticleSystem::WaitingToStart) return;
 	if (GetEmissionState() == ParticleSystem::Stopped) return;
 
@@ -94,7 +162,7 @@ void ParticleEmitter::DrawDebug()
 }
 void ParticleEmitter::Update()
 {
-	if (*this != Active) return;
+	if (this != Active) return;
 	switch (GetEmissionState())
 	{
 	case ParticleSystem::Paused:  return;
@@ -144,8 +212,14 @@ void ParticleEmitter::Update()
 void ParticleEmitter::Initialise()
 {
 	GameObject::Initialise();
+
 	glGenVertexArrays(1, &vao);
 	glPointSize(5.0f);
+	shaderProgram = new ShaderProgram();
+	shaderProgram->LoadAndLinkFromJSON("Assets\\Shaders\\ParticleSystem.gpu");
+	computeShader = new ComputeShader("Assets\\Shaders\\Particles.comp");
+	particleSystem = new ParticleSystem();
+
 	Updater::DrawAdd(this);
 }
 void ParticleEmitter::OnDestroy()

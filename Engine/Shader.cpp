@@ -213,11 +213,11 @@ ShaderProgram::~ShaderProgram()
 	if (program != 0) glDeleteProgram(program);
 }
 
-bool ShaderProgram::LoadAndLinkFromJSON(const char* filename)
+bool ShaderProgram::LoadAndLinkFromJSON(const char* filepathInit)
 {
-	if (!JSONFileIsValid(filename)) return false;
+	if (!JSONFileIsValid(filepathInit)) return false;
 
-	ifstream input(filename);
+	ifstream input(filepathInit);
 	json shaderProgram;
 	input >> shaderProgram;
 
@@ -237,6 +237,11 @@ bool ShaderProgram::LoadAndLinkFromJSON(const char* filename)
 	if (LoadShaderFromJSON(FragmentStage, fragmentFile.c_str()) == false) return false;
 
 	if (program != 0) glDeleteProgram(program);
+
+	uint filepathLength = strlen(filepathInit);
+	filepath = new char[filepathLength + 1];
+	memcpy(filepath, filepathInit, filepathLength + 1);
+
 	return Link();
 }
 
@@ -297,6 +302,11 @@ void ShaderProgram::Bind()
 {
 	assert(program > 0 && "Invalid shader program");
 	glUseProgram(program);
+}
+
+const char* const ShaderProgram::GetFilepath() const noexcept
+{
+	return filepath;
 }
 
 void ShaderProgram::GetFields(vector<ShaderInput>& attributes, vector<ShaderInput>& uniforms)
