@@ -16,7 +16,7 @@ GameObjectGUI::GameObjectGUI(GameObject* targetInit)
 
 void GameObjectGUI::DrawGameObjectGUI(GameObject* gameObject)
 {
-	if (gameObject == nullptr || *gameObject == GameObject::Destroyed) return;
+	if (gameObject == nullptr || gameObject == GameObject::Destroyed) return;
 
 	std::string idStr = GUI::GenerateID("GameObject", gameObject);
 	const char* id = idStr.c_str();
@@ -29,9 +29,9 @@ void GameObjectGUI::DrawGameObjectGUI(GameObject* gameObject)
 			gameObject->SetName(tempName.c_str());
 		}
 		ImGui::SameLine();
-		bool active = gameObject->GetState() == GameObject::Active;
+		bool active = gameObject == GameObject::Active;
 		ImGui::Checkbox("Active", &active);
-		if (active != (gameObject->GetState() == GameObject::Active))
+		if (active != (gameObject == GameObject::Active))
 		{
 			gameObject->SetState(active ? GameObject::Active : GameObject::Inactive);
 		}

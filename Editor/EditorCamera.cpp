@@ -3,6 +3,9 @@
 
 #include "TimeManager.h"
 
+void EditorCamera::SerialiseTo(json& jsonObj) const {}
+void EditorCamera::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptions) {}
+
 glm::mat4 EditorCamera::GetViewMatrix()
 {
 	float thetaR = glm::radians(xRotation);

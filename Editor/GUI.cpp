@@ -1,12 +1,17 @@
 #include "GUI.h"
 
+#include "GLIncludes.h"
 #include <JsonIncludes.h>
+
+#include "Inspector.h"
+#include "ShaderProgramGUI.h"
+#include "MaterialGUI.h"
+
+#include "GameObject.h"
 
 #include <sstream>
 
-#include "ConsoleGUI.h"
-
-#include "GameObject.h"
+#include "Debug.h"
 
 string GUI::currentStyle = "Orchid";
 map<string, string> GUI::styleMap = {
@@ -202,6 +207,9 @@ void GUI::LoadStyle(string styleName)
 void GUI::UpdateStyle()
 {
 	ImGuiStyle* style = &ImGui::GetStyle();
+	
+	// Font
+	ImFont* odudoMono = ImGui::GetIO().Fonts->AddFontFromFileTTF("Assets\\Fonts\\OdudoMono-Regular.otf", 16);
 
 	// Text
 	style->Colors[ImGuiCol_Text]						= *(ImVec4*)&colours.text;

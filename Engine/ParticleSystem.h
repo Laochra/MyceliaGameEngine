@@ -17,7 +17,7 @@ class ParticleSystem
 
 public:
 	enum State { Stopped, Playing, Paused, WaitingToStart };
-	enum class Shape { Sphere, Cone, Box, Quad, Circle };
+	enum class Shape : uint { Sphere, Cone, Box, Quad, Circle };
 	struct Properties
 	{
 		// System Settings

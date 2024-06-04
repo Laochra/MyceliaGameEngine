@@ -131,6 +131,7 @@
       <AdditionalLibraryDirectories>$(SolutionDir)External/GLFW</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies); glfw3.lib</AdditionalDependencies>
     </Link>
+    <Lib />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -154,6 +155,7 @@
       <AdditionalLibraryDirectories>$(SolutionDir)External/GLFW</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies); glfw3.lib</AdditionalDependencies>
     </Link>
+    <Lib />
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\External\glad\glad.c" />
@@ -162,6 +164,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObject3D.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
+    <ClCompile Include="GuidGenerator.cpp" />
     <ClCompile Include="KeyAxis.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Input.cpp" />

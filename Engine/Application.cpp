@@ -43,7 +43,6 @@ int Application::Run()
 	GameLoop();
 
 	debug->Log("Terminating application...", Debug::Subtle);
-	OnClose();
 	Close();
 	debug->Log("Application termination successful\n", Debug::Subtle);
 
@@ -53,14 +52,12 @@ int Application::Run()
 
 
 void Application::Initialise() { }
-void Application::OnFrameStart() { }
 
 void Application::FixedUpdate() { } 
 void Application::Update() { }
 void Application::Draw() { }
-void Application::DrawPostProcess() {}
-void Application::DrawGUI() { }
-void Application::OnClose() { }
+
+bool Application::OnClose() { return true; }
 
 
 int Application::Setup()
@@ -133,37 +130,36 @@ int Application::Setup()
 void Application::GameLoop()
 {
 	float timeDebt = 0;
-	while (isRunning && !glfwWindowShouldClose(window))
+	bool applicationIsReadyToClose = false;
+
+	while (!applicationIsReadyToClose)
 	{
-		input->Update();
-		glfwPollEvents();
-
-		OnFrameStart();
-		Updater::CallOnFrameStart();
-
-		Time::Tick((float)glfwGetTime());
-		timeDebt += Time::delta;
-		while (timeDebt > Time::fixedStep)
+		while (isRunning && !glfwWindowShouldClose(window))
 		{
-			FixedUpdate();
-			Updater::CallFixedUpdate();
-			timeDebt -= Time::fixedStep;
-		}
+			input->Update();
+			glfwPollEvents();
 
-		if (isRunning)
-		{
+			Time::Tick((float)glfwGetTime());
+			timeDebt += Time::delta;
+			while (timeDebt > Time::fixedStep)
+			{
+				FixedUpdate();
+				timeDebt -= Time::fixedStep;
+			}
+
 			Update();
-			Updater::CallUpdate();
-		}
 
-		if (isRunning)
-		{
 			Draw();
-			Updater::CallDraw();
-			DrawPostProcess();
-			DrawGUI();
 
 			glfwSwapBuffers(window);
+		}
+
+		applicationIsReadyToClose = OnClose();
+
+		if (!applicationIsReadyToClose)
+		{
+			isRunning = true;
+			glfwSetWindowShouldClose(window, false);
 		}
 	}
 }

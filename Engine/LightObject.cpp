@@ -4,6 +4,34 @@
 
 #include "Debug.h"
 
+
+void LightObject::SerialiseTo(json& jsonObj) const
+{
+	GameObject3D::SerialiseTo(jsonObj);
+
+	jsonObj["Range"] = range;
+
+	vector<float> angleData(2);
+	memcpy(angleData.data(), &angle[0], 2 * sizeof(float));
+	jsonObj["Angle"] = angleData;
+
+	vector<float> hdrColourData(4);
+	memcpy(hdrColourData.data(), &colour[0], 4 * sizeof(float));
+	jsonObj["HDRColour"] = hdrColourData;
+}
+void LightObject::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptions)
+{
+	GameObject3D::DeserialiseFrom(jsonObj, guidOptions);
+
+	range = jsonObj["Range"];
+
+	vector<float> angleData = jsonObj["Angle"];
+	memcpy(&angle[0], angleData.data(), 2 * sizeof(float));
+
+	vector<float> hdrColourData = jsonObj["HDRColour"];
+	memcpy(&colour[0], hdrColourData.data(), 4 * sizeof(float));
+}
+
 void LightObject::DrawDebug()
 {
 	Colour debugColour = Colour(colour.x, colour.y, colour.z);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ImGuiIncludes.h"
+#include "tinyfiledialogs.h"
 
 #include <string>
 using std::string;
@@ -10,6 +11,8 @@ using std::array;
 #include <map>
 using std::map;
 using std::pair;
+#include <initializer_list>
+typedef std::initializer_list<string> StringParams;
 
 class GameObject;
 

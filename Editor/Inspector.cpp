@@ -13,17 +13,28 @@ void Inspector::SetTarget(GameObject* target)
 {
 	del(targetGUI);
 
-	const char* targetClassName = target->ClassName();
+	if (target == nullptr) return;
 
-	#define SetGuiIfEqual(className) if (targetClassName == stringify(className)) { targetGUI = new className##GUI(target); }
-
-	SetGuiIfEqual(GameObject)
-	else SetGuiIfEqual(GameObject3D)
-	else SetGuiIfEqual(MeshRenderer)
-	else SetGuiIfEqual(LightObject)
-	else SetGuiIfEqual(ParticleEmitter)
-
-	#undef SetGuiIfEqual
+	switch (target->GetClassID())
+	{
+	case GameObject::classID: targetGUI = new GameObjectGUI(target); break;
+	case GameObject3D::classID: targetGUI = new GameObject3DGUI(target); break;
+	case MeshRenderer::classID: targetGUI = new MeshRendererGUI(target); break;
+	case LightObject::classID: targetGUI = new LightObjectGUI(target); break;
+	case ParticleEmitter::classID: targetGUI = new ParticleEmitterGUI(target); break;
+	default:
+		targetGUI = new GameObjectGUI(target);
+		debug->Log(
+			{
+				target->GetClassName(), " "
+				"was not accounted for when selecting inspector display.",
+				"Editable fields will be limited."
+				locationinfo
+			},
+			Debug::Error, Debug::ERR151
+		);
+		break;
+	}
 }
 
 const GameObjectGUI* Inspector::GetTargetGUI()
@@ -33,15 +44,28 @@ const GameObjectGUI* Inspector::GetTargetGUI()
 
 GameObject* Inspector::GetTarget()
 {
+	if (targetGUI == nullptr) return nullptr;
 	return targetGUI->target;
 }
 
-void Inspector::Draw()
+void Inspector::Draw(const char* const name, bool& open)
 {
-	if (targetGUI == nullptr) return;
+	ImGui::Begin(name, &open);
 
-	targetGUI->Draw();
-	targetGUI->target->DrawDebug();
+	if (inspector->targetGUI != nullptr)
+	{
+		if (inspector->targetGUI->target == nullptr || inspector->targetGUI->target != GameObject::Destroyed)
+		{
+			inspector->targetGUI->Draw();
+			inspector->targetGUI->target->DrawDebug();
+		}
+		else
+		{
+			del(inspector->targetGUI);
+		}
+	}
+
+	ImGui::End();
 }
 
 Inspector::~Inspector()

@@ -14,10 +14,10 @@ public:
 	const GameObjectGUI* GetTargetGUI();
 	GameObject* GetTarget();
 
-	void Draw();
+	static void Draw(const char* const name, bool& open);
 
 private:
-	GameObjectGUI* targetGUI;
+	GameObjectGUI* targetGUI = nullptr;
 };
 
 extern Inspector* inspector;

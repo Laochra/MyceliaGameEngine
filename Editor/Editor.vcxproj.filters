@@ -60,6 +60,36 @@
     <ClCompile Include="ParticleEmitterGUI.cpp">
       <Filter>GUI\EditorWindows\GameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="MeshCooker.cpp">
+      <Filter>GUI\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="Heirarchy.cpp">
+      <Filter>GUI\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="ConsoleGUI.cpp">
+      <Filter>GUI\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorStyler.cpp">
+      <Filter>GUI\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialGUI.cpp">
+      <Filter>GUI\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderProgramGUI.cpp">
+      <Filter>GUI\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\External\tinyfiledialogs\tinyfiledialogs.cpp">
+      <Filter>3rd Party\tinyfiledialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGUI.cpp">
+      <Filter>GUI\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorGUI.cpp">
+      <Filter>GUI\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="PostProcessingGUI.cpp">
+      <Filter>GUI\EditorWindows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="JSON Configs">
@@ -88,6 +118,9 @@
     </Filter>
     <Filter Include="GUI\EditorWindows\GameObjects">
       <UniqueIdentifier>{98854a77-5f41-4e2d-97a3-f359bffece5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rd Party\tinyfiledialogs">
+      <UniqueIdentifier>{c5bfb596-71a4-4cbd-b761-7f14c6abcd6b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +214,21 @@
     </ClInclude>
     <ClInclude Include="ParticleEmitterGUI.h">
       <Filter>GUI\EditorWindows\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshCooker.h">
+      <Filter>GUI\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\External\tinyfiledialogs\tinyfiledialogs.h">
+      <Filter>3rd Party\tinyfiledialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGUI.h">
+      <Filter>GUI\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorGUI.h">
+      <Filter>GUI\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="PostProcessingGUI.h">
+      <Filter>GUI\EditorWindows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
