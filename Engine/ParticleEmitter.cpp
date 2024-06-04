@@ -105,11 +105,15 @@ void ParticleEmitter::Draw()
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(vec4), 0);
 
+	glBindBuffer(GL_ARRAY_BUFFER, particleSystem->sizeBuffer);
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(vec2), 0);
+
 	// Bind Program and View Projection Matrix
 	shaderProgram->Bind();
-	shaderProgram->BindUniform("ProjectionViewModel", mainCamera->GetPVMatrix() * GetMatrix());
-	shaderProgram->BindUniform("CameraPosition", mainCamera->GetGlobalPosition());
-	shaderProgram->BindUniform("CameraUp", (vec3)glm::inverse(mainCamera->GetMatrix())[1]);
+	shaderProgram->BindUniform("Projection", mainCamera->GetProjectionMatrix(screenWidth, screenHeight));
+	shaderProgram->BindUniform("ModelView", mainCamera->GetViewMatrix() * GetMatrix());
+
 
 	// Draw the Particles!
 	glDrawArrays(GL_POINTS, 0, particleSystem->properties.maxCount);

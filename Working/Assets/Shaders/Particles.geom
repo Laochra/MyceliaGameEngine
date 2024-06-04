@@ -3,12 +3,14 @@
 layout(points) in;
 layout(triangle_strip, max_vertices = 4) out;
 
-uniform mat4 ProjectionView;
-uniform vec3 CameraPosition;
-uniform vec3 CameraUp;
-
-in vec4 GeomColour[];
-in mat4 PVM[];
+struct Inputs
+{
+	mat4 Projection;
+	mat4 ModelView;
+	vec4 Colour;
+	vec2 Size;
+};
+in Inputs GeomInputs[];
 
 out vec4 Colour;
 out vec2 FragTexCoords;
@@ -28,35 +30,39 @@ void main() // Geometry
 	}
 	
 	vec3 position = gl_in[0].gl_Position.xyz;
-	vec3 cameraToPoint = normalize(position - CameraPosition);
+	vec4 particleWorldPosition = GeomInputs[0].ModelView * vec4(gl_in[0].gl_Position.xyz, 1.0);
 	
-	vec3 up = vec3(0, 1, 0);
-	vec3 right = normalize(cross(cameraToPoint, up));
+	float halfWidth = GeomInputs[0].Size.x * 0.5;
+	float halfHeight = GeomInputs[0].Size.y * 0.5;
 	
-	vec3 UP = up * vec3(0.5);
-	vec3 RIGHT = vec3(right.x * 0.5, right.y * 0.5, right.z * 0.5);
-	
-	Colour = GeomColour[0];
+	Colour = GeomInputs[0].Colour;
 	
 	// Bottom Left
-	gl_Position 	= PVM[0] * vec4(position + -UP + -RIGHT, 1.0);
+	gl_Position 	= GeomInputs[0].Projection * (particleWorldPosition + vec4(-halfWidth, -halfHeight, 0, 0));
 	FragTexCoords 	= vec2(0.0, 0.0);
 	EmitVertex();
 	
 	// Bottom Right
-	gl_Position 	= PVM[0] * vec4(position + -UP +  RIGHT, 1.0);
+	gl_Position 	= GeomInputs[0].Projection * (particleWorldPosition + vec4(halfWidth, -halfHeight, 0, 0));
 	FragTexCoords 	= vec2(1.0, 0.0);
 	EmitVertex();
 	
 	// Top Left
-	gl_Position 	= PVM[0] * vec4(position +  UP + -RIGHT, 1.0);
+	gl_Position 	= GeomInputs[0].Projection * (particleWorldPosition + vec4(-halfWidth, halfHeight, 0, 0));
 	FragTexCoords 	= vec2(0.0, 1.0);
 	EmitVertex();
 	
 	// Top Right
-	gl_Position 	= PVM[0] * vec4(position +  UP +  RIGHT, 1.0);
+	gl_Position 	= GeomInputs[0].Projection * (particleWorldPosition + vec4(halfWidth, halfHeight, 0, 0));
 	FragTexCoords 	= vec2(1.0, 1.0);
 	EmitVertex();
 	
 	EndPrimitive();
 }
+
+
+
+//transform from emitter to world space (model matrix)
+//transform from world to view space (view matrix)
+//I recommend doing the offset here
+//transform from view space to clip space (projection matrix)

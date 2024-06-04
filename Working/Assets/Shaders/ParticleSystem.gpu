@@ -12,7 +12,7 @@
     }
   ],
   "Fragment": "Assets\\Shaders\\Particles.frag",
-  "Geometry": "None",
+  "Geometry": "Assets\\Shaders\\Particles.geom",
   "TessControl": "None",
   "TessEvaluation": "None",
   "Uniforms": [

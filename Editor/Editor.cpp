@@ -47,8 +47,6 @@ void Editor::Initialise()
 
 	//Testing Particle System	
 	//ParticleEmitter* particleEmitter = GameObject3D::Instantiate<ParticleEmitter>({ 0, 0, 0 });
-	
-	//particleShader->LoadShader(GeometryStage, "Assets\\Shaders\\Particles.geom");
 }
 
 void Editor::FixedUpdate()

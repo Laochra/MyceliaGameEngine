@@ -2,6 +2,8 @@
 
 #include "GLIncludes.h"
 
+#include "Debug.h"
+
 #include <vector>
 using std::vector;
 
@@ -32,7 +34,9 @@ public:
 		float sizeRange[2] = { 1.0f, 1.0f };
 		float lifetimeRange[2] = { 0.1f, 1.0f };
 		float speedRange[2] = { 1.0f, 1.0f };
-		float colour[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		float colour[8] = { 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
+		Colour& ColourA() { return *(Colour*)&colour[0]; }
+		Colour& ColourB() { return *(Colour*)&colour[4]; } 
 
 		// Emission Settings
 		bool emitOverTime;
@@ -66,6 +70,7 @@ public:
 	const uint GetPositionBuffer() const noexcept;
 	const uint GetVelocityBuffer() const noexcept;
 	const uint GetColourBuffer() const noexcept;
+	const uint GetSizeBuffer() const noexcept;
 
 private:
 	State state = Stopped;
@@ -77,4 +82,6 @@ private:
 	uint velocityBuffer;
 	// vec4 buffer: RGBA colour
 	uint colourBuffer;
+	// vec2 buffer: Size (Width, Height)
+	uint sizeBuffer;
 };

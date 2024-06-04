@@ -18,6 +18,7 @@ ParticleSystem::~ParticleSystem() noexcept
 	glDeleteBuffers(1, &positionBuffer);
 	glDeleteBuffers(1, &velocityBuffer);
 	glDeleteBuffers(1, &colourBuffer);
+	glDeleteBuffers(1, &sizeBuffer);
 }
 
 void ParticleSystem::Start() noexcept
@@ -115,6 +116,19 @@ void ParticleSystem::Start() noexcept
 	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
 
+	glGenBuffers(1, &sizeBuffer);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, sizeBuffer);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, properties.maxCount * sizeof(vec2), NULL, GL_DYNAMIC_DRAW);
+
+	vec2* sizes = (vec2*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, properties.maxCount * sizeof(vec2), bufMask);
+	for (uint i = 0; i < properties.maxCount; i++)
+	{
+		vec2 spriteSizeRatio(1, 1);
+		sizes[i] = spriteSizeRatio * Random::Float(properties.sizeRange[0], properties.sizeRange[1]);
+	}
+	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+
+
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 }
 
@@ -126,6 +140,7 @@ void ParticleSystem::Stop() noexcept
 	glDeleteBuffers(1, &positionBuffer);
 	glDeleteBuffers(1, &velocityBuffer);
 	glDeleteBuffers(1, &colourBuffer);
+	glDeleteBuffers(1, &sizeBuffer);
 }
 
 void ParticleSystem::Dispatch() const noexcept
@@ -153,4 +168,8 @@ const uint ParticleSystem::GetVelocityBuffer() const noexcept
 const uint ParticleSystem::GetColourBuffer() const noexcept
 {
 	return colourBuffer;
+}
+const uint ParticleSystem::GetSizeBuffer() const noexcept
+{
+	return sizeBuffer;
 }

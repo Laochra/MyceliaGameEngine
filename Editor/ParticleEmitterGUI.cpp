@@ -98,7 +98,6 @@ void ParticleEmitterGUI::DrawParticleEmitterGUI(ParticleEmitter* particleEmitter
 			if (ImGui::CollapsingHeader("Particle Settings", ImGuiTreeNodeFlags_DefaultOpen))
 			{
 				ImGui::PushItemWidth(ImGui::CalcItemWidth() / 3);
-				ImGui::BeginDisabled();
 				if (ImGui::DragFloat("##Size Min", &properties.sizeRange[0], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
 				{
 					if (properties.sizeRange[0] > properties.sizeRange[1]) properties.sizeRange[1] = properties.sizeRange[0];
@@ -110,7 +109,6 @@ void ParticleEmitterGUI::DrawParticleEmitterGUI(ParticleEmitter* particleEmitter
 				}
 				ImGui::SameLine();
 				ImGui::Text("Size Range");
-				ImGui::EndDisabled();
 
 				if (ImGui::DragFloat("##Speed Min", &properties.speedRange[0], 0.01f, 0.0f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
 				{
@@ -136,8 +134,21 @@ void ParticleEmitterGUI::DrawParticleEmitterGUI(ParticleEmitter* particleEmitter
 				ImGui::SameLine();
 				ImGui::Text("Lifetime Range");
 				ImGui::PopItemWidth();
-				ImGui::ColorEdit4("Colour", &properties.colour[0], ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview);
+
+				if (ImGui::ColorEdit4("##ColourA", (float*)&properties.ColourA(), ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_InputHSV))
+				{
+					// TODO: move each others R values to ensure A is min hue and B is max hue
+					// will need to convert from hsv to rgb later
+				}
+				ImGui::SameLine();
+				if (ImGui::ColorEdit4("##ColourB", (float*)&properties.ColourB(), ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_InputHSV))
+				{
+
+				}
+				ImGui::SameLine();
+				ImGui::Text("Colour Range");
 			}
+
 			if (ImGui::CollapsingHeader("Emission Settings", ImGuiTreeNodeFlags_DefaultOpen))
 			{
 				ImGui::BeginDisabled();
