@@ -215,10 +215,10 @@ void ParticleEmitter::Initialise()
 
 	glGenVertexArrays(1, &vao);
 	glPointSize(5.0f);
-	shaderProgram = new ShaderProgram();
+	if (shaderProgram == nullptr) shaderProgram = new ShaderProgram();
 	shaderProgram->LoadAndLinkFromJSON("Assets\\Shaders\\ParticleSystem.gpu");
-	computeShader = new ComputeShader("Assets\\Shaders\\Particles.comp");
-	particleSystem = new ParticleSystem();
+	if (computeShader == nullptr) computeShader = new ComputeShader("Assets\\Shaders\\Particles.comp");
+	if (particleSystem == nullptr) particleSystem = new ParticleSystem();
 
 	Updater::DrawAdd(this);
 }
