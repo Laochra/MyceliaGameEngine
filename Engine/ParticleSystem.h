@@ -34,9 +34,10 @@ public:
 		float sizeRange[2] = { 1.0f, 1.0f };
 		float lifetimeRange[2] = { 0.1f, 1.0f };
 		float speedRange[2] = { 1.0f, 1.0f };
-		float colour[8] = { 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
-		Colour& ColourA() { return *(Colour*)&colour[0]; }
-		Colour& ColourB() { return *(Colour*)&colour[4]; } 
+		float colourRange[10] = { 1.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+										  1.0f, 0.0f, 1.0f, 1.0f, 1.0f };
+		HDRColour& ColourA() { return *(HDRColour*)&colourRange[0]; }
+		HDRColour& ColourB() { return *(HDRColour*)&colourRange[5]; }
 
 		// Emission Settings
 		bool emitOverTime;

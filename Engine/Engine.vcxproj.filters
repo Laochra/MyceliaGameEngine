@@ -81,10 +81,13 @@
       <Filter>Rendering</Filter>
     </ClCompile>
     <ClCompile Include="RandomGen.cpp">
-		<Filter>Utility</Filter>
+      <Filter>Utility</Filter>
     </ClCompile>
     <ClCompile Include="GuidGenerator.cpp">
       <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Colour.cpp">
+      <Filter>Rendering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -214,6 +217,9 @@
     </ClInclude>
     <ClInclude Include="RandomGen.h">
       <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Colour.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

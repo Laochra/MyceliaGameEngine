@@ -84,7 +84,7 @@ void ParticleEmitterGUI::DrawParticleEmitterGUI(ParticleEmitter* particleEmitter
 				ImGui::PushItemWidth(ImGui::CalcItemWidth() / 3);
 
 				ImGui::DragFloat("Duration", &properties.duration, 0.1f, 0.0f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
-				ImGui::DragFloat("Delay", &properties.delay, 0.01f, -FLT_MAX, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
+				ImGui::DragFloat("Delay", &properties.delay, 0.01f, 0.0f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
 
 				GUI::Spacing(3);
 
@@ -135,18 +135,17 @@ void ParticleEmitterGUI::DrawParticleEmitterGUI(ParticleEmitter* particleEmitter
 				ImGui::Text("Lifetime Range");
 				ImGui::PopItemWidth();
 
-				if (ImGui::ColorEdit4("##ColourA", (float*)&properties.ColourA(), ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_InputHSV))
-				{
-					// TODO: move each others R values to ensure A is min hue and B is max hue
-					// will need to convert from hsv to rgb later
-				}
+				ImGui::PushItemWidth(ImGui::CalcItemWidth() / 4.3f);
+				ImGui::ColorEdit4("##ColourA", (float*)&properties.ColourA(), ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_InputHSV | ImGuiColorEditFlags_Float);
 				ImGui::SameLine();
-				if (ImGui::ColorEdit4("##ColourB", (float*)&properties.ColourB(), ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_InputHSV))
-				{
-
-				}
+				ImGui::DragFloat("##IntensityA", &properties.ColourA().i, 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
 				ImGui::SameLine();
-				ImGui::Text("Colour Range");
+				ImGui::ColorEdit4("##ColourB", (float*)&properties.ColourB(), ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_InputHSV | ImGuiColorEditFlags_Float);
+				ImGui::SameLine();
+				ImGui::DragFloat("##IntensityB", &properties.ColourB().i, 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
+				ImGui::SameLine();
+				ImGui::Text("HDR Colour Range");
+				ImGui::PopItemWidth();
 			}
 
 			if (ImGui::CollapsingHeader("Emission Settings", ImGuiTreeNodeFlags_DefaultOpen))

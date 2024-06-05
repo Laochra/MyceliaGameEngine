@@ -25,8 +25,9 @@ void ParticleEmitter::SerialiseTo(json& jsonObj) const
 		properties["LifetimeRange"] = vector{ lifetimeRange[0], lifetimeRange[1] };
 		float* speedRange = particleSystem->properties.speedRange;
 		properties["SpeedRange"] = vector{ speedRange[0], speedRange[1] };
-		float* colour = particleSystem->properties.colour;
-		properties["Colour"] = vector{ colour[0], colour[1], colour[2], colour[3] };
+		float* colour = particleSystem->properties.colourRange;
+		properties["ColourRange"] = vector{ colour[0], colour[1], colour[2], colour[3], colour[4],
+														colour[5], colour[6], colour[7], colour[8], colour[9] };
 
 		properties["EmitOverTime"] = particleSystem->properties.emitOverTime;
 		properties["ParticlesPerSecond"] = particleSystem->properties.particlesPerSecond;
@@ -63,8 +64,8 @@ void ParticleEmitter::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOp
 		memcpy(particleSystem->properties.lifetimeRange, lifetimeRange.data(), lifetimeRange.size());
 		vector<float> speedRange = properties["SpeedRange"];
 		memcpy(particleSystem->properties.speedRange, speedRange.data(), speedRange.size());
-		vector<float> colour = properties["SizeRange"];
-		memcpy(particleSystem->properties.colour, colour.data(), colour.size());
+		vector<float> colour = properties["ColourRange"];
+		memcpy(particleSystem->properties.colourRange, colour.data(), colour.size());
 
 		particleSystem->properties.emitOverTime = properties["EmitOverTime"];
 		particleSystem->properties.particlesPerSecond = properties["ParticlesPerSecond"];

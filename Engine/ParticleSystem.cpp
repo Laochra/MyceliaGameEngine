@@ -108,10 +108,20 @@ void ParticleSystem::Start() noexcept
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, colourBuffer);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, properties.maxCount * sizeof(vec4), NULL, GL_DYNAMIC_DRAW);
 
-	vec4* colours = (vec4*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, properties.maxCount * sizeof(vec4), bufMask);
-	for (uint i = 0; i < properties.maxCount; i++)
+	Colour* colours = (Colour*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, properties.maxCount * sizeof(Colour), bufMask);
+	for (uint c = 0; c < properties.maxCount; c++)
 	{
-		colours[i] = *(vec4*)&properties.colour;
+		float h = properties.colourRange[0] < properties.colourRange[5] ? Random::Float(properties.colourRange[0], properties.colourRange[5]) : Random::Float(properties.colourRange[5], properties.colourRange[0]);
+		float s = properties.colourRange[1] < properties.colourRange[6] ? Random::Float(properties.colourRange[1], properties.colourRange[6]) : Random::Float(properties.colourRange[6], properties.colourRange[1]);
+		float v = properties.colourRange[2] < properties.colourRange[7] ? Random::Float(properties.colourRange[2], properties.colourRange[7]) : Random::Float(properties.colourRange[7], properties.colourRange[2]);
+		float a = properties.colourRange[3] < properties.colourRange[8] ? Random::Float(properties.colourRange[3], properties.colourRange[8]) : Random::Float(properties.colourRange[8], properties.colourRange[3]);
+		float i = properties.colourRange[4] < properties.colourRange[9] ? Random::Float(properties.colourRange[4], properties.colourRange[9]) : Random::Float(properties.colourRange[9], properties.colourRange[4]);
+		HDRColour hsv = HDRColour(h, s, v, a, i);
+		HDRColour colour = HDRColour::HSVToRGB(hsv);
+		colours[c] = Colour(colour.r * colour.i, colour.g * colour.i, colour.b * colour.i, colour.a);
+
+		HDRColour backToHSV = HDRColour::RGBToHSV(colour);
+		int sdfsf = 0;
 	}
 	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
