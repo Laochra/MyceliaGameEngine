@@ -12,7 +12,7 @@ struct Inputs
 };
 in Inputs GeomInputs[];
 
-out vec4 Colour;
+out vec4 ColourTint;
 out vec2 FragTexCoords;
 
 void main() // Geometry
@@ -20,7 +20,7 @@ void main() // Geometry
 	if (gl_in[0].gl_Position.a == 0.0)
 	{
 		gl_Position = gl_in[0].gl_Position;
-		Colour = vec4(0.0);
+		ColourTint = vec4(0.0);
 		FragTexCoords = vec2(0.0);
 		EmitVertex();
 		EmitVertex();
@@ -35,26 +35,26 @@ void main() // Geometry
 	float halfWidth = GeomInputs[0].Size.x * 0.5;
 	float halfHeight = GeomInputs[0].Size.y * 0.5;
 	
-	Colour = GeomInputs[0].Colour;
+	ColourTint = GeomInputs[0].Colour;
 	
 	// Bottom Left
 	gl_Position 	= GeomInputs[0].Projection * (particleWorldPosition + vec4(-halfWidth, -halfHeight, 0, 0));
-	FragTexCoords 	= vec2(0.0, 0.0);
+	FragTexCoords 	= vec2(0.0, 1.0);
 	EmitVertex();
 	
 	// Bottom Right
 	gl_Position 	= GeomInputs[0].Projection * (particleWorldPosition + vec4(halfWidth, -halfHeight, 0, 0));
-	FragTexCoords 	= vec2(1.0, 0.0);
+	FragTexCoords 	= vec2(1.0, 1.0);
 	EmitVertex();
 	
 	// Top Left
 	gl_Position 	= GeomInputs[0].Projection * (particleWorldPosition + vec4(-halfWidth, halfHeight, 0, 0));
-	FragTexCoords 	= vec2(0.0, 1.0);
+	FragTexCoords 	= vec2(0.0, 0.0);
 	EmitVertex();
 	
 	// Top Right
 	gl_Position 	= GeomInputs[0].Projection * (particleWorldPosition + vec4(halfWidth, halfHeight, 0, 0));
-	FragTexCoords 	= vec2(1.0, 1.0);
+	FragTexCoords 	= vec2(1.0, 0.0);
 	EmitVertex();
 	
 	EndPrimitive();

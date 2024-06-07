@@ -187,91 +187,155 @@ void ParticleEmitterGUI::DrawParticleEmitterGUI(ParticleEmitter* particleEmitter
 				{
 				case Shape::Sphere:
 				{
-					if (ImGui::DragFloat("##Inner Radius", &properties.shapeData[0], 0.01f, 0.0f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
+					if (ImGui::DragFloat("##Inner Radius", &properties.innerRadius, 0.01f, 0.0f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
 					{
-						if (properties.shapeData[0] > properties.shapeData[1]) properties.shapeData[1] = properties.shapeData[0];
+						if (properties.innerRadius > properties.outerRadius) properties.outerRadius = properties.innerRadius;
 					}
 					ImGui::SameLine();
-					if (properties.shapeData[1] < 0.01f) properties.shapeData[1] = 1.0f;
-					if (ImGui::DragFloat("##Outer Radius", &properties.shapeData[1], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
+					if (properties.outerRadius < 0.01f) properties.outerRadius = 1.0f;
+					if (ImGui::DragFloat("##Outer Radius", &properties.outerRadius, 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
 					{
-						if (properties.shapeData[1] < properties.shapeData[0]) properties.shapeData[0] = properties.shapeData[1];
+						if (properties.outerRadius < properties.innerRadius) properties.innerRadius = properties.outerRadius;
 					}
 					ImGui::SameLine();
 					ImGui::Text("Inner/Outer Radius");
 
-					properties.shapeData[2] = 0.0f;
+					properties.coneAngle = 0.0f;
 					break;
 				}
 				case Shape::Cone:
 				{
-					if (ImGui::DragFloat("##Inner Radius", &properties.shapeData[0], 0.01f, 0.0f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
+					if (ImGui::DragFloat("##Inner Radius", &properties.innerRadius, 0.01f, 0.0f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
 					{
-						if (properties.shapeData[0] > properties.shapeData[1]) properties.shapeData[1] = properties.shapeData[0];
+						if (properties.innerRadius > properties.outerRadius) properties.outerRadius = properties.innerRadius;
 					}
 					ImGui::SameLine();
-					if (properties.shapeData[1] < 0.01f) properties.shapeData[1] = 1.0f;
-					if (ImGui::DragFloat("##Outer Radius", &properties.shapeData[1], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
+					if (properties.outerRadius < 0.01f) properties.outerRadius = 1.0f;
+					if (ImGui::DragFloat("##Outer Radius", &properties.outerRadius, 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
 					{
-						if (properties.shapeData[1] < properties.shapeData[0]) properties.shapeData[0] = properties.shapeData[1];
+						if (properties.outerRadius < properties.innerRadius) properties.innerRadius = properties.outerRadius;
 					}
 					ImGui::SameLine();
 					ImGui::Text("Inner/Outer Radius");
 
-					float coneAngle = glm::degrees(properties.shapeData[2]);
+					float coneAngle = glm::degrees(properties.coneAngle);
 					if (ImGui::DragFloat("Angle", &coneAngle, 0.1f, 0.0f, 89.9f, NULL, ImGuiSliderFlags_AlwaysClamp))
 					{
-						properties.shapeData[2] = glm::radians(coneAngle);
+						properties.coneAngle = glm::radians(coneAngle);
 					}
 					break;
 				}
 				case Shape::Box:
 				{
-					if (properties.shapeData[0] < 0.01f) properties.shapeData[0] = 1.0f;
-					ImGui::DragFloat("##Width", &properties.shapeData[0], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
+					if (properties.width < 0.01f) properties.width = 1.0f;
+					ImGui::DragFloat("##Width", &properties.width, 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
 					ImGui::SameLine();
-					if (properties.shapeData[1] < 0.01f) properties.shapeData[1] = 1.0f;
-					ImGui::DragFloat("##Height", &properties.shapeData[1], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
+					if (properties.height < 0.01f) properties.height = 1.0f;
+					ImGui::DragFloat("##Height", &properties.height, 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
 					ImGui::SameLine();
-					if (properties.shapeData[2] < 0.01f) properties.shapeData[2] = 1.0f;
-					ImGui::DragFloat("##Depth", &properties.shapeData[2], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
+					if (properties.depth < 0.01f) properties.depth = 1.0f;
+					ImGui::DragFloat("##Depth", &properties.depth, 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
 					ImGui::SameLine();
 					ImGui::Text("Size");
 					break;
 				}
 				case Shape::Quad:
 				{
-					if (properties.shapeData[0] < 0.01f) properties.shapeData[0] = 1.0f;
-					ImGui::DragFloat("##Width", &properties.shapeData[0], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
+					if (properties.width < 0.01f) properties.width = 1.0f;
+					ImGui::DragFloat("##Width", &properties.width, 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
 					ImGui::SameLine();
-					if (properties.shapeData[1] < 0.01f) properties.shapeData[1] = 1.0f;
-					ImGui::DragFloat("##Height", &properties.shapeData[1], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
-					properties.shapeData[2] = 0.0f;
+					if (properties.height < 0.01f) properties.height = 1.0f;
+					ImGui::DragFloat("##Height", &properties.height, 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp);
+					properties.depth = 0.0f;
 					ImGui::SameLine();
 					ImGui::Text("Size");
 					break;
 				}
 				case Shape::Circle:
 				{
-					if (ImGui::DragFloat("##Inner Radius", &properties.shapeData[0], 0.01f, 0.0f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
+					if (ImGui::DragFloat("##Inner Radius", &properties.innerRadius, 0.01f, 0.0f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
 					{
-						if (properties.shapeData[0] > properties.shapeData[1]) properties.shapeData[1] = properties.shapeData[0];
+						if (properties.innerRadius > properties.outerRadius) properties.outerRadius = properties.innerRadius;
 					}
 					ImGui::SameLine();
-					if (properties.shapeData[1] < 0.01f) properties.shapeData[1] = 1.0f;
-					if (ImGui::DragFloat("##Outer Radius", &properties.shapeData[1], 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
+					if (properties.outerRadius < 0.01f) properties.outerRadius = 1.0f;
+					if (ImGui::DragFloat("##Outer Radius", &properties.outerRadius, 0.01f, 0.01f, FLT_MAX, NULL, ImGuiSliderFlags_AlwaysClamp))
 					{
-						if (properties.shapeData[1] < properties.shapeData[0]) properties.shapeData[0] = properties.shapeData[1];
+						if (properties.outerRadius < properties.innerRadius) properties.innerRadius = properties.outerRadius;
 					}
 					ImGui::SameLine();
 					ImGui::Text("Inner/Outer Radius");
 
-					properties.shapeData[2] = 0.0f;
+					properties.coneAngle = 0.0f;
 					break;
 				}
 				}
 
 				ImGui::PopItemWidth();
+			}
+
+			if (ImGui::CollapsingHeader("Rendering Settings", ImGuiTreeNodeFlags_DefaultOpen))
+			{
+				string filepath(properties.spriteFilepath, properties.spriteFilepathLength);
+
+				if (ImGui::BeginCombo("Sprite", filepath.c_str()))
+				{
+					if (ImGui::Selectable("DefaultColour", filepath == "DefaultColour"))
+					{
+						properties.spriteFilepathLength = 13;
+						memcpy(properties.spriteFilepath, "DefaultColour", properties.spriteFilepathLength + 1);
+					}
+					if (ImGui::Selectable("Select from file"))
+					{
+						const char* const windowTitle = "Select Sprite";
+						const uint defaultPathLength = 17;
+						const char defaultPath[defaultPathLength] = "Assets\\Textures\\";
+						const uint filterPatternCount = 3;
+						const char* const filterPatterns[filterPatternCount] = { "*.png", "*.tga", "*.jpg" };
+
+						const char* newFilepath = tinyfd_openFileDialog(windowTitle, defaultPath, filterPatternCount, filterPatterns, nullptr, false);
+
+						if (newFilepath != nullptr)
+						{
+							const uint newFilepathLength = strlen(newFilepath);
+
+							const uint startOffset = (uint)string(newFilepath).find("Assets\\");
+
+							if (startOffset != string::npos)
+							{
+								properties.spriteFilepathLength = newFilepathLength - startOffset;
+								memcpy(properties.spriteFilepath, newFilepath + startOffset, properties.spriteFilepathLength + 1);
+							}
+							else
+							{
+								debug->Log
+								(
+									"Assets should only be loaded from inside the Assets folder. "
+									"Assets outside this folder won't be included in builds. ",
+									Debug::Warning, Debug::WRN105
+								);
+							}
+						}
+					}
+					ImGui::EndCombo();
+				}
+
+
+				bool alphaClipping = properties.alphaClippingThreshold != 0.0f;
+				if (ImGui::Checkbox("Alpha Clipping?", &alphaClipping))
+				{
+					properties.alphaClippingThreshold = alphaClipping ? 0.5f : 0.0f;
+				}
+				if (alphaClipping)
+				{
+					ImGui::SameLine();
+					GUI::HSpacing(3);
+					ImGui::SameLine();
+
+					ImGui::PushItemWidth(ImGui::CalcItemWidth() / 3);
+					ImGui::DragFloat("Threshold", &properties.alphaClippingThreshold, 0.01f, 0.01f, 1.0f, NULL, ImGuiSliderFlags_AlwaysClamp);
+					ImGui::PopItemWidth();
+				}
 			}
 		}
 		ImGui::Unindent();

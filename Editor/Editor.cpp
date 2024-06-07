@@ -44,9 +44,6 @@ void Editor::Initialise()
 		fxaaProgram.LoadShader(FragmentStage, "Engine\\DefaultAssets\\FXAA.frag");
 		fxaaProgram.Link();
 	}
-
-	//Testing Particle System	
-	//ParticleEmitter* particleEmitter = GameObject3D::Instantiate<ParticleEmitter>({ 0, 0, 0 });
 }
 
 void Editor::FixedUpdate()
@@ -54,23 +51,7 @@ void Editor::FixedUpdate()
 	Updater::CallFixedUpdate();
 }
 void Editor::Update()
-{
-	//{
-	//	ImVec2 oldPadding = ImGui::GetStyle().WindowPadding;
-	//	ImGui::GetStyle().WindowPadding = ImVec2(0.0f, 0.0f);
-	//	ImGui::Begin("Image Viewer");
-	//	{
-	//		//float titleBarHeight = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2;
-	//		//const float textureWidth = ImGui::GetWindowWidth();
-	//		//const float textureHeight = ImGui::GetWindowHeight() - titleBarHeight;
-	//		//const uint localWidth = 10;
-	//		//const uint localHeight = 10;
-	//
-	//		//ImGui::Image((void*)0, ImVec2(textureWidth, textureHeight), ImVec2(0, 1), ImVec2(1, 0));
-	//	} ImGui::End();
-	//	ImGui::GetStyle().WindowPadding = oldPadding;
-	//}
-	
+{	
 	EditorGUI::Draw();
 	Updater::CallUpdate();
 }

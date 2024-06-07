@@ -47,31 +47,31 @@ void ParticleSystem::Start() noexcept
 			pos.y = std::sin(theta) * std::sin(phi);
 			pos.z = std::cos(theta);
 
-			pos *= Random::Float(properties.InnerRadius(), properties.OuterRadius());
+			pos *= Random::Float(properties.innerRadius, properties.outerRadius);
 			break;
 		}
 		case Shape::Cone:
 		{
-			float theta = Random::Float(-properties.ConeAngle(), properties.ConeAngle());
+			float theta = Random::Float(-properties.coneAngle, properties.coneAngle);
 			float phi = Random::Float(0, glm::pi<float>() * 2.0f);
 			pos.x = std::sin(theta) * std::cos(phi);
 			pos.y = std::sin(theta) * std::sin(phi);
 			pos.z = std::cos(theta);
 
-			float innerBaseRadius = properties.InnerRadius() * tan(theta);
-			float outerBaseRadius = properties.OuterRadius() * tan(theta);
+			float innerBaseRadius = properties.innerRadius * tan(theta);
+			float outerBaseRadius = properties.outerRadius * tan(theta);
 
-			float distanceMin = sqrt(sqr(properties.InnerRadius()) + sqr(innerBaseRadius));
-			float distanceMax = sqrt(sqr(properties.OuterRadius()) + sqr(outerBaseRadius));
+			float distanceMin = sqrt(sqr(properties.innerRadius) + sqr(innerBaseRadius));
+			float distanceMax = sqrt(sqr(properties.outerRadius) + sqr(outerBaseRadius));
 
 			pos *= Random::Float(distanceMin, distanceMax);
 			break;
 		}
 		case Shape::Box:
 		{
-			pos.x = Random::Float(-properties.Width()  * 0.5f, properties.Width()  * 0.5f);
-			pos.y = Random::Float(-properties.Height() * 0.5f, properties.Height() * 0.5f);
-			pos.z = Random::Float(-properties.Depth()  * 0.5f, properties.Depth()  * 0.5f);
+			pos.x = Random::Float(-properties.width  * 0.5f, properties.width  * 0.5f);
+			pos.y = Random::Float(-properties.height * 0.5f, properties.height * 0.5f);
+			pos.z = Random::Float(-properties.depth  * 0.5f, properties.depth  * 0.5f);
 			break;
 		}
 		case Shape::Quad:

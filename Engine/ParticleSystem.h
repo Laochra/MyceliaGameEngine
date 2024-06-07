@@ -43,16 +43,14 @@ public:
 		bool emitOverTime;
 		uint particlesPerSecond;
 		Shape shape;
-		float shapeData[3];
+		union { float shapeData0, innerRadius, width;  };
+		union { float shapeData1, outerRadius, height; };
+		union { float shapeData2, coneAngle,	depth;  };
 
-		// Sphere / Cone / Circle Shape Data
-		float& InnerRadius() { return shapeData[0]; }
-		float& OuterRadius() { return shapeData[1]; }
-		float& ConeAngle() { return shapeData[2]; }
-		// Box / Quad Shape Data
-		float& Width() { return shapeData[0]; }
-		float& Height() { return shapeData[1]; }
-		float& Depth() { return shapeData[2]; }
+		// Rendering Settings
+		uint spriteFilepathLength = 13;
+		char spriteFilepath[256] = "DefaultColour";
+		float alphaClippingThreshold = 0.5f;
 	};
 	Properties properties;
 

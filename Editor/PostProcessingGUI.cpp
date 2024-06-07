@@ -2,7 +2,7 @@
 
 namespace PostProcessingGUI
 {
-	float exposure = 1.0f;
+	float exposure = 3.0f;
 
 	void PostProcessingGUI::Draw(const char* const name, bool& open) noexcept
 	{

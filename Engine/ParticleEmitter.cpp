@@ -1,6 +1,7 @@
 #include "ParticleEmitter.h"
 
 #include "Camera.h"
+#include "TextureManager.h"
 
 #include "Debug.h";
 
@@ -12,28 +13,28 @@ void ParticleEmitter::SerialiseTo(json& jsonObj) const
 	{
 		json properties;
 
-		properties["Autoplay"] = particleSystem->properties.autoplay;
-		properties["Loop"] = particleSystem->properties.loop;
-		properties["Duration"] = particleSystem->properties.duration;
-		properties["Delay"] = particleSystem->properties.delay;
-		properties["MaxCount"] = particleSystem->properties.maxCount;
-		properties["Gravity"] = particleSystem->properties.gravity;
+		ParticleSystem::Properties& p = particleSystem->properties;
 
-		float* sizeRange = particleSystem->properties.sizeRange;
-		properties["SizeRange"] = vector{ sizeRange[0], sizeRange[1] };
-		float* lifetimeRange = particleSystem->properties.lifetimeRange;
-		properties["LifetimeRange"] = vector{ lifetimeRange[0], lifetimeRange[1] };
-		float* speedRange = particleSystem->properties.speedRange;
-		properties["SpeedRange"] = vector{ speedRange[0], speedRange[1] };
-		float* colour = particleSystem->properties.colourRange;
-		properties["ColourRange"] = vector{ colour[0], colour[1], colour[2], colour[3], colour[4],
-														colour[5], colour[6], colour[7], colour[8], colour[9] };
+		properties["Autoplay"] = p.autoplay;
+		properties["Loop"] = p.loop;
+		properties["Duration"] = p.duration;
+		properties["Delay"] = p.delay;
+		properties["MaxCount"] = p.maxCount;
+		properties["Gravity"] = p.gravity;
 
-		properties["EmitOverTime"] = particleSystem->properties.emitOverTime;
-		properties["ParticlesPerSecond"] = particleSystem->properties.particlesPerSecond;
-		properties["ShapeID"] = (uint)particleSystem->properties.shape;
-		float* shapeData = particleSystem->properties.shapeData;
-		properties["ShapeData"] = vector{ shapeData[0], shapeData[1], shapeData[2] };
+		properties["SizeRange"] = vector{ p.sizeRange[0], p.sizeRange[1] };
+		properties["LifetimeRange"] = vector{ p.lifetimeRange[0], p.lifetimeRange[1] };
+		properties["SpeedRange"] = vector{ p.speedRange[0], p.speedRange[1] };
+		properties["ColourRange"] = vector{ p.colourRange[0], p.colourRange[1], p.colourRange[2], p.colourRange[3], p.colourRange[4],
+														p.colourRange[5], p.colourRange[6], p.colourRange[7], p.colourRange[8], p.colourRange[9] };
+
+		properties["EmitOverTime"] = p.emitOverTime;
+		properties["ParticlesPerSecond"] = p.particlesPerSecond;
+		properties["ShapeID"] = (uint)p.shape;
+		properties["ShapeData"] = vector{ p.shapeData0, p.shapeData1, p.shapeData2 };
+
+		properties["Sprite"] = string(p.spriteFilepath, p.spriteFilepathLength);
+		properties["AlphaThreshold"] = p.alphaClippingThreshold;
 
 		jsonObj["ParticleProperties"] = properties;
 	}
@@ -49,29 +50,37 @@ void ParticleEmitter::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOp
 	// Particle Properties
 	{
 		json properties = jsonObj["ParticleProperties"];
+
 		del(particleSystem);
 		particleSystem = new ParticleSystem();
-		particleSystem->properties.autoplay = properties["Autoplay"];
-		particleSystem->properties.loop = properties["Loop"];
-		particleSystem->properties.duration = properties["Duration"];
-		particleSystem->properties.delay = properties["Delay"];
-		particleSystem->properties.maxCount = properties["MaxCount"];
-		particleSystem->properties.gravity = properties["Gravity"];
+		ParticleSystem::Properties& p = particleSystem->properties;
+
+		p.autoplay = properties["Autoplay"];
+		p.loop = properties["Loop"];
+		p.duration = properties["Duration"];
+		p.delay = properties["Delay"];
+		p.maxCount = properties["MaxCount"];
+		p.gravity = properties["Gravity"];
 
 		vector<float> sizeRange = properties["SizeRange"];
-		memcpy(particleSystem->properties.sizeRange, sizeRange.data(), sizeRange.size());
+		memcpy(p.sizeRange, sizeRange.data(), sizeRange.size() * sizeof(float));
 		vector<float> lifetimeRange = properties["LifetimeRange"];
-		memcpy(particleSystem->properties.lifetimeRange, lifetimeRange.data(), lifetimeRange.size());
+		memcpy(p.lifetimeRange, lifetimeRange.data(), lifetimeRange.size() * sizeof(float));
 		vector<float> speedRange = properties["SpeedRange"];
-		memcpy(particleSystem->properties.speedRange, speedRange.data(), speedRange.size());
+		memcpy(p.speedRange, speedRange.data(), speedRange.size() * sizeof(float));
 		vector<float> colour = properties["ColourRange"];
-		memcpy(particleSystem->properties.colourRange, colour.data(), colour.size());
+		memcpy(p.colourRange, colour.data(), colour.size() * sizeof(float));
 
-		particleSystem->properties.emitOverTime = properties["EmitOverTime"];
-		particleSystem->properties.particlesPerSecond = properties["ParticlesPerSecond"];
-		particleSystem->properties.shape = (ParticleSystem::Shape)(uint)properties["ShapeID"];
+		p.emitOverTime = properties["EmitOverTime"];
+		p.particlesPerSecond = properties["ParticlesPerSecond"];
+		p.shape = (ParticleSystem::Shape)(uint)properties["ShapeID"];
 		vector<float> shapeData = properties["ShapeData"];
-		memcpy(particleSystem->properties.shapeData, shapeData.data(), shapeData.size());
+		memcpy(&p.shapeData0, shapeData.data(), shapeData.size() * sizeof(float));
+
+		string spriteFilepath = properties["Sprite"];
+		p.spriteFilepathLength = spriteFilepath.size();
+		memcpy(p.spriteFilepath, spriteFilepath.c_str(), spriteFilepath.size() + 1);
+		p.alphaClippingThreshold = properties["AlphaThreshold"];
 	}
 
 	string computeShaderFilepath = jsonObj["ComputeShader"];
@@ -114,6 +123,9 @@ void ParticleEmitter::Draw()
 	shaderProgram->Bind();
 	shaderProgram->BindUniform("Projection", mainCamera->GetProjectionMatrix(screenWidth, screenHeight));
 	shaderProgram->BindUniform("ModelView", mainCamera->GetViewMatrix() * GetMatrix());
+	textureManager->GetTexture(particleSystem->properties.spriteFilepath, Texture::NonLinear)->Bind(0);
+	shaderProgram->BindUniform("Sprite", 0);
+	shaderProgram->BindUniform("AlphaCutoff", particleSystem->properties.alphaClippingThreshold);
 
 
 	// Draw the Particles!
@@ -132,8 +144,8 @@ void ParticleEmitter::DrawDebug()
 	{
 	case Shape::Sphere:
 	{
-		debug->lines.AddSphere(GetGlobalPosition(), properties->shapeData[0], 32);
-		debug->lines.AddSphere(GetGlobalPosition(), properties->shapeData[1], 32);
+		debug->lines.AddSphere(GetGlobalPosition(), properties->innerRadius, 32);
+		debug->lines.AddSphere(GetGlobalPosition(), properties->outerRadius, 32);
 		break;
 	}
 	case Shape::Cone:
@@ -143,16 +155,16 @@ void ParticleEmitter::DrawDebug()
 		debug->lines.AddConicalFrustum(
 			GetGlobalPosition(),
 			direction,
-			properties->shapeData[0],
-			properties->shapeData[1],
-			properties->shapeData[2],
+			properties->innerRadius,
+			properties->outerRadius,
+			properties->coneAngle,
 			32
 		);
 		break;
 	}
 	case Shape::Box:
 	{
-		debug->lines.AddCuboid(GetGlobalPosition(), as(vec3)properties->shapeData);
+		debug->lines.AddCuboid(GetGlobalPosition(), vec3(properties->width, properties->height, properties->depth));
 		break;
 	}
 	case Shape::Quad:
