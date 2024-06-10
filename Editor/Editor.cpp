@@ -18,10 +18,9 @@ void Editor::Initialise()
 
 	gameObjectManager = new GameObjectManager();
 	
-	mainCamera = GameObject3D::Instantiate<EditorCamera>(vec3(0.0f, 10.0f, 10.0f));
-	mainCamera->SetPosition({ -0.25, 1.0f, 1.5f });
-	((EditorCamera*)mainCamera)->xRotation = -80;
-	((EditorCamera*)mainCamera)->yRotation = -20;
+	Camera::main = GameObject3D::Instantiate<EditorCamera>(vec3(-0.25f, 1.0f, 1.5f));
+	EditorCamera::main()->xRotation = -80;
+	EditorCamera::main()->yRotation = -20;
 
 	LightingManager::ambientLight = Light(vec3(0.1f, 0.1f, 0.1f));
 	LightingManager::directionalLight = DirectionalLight(vec3(1.0f, 1.0f, 1.0f), glm::normalize(vec3(-0.1f, -1, -1)));
@@ -115,7 +114,7 @@ void Editor::Draw()
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	vec3 cameraPos(mainCamera->GetPosition());
+	vec3 cameraPos(Camera::main->GetPosition());
 	debug->lines.AddGrid(vec3((int)cameraPos.x, 0, (int)cameraPos.z), 50);
 
 	debug->lines.Draw();
@@ -246,7 +245,7 @@ bool Editor::OnClose()
 {
 	if (!EditorGUI::CleanUp()) return false;
 
-	del(mainCamera);
+	del(Camera::main);
 
 	del(gameObjectManager);
 

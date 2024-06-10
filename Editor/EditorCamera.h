@@ -26,6 +26,8 @@ public:
 	Keybind quickMode;
 
 
+	static EditorCamera* main() { return (EditorCamera*)Camera::main; }
+
 	glm::mat4 GetViewMatrix() override;
 
 	void Initialise() override;

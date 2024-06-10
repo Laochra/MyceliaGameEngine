@@ -11,6 +11,8 @@ public:
 
 	using GameObject3D::GameObject3D;
 
+	static Camera* main;
+
 	float fov = 0;
 	float nearClip = 0.1f;
 	float farClip = 1000;
@@ -23,6 +25,5 @@ public:
 	void Initialise() override;
 };
 
-extern Camera* mainCamera;
 extern int screenWidth;
 extern int screenHeight;

@@ -44,7 +44,7 @@ namespace SceneGUI
 
 		if (ImGui::IsWindowHovered())
 		{
-			if (((EditorCamera*)mainCamera)->freeCamera.pressed())
+			if (EditorCamera::main()->freeCamera.pressed())
 			{
 				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 				if (glfwRawMouseMotionSupported()) glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
@@ -52,14 +52,14 @@ namespace SceneGUI
 			}
 			input->enabled = true;
 		}
-		else if (input->enabled && !((EditorCamera*)mainCamera)->freeCamera.down())
+		else if (input->enabled && !EditorCamera::main()->freeCamera.down())
 		{
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 			ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse; // Re-enables Imgui's Mouse Input
 			input->enabled = false;
 		}
 
-		if (((EditorCamera*)mainCamera)->freeCamera.released())
+		if (EditorCamera::main()->freeCamera.released())
 		{
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 			ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse; // Re-enables Imgui's Mouse Input

@@ -33,13 +33,13 @@ void MeshRenderer::Draw()
 	if (material->shaderProgram == nullptr) return;
 	if (mesh == nullptr) return;
 
-	mat4 ProjectionViewMatrix = mainCamera->GetPVMatrix();
+	mat4 ProjectionViewMatrix = Camera::main->GetPVMatrix();
 
 	// Bind Shader
 	material->shaderProgram->Bind();
 
 	// Bind Camera Posiiton
-	material->shaderProgram->BindUniform("CameraPosition", mainCamera->GetGlobalPosition());
+	material->shaderProgram->BindUniform("CameraPosition", Camera::main->GetGlobalPosition());
 
 	// Bind Light
 	//material->shaderProgram->BindUniform("AmbientColour", LightingManager::ambientLight.colour);

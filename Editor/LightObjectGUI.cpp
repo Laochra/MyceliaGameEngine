@@ -15,7 +15,7 @@ void LightObjectGUI::DrawLightObjectGUI(LightObject* lightObject)
 
 	GameObject3DGUI::DrawGameObject3DGUI(lightObject);
 
-	std::string idStr = GUI::GenerateID("LightObject", lightObject);
+	std::string idStr = GUI::GenerateID(LightObject::className, lightObject);
 	const char* id = idStr.c_str();
 
 	if (ImGui::CollapsingHeader(id, ImGuiTreeNodeFlags_DefaultOpen))

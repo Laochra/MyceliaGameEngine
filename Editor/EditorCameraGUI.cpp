@@ -6,14 +6,14 @@ void EditorCameraGUI::DrawEditorCameraGUI(const char* const name, bool& open)
 {
 	ImGui::Begin(name, &open);
 
-	DrawEditorCameraGUI((EditorCamera*)mainCamera);
+	DrawEditorCameraGUI(EditorCamera::main());
 
 	ImGui::End();
 }
 
 void EditorCameraGUI::DrawEditorCameraGUI(EditorCamera* camera)
 {
-	std::string idStr = GUI::GenerateID("Editor Camera", camera);
+	std::string idStr = GUI::GenerateID(EditorCamera::className, camera);
 	const char* id = idStr.c_str();
 
 	if (ImGui::CollapsingHeader(id, ImGuiTreeNodeFlags_DefaultOpen))

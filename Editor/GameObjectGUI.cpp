@@ -18,7 +18,7 @@ void GameObjectGUI::DrawGameObjectGUI(GameObject* gameObject)
 {
 	if (gameObject == nullptr || gameObject == GameObject::Destroyed) return;
 
-	std::string idStr = GUI::GenerateID("GameObject", gameObject);
+	std::string idStr = GUI::GenerateID(GameObject::className, gameObject);
 	const char* id = idStr.c_str();
 
 	if (ImGui::CollapsingHeader(id, ImGuiTreeNodeFlags_DefaultOpen))

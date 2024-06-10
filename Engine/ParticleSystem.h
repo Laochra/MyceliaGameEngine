@@ -2,7 +2,7 @@
 
 #include "GLIncludes.h"
 
-#include "Debug.h"
+#include "Colour.h"
 
 #include <vector>
 using std::vector;

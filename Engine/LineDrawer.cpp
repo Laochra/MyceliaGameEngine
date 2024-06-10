@@ -62,7 +62,7 @@ void LineDrawer::Draw() noexcept
 
 	// Bind Program and View Projection Matrix
 	linesProgram.Bind();
-	linesProgram.BindUniform("PVMatrix", mainCamera->GetPVMatrix());
+	linesProgram.BindUniform("PVMatrix", Camera::main->GetPVMatrix());
 
 	// Draw the Lines!
 	glDrawArrays(GL_LINES, 0, (int)positions.size());

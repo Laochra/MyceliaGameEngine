@@ -34,10 +34,10 @@ int Application::Run()
 	Initialise();
 	debug->Log("Initialisation successful\n", Debug::Subtle);
 
-	if (mainCamera == nullptr)
+	if (Camera::main == nullptr)
 	{
 		debug->Log("No Camera was set up in Initialise(), so a default was created. Application will not behave as expected." locationinfo, Debug::Warning, Debug::WRN001);
-		mainCamera = GameObject::Instantiate<Camera>();
+		Camera::main = GameObject::Instantiate<Camera>();
 	}
 
 	GameLoop();

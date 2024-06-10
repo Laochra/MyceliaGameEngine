@@ -231,10 +231,10 @@ namespace EditorGUI
 				}
 				if (ImGui::BeginMenu(" 3D   "))
 				{
-					if (ImGui::MenuItem(" GameObject3D")) { GameObject::Instantiate<GameObject3D>(); }
-					if (ImGui::MenuItem(" MeshRenderer")) { GameObject::Instantiate<MeshRenderer>(); }
-					if (ImGui::MenuItem(" LightObject")) { GameObject::Instantiate<LightObject>(); }
-					if (ImGui::MenuItem(" ParticleEmitter")) { GameObject::Instantiate<ParticleEmitter>(); }
+					if (ImGui::MenuItem(GameObject3D::className)) { GameObject::Instantiate<GameObject3D>(); }
+					if (ImGui::MenuItem(MeshRenderer::className)) { GameObject::Instantiate<MeshRenderer>(); }
+					if (ImGui::MenuItem(MeshRenderer::className)) { GameObject::Instantiate<LightObject>(); }
+					if (ImGui::MenuItem(ParticleEmitter::className)) { GameObject::Instantiate<ParticleEmitter>(); }
 					ImGui::EndMenu();
 				}
 				ImGui::EndMenu();

@@ -87,7 +87,7 @@ void GameObjectManager::Clear() noexcept
 	Updater::updateList.clear();
 	Updater::drawList.clear();
 
-	if (mainCamera != nullptr) Updater::updateList.push_back(mainCamera);
+	if (Camera::main != nullptr) Updater::updateList.push_back(Camera::main);
 
 	while (gameObjects.size() > 0)
 	{

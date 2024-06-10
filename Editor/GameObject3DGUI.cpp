@@ -13,7 +13,7 @@ void GameObject3DGUI::DrawGameObject3DGUI(GameObject3D* gameObject3D)
 
 	GameObjectGUI::DrawGameObjectGUI(gameObject3D);
 
-	std::string idStr = GUI::GenerateID("GameObject3D", gameObject3D);
+	std::string idStr = GUI::GenerateID(GameObject3D::className, gameObject3D);
 	const char* id = idStr.c_str();
 
 	if (ImGui::CollapsingHeader(id, ImGuiTreeNodeFlags_DefaultOpen))

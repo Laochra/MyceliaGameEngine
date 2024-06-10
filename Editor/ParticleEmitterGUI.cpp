@@ -15,15 +15,14 @@ void ParticleEmitterGUI::DrawParticleEmitterGUI(ParticleEmitter* particleEmitter
 
 	GameObject3DGUI::DrawGameObject3DGUI(particleEmitter);
 
-	std::string idStr = GUI::GenerateID("ParticleEmitter", particleEmitter);
+	std::string idStr = GUI::GenerateID(ParticleEmitter::className, particleEmitter);
 	const char* id = idStr.c_str();
 
 	if (ImGui::CollapsingHeader(id, ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ParticleSystem::Properties& properties = particleEmitter->GetParticleSystem()->properties;
 
-		ImGui::BeginDisabled(particleEmitter->GetEmissionState() == ParticleSystem::Playing ||
-									particleEmitter->GetEmissionState() == ParticleSystem::Playing);
+		ImGui::BeginDisabled(particleEmitter->GetEmissionState() == ParticleSystem::Playing);
 		{
 			if (ImGui::Button("Play"))
 			{

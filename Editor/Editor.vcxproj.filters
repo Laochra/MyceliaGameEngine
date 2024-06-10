@@ -6,9 +6,6 @@
     <ClCompile Include="EditorCamera.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="InputEditor.cpp">
-      <Filter>GUI\EditorWindows</Filter>
-    </ClCompile>
     <ClCompile Include="..\External\imgui\imgui.cpp">
       <Filter>3rd Party\imgui</Filter>
     </ClCompile>
@@ -60,22 +57,10 @@
     <ClCompile Include="ParticleEmitterGUI.cpp">
       <Filter>GUI\EditorWindows\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="MeshCooker.cpp">
-      <Filter>GUI\EditorWindows</Filter>
-    </ClCompile>
     <ClCompile Include="Heirarchy.cpp">
       <Filter>GUI\EditorWindows</Filter>
     </ClCompile>
     <ClCompile Include="ConsoleGUI.cpp">
-      <Filter>GUI\EditorWindows</Filter>
-    </ClCompile>
-    <ClCompile Include="EditorStyler.cpp">
-      <Filter>GUI\EditorWindows</Filter>
-    </ClCompile>
-    <ClCompile Include="MaterialGUI.cpp">
-      <Filter>GUI\EditorWindows</Filter>
-    </ClCompile>
-    <ClCompile Include="ShaderProgramGUI.cpp">
       <Filter>GUI\EditorWindows</Filter>
     </ClCompile>
     <ClCompile Include="..\External\tinyfiledialogs\tinyfiledialogs.cpp">
@@ -87,8 +72,23 @@
     <ClCompile Include="EditorGUI.cpp">
       <Filter>GUI\EditorWindows</Filter>
     </ClCompile>
+    <ClCompile Include="MaterialGUI.cpp">
+      <Filter>GUI\EditorWindows\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshCooker.cpp">
+      <Filter>GUI\EditorWindows\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderProgramGUI.cpp">
+      <Filter>GUI\EditorWindows\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="InputEditor.cpp">
+      <Filter>GUI\EditorWindows\Settings</Filter>
+    </ClCompile>
     <ClCompile Include="PostProcessingGUI.cpp">
-      <Filter>GUI\EditorWindows</Filter>
+      <Filter>GUI\EditorWindows\Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorStyler.cpp">
+      <Filter>GUI\EditorWindows\Settings</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -122,6 +122,12 @@
     <Filter Include="3rd Party\tinyfiledialogs">
       <UniqueIdentifier>{c5bfb596-71a4-4cbd-b761-7f14c6abcd6b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GUI\EditorWindows\Tools">
+      <UniqueIdentifier>{df3baf75-53e5-42af-96c3-7475fce02421}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\EditorWindows\Settings">
+      <UniqueIdentifier>{2510f597-4832-4e02-a16e-754420af2387}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EditorCameraConfig.h">
@@ -133,9 +139,6 @@
     <ClInclude Include="Editor.h" />
     <ClInclude Include="EditorCamera.h">
       <Filter>GameObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="InputEditor.h">
-      <Filter>GUI\EditorWindows</Filter>
     </ClInclude>
     <ClInclude Include="..\External\imgui\imconfig.h">
       <Filter>3rd Party\imgui</Filter>
@@ -167,22 +170,13 @@
     <ClInclude Include="..\External\imgui\imstb_truetype.h">
       <Filter>3rd Party\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="ShaderProgramGUI.h">
-      <Filter>GUI\EditorWindows</Filter>
-    </ClInclude>
     <ClInclude Include="ConsoleGUI.h">
-      <Filter>GUI\EditorWindows</Filter>
-    </ClInclude>
-    <ClInclude Include="MaterialGUI.h">
       <Filter>GUI\EditorWindows</Filter>
     </ClInclude>
     <ClInclude Include="Heirarchy.h">
       <Filter>GUI\EditorWindows</Filter>
     </ClInclude>
     <ClInclude Include="Inspector.h">
-      <Filter>GUI\EditorWindows</Filter>
-    </ClInclude>
-    <ClInclude Include="EditorStyler.h">
       <Filter>GUI\EditorWindows</Filter>
     </ClInclude>
     <ClInclude Include="GUI.h">
@@ -215,9 +209,6 @@
     <ClInclude Include="ParticleEmitterGUI.h">
       <Filter>GUI\EditorWindows\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="MeshCooker.h">
-      <Filter>GUI\EditorWindows</Filter>
-    </ClInclude>
     <ClInclude Include="..\External\tinyfiledialogs\tinyfiledialogs.h">
       <Filter>3rd Party\tinyfiledialogs</Filter>
     </ClInclude>
@@ -227,8 +218,23 @@
     <ClInclude Include="EditorGUI.h">
       <Filter>GUI\EditorWindows</Filter>
     </ClInclude>
+    <ClInclude Include="MaterialGUI.h">
+      <Filter>GUI\EditorWindows\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshCooker.h">
+      <Filter>GUI\EditorWindows\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderProgramGUI.h">
+      <Filter>GUI\EditorWindows\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="InputEditor.h">
+      <Filter>GUI\EditorWindows\Settings</Filter>
+    </ClInclude>
     <ClInclude Include="PostProcessingGUI.h">
-      <Filter>GUI\EditorWindows</Filter>
+      <Filter>GUI\EditorWindows\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorStyler.h">
+      <Filter>GUI\EditorWindows\Settings</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

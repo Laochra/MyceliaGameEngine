@@ -1,8 +1,9 @@
 #include "Camera.h"
 
-Camera* mainCamera = nullptr;
 int screenWidth = 0;
 int screenHeight = 0;
+
+Camera* Camera::main = nullptr;
 
 void Camera::SerialiseTo(json& jsonObj) const
 {
