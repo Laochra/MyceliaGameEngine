@@ -89,6 +89,9 @@
     <ClCompile Include="Colour.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -220,6 +223,9 @@
     </ClInclude>
     <ClInclude Include="Colour.h">
       <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

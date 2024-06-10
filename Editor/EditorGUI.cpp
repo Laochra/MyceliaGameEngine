@@ -132,7 +132,7 @@ namespace EditorGUI
 		bool isForceCloseComboPressed =
 			ImGui::IsKeyPressed(ImGuiKey_LeftCtrl) &&
 			ImGui::IsKeyPressed(ImGuiKey_LeftShift);
-		if (!isForceCloseComboPressed && !SceneGUI::ClearScene()) return false;
+		if (!isForceCloseComboPressed && !SceneGUI::EnsureClearIsIntentional()) return false;
 
 		json editorSettings;
 		vector<string> windows;

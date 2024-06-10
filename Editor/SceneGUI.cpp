@@ -1,5 +1,7 @@
 #include "SceneGUI.h"
 
+#include "Scene.h"
+
 #include "EditorGUI.h"
 #include "EditorCamera.h"
 
@@ -12,24 +14,9 @@
 
 #include "Debug.h"
 
-#define VMillions  000
-#define VThousands 000
-#define VHundreds  001
-#define FormatVersion(vM, vT, vH) vM##vT##vH
-
-#define LoadSceneFormat(vM, vT, vH, scene) LoadScene_v ## vM ##_## vT ##_## vH(scene)
-#define LoadSceneLatest(scene) exindent(LoadScene_v) ## exindent(VMillions) ## exindent(_) ## exindent(VThousands) ## exindent(_) ## exindent(VHundreds)(scene)
-
-#define SaveSceneFormat(vM, vT, vH, scene) SaveScene_v ## vM ##_## vT ##_## vH(scene)
-#define SaveSceneLatest(scene) exindent(SaveScene_v) ## exindent(VMillions) ## exindent(_) ## exindent(VThousands) ## exindent(_) ## exindent(VHundreds)(scene)
-
 namespace SceneGUI
 {
-	const char* currentScenePath = nullptr;
-	constexpr uint currentFormatVersion = (VMillions << 6) + (VThousands << 3) + (VHundreds);
-	bool dirty = false;
-
-	void DrawScene(const char* const name, bool& open) noexcept
+	void SceneGUI::DrawScene(const char* const name, bool& open) noexcept
 	{
 		GLFWwindow* window = glfwGetCurrentContext();
 
@@ -94,7 +81,7 @@ namespace SceneGUI
 		}
 	}
 
-	bool ClearScene() noexcept
+	bool SceneGUI::EnsureClearIsIntentional() noexcept
 	{
 		const char* const dialogueTitle = "Unsaved scene data will be lost!";
 		const char* const dialogueMessage = "Would you like to save your changes?";
@@ -112,14 +99,16 @@ namespace SceneGUI
 		}
 
 		inspector->SetTarget(nullptr);
-		gameObjectManager->Clear();
+		Scene::Clear();
 		return true;
 	}
+	
 	bool NewScene() noexcept
 	{
-		if (!ClearScene()) return false;
-		currentScenePath = nullptr;
-		dirty = false;
+		if (!EnsureClearIsIntentional()) return false;
+		Scene::Clear();
+		Scene::currentPath = nullptr;
+		Scene::dirty = false;
 		return true;
 	}
 	bool OpenScene() noexcept
@@ -148,98 +137,17 @@ namespace SceneGUI
 			return false;
 		}
 
-		currentScenePath = filePath + startOffset;
+		if (!EnsureClearIsIntentional()) return false;
 
-		ifstream input(currentScenePath);
-
-		json scene;
-		try { input >> scene; }
-		catch (parse_error)
-		{
-			debug->Log
-			(
-				{
-					currentScenePath, " was corrupt. "
-					"Scene could not be opened. "
-					locationinfo
-				},
-				Debug::Warning, Debug::WRN102
-			);
-			return false;
-		}
-
-		if (!ClearScene()) return false;
-
-		LoadScene(scene);
-
-		dirty = false;
-		return true;
+		return Scene::Open(filePath + startOffset);
 	}
-#pragma region LoadVersions
-	static bool LoadScene_v000_000_001(json scene)
-	{
-		vector<json> gameObjects = scene["GameObjects"];
-		for (int i = 0; i < gameObjects.size(); i++)
-		{
-			gameObjectManager->Add(GameObject::InstantiateFrom(gameObjects[i]));
-		}
 
-		return true;
-	}
-#pragma endregion
-	static bool LoadScene(json scene) noexcept // Select the correct version of load to run
-	{
-		uint formatVersion = scene["FormatVersion"];
-
-		switch (formatVersion)
-		{
-		case FormatVersion(000,000,000):	return LoadSceneLatest(scene);
-		case FormatVersion(000,000,001):	return LoadSceneFormat(000,000,001, scene);
-		default:
-		{
-			debug->Log
-			(
-				{
-					"Unknown Scene Format Version couldn't be loaded: ",
-					std::to_string(formatVersion), " "
-					locationinfo
-				},
-				Debug::Warning, Debug::WRN152
-			);
-			return false;
-		}
-		}
-	}
-#pragma region SaveVersions // Purely keeping old versions for archival reasons
-	static bool SaveScene_v000_000_001(json& scene)
-	{
-		vector<json> gameObjects;
-		for (int i = 0; i < gameObjectManager->gameObjects.size(); i++)
-		{
-			gameObjects.push_back(gameObjectManager->gameObjects[i]);
-		}
-		scene["GameObjects"] = gameObjects;
-
-		return true;
-	}
-#pragma endregion
 	bool SaveScene() noexcept
 	{
-		if (currentScenePath == nullptr)
-		{
-			return SaveSceneAs();
-		}
-
-		json scene;
-		scene["FormatVersion"] = currentFormatVersion;
-		if (!SaveSceneLatest(scene)) return false;
-
-		ofstream output(currentScenePath);
-		output << std::setw(2) << scene << "\n";
-
-		dirty = false;
-		return true;
+		if (Scene::currentPath == nullptr) return SaveSceneAs();
+		else return Scene::Save();
 	}
+
 	bool SaveSceneAs() noexcept
 	{
 		const char* const windowTitle = "Save Scene As";
@@ -267,10 +175,8 @@ namespace SceneGUI
 			return false;
 		}
 
-		currentScenePath = filePath + startOffset;
+		Scene::currentPath = filePath + startOffset;
 
-		if (!SaveScene()) return false;
-
-		return true;
+		return Scene::Save();
 	}
 }
