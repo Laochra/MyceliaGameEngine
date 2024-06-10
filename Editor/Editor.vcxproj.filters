@@ -90,6 +90,9 @@
     <ClCompile Include="EditorStyler.cpp">
       <Filter>GUI\EditorWindows\Settings</Filter>
     </ClCompile>
+    <ClCompile Include="MeshHeirarchy.cpp">
+      <Filter>GUI\EditorWindows\Tools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="JSON Configs">
@@ -235,6 +238,9 @@
     </ClInclude>
     <ClInclude Include="EditorStyler.h">
       <Filter>GUI\EditorWindows\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshHeirarchy.h">
+      <Filter>GUI\EditorWindows\Tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

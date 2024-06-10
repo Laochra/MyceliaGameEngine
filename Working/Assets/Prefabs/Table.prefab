@@ -1,0 +1,61 @@
+{
+  "Active": true,
+  "Children": [
+    {
+      "Active": true,
+      "Children": [],
+      "GUID": 13580412891625885373,
+      "Material": "Default",
+      "Mesh": "Assets\\Meshes\\Table_Draw.mesh",
+      "Name": "Table_Draw",
+      "Pivot": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "Position": [
+        0.0,
+        0.0,
+        50.0
+      ],
+      "Rotation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "Scale": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "TypeID": 181025226017607
+    }
+  ],
+  "GUID": 2359786275838026129,
+  "Material": "Default",
+  "Mesh": "Assets\\Meshes\\Table.mesh",
+  "Name": "Table",
+  "Pivot": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Position": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Rotation": [
+    1.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Scale": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "TypeID": 181025226017607
+}

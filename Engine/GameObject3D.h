@@ -32,6 +32,8 @@ public:
 	mat4 GetLocalMatrix() noexcept;
 	void SetDirty();
 
+	// TODO: These seem to be calculated very incorrectly.
+	// Should be getting at least Position from the global matrix to account for rotation and scale.
 	vec3 GetGlobalPosition() const noexcept;
 	quat GetGlobalRotation() const noexcept;
 	vec3 GetGlobalScale() const noexcept;

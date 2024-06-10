@@ -305,7 +305,7 @@ namespace EditorGUI
 		{
 			if (CheckIfStringContains(files[i], { ".fbx", ".obj", ".gltf" }))
 			{
-				MeshCooker::fileQueue.push_back(files[i]);
+				MeshCooker::Add(files[i]);
 			}
 		}
 	}

@@ -1,0 +1,30 @@
+{
+  "Active": true,
+  "Children": [],
+  "GUID": 509449080071776708,
+  "Material": "Default",
+  "Mesh": "Assets\\Meshes\\Marill.mesh",
+  "Name": "Marill",
+  "Pivot": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Position": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Rotation": [
+    -0.7071067094802856,
+    0.7071068286895752,
+    0.0,
+    0.0
+  ],
+  "Scale": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "TypeID": 181025226017607
+}

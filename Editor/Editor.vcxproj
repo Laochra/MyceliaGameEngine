@@ -188,6 +188,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MaterialGUI.cpp" />
     <ClCompile Include="MeshCooker.cpp" />
+    <ClCompile Include="MeshHeirarchy.cpp" />
     <ClCompile Include="MeshRendererGUI.cpp" />
     <ClCompile Include="ParticleEmitterGUI.cpp" />
     <ClCompile Include="PostProcessingGUI.cpp" />
@@ -224,6 +225,7 @@
     <ClInclude Include="MaterialGUI.h" />
     <ClInclude Include="Inspector.h" />
     <ClInclude Include="MeshCooker.h" />
+    <ClInclude Include="MeshHeirarchy.h" />
     <ClInclude Include="MeshRendererGUI.h" />
     <ClInclude Include="ParticleEmitterGUI.h" />
     <ClInclude Include="PostProcessingGUI.h" />
