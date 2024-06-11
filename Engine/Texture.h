@@ -39,7 +39,6 @@ public:
 	unsigned int GetWidth() const { return width; }
 	unsigned int GetHeight() const { return height; }
 	Format GetFormat() const { return format; }
-	const unsigned char* GetPixels() const { return loadedPixels; }
 
 protected:
 
@@ -48,7 +47,6 @@ protected:
 	unsigned int height;
 	unsigned int glHandle;
 	Format format;
-	unsigned char* loadedPixels;
 
 	friend class TextureManager;
 	friend class Material;

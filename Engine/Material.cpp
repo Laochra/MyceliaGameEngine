@@ -6,10 +6,8 @@
 
 #include "Debug.h"
 
-bool Material::LoadFromJSON(const char* filepathInit)
+bool Material::LoadFromJSON(const char* filepathInit) noexcept
 {
-   //if (!JSONFileIsValid(filename)) return false;
-
 	int size = 1;
 	while (filepathInit[size] != '\0') { size++; }
 	filepath = new char[size];
@@ -145,7 +143,17 @@ bool Material::LoadFromJSON(const char* filepathInit)
    return true;
 }
 
-const char* Material::GetFilePath() const
+Material::~Material() noexcept
+{
+	if (filepath != nullptr &&
+		 strcmp(filepath, "Default") != 0 &&
+		 strcmp(filepath, "Missing") != 0)
+		{
+			delete filepath;
+		}
+}
+
+const char* Material::GetFilePath() const noexcept
 {
 	return filepath;
 }

@@ -31,7 +31,7 @@ namespace MeshCooker
 		}
 		else
 		{
-			current = fileQueue.size() - 1;
+			current = (uint)fileQueue.size() - 1;
 		}
 		
 		if (fileQueue.size() > 0)
@@ -45,7 +45,7 @@ namespace MeshCooker
 		ImGui::Begin(name, &open);
 
 		string currentString = fileQueue.size() > 0 ? fileQueue[current] : "No files open";
-		const uint relativeOffset = currentString.find("Assets\\");
+		const uint relativeOffset = (uint)currentString.find("Assets\\");
 		if (relativeOffset != (uint)string::npos) currentString.erase(0, relativeOffset);
 
 		{
@@ -111,7 +111,7 @@ namespace MeshCooker
 
 		if (fileQueue.size() > 0)
 		{
-			if (current >= fileQueue.size()) SetCurrent(fileQueue.size() - 1);
+			if (current >= fileQueue.size()) SetCurrent((uint)fileQueue.size() - 1);
 
 			if (ImGui::Button("Cook"))
 			{
@@ -243,8 +243,6 @@ namespace MeshCooker
 		meshRenderer["GUID"] = GuidGenerator::NewGuid();
 		meshRenderer["Active"] = true;
 		meshRenderer["TypeID"] = hasMesh ? MeshRenderer::classID : GameObject3D::classID;
-		// TODO: Actually get transforms and pass those through,
-		// make sure to apply parent transforms to children if a parent is culled for being useless
 		const mat4& t = mesh->localMatrix;
 		const vec3 position(t[3]);
 		meshRenderer["Position"] = vector{ position.x, position.y, position.z };
@@ -275,7 +273,7 @@ namespace MeshCooker
 		json gameobject = CookHeirarchy(&tempMeshes);
 
 		string filename = aiScene::GetShortFilename(fileQueue[current].c_str());
-		uint extensionIndex = filename.find('.');
+		uint extensionIndex = (uint)filename.find('.');
 		if (extensionIndex != string::npos)
 		{
 			filename.erase(filename.begin() + extensionIndex, filename.end());

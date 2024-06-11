@@ -4,15 +4,15 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-Texture::Texture() : fileName("none"), width(0), height(0), glHandle(0), format(None), loadedPixels(nullptr) { }
+Texture::Texture() : fileName("none"), width(0), height(0), glHandle(0), format(None) { }
 
-Texture::Texture(const char* fileNameInit, Linearity linearity) : fileName("none"), width(0), height(0), glHandle(0), format(None), loadedPixels(nullptr)
+Texture::Texture(const char* fileNameInit, Linearity linearity) : fileName("none"), width(0), height(0), glHandle(0), format(None)
 {
 	Load(fileNameInit, linearity);
 }
 
 Texture::Texture(unsigned int widthInit, unsigned int heightInit, Format formatInit, unsigned char* pixels, Linearity linearity) :
-	fileName("none"), width(widthInit), height(heightInit), format(formatInit), loadedPixels(nullptr)
+	fileName("none"), width(widthInit), height(heightInit), format(formatInit)
 {
 	Create(width, height, formatInit, pixels, linearity);
 }
@@ -20,7 +20,6 @@ Texture::Texture(unsigned int widthInit, unsigned int heightInit, Format formatI
 Texture::~Texture()
 {
 	if (glHandle != 0) glDeleteTextures(1, &glHandle);
-	if (loadedPixels != nullptr) stbi_image_free(loadedPixels);
 }
 
 bool Texture::Load(const char* filename, Linearity linearity)
@@ -35,7 +34,7 @@ bool Texture::Load(const char* filename, Linearity linearity)
 	}
 
 	int x = 0, y = 0, comp = 0;
-	loadedPixels = stbi_load(filename, &x, &y, &comp, STBI_default);
+	unsigned char* loadedPixels = stbi_load(filename, &x, &y, &comp, STBI_default);
 
 	if (loadedPixels != nullptr)
 	{
@@ -82,7 +81,6 @@ bool Texture::Load(const char* filename, Linearity linearity)
 		height = (unsigned int)y;
 		fileName = filename;
 		stbi_image_free(loadedPixels);
-		loadedPixels = nullptr;
 		return true;
 	}
 	return false;

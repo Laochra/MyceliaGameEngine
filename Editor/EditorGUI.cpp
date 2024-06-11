@@ -233,7 +233,7 @@ namespace EditorGUI
 				{
 					if (ImGui::MenuItem(GameObject3D::className)) { GameObject::Instantiate<GameObject3D>(); }
 					if (ImGui::MenuItem(MeshRenderer::className)) { GameObject::Instantiate<MeshRenderer>(); }
-					if (ImGui::MenuItem(MeshRenderer::className)) { GameObject::Instantiate<LightObject>(); }
+					if (ImGui::MenuItem(LightObject::className)) { GameObject::Instantiate<LightObject>(); }
 					if (ImGui::MenuItem(ParticleEmitter::className)) { GameObject::Instantiate<ParticleEmitter>(); }
 					ImGui::EndMenu();
 				}

@@ -3,7 +3,7 @@
 #include "Camera.h"
 #include "TextureManager.h"
 
-#include "Debug.h";
+#include "Debug.h"
 
 void ParticleEmitter::SerialiseTo(json& jsonObj) const
 {
@@ -78,7 +78,7 @@ void ParticleEmitter::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOp
 		memcpy(&p.shapeData0, shapeData.data(), shapeData.size() * sizeof(float));
 
 		string spriteFilepath = properties["Sprite"];
-		p.spriteFilepathLength = spriteFilepath.size();
+		p.spriteFilepathLength = (uint)spriteFilepath.size();
 		memcpy(p.spriteFilepath, spriteFilepath.c_str(), spriteFilepath.size() + 1);
 		p.alphaClippingThreshold = properties["AlphaThreshold"];
 	}
@@ -121,7 +121,7 @@ void ParticleEmitter::Draw()
 
 	// Bind Program and View Projection Matrix
 	shaderProgram->Bind();
-	shaderProgram->BindUniform("Projection", Camera::main->GetProjectionMatrix(screenWidth, screenHeight));
+	shaderProgram->BindUniform("Projection", Camera::main->GetProjectionMatrix((float)screenWidth, (float)screenHeight));
 	shaderProgram->BindUniform("ModelView", Camera::main->GetViewMatrix() * GetMatrix());
 	textureManager->GetTexture(particleSystem->properties.spriteFilepath, Texture::NonLinear)->Bind(0);
 	shaderProgram->BindUniform("Sprite", 0);

@@ -86,8 +86,12 @@ struct MaterialInput
 class Material
 {
 public:
-	bool LoadFromJSON(const char* filepathInit);
-	const char* GetFilePath() const;
+	Material() noexcept = default;
+	~Material() noexcept;
+	uncopyable(Material)
+
+	bool LoadFromJSON(const char* filepathInit) noexcept;
+	const char* GetFilePath() const noexcept;
 
 protected:
 	char* filepath;

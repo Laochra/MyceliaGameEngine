@@ -8,6 +8,8 @@
 
 Mesh::~Mesh()
 {
+	if (filepath != nullptr && strcmp(filepath, "None") != 0) { delete filepath; }
+
 	glDeleteVertexArrays(1, &vao);
 	glDeleteBuffers(1, &vbo);
 	glDeleteBuffers(1, &ibo);
@@ -278,6 +280,11 @@ bool Mesh::LoadFromFile(const char* filepathInit)
 	filestream.read((char*)&indices[0], indexCount * sizeof(uint));
 
 	Initialise(vertexCount, vertices, indexCount, indices);
+	
+	delete[] vertices;
+	delete[] indices;
+	
+	if (filepath != nullptr && strcmp(filepath, "None") != 0) { delete filepath; }
 
 	uint filepathLength = (uint)strlen(filepathInit) + 1;
 	filepath = new char[filepathLength];
