@@ -141,22 +141,30 @@ void GameObject3D::SetDirty()
 }
 
 
-vec3 GameObject3D::GetGlobalPosition() const noexcept
+vec3 GameObject3D::GetGlobalPosition() noexcept
 {
-	if (parent == nullptr) return position - pivot;
-	return parent->GetGlobalPosition() + position - pivot;
+	return vec3(GetMatrix()[3]);
 }
 
-quat GameObject3D::GetGlobalRotation() const noexcept
+mat3 GameObject3D::GetGlobalRotationMatrix() noexcept
 {
-	if (parent == nullptr) return glm::normalize(rotation);
-	return glm::normalize(parent->GetGlobalRotation() * rotation);
+	const mat4 t(GetMatrix());
+	const vec3 scale(GetGlobalScale());
+	const mat3 rotMat((vec3)t[0] / scale[0], (vec3)t[1] / scale[1], (vec3)t[2] / scale[2]);
+	return rotMat;
+}
+quat GameObject3D::GetGlobalRotationQuat() noexcept
+{
+	const mat4 t(GetMatrix());
+	const vec3 scale(GetGlobalScale());
+	const mat3 rotMat((vec3)t[0] / scale[0], (vec3)t[1] / scale[1], (vec3)t[2] / scale[2]);
+	return glm::quat_cast(rotMat);
 }
 
-vec3 GameObject3D::GetGlobalScale() const noexcept
+vec3 GameObject3D::GetGlobalScale() noexcept
 {
-	if (parent == nullptr) return scale;
-	return parent->GetGlobalScale() * scale;
+	const mat4 t = GetMatrix();
+	return vec3(glm::length(vec3(t[0])), glm::length(vec3(t[1])), glm::length(vec3(t[2])));
 }
 
 
@@ -181,7 +189,11 @@ void GameObject3D::Translate(vec3 amountToTranslate) noexcept
 	if (!dirty) SetDirty();
 }
 
-quat GameObject3D::GetRotation() const noexcept
+mat3 GameObject3D::GetRotationMatrix() const noexcept
+{
+	return glm::toMat3(rotation);
+}
+quat GameObject3D::GetRotationQuat() const noexcept
 {
 	return rotation;
 }

@@ -60,8 +60,8 @@ void MeshRenderer::Draw()
 		}
 		else
 		{
-			const mat4& lightMatrix = lightObjects[i]->GetMatrix();
-			vec3 direction = glm::normalize(vec3(lightMatrix[2]));
+			const mat3& lightRotationMatrix = lightObjects[i]->GetRotationMatrix();
+			vec3 direction = glm::normalize(vec3(lightRotationMatrix[2]));
 			material->shaderProgram->BindUniform(("LightObjects[" + std::to_string(i) + "].direction").c_str(), direction);
 		}
 		material->shaderProgram->BindUniform(("LightObjects[" + std::to_string(i) + "].range").c_str(), lightObjects[i]->range);

@@ -34,16 +34,18 @@ public:
 
 	// TODO: These seem to be calculated very incorrectly.
 	// Should be getting at least Position from the global matrix to account for rotation and scale.
-	vec3 GetGlobalPosition() const noexcept;
-	quat GetGlobalRotation() const noexcept;
-	vec3 GetGlobalScale() const noexcept;
+	vec3 GetGlobalPosition() noexcept;
+	mat3 GetGlobalRotationMatrix() noexcept;
+	quat GetGlobalRotationQuat() noexcept;
+	vec3 GetGlobalScale() noexcept;
 
 
 	vec3 GetPosition() const noexcept;
 	void SetPosition(vec3 newPosition) noexcept;
 	void Translate(vec3 amountToTranslate) noexcept;
 
-	quat GetRotation() const noexcept;
+	mat3 GetRotationMatrix() const noexcept;
+	quat GetRotationQuat() const noexcept;
 	void SetRotation(quat newRotation) noexcept;
 	void Rotate(float radians, vec3 axis) noexcept;
 	/// <summary>Interpolates between the current and target rotations, without rotating more than the max radians</summary>

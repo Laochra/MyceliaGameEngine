@@ -249,7 +249,7 @@ namespace MeshCooker
 		const vec3 position(t[3]);
 		meshRenderer["Position"] = vector{ position.x, position.y, position.z };
 		const vec3 scale(glm::length((vec3)t[0]), glm::length((vec3)t[1]), glm::length((vec3)t[2]));
-		meshRenderer["Scale"] = vector{ 0.0f, 0.0f, 0.0f };
+		meshRenderer["Scale"] = vector{ scale.x, scale.y, scale.z };
 		const mat3 rotMat((vec3)t[0] / scale[0], (vec3)t[1] / scale[1], (vec3)t[2] / scale[2]);
 		const quat rotation = glm::quat_cast(rotMat);
 		meshRenderer["Rotation"] = vector{ rotation.w, rotation.x, rotation.y, rotation.z };

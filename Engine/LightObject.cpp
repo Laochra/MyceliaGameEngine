@@ -42,7 +42,7 @@ void LightObject::DrawDebug()
 	}
 	else
 	{
-		vec3 direction = (vec3)glm::normalize(glm::inverse(GetMatrix())[2]);
+		vec3 direction = -glm::normalize((vec3)GetRotationMatrix()[2]);
 
 		float outerBaseRadius = range * tan(acos(angle[1]));
 		debug->lines.AddCone(GetGlobalPosition(), direction, range, outerBaseRadius, 32, debugColour);

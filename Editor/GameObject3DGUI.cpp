@@ -23,18 +23,21 @@ void GameObject3DGUI::DrawGameObject3DGUI(GameObject3D* gameObject3D)
 		gameObject3D->SetPosition(position);
 
 
-		vec3 rotationEuler = glm::eulerAngles(gameObject3D->GetRotation());
+		vec3 rotationEuler = glm::eulerAngles(gameObject3D->GetRotationQuat());
 		vec3 rotationDegrees = vec3(glm::degrees(rotationEuler.x), glm::degrees(rotationEuler.y), glm::degrees(rotationEuler.z));
+		vec3 originalDegrees = rotationDegrees;
 
-		ImGui::DragFloat3("Rotation", (float*)&rotationDegrees);
+		if (ImGui::DragFloat3("Rotation", (float*)&rotationDegrees))
+		{
+			rotationDegrees -= originalDegrees;
+			rotationEuler = vec3(glm::radians(rotationDegrees.x), glm::radians(rotationDegrees.y), glm::radians(rotationDegrees.z));
+			
+			quat quatZ = glm::angleAxis(rotationEuler.z, vec3(0, 0, 1));
+			quat quatY = glm::angleAxis(rotationEuler.y, vec3(0, 1, 0));
+			quat quatX = glm::angleAxis(rotationEuler.x, vec3(1, 0, 0));
 
-		rotationEuler = vec3(glm::radians(rotationDegrees.x), glm::radians(rotationDegrees.y), glm::radians(rotationDegrees.z));
-		quat quatZ = glm::angleAxis(rotationEuler.z, vec3(0, 0, 1));
-		quat quatY = glm::angleAxis(rotationEuler.y, vec3(0, 1, 0));
-		quat quatX = glm::angleAxis(rotationEuler.x, vec3(1, 0, 0));
-
-		gameObject3D->SetRotation(glm::normalize(quatZ * quatY * quatX));
-
+			gameObject3D->SetRotation(glm::normalize(quatZ * quatY * quatX) * gameObject3D->GetRotationQuat());
+		}
 
 		vec3 scale = gameObject3D->GetScale();
 		ImGui::DragFloat3("Scale", (float*)&scale);
