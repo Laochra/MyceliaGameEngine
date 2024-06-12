@@ -14,6 +14,8 @@ typedef std::initializer_list<string> StringParams;
 
 #include "LineDrawer.h"
 
+#include "StackTimer.h"
+
 class Debug
 {
 public:
