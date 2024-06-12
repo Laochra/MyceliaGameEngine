@@ -238,7 +238,7 @@ bool ShaderProgram::LoadAndLinkFromJSON(const char* filepathInit)
 
 	if (program != 0) glDeleteProgram(program);
 
-	uint filepathLength = strlen(filepathInit);
+	uint filepathLength = (uint)strlen(filepathInit);
 	filepath = new char[filepathLength + 1];
 	memcpy(filepath, filepathInit, filepathLength + 1);
 

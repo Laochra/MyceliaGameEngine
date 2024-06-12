@@ -296,7 +296,7 @@ void ParticleEmitterGUI::DrawParticleEmitterGUI(ParticleEmitter* particleEmitter
 
 						if (newFilepath != nullptr)
 						{
-							const uint newFilepathLength = strlen(newFilepath);
+							const uint newFilepathLength = (uint)strlen(newFilepath);
 
 							const uint startOffset = (uint)string(newFilepath).find("Assets\\");
 

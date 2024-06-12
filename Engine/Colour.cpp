@@ -18,7 +18,7 @@ Colour Colour::HSVToRGB(Colour& hsv) noexcept
 	Colour rgb;
 	rgb.a = hsv.a;
 
-	int h = floor(hsv.h * 6);
+	int h = (int)floor(hsv.h * 6);
 	if (h == 6) h = 0;
 
 	float chroma = hsv.v * hsv.s;

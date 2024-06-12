@@ -158,7 +158,7 @@ void ParticleSystem::Dispatch() const noexcept
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, positionBuffer);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, velocityBuffer);
 
-	float workGroups = ceil(properties.maxCount / (float)particlesWorkGroupSize);
+	uint workGroups = (uint)ceil(properties.maxCount / (float)particlesWorkGroupSize);
 	glDispatchCompute(workGroups, 1, 1); // Y and Z are 1 because this is just a 1 dimensional buffer
 }
 

@@ -7,6 +7,9 @@
 #endif
 
 #if defined(_WIN32) || defined(_WIN64)
+#ifdef APIENTRY
+#undef APIENTRY
+#endif
 #include "Windows.h"
 HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 #define LIGHTGREY 7

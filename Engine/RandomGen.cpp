@@ -17,7 +17,7 @@ namespace Random
 	}
 
 	typedef std::mt19937 Engine32;
-	Engine32 engine32(SecondsSinceEpoch());
+	Engine32 engine32((int32)SecondsSinceEpoch());
 	typedef std::mt19937_64 Engine64;
 	Engine64 engine64(SecondsSinceEpoch());
 }
@@ -63,7 +63,8 @@ uint64 Random::UInt64(uint64 min, uint64 max)
 
 float Random::Float()
 {
-	return engine32();
+	unsigned int value32 = engine32();
+	return *(float*)&value32;
 }
 float Random::Float(float min, float max)
 {
