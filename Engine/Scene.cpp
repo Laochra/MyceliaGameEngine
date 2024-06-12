@@ -5,6 +5,8 @@
 
 #include "GeneralMacros.h"
 
+#include "StackTimer.h"
+
 #include "Debug.h"
 
 #define VMillions  000

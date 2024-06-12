@@ -143,16 +143,6 @@ bool Material::LoadFromJSON(const char* filepathInit) noexcept
    return true;
 }
 
-Material::~Material() noexcept
-{
-	if (filepath != nullptr &&
-		 strcmp(filepath, "Engine\\DefaultAssets\\Default.mat") != 0 &&
-		 strcmp(filepath, "Engine\\DefaultAssets\\Missing.mat") != 0)
-		{
-			delete filepath;
-		}
-}
-
 const char* Material::GetFilePath() const noexcept
 {
 	return filepath;

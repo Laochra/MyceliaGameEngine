@@ -8,7 +8,10 @@
 
 Mesh::~Mesh()
 {
-	if (filepath != nullptr && strcmp(filepath, "None") != 0) { delete filepath; }
+	if (filepath != nullptr && strcmp(filepath, "ProceduralQuad") != 0 && strcmp(filepath, "ProceduralCube") != 0)
+	{
+		delete filepath;
+	}
 
 	glDeleteVertexArrays(1, &vao);
 	glDeleteBuffers(1, &vbo);

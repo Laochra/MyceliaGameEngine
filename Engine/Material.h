@@ -87,7 +87,6 @@ class Material
 {
 public:
 	Material() noexcept = default;
-	~Material() noexcept;
 	uncopyable(Material)
 
 	bool LoadFromJSON(const char* filepathInit) noexcept;
