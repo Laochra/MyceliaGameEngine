@@ -92,6 +92,9 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
+    <ClCompile Include="StackTimer.cpp">
+      <Filter>Utility\Debugging</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -226,6 +229,9 @@
     </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="StackTimer.h">
+      <Filter>Utility\Debugging</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
