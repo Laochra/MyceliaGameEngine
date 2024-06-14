@@ -20,31 +20,32 @@ int Application::Run()
 	isRunning = true;
 
 	{
-		debug->Log("Setting up application...", Debug::Subtle);
+		Debug::Log(Debug::SUBTLE("Setting up application..."));
 		int returnCode = Setup();
 		if (returnCode != 0)
 		{
-			debug->Log("Application setup failed" locationinfo "\n", Debug::Error, Debug::ERR001);
+			Debug::Log(Debug::ERR("Application setup failed" locationinfo "\n"), Debug::ERR001);
 			return returnCode;
 		}
-		debug->Log("Application setup successful\n", Debug::Subtle);
+		Debug::Log(Debug::SUBTLE("Application setup successful\n"));
 	}
 
-	debug->Log("Initialising application...", Debug::Subtle);
+	Debug::Log(Debug::SUBTLE("Initialising application..."));
 	Initialise();
-	debug->Log("Initialisation successful\n", Debug::Subtle);
+	Debug::Log(Debug::SUBTLE("Initialisation successful\n"));
 
 	if (Camera::main == nullptr)
 	{
-		debug->Log("No Camera was set up in Initialise(), so a default was created. Application will not behave as expected." locationinfo, Debug::Warning, Debug::WRN001);
+		Debug::Log(Debug::WRN("No Camera was set up in Initialise(), so a default was created."
+							"Application will not behave as expected." locationinfo), Debug::WRN001);
 		Camera::main = GameObject::Instantiate<Camera>();
 	}
 
 	GameLoop();
 
-	debug->Log("Terminating application...", Debug::Subtle);
+	Debug::Log(Debug::SUBTLE("Terminating application..."));
 	Close();
-	debug->Log("Application termination successful\n", Debug::Subtle);
+	Debug::Log(Debug::SUBTLE("Application termination successful\n"));
 
 	return 0;
 }
@@ -64,7 +65,7 @@ int Application::Setup()
 {
 	if (!glfwInit())
 	{
-		debug->Log("GLFW failed to initialise" locationinfo, Debug::Error, Debug::ERR902);
+		Debug::Log(Debug::ERR("GLFW failed to initialise" locationinfo), Debug::ERR902);
 		return -1;
 	}
 
@@ -79,7 +80,7 @@ int Application::Setup()
 	window = glfwCreateWindow(1600, 900, "Window", nullptr, nullptr);
 	if (window == nullptr)
 	{
-		debug->Log("GLFW failed to create a window" locationinfo, Debug::Error, Debug::ERR902);
+		Debug::Log(Debug::ERR("GLFW failed to create a window" locationinfo), Debug::ERR902);
 		glfwTerminate();
 		return -1;
 	}
@@ -99,7 +100,7 @@ int Application::Setup()
 
 	if (!gladLoadGL())
 	{
-		debug->Log("GLAD failed to load OpenGL functions" locationinfo, Debug::Error, Debug::ERR901);
+		Debug::Log(Debug::ERR("GLAD failed to load OpenGL functions" locationinfo), Debug::ERR901);
 		return -1;
 	}
 
@@ -223,12 +224,12 @@ void GLErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLs
 {
 	switch (severity)
 	{
-	case GL_DEBUG_SEVERITY_HIGH:		debug->Log({ "OpenGL ", GLErrorSource(source), GLErrorType(type), std::to_string(id), ": \"", message, locationinfo }, Debug::Error,   Debug::ERR901); break;
-	case GL_DEBUG_SEVERITY_MEDIUM:	debug->Log({ "OpenGL ", GLErrorSource(source), GLErrorType(type), std::to_string(id), ": \"", message, locationinfo }, Debug::Warning, Debug::WRN901); break;
-	case GL_DEBUG_SEVERITY_LOW:		debug->Log({ "OpenGL ", GLErrorSource(source), GLErrorType(type), std::to_string(id), ": \"", message, locationinfo }, Debug::Warning, Debug::WRN902); break;
+	case GL_DEBUG_SEVERITY_HIGH:		Debug::Log(Debug::ERR( "OpenGL ", GLErrorSource(source), GLErrorType(type), id, ": \"", message, locationinfo ), Debug::ERR901); break;
+	case GL_DEBUG_SEVERITY_MEDIUM:	Debug::Log(Debug::WRN( "OpenGL ", GLErrorSource(source), GLErrorType(type), id, ": \"", message, locationinfo ), Debug::WRN901); break;
+	case GL_DEBUG_SEVERITY_LOW:		Debug::Log(Debug::WRN( "OpenGL ", GLErrorSource(source), GLErrorType(type), id, ": \"", message, locationinfo ), Debug::WRN902); break;
 	}
 }
 void GLFWErrorCallback(int code, const char* description)
 {
-	debug->Log({ "GLFW ", std::to_string(code), ": ", description, locationinfo }, Debug::Error, Debug::ERR902);
+	Debug::Log(Debug::ERR( "GLFW ", code, ": ", description, locationinfo ), Debug::ERR902);
 }

@@ -21,14 +21,14 @@ GameObject* GameObject::InstantiateFrom(json jsonObj, GuidGeneration guidOptions
 	case ParticleEmitter::classID: gameObject = new ParticleEmitter(); break;
 	default:
 		gameObject = new GameObject();
-		debug->Log(
-			{
-				"TypeID '", std::to_string(typeID), "' "
+		Debug::Log(
+			Debug::ERR(
+				"TypeID '", typeID, "' "
 				"was not accounted for when loading. "
 				"DO NOT SAVE! Data will be lost. "
 				locationinfo
-			},
-			Debug::Error, Debug::ERR151
+			),
+			Debug::ERR151
 		);
 		break;
 	}

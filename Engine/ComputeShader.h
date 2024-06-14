@@ -22,7 +22,7 @@ public:
 		file.open(filepathInit);
 		if (!file.good())
 		{
-			debug->Log({ "Compute shader file not found at: ", filepathInit, locationinfo }, Debug::Warning, Debug::WRN101);
+			Debug::Log(Debug::WRN( "Compute shader file not found at: ", filepathInit, locationinfo ), Debug::WRN101);
 			return;
 		}
 
@@ -49,7 +49,7 @@ public:
 			glGetShaderiv(compute, GL_INFO_LOG_LENGTH, &errorLogLength);
 			char* errorLog = new char[errorLogLength];
 			glGetShaderInfoLog(compute, errorLogLength, NULL, errorLog);
-			debug->Log({ errorLog, locationinfo }, Debug::Error, Debug::ERR901);
+			Debug::Log(Debug::ERR( errorLog, locationinfo ), Debug::ERR901);
 			return;
 		}
 
@@ -65,7 +65,7 @@ public:
 			glGetProgramiv(program, GL_INFO_LOG_LENGTH, &errorLogLength);
 			char* errorLog = new char[errorLogLength];
 			glGetProgramInfoLog(program, errorLogLength, NULL, errorLog);
-			debug->Log({ errorLog, locationinfo }, Debug::Error, Debug::ERR901);
+			Debug::Log(Debug::ERR( errorLog, locationinfo ), Debug::ERR901);
 			return;
 		}
 

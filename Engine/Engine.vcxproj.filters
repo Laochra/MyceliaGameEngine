@@ -95,6 +95,9 @@
     <ClCompile Include="StackTimer.cpp">
       <Filter>Utility\Debugging</Filter>
     </ClCompile>
+    <ClCompile Include="StringBuilder.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -232,6 +235,9 @@
     </ClInclude>
     <ClInclude Include="StackTimer.h">
       <Filter>Utility\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="StringBuilder.h">
+      <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

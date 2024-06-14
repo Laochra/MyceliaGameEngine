@@ -17,5 +17,5 @@ StackTimer::~StackTimer()
 	
 	double ms = ns.count() / 1'000'000.0f;
 
-	debug->Log({ name, " took ", std::to_string(ms), " milliseconds to complete", location});
+	Debug::Log(Debug::MSG( name, " took ", ms, " milliseconds to complete", location));
 }

@@ -33,7 +33,7 @@ Debug::~Debug() noexcept
 	delete outputFile;
 }
 
-Debug::DebugLog Debug::Log(const StringParams& message, const LogType type, const LogID id)
+Debug::DebugLog Debug::LogImplementation(const string& message, const LogType type, const LogID id)
 {
 	DebugLog log(message, type, id);
 	if (log.id == Undefined)
@@ -62,13 +62,11 @@ Debug::DebugLog Debug::Log(const StringParams& message, const LogType type, cons
 #endif
 #endif
 
-	*outputFile << logString;
+	* outputFile << logString;
 	outputFile->flush();
 
 	return log;
 }
-Debug::DebugLog Debug::Log(const string& message, const LogType type, const LogID id) { return Log({message}, type, id); }
-Debug::DebugLog Debug::Log(const LogType type, const LogID id) { return Log(StringParams(), type, id); }
 
 string Debug::GetLogAsString(const Debug::DebugLog& log) noexcept
 {

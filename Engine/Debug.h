@@ -16,6 +16,11 @@ typedef std::initializer_list<string> StringParams;
 
 #include "StackTimer.h"
 
+#include "StringBuilder.h"
+
+class Debug;
+extern Debug* debug;
+
 class Debug
 {
 public:
@@ -82,6 +87,35 @@ public:
 	)
 	#pragma endregion
 
+	template<typename RequiredParam, typename... OptionalParams>
+	struct MSG : public StringBuilder<RequiredParam, OptionalParams...>
+	{
+		MSG(RequiredParam requiredParam, OptionalParams... optionalParam) :
+			StringBuilder<RequiredParam, OptionalParams...>(requiredParam, optionalParam...)
+		{ }
+	};
+	template<typename RequiredParam, typename... OptionalParams>
+	struct SUBTLE : public StringBuilder<RequiredParam, OptionalParams...>
+	{
+		SUBTLE(RequiredParam requiredParam, OptionalParams... optionalParam) :
+			StringBuilder<RequiredParam, OptionalParams...>(requiredParam, optionalParam...)
+		{ }
+	};
+	template<typename RequiredParam, typename... OptionalParams>
+	struct WRN : public StringBuilder<RequiredParam, OptionalParams...>
+	{
+		WRN(RequiredParam requiredParam, OptionalParams... optionalParam) :
+			StringBuilder<RequiredParam, OptionalParams...>(requiredParam, optionalParam...)
+		{ }
+	};
+	template<typename RequiredParam, typename... OptionalParams>
+	struct ERR : public StringBuilder<RequiredParam, OptionalParams...>
+	{
+		ERR(RequiredParam requiredParam, OptionalParams... optionalParam) :
+			StringBuilder<RequiredParam, OptionalParams...>(requiredParam, optionalParam...)
+		{ }
+	};
+
 	struct DebugLog
 	{
 		string message;
@@ -101,14 +135,31 @@ public:
 			{ for (string str : messageInit) { message += str; } }
 	};
 
-	virtual DebugLog Log(const StringParams& message, const LogType type = Message, const LogID id = Undefined);
-	virtual DebugLog Log(const string& message, const LogType type = Message, const LogID id = Undefined);
-	virtual DebugLog Log(const LogType type, const LogID id = Undefined);
+	template<typename RequiredParam, typename... OptionalParams>
+	static DebugLog Log(MSG<RequiredParam, OptionalParams...> stringBuilder)
+	{
+		return debug->LogImplementation(stringBuilder.value, LogType::Message, LogID::Undefined);
+	}
+	template<typename RequiredParam, typename... OptionalParams>
+	static DebugLog Log(SUBTLE<RequiredParam, OptionalParams...> stringBuilder)
+	{
+		return debug->LogImplementation(stringBuilder.value, LogType::Subtle, LogID::Undefined);
+	}
+	template<typename RequiredParam, typename... OptionalParams>
+	static DebugLog Log(WRN<RequiredParam, OptionalParams...> stringBuilder, LogID warningCode = LogID::WRN000)
+	{
+		return debug->LogImplementation(stringBuilder.value, LogType::Warning, warningCode);
+	}
+	template<typename RequiredParam, typename... OptionalParams>
+	static DebugLog Log(ERR<RequiredParam, OptionalParams...> stringBuilder, LogID errorCode = LogID::ERR000)
+	{
+		return debug->LogImplementation(stringBuilder.value, LogType::Error, errorCode);
+	}
 
 	static string GetLogAsString(const DebugLog& log) noexcept;
 
 protected:
 	std::ofstream* outputFile;
-};
 
-extern Debug* debug;
+	virtual DebugLog LogImplementation(const string& message, const LogType type = Message, const LogID id = Undefined);
+};
