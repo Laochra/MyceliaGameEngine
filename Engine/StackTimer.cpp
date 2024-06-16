@@ -17,5 +17,5 @@ StackTimer::~StackTimer()
 	
 	double ms = ns.count() / 1'000'000.0f;
 
-	Debug::Log(Debug::MSG( name, " took ", ms, " milliseconds to complete", location));
+	Debug::Log(name, " took ", ms, " milliseconds to complete", location);
 }

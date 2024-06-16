@@ -24,14 +24,11 @@ void Inspector::SetTarget(GameObject* target)
 	case ParticleEmitter::classID: targetGUI = new ParticleEmitterGUI(target); break;
 	default:
 		targetGUI = new GameObjectGUI(target);
-		Debug::Log(
-			Debug::ERR(
-				target->GetClassName(), " "
-				"was not accounted for when selecting inspector display.",
-				"Editable fields will be limited."
-				locationinfo
-			),
-			Debug::ERR151
+		Debug::LogError(ERR151,
+			target->GetClassName(), " "
+			"was not accounted for when selecting inspector display.",
+			"Editable fields will be limited."
+			locationinfo
 		);
 		break;
 	}

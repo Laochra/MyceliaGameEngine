@@ -166,7 +166,7 @@ bool Shader::LoadShader(ShaderStage stage, const char* filename)
 		delete[] lastError;
 		lastError = new char[infoLogLength];
 		glGetShaderInfoLog(glHandle, infoLogLength, 0, lastError);
-		Debug::Log(Debug::ERR( lastError, locationinfo ), Debug::ERR901);
+		Debug::LogError(ERR901, lastError, locationinfo);
 		return false;
 	}
 
@@ -292,7 +292,7 @@ bool ShaderProgram::Link()
 		delete[] lastError;
 		lastError = new char[infoLogLength + 1];
 		glGetProgramInfoLog(program, infoLogLength, 0, lastError);
-		Debug::Log(Debug::ERR( lastError, locationinfo ), Debug::ERR901);
+		Debug::LogError(ERR901, lastError, locationinfo);
 		return false;
 	}
 	return true;
@@ -667,18 +667,18 @@ bool ShaderProgram::LoadShaderFromJSON(ShaderStage stage, const char* filename)
 			case VertexStage:
 				if (LoadShader(stage, ("Engine\\DefaultAssets\\" + string(filename) + ".vert").c_str()) == false)
 				{
-					Debug::Log(Debug::WRN( filename, " is not a valid shader file" locationinfo ), Debug::WRN102);
+					Debug::LogWarning(WRN102, filename, " is not a valid shader file", locationinfo);
 					return false;
 				}
 				break;
 			case FragmentStage:
 				if (LoadShader(stage, ("Engine\\DefaultAssets\\" + string(filename) + ".frag").c_str()) == false)
 				{
-					Debug::Log(Debug::WRN( filename, " is not a valid shader file" locationinfo ), Debug::WRN102);
+					Debug::LogWarning(WRN102, filename, " is not a valid shader file", locationinfo);
 					return false;
 				}
 				break;
-			default: Debug::Log(Debug::WRN( "Shader stage ", stage, " has no default" locationinfo ), Debug::WRN104);
+			default: Debug::LogWarning(WRN104, "Shader stage ", stage, " has no default", locationinfo);
 				return false;
 		}
 	}
@@ -686,7 +686,7 @@ bool ShaderProgram::LoadShaderFromJSON(ShaderStage stage, const char* filename)
 	{
 		if (LoadShader(stage, filename) == false)
 		{
-			Debug::Log(Debug::WRN( filename, " is not a valid shader file" locationinfo ), Debug::WRN102);
+			Debug::LogWarning(WRN102, filename, " is not a valid shader file", locationinfo);
 			return false;
 		}
 	}
@@ -702,7 +702,7 @@ bool ShaderProgram::JSONFileIsValid(const char* filename)
 	ifstream input(filename);
 	if (!input.good())
 	{
-		Debug::Log(Debug::WRN( filename, " is missing, it may have been moved, deleted, or renamed" locationinfo ), Debug::WRN101);
+		Debug::LogWarning(WRN101, filename, " is missing, it may have been moved, deleted, or renamed", locationinfo);
 		return false;
 	}
 
@@ -710,34 +710,34 @@ bool ShaderProgram::JSONFileIsValid(const char* filename)
 	try { input >> shaderProgram; }
 	catch (parse_error)
 	{
-		Debug::Log(Debug::WRN( filename, " is not a valid shader file" locationinfo ), Debug::WRN102);
+		Debug::LogWarning(WRN102, filename, " is not a valid shader file", locationinfo);
 		return false;
 	}
 
 	bool incompleteFile = false;
 	if (!shaderProgram.contains("Vertex"))
 	{
-		Debug::Log(Debug::WRN( filename, " does not specify a Vertex shader, specify \"None\" to disregard it" locationinfo ), Debug::WRN103);
+		Debug::LogWarning(WRN103, filename, " does not specify a Vertex shader, specify \"None\" to disregard it", locationinfo);
 		incompleteFile = true;
 	}
 	if (!shaderProgram.contains("TessEvaluation"))
 	{
-		Debug::Log(Debug::WRN( filename, " does not specify a Tess Evaluation shader, specify \"None\" to disregard it" locationinfo ), Debug::WRN103);
+		Debug::LogWarning(WRN103, filename, " does not specify a Tess Evaluation shader, specify \"None\" to disregard it", locationinfo);
 		incompleteFile = true;
 	}
 	if (!shaderProgram.contains("TessControl"))
 	{
-		Debug::Log(Debug::WRN( filename, " does not specify a Tess Control shader, specify \"None\" to disregard it" locationinfo ), Debug::WRN103);
+		Debug::LogWarning(WRN103, filename, " does not specify a Tess Control shader, specify \"None\" to disregard it", locationinfo);
 		incompleteFile = true;
 	}
 	if (!shaderProgram.contains("Geometry"))
 	{
-		Debug::Log(Debug::WRN( filename, " does not specify a Geometry shader, specify \"None\" to disregard it" locationinfo ), Debug::WRN103);
+		Debug::LogWarning(WRN103, filename, " does not specify a Geometry shader, specify \"None\" to disregard it", locationinfo);
 		incompleteFile = true;
 	}
 	if (!shaderProgram.contains("Fragment"))
 	{
-		Debug::Log(Debug::WRN( filename, " does not specify a Fragment shader, specify \"None\" to disregard it" locationinfo ), Debug::WRN103);
+		Debug::LogWarning(WRN103, filename, " does not specify a Fragment shader, specify \"None\" to disregard it", locationinfo);
 		incompleteFile = true;
 	}
 	if (incompleteFile) return false;

@@ -307,11 +307,10 @@ void ParticleEmitterGUI::DrawParticleEmitterGUI(ParticleEmitter* particleEmitter
 							}
 							else
 							{
-								Debug::Log
-								(
-									Debug::WRN("Assets should only be loaded from inside the Assets folder. "
-										"Assets outside this folder won't be included in builds. "),
-									Debug::WRN105
+								Debug::Log(WRN105,
+									"Assets should only be loaded from inside the Assets folder. "
+									"Assets outside this folder won't be included in builds. "
+									locationinfo
 								);
 							}
 						}

@@ -92,7 +92,7 @@ namespace SceneGUI
 
 		switch (selectedOption)
 		{
-		default: Debug::Log(Debug::WRN("Unexpected return value from save message box")); return false;
+		default: Debug::LogWarning("Unexpected return value from save message box"); return false;
 		case 0: return false;			// int 0 means Cancel
 		case 1: SaveScene(); break;	// int 1 means Yes, do save changes
 		case 2: break;						// int 2 means No, don't save changes
@@ -127,12 +127,10 @@ namespace SceneGUI
 
 		if (startOffset == string::npos)
 		{
-			Debug::Log
-			(
-				Debug::WRN("Assets should only be loaded from inside the Assets folder. "
+			Debug::LogWarning(WRN105,
+				"Assets should only be loaded from inside the Assets folder. "
 				"Assets outside this folder won't be included in builds. "
-				"Scene was not saved!"),
-				Debug::WRN105
+				"Scene was not saved!"
 			);
 			return false;
 		}
@@ -164,13 +162,11 @@ namespace SceneGUI
 
 		if (startOffset == string::npos)
 		{
-			Debug::Log
-			(
-				Debug::WRN("Assets should only be saved inside the Assets folder. "
-					"Assets outside this folder won't be included in builds. "
-					"Scene was not saved! "
-					locationinfo),
-				Debug::WRN121
+			Debug::LogWarning(WRN121,
+				"Assets should only be saved inside the Assets folder. "
+				"Assets outside this folder won't be included in builds. "
+				"Scene was not saved! "
+				locationinfo
 			);
 			return false;
 		}

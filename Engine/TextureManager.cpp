@@ -69,9 +69,10 @@ Texture* TextureManager::AddTexture(const char* filepath, Texture::Linearity lin
    else
    {
       delete newTexture;
-      Debug::Log(Debug::WRN( "Failed to load a Texture from filepath: ",
-                     filepath, ". Set to Missing Texture" locationinfo ),
-                     Debug::WRN100);
+      Debug::LogWarning(WRN100,
+         "Failed to load a Texture from filepath: ",
+         filepath, ". Set to Missing Texture", locationinfo
+      );
       return GetTexture("Missing");
    }
 }

@@ -268,11 +268,11 @@ namespace MeshCooker
 			std::ifstream filestream(filepath);
 			if (filestream.good())
 			{
-				Debug::Log(Debug::WRN( "Found a Mesh file at filepath: ", filepath, ". But AssImp couldn't load it." locationinfo ), Debug::WRN102);
+				Debug::LogWarning(WRN102, "Found a Mesh file at filepath: ", filepath, ". But AssImp couldn't load it.", locationinfo);
 			}
 			else
 			{
-				Debug::Log(Debug::WRN( "Couldn't find a Mesh file at filepath: ", filepath, locationinfo ), Debug::WRN101);
+				Debug::LogWarning(WRN101, "Couldn't find a Mesh file at filepath: ", filepath, locationinfo);
 			}
 			return;
 		}

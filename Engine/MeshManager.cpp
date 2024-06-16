@@ -47,7 +47,7 @@ Mesh* MeshManager::AddMesh(const char* filepath)
    else
    {
       delete newMesh;
-      Debug::Log(Debug::WRN( "Failed to load a Mesh from filepath: ", filepath, ". Set to None" locationinfo ), Debug::WRN100);
+      Debug::LogWarning(WRN100, "Failed to load a Mesh from filepath: ", filepath, ". Set to None", locationinfo);
       return nullptr;
    }
 }

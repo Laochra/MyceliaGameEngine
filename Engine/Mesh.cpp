@@ -266,7 +266,7 @@ bool Mesh::LoadFromFile(const char* filepathInit)
 
 	if (!filestream.good())
 	{
-		Debug::Log(Debug::WRN( "Couldn't find a Mesh file at filepath: ", filepath, locationinfo ), Debug::WRN101);
+		Debug::LogWarning(WRN101, "Couldn't find a Mesh file at filepath: ", filepath, locationinfo);
 		return false;
 	}
 

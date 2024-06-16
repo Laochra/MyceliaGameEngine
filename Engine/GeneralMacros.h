@@ -52,7 +52,7 @@
 			if (currentString.size() > 0) result.insert(std::pair<name, string>(current##name, currentString));\
 			return result;\
 		} \
-		std::map<name, string> name##Map = name##GenerateMap(#__VA_ARGS__);
+		inline std::map<name, string> name##Map = name##GenerateMap(#__VA_ARGS__);
 	
 	#define mappedenumi(name, type, currentAccessibility, ...)\
 		enum name : type { __VA_ARGS__ };\

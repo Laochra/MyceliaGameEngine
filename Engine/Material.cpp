@@ -19,7 +19,7 @@ bool Material::LoadFromJSON(const char* filepathInit) noexcept
 	ifstream materialInput(filepathInit);
 	if (!materialInput.good())
 	{
-		Debug::Log(Debug::WRN( "Failed to find a Material at: ", filepathInit, ". Set to Missing.mat" locationinfo ), Debug::WRN101);
+		Debug::LogWarning(WRN101, "Failed to find a Material at: ", filepathInit, ". Set to Missing.mat", locationinfo);
 		return false;
 	}
 
@@ -29,7 +29,7 @@ bool Material::LoadFromJSON(const char* filepathInit) noexcept
 	try { materialInput >> material; }
 	catch (parse_error)
 	{
-		Debug::Log(Debug::WRN( filepathInit, " was corrupt. Set to Missing.mat" locationinfo ), Debug::WRN102);
+		Debug::LogWarning(WRN102, filepathInit, " was corrupt. Set to Missing.mat", locationinfo);
 		return false;
 	}
 
@@ -58,7 +58,7 @@ bool Material::LoadFromJSON(const char* filepathInit) noexcept
 
 	if (!shaderInput.good())
 	{
-		Debug::Log(Debug::WRN( "Failed to find ShaderProgram at: ", shaderFilePath, ". Set to \"PBRLit\"" locationinfo ), Debug::WRN101);
+		Debug::LogWarning(WRN101, "Failed to find ShaderProgram at: ", shaderFilePath, ". Set to \"PBRLit\"", locationinfo);
 		material["ShaderProgram"] = "PBRLit";
 		return true;
 	}
@@ -69,7 +69,7 @@ bool Material::LoadFromJSON(const char* filepathInit) noexcept
 	try { shaderInput >> shaderProgramJSON; }
 	catch (parse_error)
 	{
-		Debug::Log(Debug::WRN( shaderFilePath, " was corrupt. Set to \"PBRLit\"" locationinfo ), Debug::WRN102);
+		Debug::LogWarning(WRN102, shaderFilePath, " was corrupt. Set to \"PBRLit\"", locationinfo);
 		shaderFilePath = "PBRLit";
 		return true;
 	}
