@@ -4,10 +4,10 @@
     {
       "Active": true,
       "Children": [],
-      "GUID": 13580412891625885373,
+      "GUID": 12532635982031109272,
       "Material": "Default",
-      "Mesh": "Assets\\Meshes\\Table_Draw.mesh",
-      "Name": "Table_Draw",
+      "Mesh": "Assets\\Meshes\\TableDrawer.mesh",
+      "Name": "TableDrawer",
       "Pivot": [
         0.0,
         0.0,
@@ -25,14 +25,14 @@
         0.0
       ],
       "Scale": [
-        0.0,
-        0.0,
-        0.0
+        1.0,
+        1.0,
+        1.0
       ],
       "TypeID": 181025226017607
     }
   ],
-  "GUID": 2359786275838026129,
+  "GUID": 6885646681901763801,
   "Material": "Default",
   "Mesh": "Assets\\Meshes\\Table.mesh",
   "Name": "Table",
@@ -53,9 +53,9 @@
     0.0
   ],
   "Scale": [
-    0.0,
-    0.0,
-    0.0
+    1.0,
+    1.0,
+    1.0
   ],
   "TypeID": 181025226017607
 }

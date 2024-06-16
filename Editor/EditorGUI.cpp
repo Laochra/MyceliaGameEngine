@@ -237,6 +237,58 @@ namespace EditorGUI
 					if (ImGui::MenuItem(ParticleEmitter::className)) { GameObject::Instantiate<ParticleEmitter>(); }
 					ImGui::EndMenu();
 				}
+				if (ImGui::MenuItem(" Prefab"))
+				{
+					const char* const windowTitle = "Open Prefab";
+					const uint defaultPathLength = 16;
+					const char defaultPath[defaultPathLength] = "Assets\\Prefabs\\";
+					const uint filterPatternCount = 1;
+					const char* const filterPatterns[filterPatternCount] = { "*.prefab" };
+
+					const char* const filePath = tinyfd_openFileDialog(windowTitle, defaultPath, filterPatternCount, filterPatterns, nullptr, false);
+					if (filePath != nullptr)
+					{
+						const uint filePathLength = (uint)strlen(filePath);
+
+						const uint startOffset = (uint)string(filePath).find("Assets\\");
+
+						if (startOffset == string::npos)
+						{
+							Debug::Log(
+								Debug::WRN("Assets should only be loaded from inside the Assets folder. "
+									"Assets outside this folder won't be included in builds. "
+								),
+								Debug::WRN105
+							);
+						}
+						else
+						{
+							ifstream input(filePath + startOffset);
+							json prefab;
+
+							bool parseError = false;
+							try { input >> prefab; }
+							catch (parse_error)
+							{
+								Debug::Log
+								(
+									Debug::WRN(
+										filePath + startOffset, " was corrupt. "
+										"Prefab could not be opened. "
+										locationinfo
+									),
+									Debug::WRN102
+								);
+								parseError = true;
+							}
+
+							if (!parseError)
+							{
+								gameObjectManager->Add(GameObject::InstantiateFrom(prefab));
+							}
+						}
+					}
+				}
 				ImGui::EndMenu();
 			}
 			ImGui::EndMainMenuBar();

@@ -1,12 +1,16 @@
 #include "MeshHeirarchy.h"
 
-MeshHeirarchy::MeshHeirarchy(const char* nameInit) noexcept :
-	name(nameInit)
+MeshHeirarchy::MeshHeirarchy(const char* filepathInit, const char* nameInit, const char* materialPathInit) noexcept :
+	filepath(filepathInit),
+	name(nameInit),
+	materialPath(materialPathInit)
 {
 
 }
 MeshHeirarchy::MeshHeirarchy(MeshHeirarchy& other) noexcept :
-	name(other.name)
+	filepath(other.filepath),
+	name(other.name),
+	materialPath(other.materialPath)
 {
 	for (int i = 0; i < other.children.size(); i++)
 	{
@@ -16,7 +20,9 @@ MeshHeirarchy::MeshHeirarchy(MeshHeirarchy& other) noexcept :
 MeshHeirarchy& MeshHeirarchy::operator=(MeshHeirarchy& other) noexcept
 {
 	Clear();
+	filepath = other.filepath;
 	name = other.name;
+	materialPath = other.materialPath;
 	for (int i = 0; i < other.children.size(); i++)
 	{
 		children.push_back(new MeshHeirarchy(*other.children[i]));
@@ -30,7 +36,7 @@ MeshHeirarchy::~MeshHeirarchy() noexcept
 }
 
 
-MeshHeirarchy& MeshHeirarchy::Add(const char* nameInit) noexcept
+MeshHeirarchy& MeshHeirarchy::Add(const char* filepathInit, const char* nameInit) noexcept
 {
 	MeshHeirarchy* newMeshHeirachy = new MeshHeirarchy();
 	newMeshHeirachy->name = nameInit;

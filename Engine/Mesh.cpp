@@ -8,7 +8,7 @@
 
 Mesh::~Mesh()
 {
-	if (filepath != nullptr && strcmp(filepath, "ProceduralQuad") != 0 && strcmp(filepath, "ProceduralCube") != 0)
+	if (filepath != nullptr && strcmp(filepath, "None") != 0 && strcmp(filepath, "ProceduralQuad") != 0 && strcmp(filepath, "ProceduralCube") != 0)
 	{
 		delete filepath;
 	}

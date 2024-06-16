@@ -12,6 +12,8 @@
 
 #include "Vertex.h"
 
+#include "Input.h"
+
 #include "Debug.h"
 
 namespace MeshCooker
@@ -19,6 +21,7 @@ namespace MeshCooker
 	vector<string> fileQueue;
 	uint current;
 	MeshHeirarchy tempMeshes;
+	MeshHeirarchy* selectedTempMesh;
 
 	Assimp::Importer importer;
 	const aiScene* currentFile;
@@ -40,6 +43,47 @@ namespace MeshCooker
 		}
 	}
 
+	static void DrawNode(MeshHeirarchy* tempMesh)
+	{
+		bool isSelected = tempMesh == selectedTempMesh;
+		bool isLeaf = tempMesh->children.size() == 0;
+
+		int flags = 0;
+		flags |= ImGuiTreeNodeFlags_DefaultOpen;
+		flags |= ImGuiTreeNodeFlags_OpenOnArrow;
+		flags |= ImGuiTreeNodeFlags_OpenOnDoubleClick;
+		flags |= ImGuiTreeNodeFlags_FramePadding;
+		flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
+		flags |= ImGuiTreeNodeFlags_Selected * isSelected;
+		flags |= ImGuiTreeNodeFlags_Leaf * isLeaf;
+
+		if (ImGui::TreeNodeEx(tempMesh->name.c_str(), flags))
+		{
+			if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenOverlapped))
+			{
+				if (!input->enabled && ImGui::IsKeyReleased(ImGuiKey_MouseLeft))
+				{
+					selectedTempMesh = tempMesh;
+				}
+			}
+			for (int i = 0; i < tempMesh->children.size(); i++)
+			{
+				DrawNode(tempMesh->children[i]);
+			}
+			ImGui::TreePop();
+		}
+		else
+		{
+			if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenOverlapped))
+			{
+				if (!input->enabled && ImGui::IsKeyReleased(ImGuiKey_MouseLeft))
+				{
+					selectedTempMesh = tempMesh;
+				}
+			}
+		}
+	}
+
 	void MeshCooker::Draw(const char* const name, bool& open) noexcept
 	{
 		ImGui::Begin(name, &open);
@@ -57,7 +101,7 @@ namespace MeshCooker
 		ImGui::SameLine();
 		{
 			ImGui::BeginDisabled(current == 0);
-			if (ImGui::Button(" < ")) { SetCurrent(current - 1); }
+			if (ImGui::Button(" < ")) { SetCurrent(current - 1); selectedTempMesh = nullptr; }
 			ImGui::EndDisabled();
 		}
 		ImGui::SameLine();
@@ -65,7 +109,7 @@ namespace MeshCooker
 		ImGui::SameLine();
 		{
 			ImGui::BeginDisabled(fileQueue.size() == 0 || current >= fileQueue.size() - 1);
-			if (ImGui::Button(" > ")) { SetCurrent(current + 1); }
+			if (ImGui::Button(" > ")) { SetCurrent(current + 1); selectedTempMesh = nullptr; }
 			ImGui::EndDisabled();
 		}
 
@@ -105,6 +149,7 @@ namespace MeshCooker
 				fileQueue.clear();
 				tempMeshes.Clear();
 				SetCurrent(0);
+				selectedTempMesh = nullptr;
 			}
 			ImGui::EndDisabled();
 		}
@@ -116,6 +161,7 @@ namespace MeshCooker
 			if (ImGui::Button("Cook"))
 			{
 				CookCurrent();
+				selectedTempMesh = nullptr;
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Cook All"))
@@ -127,6 +173,18 @@ namespace MeshCooker
 				fileQueue.clear();
 				tempMeshes.Clear();
 				SetCurrent(0);
+				selectedTempMesh = nullptr;
+			}
+
+			ImGui::SeparatorText("Preview");
+			DrawNode(&tempMeshes);
+
+			if (selectedTempMesh != nullptr)
+			{
+				ImGui::SeparatorText("Mesh Settings");
+
+				if (ImGui::InputText("Name", &selectedTempMesh->name));
+
 			}
 		}
 
@@ -142,7 +200,8 @@ namespace MeshCooker
 	static void ProcessMesh(const aiMesh* mesh, MeshHeirarchy& current) noexcept
 	{
 		current.name = mesh->mName.C_Str();
-		std::ofstream output("Engine\\Temp\\" + string(mesh->mName.C_Str()) + ".mesh", std::ios::binary);
+		current.filepath = "Engine\\Temp\\" + string(mesh->mName.C_Str()) + ".mesh";
+		std::ofstream output(current.filepath, std::ios::binary);
 
 		uint vertexCount = (uint)mesh->mNumVertices;
 		output.write((char*)&vertexCount, 1 * sizeof(uint));
@@ -226,14 +285,13 @@ namespace MeshCooker
 	{
 		string newPath;
 
-		bool hasMesh = strcmp(mesh->name, "GameObject3D") != 0;
+		bool hasMesh = strcmp(mesh->name.c_str(), "GameObject3D") != 0;
 
 		// Move Mesh
 		if (hasMesh)
 		{
-			string oldPath = "Engine\\Temp\\" + string(mesh->name) + ".mesh";
 			newPath = "Assets\\Meshes\\" + string(mesh->name) + ".mesh";
-			std::rename(oldPath.c_str(), newPath.c_str());
+			std::rename(mesh->filepath.c_str(), newPath.c_str());
 		}
 
 		// Construct MeshRenderer for Prefab
@@ -255,7 +313,7 @@ namespace MeshCooker
 		if (hasMesh)
 		{
 			meshRenderer["Mesh"] = newPath;
-			meshRenderer["Material"] = "Default";
+			meshRenderer["Material"] = mesh->materialPath;
 		}
 
 		vector<json> children;
