@@ -148,7 +148,7 @@ namespace MaterialGUI
 		try { materialInput >> material; }
 		catch (parse_error)
 		{
-			Debug::LogWarning(WRN102, current.filePath, " was corrupt. All fields defaulted to \"None\".", locationinfo);
+			Debug::LogWarning(LogID::WRN102, current.filePath, " All fields defaulted to \"None\".", locationinfo);
 			Save();
 			materialInput = ifstream(current.filePath.c_str());
 			assert(materialInput.good());
@@ -161,7 +161,7 @@ namespace MaterialGUI
 		// Ensuring Shader Program is Valid
 		if (!material.contains("ShaderProgram"))
 		{
-			Debug::LogWarning(WRN103, current.filePath, " did not specify a Shader Program. Set to \"PBRLit\".", locationinfo);
+			Debug::LogWarning(LogID::WRN103, current.filePath, " did not specify a Shader Program. Set to \"PBRLit\".", locationinfo);
 			material["ShaderProgram"] = "PBRLit";
 			Save();
 		}
@@ -187,7 +187,7 @@ namespace MaterialGUI
 		try { shaderInput >> shaderProgram; }
 		catch (parse_error)
 		{
-			Debug::LogWarning(WRN102, current.filePath, " was corrupt. Shader Program set to \"PBRLit\".", locationinfo);
+			Debug::LogWarning(LogID::WRN102, current.filePath, " Shader Program set to \"PBRLit\".", locationinfo);
 			current.shaderFilePath = "PBRLit";
 			Save();
 
@@ -290,7 +290,7 @@ namespace MaterialGUI
 		try { input >> shaderProgram; }
 		catch (parse_error)
 		{
-			Debug::LogWarning(WRN102, current.shaderFilePath, " was corrupt. All fields defaulted to \"None\".", locationinfo);
+			Debug::LogWarning(LogID::WRN102, current.shaderFilePath, " All fields defaulted to \"None\".", locationinfo);
 			input = ifstream(current.filePath.c_str());
 			return;
 		}
@@ -307,7 +307,7 @@ namespace MaterialGUI
 				{
 					if (!attributes[i].contains("Exposed"))
 					{
-						Debug::LogWarning(WRN103, "Attribute ", i ," in ", current.shaderFilePath, " did not specify an Exposed status.", locationinfo);
+						Debug::LogWarning(LogID::WRN103, "Attribute ", i ," in ", current.shaderFilePath, " did not specify an Exposed status.", locationinfo);
 						continue;
 					}
 
@@ -315,13 +315,13 @@ namespace MaterialGUI
 
 					if (!attributes[i].contains("Name"))
 					{
-						Debug::LogWarning(WRN103, "Attribute ", i ," in ", current.shaderFilePath, " did not specify a name.", locationinfo);
+						Debug::LogWarning(LogID::WRN103, "Attribute ", i ," in ", current.shaderFilePath, " did not specify a name.", locationinfo);
 						continue;
 					}
 
 					if (!attributes[i].contains("Type"))
 					{
-						Debug::LogWarning(WRN103, "Attribute ", i ," in ", current.shaderFilePath, " did not specify a type.", locationinfo);
+						Debug::LogWarning(LogID::WRN103, "Attribute ", i ," in ", current.shaderFilePath, " did not specify a type.", locationinfo);
 						continue;
 					}
 
@@ -331,7 +331,7 @@ namespace MaterialGUI
 					current.attributes.push_back(attribute);
 				}
 			}
-			else { Debug::LogWarning(WRN103, current.shaderFilePath, " did not contain an Attributes list.", locationinfo); }
+			else { Debug::LogWarning(LogID::WRN103, current.shaderFilePath, " did not contain an Attributes list.", locationinfo); }
 
 			if (shaderProgram.contains("Uniforms"))
 			{
@@ -342,7 +342,7 @@ namespace MaterialGUI
 				{
 					if (!uniforms[i].contains("Exposed"))
 					{
-						Debug::LogWarning(WRN103, "Uniform ", i ," in ",  current.shaderFilePath, " did not specify an Exposed status.", locationinfo);
+						Debug::LogWarning(LogID::WRN103, "Uniform ", i ," in ",  current.shaderFilePath, " did not specify an Exposed status.", locationinfo);
 						continue;
 					}
 
@@ -350,13 +350,13 @@ namespace MaterialGUI
 
 					if (!uniforms[i].contains("Name"))
 					{
-						Debug::LogWarning(WRN103, "Uniform ", i ," in ", current.shaderFilePath, " did not specify a name.", locationinfo);
+						Debug::LogWarning(LogID::WRN103, "Uniform ", i ," in ", current.shaderFilePath, " did not specify a name.", locationinfo);
 						continue;
 					}
 
 					if (!uniforms[i].contains("Type"))
 					{
-						Debug::LogWarning(WRN103, "Uniform ", i ," in ", current.shaderFilePath, " did not specify a type.", locationinfo);
+						Debug::LogWarning(LogID::WRN103, "Uniform ", i ," in ", current.shaderFilePath, " did not specify a type.", locationinfo);
 						continue;
 					}
 
@@ -366,7 +366,7 @@ namespace MaterialGUI
 					current.uniforms.push_back(uniform);
 				}
 			}
-			else { dirty = true; Debug::LogWarning(WRN103, current.shaderFilePath, " did not contain a Uniforms list.", locationinfo); }
+			else { dirty = true; Debug::LogWarning(LogID::WRN103, current.shaderFilePath, " did not contain a Uniforms list.", locationinfo); }
 		}
 
 	}

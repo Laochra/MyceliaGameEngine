@@ -254,10 +254,7 @@ namespace EditorGUI
 
 						if (startOffset == string::npos)
 						{
-							Debug::LogWarning(WRN105,
-								"Assets should only be loaded from inside the Assets folder. "
-								"Assets outside this folder won't be included in builds. "
-							);
+							Debug::LogWarning(LogID::WRN106, locationinfo);
 						}
 						else
 						{
@@ -268,9 +265,8 @@ namespace EditorGUI
 							try { input >> prefab; }
 							catch (parse_error)
 							{
-								Debug::LogWarning(WRN102,
-									filePath + startOffset, " was corrupt. "
-									"Prefab could not be opened. "
+								Debug::LogWarning(LogID::WRN102,
+									filePath + startOffset,
 									locationinfo
 								);
 								parseError = true;

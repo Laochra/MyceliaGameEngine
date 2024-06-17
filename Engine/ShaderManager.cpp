@@ -15,7 +15,7 @@ ShaderManager::ShaderManager()
    }
    else
    {
-      Debug::LogError(ERR101, "Failed to load PBRLit.gpu", locationinfo);
+      Debug::LogError(LogID::ERR101, "Failed to load PBRLit.gpu", locationinfo);
       delete pbrLit;
    }
    ShaderProgram* pbrUnlit = new ShaderProgram;
@@ -25,7 +25,7 @@ ShaderManager::ShaderManager()
    }
    else
    {
-      Debug::LogError(ERR101, "Failed to load Unlit.gpu", locationinfo);
+      Debug::LogError(LogID::ERR101, "Failed to load Unlit.gpu", locationinfo);
       delete pbrUnlit;
    }
 }
@@ -60,7 +60,7 @@ ShaderProgram* ShaderManager::AddProgram(const char* filepath)
    else
    {
       delete newProgram;
-      Debug::LogWarning(WRN100, "Failed to load a ShaderProgram from filepath: ", filepath, ". Set to PBRLit.gpu", locationinfo);
+      Debug::LogWarning(LogID::WRN100, "Failed to load a ShaderProgram from filepath: ", filepath, ". Set to PBRLit.gpu", locationinfo);
       return GetProgram("PBRLit");
    }
 }

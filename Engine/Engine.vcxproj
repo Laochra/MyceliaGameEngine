@@ -173,6 +173,7 @@
     <ClCompile Include="LightingManager.cpp" />
     <ClCompile Include="LightObject.cpp" />
     <ClCompile Include="LineDrawer.cpp" />
+    <ClCompile Include="LogID.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="MaterialManager.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -218,6 +219,7 @@
     <ClInclude Include="LightingManager.h" />
     <ClInclude Include="LightObject.h" />
     <ClInclude Include="LineDrawer.h" />
+    <ClInclude Include="LogID.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MaterialManager.h" />
     <ClInclude Include="MathIncludes.h" />

@@ -18,58 +18,12 @@ typedef std::initializer_list<string> StringParams;
 
 #include "StringBuilder.h"
 
+#include "LogID.h"
+
 class Debug;
 extern Debug* debug;
 
-#pragma region LogID enum
-mappedenum(LogID, unsigned int,
-	Undefined,	// Default ID
-
-
-	///  Warnings  ///
-	WRN000,		// Undefined Warning
-
-	// Initialisation
-	WRN001,		// Camera Not Initialised
-
-	// Files
-	WRN100,		// Failed to Load File
-	WRN101,		// File Not Found
-	WRN102,		// File Invalid
-	WRN103,		// File Missing Data
-	WRN104,		// Requested Default Doesn't Exist
-	WRN105,		// Invalid Load Path Given
-	WRN120,		// Failed to Save File
-	WRN121,		// Invalid Save Path Given
-
-	// Data & Serialisation
-	WRN150,		// Data Failure
-	WRN151,		// POD Data Size Mismatch
-	WRN152,		// Unknown Data Format Version
-
-	// 3rd Party
-	WRN901,		// OpenGL Warning
-	WRN902,		// OpenGL Warning (Severe)
-
-
-	///   Errors   ///
-	ERR000,		// Undefined Error
-	ERR001,		// Setup Failure
-	ERR002,		// Initialisation Failure
-
-	// Files
-	ERR100,		// Failed to Load Critical File
-	ERR101,		// Failed to Load a Default Asset
-
-	// Data & Serialisation
-	ERR150,		// Fatal Data Failure
-	ERR151,		// Unspecified Case for TypeID
-
-	// 3rd Party
-	ERR901,		// OpenGL Error
-	ERR902,		// GLFW Error
-)
-#pragma endregion
+template<typename T> concept MsgType = requires(T t) { { ValueAsString(t) } -> std::same_as<std::string>; };
 
 class Debug
 {
@@ -100,37 +54,51 @@ public:
 			id(idInit) {}
 	};
 
-	template<typename Req, typename... Opt>
+
+
+	template<MsgType Req, MsgType... Opt>
 	static DebugLog Log(Req message, Opt... messageContinued)
 	{
 		return debug->LogImplementation(StringBuilder(message, messageContinued...).value, LogType::Message);
 	}
-	template<typename Req, typename... Opt>
+	template<MsgType Req, MsgType... Opt>
 	static DebugLog LogSubtle(Req message, Opt... messageContinued)
 	{
 		return debug->LogImplementation(StringBuilder(message, messageContinued...).value, LogType::Subtle);
 	}
 
-	template<typename Req, typename... Opt>
-	static DebugLog LogWarning(Req message, Opt... messageContinued)
+	template<typename Req, MsgType... Opt>
+	static DebugLog LogWarning(Req messageOrWarningCode, Opt... messageContinued)
 	{
-		return debug->LogImplementation(StringBuilder(message, messageContinued...).value, LogType::Warning);
-	}
-	template<typename Req, typename... Opt>
-	static DebugLog LogWarning(LogID warningCode, Req message, Opt... messageContinued)
-	{
-		return debug->LogImplementation(StringBuilder(message, messageContinued...).value, LogType::Warning, warningCode);
+		if constexpr (std::is_same_v<Req, LogID>)
+		{
+			return debug->LogImplementation(StringBuilder(messageContinued...).value, LogType::Warning, messageOrWarningCode);
+		}
+		else
+		{
+			return debug->LogImplementation(StringBuilder(messageOrWarningCode, messageContinued...).value, LogType::Warning);
+		}
 	}
 
-	template<typename Req, typename... Opt>
-	static DebugLog LogError(Req message, Opt... messageContinued)
+	template<typename Req, MsgType... Opt>
+	static DebugLog LogError(Req messageOrErrorCode, Opt... messageContinued)
 	{
-		return debug->LogImplementation(StringBuilder(message, messageContinued...).value, LogType::Error);
-	}
-	template<typename Req, typename... Opt>
-	static DebugLog LogError(LogID errorCode, Req message, Opt... messageContinued)
-	{
-		return debug->LogImplementation(StringBuilder(message, messageContinued...).value, LogType::Error, errorCode);
+		if constexpr (std::is_same_v<Req, LogID>)
+		{
+			if constexpr (sizeof...(Opt) > 0)
+			{
+				return debug->LogImplementation(StringBuilder(messageContinued...).value, LogType::Error, messageOrErrorCode);
+			}
+			else
+			{
+				return debug->LogImplementation(std::string(), LogType::Error, messageOrErrorCode);
+			}
+		}
+		else
+		{
+			return debug->LogImplementation(StringBuilder(messageOrErrorCode, messageContinued...).value, LogType::Error);
+		}
+		
 	}
 
 	static string GetLogAsString(const DebugLog& log) noexcept;
@@ -138,5 +106,5 @@ public:
 protected:
 	std::ofstream* outputFile;
 
-	virtual DebugLog LogImplementation(const string& message, const LogType type = Message, const LogID id = Undefined);
+	virtual DebugLog LogImplementation(const string& message, const LogType type = Message, const LogID id = LogID::Undefined);
 };

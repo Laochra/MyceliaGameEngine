@@ -183,7 +183,7 @@ namespace MeshCooker
 			{
 				ImGui::SeparatorText("Mesh Settings");
 
-				if (ImGui::InputText("Name", &selectedTempMesh->name));
+				ImGui::InputText("Name", &selectedTempMesh->name);
 
 			}
 		}
@@ -268,11 +268,11 @@ namespace MeshCooker
 			std::ifstream filestream(filepath);
 			if (filestream.good())
 			{
-				Debug::LogWarning(WRN102, "Found a Mesh file at filepath: ", filepath, ". But AssImp couldn't load it.", locationinfo);
+				Debug::LogWarning(LogID::WRN102, "Found a Mesh file at filepath: ", filepath, ". But AssImp couldn't load it.", locationinfo);
 			}
 			else
 			{
-				Debug::LogWarning(WRN101, "Couldn't find a Mesh file at filepath: ", filepath, locationinfo);
+				Debug::LogWarning(LogID::WRN101, filepath, locationinfo);
 			}
 			return;
 		}

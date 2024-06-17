@@ -39,7 +39,7 @@ namespace Scene
 		try { input >> scene; }
 		catch (parse_error)
 		{
-			Debug::Log(WRN102,
+			Debug::LogWarning(LogID::WRN102,
 				filepath, " was corrupt. "
 				"Scene could not be opened. "
 				locationinfo
@@ -76,7 +76,7 @@ namespace Scene
 		case FormatVersion(000, 000, 001):	return LoadFormat(000, 000, 001, scene);
 		default:
 		{
-			Debug::Log(WRN152,
+			Debug::LogWarning(LogID::WRN152,
 				"Unknown Scene Format Version couldn't be loaded: ",
 				formatVersion, " "
 				locationinfo

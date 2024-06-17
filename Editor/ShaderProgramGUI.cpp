@@ -128,7 +128,7 @@ namespace ShaderProgramGUI
 		try { input >> shaderProgram; }
 		catch (parse_error)
 		{
-			Debug::LogWarning(WRN102, current.filePath, " was corrupt. All fields defaulted to \"None\".", locationinfo);
+			Debug::LogWarning(LogID::WRN102, current.filePath, " was corrupt. All fields defaulted to \"None\".", locationinfo);
 			Save();
 			input = ifstream(current.filePath.c_str());
 			assert(input.good());
@@ -143,13 +143,13 @@ namespace ShaderProgramGUI
 				if (current.vertShader == "")
 				{
 					current.vertShader = "Default3D";
-					Debug::LogWarning(WRN103, current.filePath, " had it's Vertex shader blank. Set to \"Default3D\".", locationinfo);
+					Debug::LogWarning(LogID::WRN103, current.filePath, " had it's Vertex shader blank. Set to \"Default3D\".", locationinfo);
 				}																																			
 			}																																				
 			else																																			
 			{																																				
 				dirty = true;																															
-				Debug::LogWarning(WRN103, current.filePath, " did not specify a Vertex shader. Set to \"Default3D\".", locationinfo);
+				Debug::LogWarning(LogID::WRN103, current.filePath, " did not specify a Vertex shader. Set to \"Default3D\".", locationinfo);
 			}
 
 			if (shaderProgram.contains("TessEvaluation"))
@@ -158,13 +158,13 @@ namespace ShaderProgramGUI
 				if (current.teseShader == "")
 				{
 					current.teseShader = "None";
-					Debug::LogWarning(WRN103, current.filePath, " had it's Tess Evaluation shader blank. Defaulted to \"None\".", locationinfo);
+					Debug::LogWarning(LogID::WRN103, current.filePath, " had it's Tess Evaluation shader blank. Defaulted to \"None\".", locationinfo);
 				}
 			}
 			else
 			{
 				dirty = true;
-				Debug::LogWarning(WRN103, current.filePath, " did not specify a Tess Evaluation shader. Defaulted to \"None\".", locationinfo);
+				Debug::LogWarning(LogID::WRN103, current.filePath, " did not specify a Tess Evaluation shader. Defaulted to \"None\".", locationinfo);
 			}
 
 			if (shaderProgram.contains("TessControl"))
@@ -173,13 +173,13 @@ namespace ShaderProgramGUI
 				if (current.tescShader == "")
 				{
 					current.tescShader = "None";
-					Debug::LogWarning(WRN103, current.filePath, " had it's Tess Control shader blank. Defaulted to \"None\".", locationinfo);
+					Debug::LogWarning(LogID::WRN103, current.filePath, " had it's Tess Control shader blank. Defaulted to \"None\".", locationinfo);
 				}
 			}
 			else
 			{
 				dirty = true;
-				Debug::LogWarning(WRN103, current.filePath, " did not specify a Tess Control shader. Defaulted to \"None\".", locationinfo);
+				Debug::LogWarning(LogID::WRN103, current.filePath, " did not specify a Tess Control shader. Defaulted to \"None\".", locationinfo);
 			}
 
 			if (shaderProgram.contains("Geometry"))
@@ -188,13 +188,13 @@ namespace ShaderProgramGUI
 				if (current.geomShader == "")
 				{
 					current.geomShader = "None";
-					Debug::LogWarning(WRN103, current.filePath, " had it's Geometry shader blank. Defaulted to \"None\".", locationinfo);
+					Debug::LogWarning(LogID::WRN103, current.filePath, " had it's Geometry shader blank. Defaulted to \"None\".", locationinfo);
 				}
 			}
 			else
 			{
 				dirty = true;
-				Debug::LogWarning(WRN103, current.filePath, " did not specify a Geometry shader. Defaulted to \"None\".", locationinfo);
+				Debug::LogWarning(LogID::WRN103, current.filePath, " did not specify a Geometry shader. Defaulted to \"None\".", locationinfo);
 			}
 
 			if (shaderProgram.contains("Fragment"))
@@ -203,13 +203,13 @@ namespace ShaderProgramGUI
 				if (current.fragShader == "")
 				{
 					current.fragShader = "PBRLit";
-					Debug::LogWarning(WRN103, current.filePath, " had it's Fragment shader blank. Set to \"PBRLit\".", locationinfo);
+					Debug::LogWarning(LogID::WRN103, current.filePath, " had it's Fragment shader blank. Set to \"PBRLit\".", locationinfo);
 				}
 			}
 			else
 			{
 				dirty = true;
-				Debug::LogWarning(WRN103, current.filePath, " did not specify a Fragment shader. Set to \"PBRLit\".", locationinfo);
+				Debug::LogWarning(LogID::WRN103, current.filePath, " did not specify a Fragment shader. Set to \"PBRLit\".", locationinfo);
 			}
 		}
 
@@ -226,10 +226,10 @@ namespace ShaderProgramGUI
 					if (i >= attributes.size()) { dirty = true; attributes.push_back(json()); }
 
 					if (attributes[i].contains("Exposed")) current.attributes[i].exposed = attributes[i]["Exposed"];
-					else { dirty = true; Debug::LogWarning(WRN103, "Attribute '", current.attributes[i].name , "' in ", current.filePath, " did not specify an Exposed status.", locationinfo); }
+					else { dirty = true; Debug::LogWarning(LogID::WRN103, "Attribute '", current.attributes[i].name , "' in ", current.filePath, " did not specify an Exposed status.", locationinfo); }
 				}
 			}
-			else { dirty = true; Debug::LogWarning(WRN103, current.filePath, " did not contain an Attributes list.", locationinfo); }
+			else { dirty = true; Debug::LogWarning(LogID::WRN103, current.filePath, " did not contain an Attributes list.", locationinfo); }
 
 			if (shaderProgram.contains("Uniforms"))
 			{
@@ -239,10 +239,10 @@ namespace ShaderProgramGUI
 					if (i >= uniforms.size()) { dirty = true; uniforms.push_back(json()); }
 
 					if (uniforms[i].contains("Exposed")) current.uniforms[i].exposed = uniforms[i]["Exposed"];
-					else { dirty = true; Debug::LogWarning(WRN103, "Uniform '", current.uniforms[i].name , "' in ", current.filePath, " did not specify an Exposed status.", locationinfo); }
+					else { dirty = true; Debug::LogWarning(LogID::WRN103, "Uniform '", current.uniforms[i].name , "' in ", current.filePath, " did not specify an Exposed status.", locationinfo); }
 				}
 			}
-			else { dirty = true; Debug::LogWarning(WRN103, current.filePath, " did not contain a Uniforms list.", locationinfo); }
+			else { dirty = true; Debug::LogWarning(LogID::WRN103, current.filePath, " did not contain a Uniforms list.", locationinfo); }
 		}
 
 		if (dirty) Save();

@@ -127,7 +127,7 @@ namespace SceneGUI
 
 		if (startOffset == string::npos)
 		{
-			Debug::LogWarning(WRN105,
+			Debug::LogWarning(LogID::WRN105,
 				"Assets should only be loaded from inside the Assets folder. "
 				"Assets outside this folder won't be included in builds. "
 				"Scene was not saved!"
@@ -162,7 +162,7 @@ namespace SceneGUI
 
 		if (startOffset == string::npos)
 		{
-			Debug::LogWarning(WRN121,
+			Debug::LogWarning(LogID::WRN121,
 				"Assets should only be saved inside the Assets folder. "
 				"Assets outside this folder won't be included in builds. "
 				"Scene was not saved! "

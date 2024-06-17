@@ -61,3 +61,8 @@ std::string ValueAsString(long double value)
 {
 	return std::to_string(value);
 }
+
+//std::string ValueAsString(LogID value)
+//{
+//	return std::string(value.name) + ": " + std::string(value.message);
+//}

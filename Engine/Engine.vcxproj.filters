@@ -98,6 +98,9 @@
     <ClCompile Include="StringBuilder.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
+    <ClCompile Include="LogID.cpp">
+      <Filter>Utility\Debugging</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -238,6 +241,9 @@
     </ClInclude>
     <ClInclude Include="StringBuilder.h">
       <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="LogID.h">
+      <Filter>Utility\Debugging</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

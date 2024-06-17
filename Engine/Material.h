@@ -50,7 +50,7 @@ struct MaterialInput
 		{
 			if (bytes.size() > 0) // Only give an error if a value is already initialised (this is to avoid spamming errors any time a new material file is being created)
 			{
-				Debug::LogWarning(WRN151, "Attempted to access a value larger than contained bytes", locationinfo);
+				Debug::LogWarning(LogID::WRN151, "Attempted to access a value larger than contained bytes", locationinfo);
 			}
 			return false;
 		}

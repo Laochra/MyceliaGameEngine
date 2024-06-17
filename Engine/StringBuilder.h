@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "LogID.h"
+
 std::string ValueAsString(char* value);
 std::string ValueAsString(const char* value);
 std::string ValueAsString(std::string value);
@@ -18,6 +20,8 @@ std::string ValueAsString(unsigned long long value);
 std::string ValueAsString(float value);
 std::string ValueAsString(double value);
 std::string ValueAsString(long double value);
+
+//std::string ValueAsString(LogID value);
 
 template<typename Arg1>
 std::string BuildString(Arg1 arg1)

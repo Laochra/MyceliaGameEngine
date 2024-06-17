@@ -36,19 +36,21 @@ Debug::~Debug() noexcept
 Debug::DebugLog Debug::LogImplementation(const string& message, const LogType type, const LogID id)
 {
 	DebugLog log(message, type, id);
-	if (log.id == Undefined)
+
+	if (id == LogID::Undefined)
 	{
-		switch (log.type)
+		switch (type)
 		{
-		case Warning:	log.id = WRN000;	break;
-		case Error:		log.id = ERR000;	break;
+		case Warning:	log.id = LogID::WRN; break;
+		case Error:		log.id = LogID::ERR;	break;
 		}
 	}
+
 	const string logString = GetLogAsString(log) + '\n';
 
 #ifdef _DEBUG
 #if defined(_WIN32) || defined(_WIN64)
-	switch (log.type)
+	switch (type)
 	{
 	case Warning:	SetConsoleTextColour(YELLOW);	break;
 	case Error:		SetConsoleTextColour(RED);		break;
@@ -70,5 +72,5 @@ Debug::DebugLog Debug::LogImplementation(const string& message, const LogType ty
 
 string Debug::GetLogAsString(const Debug::DebugLog& log) noexcept
 {
-	return ((log.type != Message && log.type != Subtle) ? (LogIDMap[log.id] + ": ") : ("")) + log.message;
+	return ((log.type != Message && log.type != Subtle) ? (string(log.id.name) + ": " + string(log.id.message)) : ("")) + log.message;
 }
