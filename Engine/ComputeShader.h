@@ -22,7 +22,7 @@ public:
 		file.open(filepathInit);
 		if (!file.good())
 		{
-			Debug::LogWarning(LogID::WRN101, "Compute shader file not found at: ", filepathInit, locationinfo);
+			Debug::LogWarning(LogID::WRN101, filepathInit, locationinfo);
 			return;
 		}
 

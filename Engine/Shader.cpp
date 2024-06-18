@@ -702,7 +702,7 @@ bool ShaderProgram::JSONFileIsValid(const char* filename)
 	ifstream input(filename);
 	if (!input.good())
 	{
-		Debug::LogWarning(LogID::WRN101, filename, " is missing, it may have been moved, deleted, or renamed", locationinfo);
+		Debug::LogWarning(LogID::WRN101, filename, " It may have been moved, deleted, or renamed ", locationinfo);
 		return false;
 	}
 

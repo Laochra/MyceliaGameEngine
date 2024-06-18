@@ -29,7 +29,7 @@ namespace EditorGUI
 			name(nameInit),
 			drawWindowFunc(drawFunction)
 		{
-			windowIndices.insert(pair<string, uint>(nameInit, windowIndices.size()));
+			windowIndices.insert(pair<string, uint>(nameInit, (uint)windowIndices.size()));
 		}
 		EditorWindow& operator=(const EditorWindow& other)
 		{

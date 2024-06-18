@@ -36,8 +36,7 @@ int Application::Run()
 
 	if (Camera::main == nullptr)
 	{
-		Debug::LogWarning(LogID::WRN001, "No Camera was set up in Initialise(), so a default was created."
-							"Application will not behave as expected.", locationinfo);
+		Debug::LogWarning(LogID::WRN001, "A default was created to avoid crashing but the application will not behave as expected. ", locationinfo);
 		Camera::main = GameObject::Instantiate<Camera>();
 	}
 
@@ -224,12 +223,12 @@ void GLErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLs
 {
 	switch (severity)
 	{
-	case GL_DEBUG_SEVERITY_HIGH:		Debug::LogError(LogID::ERR901, "OpenGL ", GLErrorSource(source), GLErrorType(type), id, ": \"", message, locationinfo); break;
-	case GL_DEBUG_SEVERITY_MEDIUM:	Debug::LogWarning(LogID::WRN901, "OpenGL ", GLErrorSource(source), GLErrorType(type), id, ": \"", message, locationinfo); break;
-	case GL_DEBUG_SEVERITY_LOW:		Debug::LogWarning(LogID::WRN902, "OpenGL ", GLErrorSource(source), GLErrorType(type), id, ": \"", message, locationinfo); break;
+	case GL_DEBUG_SEVERITY_HIGH:		Debug::LogError(LogID::ERR901, GLErrorSource(source), GLErrorType(type), id, ": \"", message, locationinfo); break;
+	case GL_DEBUG_SEVERITY_MEDIUM:	Debug::LogWarning(LogID::WRN901, GLErrorSource(source), GLErrorType(type), id, ": \"", message, locationinfo); break;
+	case GL_DEBUG_SEVERITY_LOW:		Debug::LogWarning(LogID::WRN902, GLErrorSource(source), GLErrorType(type), id, ": \"", message, locationinfo); break;
 	}
 }
 void GLFWErrorCallback(int code, const char* description)
 {
-	Debug::LogError(LogID::ERR902, "GLFW ", code, ": ", description, locationinfo);
+	Debug::LogError(LogID::ERR902, code, ": ", description, locationinfo);
 }

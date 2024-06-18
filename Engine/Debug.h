@@ -23,8 +23,12 @@ typedef std::initializer_list<string> StringParams;
 class Debug;
 extern Debug* debug;
 
-template<typename T> concept MsgType = requires(T t) { { ValueAsString(t) } -> std::same_as<std::string>; };
-
+template<typename T> concept MsgType =
+	requires(T t) { std::same_as<decltype(ValueAsString(t)), std::string>; };
+template<typename T> concept MsgTypeOrLogID =
+	requires(T t) { std::same_as<decltype(ValueAsString(t)), std::string>; } ||
+	std::same_as<T, LogID>;
+	 
 class Debug
 {
 public:
@@ -47,7 +51,6 @@ public:
 		string message;
 		LogID id;
 		LogType type;
-
 		DebugLog(string messageInit, LogType typeInit = LogType::Message, LogID idInit = LogID::Undefined) :
 			message(messageInit),
 			type(typeInit),
@@ -56,18 +59,35 @@ public:
 
 
 
+	/// <summary>
+	/// <para>Logs a message.</para>
+	/// <para>As many parameters as is required can be used.</para>
+	/// <param name='message/messageContinued:'>All primitive types and other types with ToString(x) overridden can be used and will be converted to strings nicely.</param>
+	/// </summary>
 	template<MsgType Req, MsgType... Opt>
 	static DebugLog Log(Req message, Opt... messageContinued)
 	{
 		return debug->LogImplementation(StringBuilder(message, messageContinued...).value, LogType::Message);
 	}
+
+	/// <summary>
+	/// <para>Logs a message subtly (certain contexts won't show subtle logs to avoid spam, but this will always show in the log file).</para>
+	/// <para>As many parameters as is required can be used.</para>
+	/// <param name='message/messageContinued:'>All primitive types and other types with ToString(x) overridden can be used and will be converted to strings nicely.</param>
+	/// </summary>
 	template<MsgType Req, MsgType... Opt>
 	static DebugLog LogSubtle(Req message, Opt... messageContinued)
 	{
 		return debug->LogImplementation(StringBuilder(message, messageContinued...).value, LogType::Subtle);
 	}
 
-	template<typename Req, MsgType... Opt>
+	/// <summary>
+	/// <para>Logs a warning which appears yellow.</para>
+	/// <para>As many parameters as is required can be used.</para>
+	/// <para>The first parameter can optionally be a LogID which inserts a generic message based on the LogID.</para>
+	/// <para>All primitive types and other types with ToString(x) overridden can be used and will be converted to strings nicely.</para>
+	/// </summary>
+	template<MsgTypeOrLogID Req, MsgType... Opt>
 	static DebugLog LogWarning(Req messageOrWarningCode, Opt... messageContinued)
 	{
 		if constexpr (std::is_same_v<Req, LogID>)
@@ -80,7 +100,14 @@ public:
 		}
 	}
 
-	template<typename Req, MsgType... Opt>
+	
+	/// <summary>
+	/// <para>Logs an error which appears red.</para>
+	/// <para>As many parameters as is required can be used.</para>
+	/// <para>The first parameter can optionally be a LogID which inserts a generic message based on the LogID.</para>
+	/// <para>All primitive types and other types with ToString(x) overridden can be used and will be converted to strings nicely.</para>
+	/// </summary>
+	template<MsgTypeOrLogID Req, MsgType... Opt>
 	static DebugLog LogError(Req messageOrErrorCode, Opt... messageContinued)
 	{
 		if constexpr (std::is_same_v<Req, LogID>)

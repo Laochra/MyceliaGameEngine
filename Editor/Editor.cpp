@@ -13,10 +13,6 @@
 
 void Editor::Initialise()
 {
-	Debug::LogError(LogID::ERR100, locationinfo);
-		
-	
-
 	EditorGUI::Initialise();
 	glfwSetDropCallback(window, EditorGUI::FileDropCallback);
 

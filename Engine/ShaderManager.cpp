@@ -15,7 +15,7 @@ ShaderManager::ShaderManager()
    }
    else
    {
-      Debug::LogError(LogID::ERR101, "Failed to load PBRLit.gpu", locationinfo);
+      Debug::LogError(LogID::ERR101, "PBRLit.gpu ", locationinfo);
       delete pbrLit;
    }
    ShaderProgram* pbrUnlit = new ShaderProgram;
@@ -25,7 +25,7 @@ ShaderManager::ShaderManager()
    }
    else
    {
-      Debug::LogError(LogID::ERR101, "Failed to load Unlit.gpu", locationinfo);
+      Debug::LogError(LogID::ERR101, "Unlit.gpu ", locationinfo);
       delete pbrUnlit;
    }
 }

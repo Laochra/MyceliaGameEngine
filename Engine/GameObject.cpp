@@ -21,12 +21,7 @@ GameObject* GameObject::InstantiateFrom(json jsonObj, GuidGeneration guidOptions
 	case ParticleEmitter::classID: gameObject = new ParticleEmitter(); break;
 	default:
 		gameObject = new GameObject();
-		Debug::LogError(LogID::ERR151,
-				"TypeID '", typeID, "' "
-				"was not accounted for when loading. "
-				"DO NOT SAVE! Data will be lost. "
-				locationinfo
-		);
+		Debug::LogError(LogID::ERR151, "'", typeID, "' DO NOT SAVE! Data will be lost. ", locationinfo);
 		break;
 	}
 

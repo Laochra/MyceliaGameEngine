@@ -128,7 +128,7 @@ namespace ShaderProgramGUI
 		try { input >> shaderProgram; }
 		catch (parse_error)
 		{
-			Debug::LogWarning(LogID::WRN102, current.filePath, " was corrupt. All fields defaulted to \"None\".", locationinfo);
+			Debug::LogWarning(LogID::WRN102, current.filePath, ". All fields defaulted to \"None\".", locationinfo);
 			Save();
 			input = ifstream(current.filePath.c_str());
 			assert(input.good());

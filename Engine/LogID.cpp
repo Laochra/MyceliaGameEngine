@@ -16,6 +16,7 @@ ID(WRN102, "File Corrupt. ");
 ID(WRN103, "File Missing Data. ");
 ID(WRN104, "File Missing Data. ");
 ID(WRN105, "Requested Default Doesn't Exist. ");
+ID(WRN106, "Assets should only be loaded from the Assets folder. ");
 ID(WRN120, "Failed to Save File. ");
 ID(WRN121, "Invalid Save Path Given. ");
 
