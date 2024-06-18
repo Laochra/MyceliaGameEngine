@@ -6,7 +6,7 @@
 #include "Inspector.h"
 #include "ShaderProgramGUI.h"
 #include "MaterialGUI.h"
-#include "MeshCooker.h"
+#include "ArtImporter.h"
 #include "EditorStyler.h"
 #include "PostProcessingGUI.h"
 
@@ -82,7 +82,7 @@ namespace EditorGUI
 			EditorWindow("Scene", SceneGUI::DrawScene),
 			EditorWindow("Shader Program Editor", ShaderProgramGUI::Draw),
 			EditorWindow("Material Editor", MaterialGUI::Draw),
-			EditorWindow("Mesh Cooker", MeshCooker::Draw),
+			EditorWindow("Art Importer", ArtImporter::Draw),
 			EditorWindow("Camera", EditorCameraGUI::DrawEditorCameraGUI),
 			EditorWindow("Editor Styler", EditorStyler::Draw),
 			EditorWindow("Post Processing", PostProcessingGUI::Draw),
@@ -214,9 +214,9 @@ namespace EditorGUI
 					{
 						GetWindow("Material Editor").open = true;
 					}
-					if (ImGui::MenuItem(" Mesh Cooker", (const char*)0, false, !GetWindow("Mesh Cooker").open))
+					if (ImGui::MenuItem(" Art Importer", (const char*)0, false, !GetWindow("Art Importer").open))
 					{
-						GetWindow("Mesh Cooker").open = true;
+						GetWindow("Art Importer").open = true;
 					}
 					ImGui::EndMenu();
 				}
@@ -274,7 +274,7 @@ namespace EditorGUI
 
 							if (!parseError)
 							{
-								gameObjectManager->Add(GameObject::InstantiateFrom(prefab));
+								gameObjectManager->Add(GameObject::InstantiateFrom(prefab, GuidGeneration::New));
 							}
 						}
 					}
@@ -347,7 +347,7 @@ namespace EditorGUI
 		{
 			if (CheckIfStringContains(files[i], { ".fbx", ".obj", ".gltf" }))
 			{
-				MeshCooker::Add(files[i]);
+				ArtImporter::Add(files[i]);
 			}
 		}
 	}

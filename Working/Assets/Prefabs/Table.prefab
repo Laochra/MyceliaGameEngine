@@ -4,8 +4,8 @@
     {
       "Active": true,
       "Children": [],
-      "GUID": 12532635982031109272,
-      "Material": "Default",
+      "GUID": 5419291513893659215,
+      "Material": "Assets\\Materials\\Table.mat",
       "Mesh": "Assets\\Meshes\\TableDrawer.mesh",
       "Name": "TableDrawer",
       "Pivot": [
@@ -32,8 +32,8 @@
       "TypeID": 181025226017607
     }
   ],
-  "GUID": 6885646681901763801,
-  "Material": "Default",
+  "GUID": 18348792776098297424,
+  "Material": "Assets\\Materials\\Table.mat",
   "Mesh": "Assets\\Meshes\\Table.mesh",
   "Name": "Table",
   "Pivot": [

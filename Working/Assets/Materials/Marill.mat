@@ -3,7 +3,7 @@
   "ShaderProgram": "PBRLit",
   "Uniforms": [
     {
-      "Data": "Assets\\Textures\\shroom.png",
+      "Data": "Assets\\Textures\\Marill_BaseColor.tga",
       "Name": "ColourMap"
     },
     {

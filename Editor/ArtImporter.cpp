@@ -1,4 +1,4 @@
-#include "MeshCooker.h"
+#include "ArtImporter.h"
 
 #include "MeshRenderer.h"
 
@@ -16,7 +16,7 @@
 
 #include "Debug.h"
 
-namespace MeshCooker
+namespace ArtImporter
 {
 	vector<string> fileQueue;
 	uint current;
@@ -28,19 +28,10 @@ namespace MeshCooker
 
 	static void SetCurrent(uint newIndex)
 	{
-		if (newIndex == 0 || newIndex < fileQueue.size())
-		{
-			current = newIndex;
-		}
-		else
-		{
-			current = (uint)fileQueue.size() - 1;
-		}
+		if (newIndex == 0 || newIndex < fileQueue.size()) { current = newIndex; }
+		else { current = (uint)fileQueue.size() - 1; }
 		
-		if (fileQueue.size() > 0)
-		{
-			Preload(fileQueue[current].c_str());
-		}
+		if (fileQueue.size() > 0) { Preload(fileQueue[current].c_str()); }
 	}
 
 	static void DrawNode(MeshHeirarchy* tempMesh)
@@ -84,7 +75,7 @@ namespace MeshCooker
 		}
 	}
 
-	void MeshCooker::Draw(const char* const name, bool& open) noexcept
+	void ArtImporter::Draw(const char* const name, bool& open) noexcept
 	{
 		ImGui::Begin(name, &open);
 
@@ -184,7 +175,41 @@ namespace MeshCooker
 				ImGui::SeparatorText("Mesh Settings");
 
 				ImGui::InputText("Name", &selectedTempMesh->name);
+				
+				if (ImGui::BeginCombo("Material", selectedTempMesh->materialPath.c_str()))
+				{
+					if (ImGui::Selectable("Default", selectedTempMesh->materialPath == "Default"))
+					{
+						selectedTempMesh->materialPath = "Default";
+					}
+					if (ImGui::Selectable("Select from file"))
+					{
+						const char* const windowTitle = "Select Material";
+						const uint defaultPathLength = 18;
+						const char defaultPath[defaultPathLength] = "Assets\\Materials\\";
+						const uint filterPatternCount = 1;
+						const char* const filterPatterns[filterPatternCount] = { "*.mat" };
 
+						const char* newFilepath = tinyfd_openFileDialog(windowTitle, defaultPath, filterPatternCount, filterPatterns, nullptr, false);
+
+						if (newFilepath != nullptr)
+						{
+							const uint newFilepathLength = (uint)strlen(newFilepath);
+
+							const uint startOffset = (uint)string(newFilepath).find("Assets\\");
+
+							if (startOffset != string::npos)
+							{
+								selectedTempMesh->materialPath = newFilepath + startOffset;
+							}
+							else
+							{
+								Debug::LogWarning(LogID::WRN106, locationinfo);
+							}
+						}
+					}
+					ImGui::EndCombo();
+				}
 			}
 		}
 
@@ -193,7 +218,7 @@ namespace MeshCooker
 
 	void Add(const string filepath) noexcept
 	{
-		MeshCooker::fileQueue.push_back(filepath);
+		ArtImporter::fileQueue.push_back(filepath);
 		if (fileQueue.size() == 1) Preload(filepath.c_str());
 	}
 
@@ -259,7 +284,7 @@ namespace MeshCooker
 		}
 	}
 
-	void MeshCooker::Preload(const char* filepath) noexcept
+	void ArtImporter::Preload(const char* filepath) noexcept
 	{
 		currentFile = importer.ReadFile(filepath, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
@@ -326,7 +351,7 @@ namespace MeshCooker
 		return meshRenderer;
 	}
 
-	void MeshCooker::CookCurrent() noexcept
+	void ArtImporter::CookCurrent() noexcept
 	{
 		json gameobject = CookHeirarchy(&tempMeshes);
 
@@ -343,7 +368,7 @@ namespace MeshCooker
 		if (current > 0 && current >= fileQueue.size()) SetCurrent(current - 1);
 	}
 
-	void MeshCooker::CookAll() noexcept
+	void ArtImporter::CookAll() noexcept
 	{
 		for (int i = 0; i < fileQueue.size(); i++)
 		{

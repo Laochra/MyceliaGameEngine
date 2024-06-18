@@ -1,8 +1,8 @@
 {
   "Active": true,
   "Children": [],
-  "GUID": 14790554553077508074,
-  "Material": "Default",
+  "GUID": 10950797132842276068,
+  "Material": "Assets\\Materials\\Marill.mat",
   "Mesh": "Assets\\Meshes\\Marill.mesh",
   "Name": "Marill",
   "Pivot": [

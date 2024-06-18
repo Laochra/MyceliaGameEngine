@@ -4,7 +4,7 @@
 
 typedef unsigned int uint;
 
-namespace MeshCooker
+namespace ArtImporter
 {
 	extern vector<string> fileQueue;
 	extern uint current;

@@ -104,7 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);EDITOR</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)External/imgui; $(SolutionDir)External/tinyfiledialogs</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External/imgui; $(SolutionDir)External/tinyfiledialogs; $(SolutionDir)External/assimp/include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <UseFullPaths>true</UseFullPaths>
@@ -187,7 +187,7 @@
     <ClCompile Include="LightObjectGUI.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MaterialGUI.cpp" />
-    <ClCompile Include="MeshCooker.cpp" />
+    <ClCompile Include="ArtImporter.cpp" />
     <ClCompile Include="MeshHeirarchy.cpp" />
     <ClCompile Include="MeshRendererGUI.cpp" />
     <ClCompile Include="ParticleEmitterGUI.cpp" />
@@ -224,7 +224,7 @@
     <ClInclude Include="LightObjectGUI.h" />
     <ClInclude Include="MaterialGUI.h" />
     <ClInclude Include="Inspector.h" />
-    <ClInclude Include="MeshCooker.h" />
+    <ClInclude Include="ArtImporter.h" />
     <ClInclude Include="MeshHeirarchy.h" />
     <ClInclude Include="MeshRendererGUI.h" />
     <ClInclude Include="ParticleEmitterGUI.h" />

@@ -82,6 +82,54 @@ namespace Heirarchy
 				{
 					GameObject3D* target = (GameObject3D*)rightClickMenu.target;
 
+					if (ImGui::MenuItem("Prefab"))
+					{
+						const char* const windowTitle = "Open Prefab";
+						const uint defaultPathLength = 16;
+						const char defaultPath[defaultPathLength] = "Assets\\Prefabs\\";
+						const uint filterPatternCount = 1;
+						const char* const filterPatterns[filterPatternCount] = { "*.prefab" };
+
+						const char* const filePath = tinyfd_openFileDialog(windowTitle, defaultPath, filterPatternCount, filterPatterns, nullptr, false);
+						if (filePath != nullptr)
+						{
+							const uint filePathLength = (uint)strlen(filePath);
+
+							const uint startOffset = (uint)string(filePath).find("Assets\\");
+
+							if (startOffset == string::npos)
+							{
+								Debug::LogWarning(LogID::WRN106, locationinfo);
+							}
+							else
+							{
+								ifstream input(filePath + startOffset);
+								json prefab;
+
+								bool parseError = false;
+								try { input >> prefab; }
+								catch (parse_error)
+								{
+									Debug::LogWarning(LogID::WRN102, filePath + startOffset, locationinfo);
+									parseError = true;
+								}
+
+								if (!parseError)
+								{
+									GameObject* instance = GameObject::InstantiateFrom(prefab, GuidGeneration::New);
+									if (dynamic_cast<GameObject3D*>(instance) != nullptr)
+									{
+										gameObjectManager->Add(instance);
+										((GameObject3D*)instance)->SetParent((GameObject3D*)rightClickMenu.target);
+									}
+									else
+									{
+										GameObject::Destroy(instance);
+									}
+								}
+							}
+						}
+					}
 					if (ImGui::MenuItem(GameObject3D::className))
 					{
 						GameObject3D::Instantiate<GameObject3D>(target);

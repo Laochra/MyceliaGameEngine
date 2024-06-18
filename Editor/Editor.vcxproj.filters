@@ -75,7 +75,7 @@
     <ClCompile Include="MaterialGUI.cpp">
       <Filter>GUI\EditorWindows\Tools</Filter>
     </ClCompile>
-    <ClCompile Include="MeshCooker.cpp">
+    <ClCompile Include="ArtImporter.cpp">
       <Filter>GUI\EditorWindows\Tools</Filter>
     </ClCompile>
     <ClCompile Include="ShaderProgramGUI.cpp">
@@ -224,7 +224,7 @@
     <ClInclude Include="MaterialGUI.h">
       <Filter>GUI\EditorWindows\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="MeshCooker.h">
+    <ClInclude Include="ArtImporter.h">
       <Filter>GUI\EditorWindows\Tools</Filter>
     </ClInclude>
     <ClInclude Include="ShaderProgramGUI.h">
