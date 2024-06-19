@@ -178,6 +178,7 @@
     <ClCompile Include="EditorDebug.cpp" />
     <ClCompile Include="EditorGUI.cpp" />
     <ClCompile Include="EditorStyler.cpp" />
+    <ClCompile Include="FileDialogue.cpp" />
     <ClCompile Include="GameObject3DGUI.cpp" />
     <ClCompile Include="GameObjectGUI.cpp" />
     <ClCompile Include="GUI.cpp" />
@@ -218,6 +219,7 @@
     <ClInclude Include="GameObjectGUI.h" />
     <ClInclude Include="GameObject3DGUI.h" />
     <ClInclude Include="GUI.h" />
+    <ClInclude Include="FileDialogue.h" />
     <ClInclude Include="Heirarchy.h" />
     <ClInclude Include="ImGuiIncludes.h" />
     <ClInclude Include="InputEditor.h" />

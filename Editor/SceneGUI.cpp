@@ -88,7 +88,13 @@ namespace SceneGUI
 		const char* const dialogueType = "yesnocancel";
 		const char* const dialogueIcon = "warning";
 
-		int selectedOption = tinyfd_messageBox(dialogueTitle, dialogueMessage, dialogueType, dialogueIcon, 0);
+		using namespace FileDialogue;
+		MessageBox messageBox(
+			"Unsaved scene data will be lost!",
+			"Would you like to save your changes?",
+			MBType::YesNoCancel, MBIcon::Warning
+		);
+		int selectedOption = DisplayMessageBox(messageBox);
 
 		switch (selectedOption)
 		{
@@ -113,27 +119,13 @@ namespace SceneGUI
 	}
 	bool OpenScene() noexcept
 	{
-		const char* const windowTitle = "Open Scene";
-		const uint defaultPathLength = 15;
-		const char defaultPath[defaultPathLength] = "Assets\\Scenes\\";
-		const uint filterPatternCount = 1;
-		const char* const filterPatterns[filterPatternCount] = { "*.scene" };
-
-		const char* const filePath = tinyfd_openFileDialog(windowTitle, defaultPath, filterPatternCount, filterPatterns, nullptr, false);
-		if (filePath == nullptr) return false;
-		const uint filePathLength = (uint)strlen(filePath);
-
-		const uint startOffset = (uint)string(filePath).find("Assets\\");
-
-		if (startOffset == string::npos)
-		{
-			Debug::LogWarning(LogID::WRN106, "Scene was not saved!" );
-			return false;
-		}
+		using namespace FileDialogue;
+		string scenePath = GetLoadPath(PathDetails("Open Scene", "Assets\\Scenes\\", { "*.scene" }), LimitToAssetFolder::True);
+		if (scenePath.size() == 0) return false;
 
 		if (!EnsureClearIsIntentional()) return false;
 
-		return Scene::Open(filePath + startOffset);
+		return Scene::Open(scenePath.c_str());
 	}
 
 	bool SaveScene() noexcept
@@ -144,25 +136,12 @@ namespace SceneGUI
 
 	bool SaveSceneAs() noexcept
 	{
-		const char* const windowTitle = "Save Scene As";
-		const uint defaultPathLength = 23;
-		const char defaultPath[defaultPathLength] = "Assets\\Scenes\\NewScene";
-		const uint filterPatternCount = 1;
-		const char* const filterPatterns[filterPatternCount] = { "*.scene" };
+		using namespace FileDialogue;
+		string filepath = GetSavePath(PathDetails("Save Scene As", "Assets\\Scenes\\NewScene", { "*.scene" }), LimitToAssetFolder::False);
 
-		const char* const filePath = tinyfd_saveFileDialog(windowTitle, defaultPath, filterPatternCount, filterPatterns, nullptr);
-		if (filePath == nullptr) return false;
-		const uint filePathLength = (uint)strlen(filePath);
+		if (filepath.size() == 0) return false;
 
-		const uint startOffset = (uint)string(filePath).find("Assets\\");
-
-		if (startOffset == string::npos)
-		{
-			Debug::LogWarning(LogID::WRN121, "Scene was not saved! ", locationinfo);
-			return false;
-		}
-
-		Scene::currentPath = filePath + startOffset;
+		Scene::currentPath = filepath.c_str();
 
 		return Scene::Save();
 	}

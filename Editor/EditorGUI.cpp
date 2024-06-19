@@ -239,43 +239,25 @@ namespace EditorGUI
 				}
 				if (ImGui::MenuItem(" Prefab"))
 				{
-					const char* const windowTitle = "Open Prefab";
-					const uint defaultPathLength = 16;
-					const char defaultPath[defaultPathLength] = "Assets\\Prefabs\\";
-					const uint filterPatternCount = 1;
-					const char* const filterPatterns[filterPatternCount] = { "*.prefab" };
+					using namespace FileDialogue;
+					string filepath = GetLoadPath(PathDetails("Open Prefab", "Assets\\Prefabs\\", { "*.prefab" }), LimitToAssetFolder::True);
 
-					const char* const filePath = tinyfd_openFileDialog(windowTitle, defaultPath, filterPatternCount, filterPatterns, nullptr, false);
-					if (filePath != nullptr)
+					if (filepath.size() > 0)
 					{
-						const uint filePathLength = (uint)strlen(filePath);
+						ifstream input(filepath);
+						json prefab;
 
-						const uint startOffset = (uint)string(filePath).find("Assets\\");
-
-						if (startOffset == string::npos)
+						bool parseError = false;
+						try { input >> prefab; }
+						catch (parse_error)
 						{
-							Debug::LogWarning(LogID::WRN106, locationinfo);
+							Debug::LogWarning(LogID::WRN102, filepath, locationinfo );
+							parseError = true;
 						}
-						else
+
+						if (!parseError)
 						{
-							ifstream input(filePath + startOffset);
-							json prefab;
-
-							bool parseError = false;
-							try { input >> prefab; }
-							catch (parse_error)
-							{
-								Debug::LogWarning(LogID::WRN102,
-									filePath + startOffset,
-									locationinfo
-								);
-								parseError = true;
-							}
-
-							if (!parseError)
-							{
-								gameObjectManager->Add(GameObject::InstantiateFrom(prefab, GuidGeneration::New));
-							}
+							gameObjectManager->Add(GameObject::InstantiateFrom(prefab, GuidGeneration::New));
 						}
 					}
 				}

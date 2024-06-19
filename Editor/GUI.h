@@ -2,6 +2,7 @@
 
 #include "ImGuiIncludes.h"
 #include "tinyfiledialogs.h"
+#include "FileDialogue.h"
 
 #include <string>
 using std::string;

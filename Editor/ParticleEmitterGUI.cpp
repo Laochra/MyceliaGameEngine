@@ -286,29 +286,13 @@ void ParticleEmitterGUI::DrawParticleEmitterGUI(ParticleEmitter* particleEmitter
 					}
 					if (ImGui::Selectable("Select from file"))
 					{
-						const char* const windowTitle = "Select Sprite";
-						const uint defaultPathLength = 17;
-						const char defaultPath[defaultPathLength] = "Assets\\Textures\\";
-						const uint filterPatternCount = 3;
-						const char* const filterPatterns[filterPatternCount] = { "*.png", "*.tga", "*.jpg" };
+						using namespace FileDialogue;
+						string newFilepath = GetLoadPath(PathDetails("Select Sprite", "Assets\\Textures\\", { "*.png", "*.tga", "*.jpg" }), LimitToAssetFolder::True);
 
-						const char* newFilepath = tinyfd_openFileDialog(windowTitle, defaultPath, filterPatternCount, filterPatterns, nullptr, false);
-
-						if (newFilepath != nullptr)
+						if (newFilepath.size() > 0)
 						{
-							const uint newFilepathLength = (uint)strlen(newFilepath);
-
-							const uint startOffset = (uint)string(newFilepath).find("Assets\\");
-
-							if (startOffset != string::npos)
-							{
-								properties.spriteFilepathLength = newFilepathLength - startOffset;
-								memcpy(properties.spriteFilepath, newFilepath + startOffset, properties.spriteFilepathLength + 1);
-							}
-							else
-							{
-								Debug::LogWarning(LogID::WRN106, locationinfo);
-							}
+							properties.spriteFilepathLength = newFilepath.size();
+							memcpy(properties.spriteFilepath, newFilepath.c_str(), newFilepath.size() + 1);
 						}
 					}
 					ImGui::EndCombo();

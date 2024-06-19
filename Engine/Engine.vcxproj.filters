@@ -194,9 +194,6 @@
     <ClInclude Include="Heirarchical.h">
       <Filter>GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="FilesIncludes.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
     <ClInclude Include="TextureManager.h">
       <Filter>Rendering</Filter>
     </ClInclude>
@@ -244,6 +241,9 @@
     </ClInclude>
     <ClInclude Include="LogID.h">
       <Filter>Utility\Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="FilesIncludes.h">
+      <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

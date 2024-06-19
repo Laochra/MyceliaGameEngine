@@ -66,7 +66,7 @@ namespace Heirarchy
 
 		if (rightClickMenu.open)
 		{
-			ImGui::SetNextWindowSize(ImVec2(150, 75));
+			ImGui::SetNextWindowSize(ImVec2(160, 100));
 			ImGui::SetNextWindowPos(rightClickMenu.position);
 			ImGui::SetNextWindowBgAlpha(0.9f);
 
@@ -84,51 +84,38 @@ namespace Heirarchy
 
 					if (ImGui::MenuItem("Prefab"))
 					{
-						const char* const windowTitle = "Open Prefab";
-						const uint defaultPathLength = 16;
-						const char defaultPath[defaultPathLength] = "Assets\\Prefabs\\";
-						const uint filterPatternCount = 1;
-						const char* const filterPatterns[filterPatternCount] = { "*.prefab" };
+						using namespace FileDialogue;
+						string filepath = GetLoadPath(PathDetails("Open Prefab", "Assets\\Prefabs\\", { "*.prefab" }), LimitToAssetFolder::True);
 
-						const char* const filePath = tinyfd_openFileDialog(windowTitle, defaultPath, filterPatternCount, filterPatterns, nullptr, false);
-						if (filePath != nullptr)
+						if (filepath.size() > 0)
 						{
-							const uint filePathLength = (uint)strlen(filePath);
+							ifstream input(filepath);
+							json prefab;
 
-							const uint startOffset = (uint)string(filePath).find("Assets\\");
-
-							if (startOffset == string::npos)
+							bool parseError = false;
+							try { input >> prefab; }
+							catch (parse_error)
 							{
-								Debug::LogWarning(LogID::WRN106, locationinfo);
+								Debug::LogWarning(LogID::WRN102, filepath, locationinfo);
+								parseError = true;
 							}
-							else
+
+							if (!parseError)
 							{
-								ifstream input(filePath + startOffset);
-								json prefab;
-
-								bool parseError = false;
-								try { input >> prefab; }
-								catch (parse_error)
+								GameObject* instance = GameObject::InstantiateFrom(prefab, GuidGeneration::New);
+								if (dynamic_cast<GameObject3D*>(instance) != nullptr)
 								{
-									Debug::LogWarning(LogID::WRN102, filePath + startOffset, locationinfo);
-									parseError = true;
+									gameObjectManager->Add(instance);
+									((GameObject3D*)instance)->SetParent((GameObject3D*)rightClickMenu.target);
 								}
-
-								if (!parseError)
+								else
 								{
-									GameObject* instance = GameObject::InstantiateFrom(prefab, GuidGeneration::New);
-									if (dynamic_cast<GameObject3D*>(instance) != nullptr)
-									{
-										gameObjectManager->Add(instance);
-										((GameObject3D*)instance)->SetParent((GameObject3D*)rightClickMenu.target);
-									}
-									else
-									{
-										GameObject::Destroy(instance);
-									}
+									GameObject::Destroy(instance);
 								}
 							}
 						}
+						
+						rightClickMenu.Close();
 					}
 					if (ImGui::MenuItem(GameObject3D::className))
 					{
@@ -157,6 +144,25 @@ namespace Heirarchy
 			{
 				Duplicate((GameObject3D*)rightClickMenu.target);
 
+				rightClickMenu.Close();
+			}
+			if (ImGui::MenuItem("Save As Prefab"))
+			{
+				using namespace FileDialogue;
+				string defaultPath = StringBuilder(
+					"Assets\\Prefabs\\",
+					rightClickMenu.target->GetName()
+				).value;
+
+				string filepath = GetSavePath(PathDetails("Save As Prefab", defaultPath.c_str(), {"*.prefab"}), LimitToAssetFolder::False);
+
+				if (filepath.size() != 0)
+				{
+					json prefab = rightClickMenu.target;
+					ofstream file(filepath);
+					file << std::setw(2) << prefab;
+				}
+				
 				rightClickMenu.Close();
 			}
 			if (ImGui::MenuItem("Delete"))

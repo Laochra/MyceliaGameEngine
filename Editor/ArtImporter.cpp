@@ -106,29 +106,12 @@ namespace ArtImporter
 
 		if (ImGui::Button("Add Files"))
 		{
-			const char* const windowTitle = "Open Mesh Files";
-			const uint defaultPathLength = 8;
-			const char defaultPath[defaultPathLength] = "Assets\\";
-			const uint filterPatternCount = 3;
-			const char* const filterPatterns[filterPatternCount] = { "*.fbx", "*.obj", "*.gltf"};
-
-			const char* const filePaths = tinyfd_openFileDialog(windowTitle, defaultPath, filterPatternCount, filterPatterns, nullptr, true);
-			if (filePaths != nullptr)
+			using namespace FileDialogue;
+			vector<string> filepaths = GetLoadPaths(PathDetails("Open Mesh Files", "Assets\\", {"*.fbx", "*.obj", "*.gltf"}), LimitToAssetFolder::False);
+			
+			for (uint i = 0; i < filepaths.size(); i++)
 			{
-				const uint filePathLength = (uint)strlen(filePaths);
-
-				string str;
-				for (uint i = 0; i < filePathLength; i++)
-				{
-					if (filePaths[i] == '|')
-					{
-						Add(str);
-						str.clear();
-						continue;
-					}
-					str.push_back(filePaths[i]);
-				}
-				if (str.size() > 0) Add(str);
+				Add(filepaths[i]);
 			}
 		}
 		
@@ -184,29 +167,10 @@ namespace ArtImporter
 					}
 					if (ImGui::Selectable("Select from file"))
 					{
-						const char* const windowTitle = "Select Material";
-						const uint defaultPathLength = 18;
-						const char defaultPath[defaultPathLength] = "Assets\\Materials\\";
-						const uint filterPatternCount = 1;
-						const char* const filterPatterns[filterPatternCount] = { "*.mat" };
+						using namespace FileDialogue;
+						string newFilepath = GetLoadPath(PathDetails("Select Material", "Assets\\Materials\\", { "*.mat" }), LimitToAssetFolder::True);
 
-						const char* newFilepath = tinyfd_openFileDialog(windowTitle, defaultPath, filterPatternCount, filterPatterns, nullptr, false);
-
-						if (newFilepath != nullptr)
-						{
-							const uint newFilepathLength = (uint)strlen(newFilepath);
-
-							const uint startOffset = (uint)string(newFilepath).find("Assets\\");
-
-							if (startOffset != string::npos)
-							{
-								selectedTempMesh->materialPath = newFilepath + startOffset;
-							}
-							else
-							{
-								Debug::LogWarning(LogID::WRN106, locationinfo);
-							}
-						}
+						if (newFilepath.size() != 0) selectedTempMesh->materialPath = newFilepath;
 					}
 					ImGui::EndCombo();
 				}
