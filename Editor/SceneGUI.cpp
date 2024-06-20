@@ -125,7 +125,8 @@ namespace SceneGUI
 
 		if (!EnsureClearIsIntentional()) return false;
 
-		return Scene::Open(scenePath.c_str());
+		bool openSuccess = Scene::Open(scenePath.c_str());
+		return openSuccess;
 	}
 
 	bool SaveScene() noexcept

@@ -45,7 +45,8 @@ namespace Scene
 
 		currentPath = filepath;
 
-		return Load(scene);
+		bool loadStatus = Load(scene);
+		return loadStatus;
 	}
 
 #pragma region LoadVersions

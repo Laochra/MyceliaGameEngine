@@ -4,7 +4,7 @@
     {
       "Active": true,
       "Children": [],
-      "GUID": 5419291513893659215,
+      "GUID": 14044014695234508932,
       "Material": "Assets\\Materials\\Table.mat",
       "Mesh": "Assets\\Meshes\\TableDrawer.mesh",
       "Name": "TableDrawer",
@@ -16,7 +16,7 @@
       "Position": [
         0.0,
         0.0,
-        50.0
+        0.0
       ],
       "Rotation": [
         1.0,
@@ -32,7 +32,7 @@
       "TypeID": 181025226017607
     }
   ],
-  "GUID": 18348792776098297424,
+  "GUID": 3847896575786137635,
   "Material": "Assets\\Materials\\Table.mat",
   "Mesh": "Assets\\Meshes\\Table.mesh",
   "Name": "Table",
@@ -53,9 +53,9 @@
     0.0
   ],
   "Scale": [
-    1.0,
-    1.0,
-    1.0
+    0.009999999776482582,
+    0.009999999776482582,
+    0.009999999776482582
   ],
   "TypeID": 181025226017607
 }

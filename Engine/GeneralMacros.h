@@ -27,6 +27,7 @@
 
 #ifndef locationinfo
 	#define locationinfo " (" __FILE__ " " expandedstringify(__LINE__) ")"
+	#define functionname __FUNCTION__
 #endif
 
 #ifndef mappedenum

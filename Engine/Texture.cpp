@@ -4,6 +4,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+#include "Debug.h"
+
 Texture::Texture() : fileName("none"), width(0), height(0), glHandle(0), format(None) { }
 
 Texture::Texture(const char* fileNameInit, Linearity linearity) : fileName("none"), width(0), height(0), glHandle(0), format(None)
