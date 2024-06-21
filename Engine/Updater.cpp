@@ -78,4 +78,22 @@ namespace Updater
 			i++;
 		}
 	}
+	void CallDrawDepth(mat4 PVMatrix)
+	{
+		int i = 0;
+		while (i < drawList.size())
+		{
+			if (drawList[i]->IsActive())
+			{
+				drawList[i]->DrawDepth(PVMatrix);
+			}
+			else if (drawList[i] == GameObject::Destroyed)
+			{
+				drawList.erase(drawList.begin() + i);
+				continue;
+			}
+
+			i++;
+		}
+	}
 }

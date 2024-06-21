@@ -60,6 +60,76 @@ void Editor::Draw()
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
 
+	// Create Shadowmaps
+	uint shadowMapFBO;
+	glGenFramebuffers(1, &shadowMapFBO);
+	for (uint l = 0; l < (uint)LightingManager::lightObjects.size(); l++)
+	{
+		using namespace LightingManager;
+		uint mapsToGenerate;
+		if (lightObjects[l]->angle[1] == 1.0f) // Check for no angle. 1.0 is the cosine of 0 degrees
+		{
+			mapsToGenerate = 6;
+		}
+		else
+		{
+			mapsToGenerate = 1;
+		}
+
+		for (uint m = 0; m < mapsToGenerate; m++)
+		{
+			const unsigned int shadowWidth = 1024, shadowHeight = 1024;
+
+			if (m + 1 > lightObjects[l]->shadowMaps.size())
+			{
+				uint shadowMap;
+				glGenTextures(1, &shadowMap);
+				lightObjects[l]->shadowMaps.push_back(shadowMap);
+			}
+
+			glBindTexture(GL_TEXTURE_2D, lightObjects[l]->shadowMaps[m]);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, shadowWidth, shadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+			glBindFramebuffer(GL_FRAMEBUFFER, shadowMapFBO);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, lightObjects[l]->shadowMaps[m], 0);
+			glDrawBuffer(GL_NONE);
+			glReadBuffer(GL_NONE);
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+			glViewport(0, 0, shadowWidth, shadowHeight);
+			glBindFramebuffer(GL_FRAMEBUFFER, shadowMapFBO);
+			glClear(GL_DEPTH_BUFFER_BIT);
+
+			float fov = acos(lightObjects[l]->angle[1]);
+			float aspect = (shadowWidth == 0.0f || shadowHeight == 0.0f) ? 0.0f : shadowWidth / (float)shadowHeight;
+			mat4 projection = glm::perspective(fov, aspect, 0.001f, lightObjects[l]->range * lightObjects[l]->range);
+			
+			vec3 position = lightObjects[l]->GetGlobalPosition();
+			vec3 direction;
+			vec3 up(0,1,0);
+			mat4 inverse = glm::inverse(lightObjects[l]->GetGlobalRotationMatrix());
+			switch (m)
+			{
+			default: direction = -glm::normalize((vec3)inverse[2]); break; // Forward
+			case 1:  direction =  glm::normalize((vec3)inverse[2]); break; // Back
+			case 2:  direction =  glm::normalize((vec3)inverse[0]); break; // Right
+			case 3:  direction = -glm::normalize((vec3)inverse[0]); break; // Left
+			case 4:  direction =  glm::normalize((vec3)inverse[1]); break; // Up
+			case 5:  direction = -glm::normalize((vec3)inverse[1]); break; // Down
+			}
+			mat4 view = glm::lookAt(position, position + direction, up);
+
+			Updater::CallDrawDepth(projection * view);
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		}
+	}
+	glDeleteFramebuffers(1, &shadowMapFBO);
+
+	// Scene Drawing Begins
 	glDeleteFramebuffers(1, &EditorGUI::sceneViewFrameBufferHDR);
 	glDeleteTextures(2, &EditorGUI::sceneViewColourBufferHDR[0]);
 	glDeleteRenderbuffers(1, &EditorGUI::sceneViewDepthStencilBuffer);

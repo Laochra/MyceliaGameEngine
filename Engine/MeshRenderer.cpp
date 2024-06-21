@@ -142,6 +142,18 @@ void MeshRenderer::Draw()
 	mesh->Draw();
 }
 
+void MeshRenderer::DrawDepth(mat4 PVMatrix)
+{
+	if (mesh == nullptr) return;
+
+	ShaderProgram* depthProgram = shaderManager->GetProgram("DepthOnly");
+	depthProgram->Bind();
+
+	depthProgram->BindUniform("ProjectionViewModel", PVMatrix * GetMatrix());
+
+	mesh->Draw();
+}
+
 const Mesh* MeshRenderer::GetMesh() const
 {
 	return mesh;

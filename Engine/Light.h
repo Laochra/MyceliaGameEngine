@@ -2,11 +2,14 @@
 
 #include "MathIncludes.h"
 
+typedef unsigned int uint;
+
 class Light
 {
 public:
 	vec3 colour;
 	float intensity;
+	vector<uint> shadowMaps;
 
 	Light(vec3 colourInit = vec3(1.0f)) : colour(colourInit) {}
 };
