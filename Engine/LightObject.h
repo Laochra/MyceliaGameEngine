@@ -13,6 +13,13 @@ public:
 	float range = 1.0f;
 	vec2 angle = { 1.0f, 1.0f };
 
+	ShadowMode shadowMode = HardShadows;
+	ubyte shadowMapCount = 6U;
+	ushort shadowWidth = 1024U, shadowHeight = 1024U;
+	uint shadowMaps[6]{ 0U, 0U, 0U, 0U, 0U, 0U };
+
+	vector<mat4> GetLightPVMatrices() noexcept;
+
 	virtual void DrawDebug() override;
 
 	virtual void Initialise() override;

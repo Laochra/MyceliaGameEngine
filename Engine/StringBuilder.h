@@ -38,6 +38,7 @@ template<typename RequiredParam, typename... OptionalParams>
 struct StringBuilder
 {
 	std::string value;
+	const char* CStr() { return value.c_str(); }
 
 	StringBuilder(RequiredParam requiredParam, OptionalParams... optionalParam)
 	{
