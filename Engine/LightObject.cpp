@@ -51,13 +51,15 @@ vector<mat4> LightObject::GetLightPVMatrices() noexcept
 	case 1:
 	{
 		float fov = acos(angle[1]);
-		float aspect = (shadowWidth == 0.0f || shadowHeight == 0.0f) ? 0.0f : shadowWidth / (float)shadowHeight;
+		float aspect = 1; //(shadowWidth == 0.0f || shadowHeight == 0.0f) ? 0.0f : shadowWidth / (float)shadowHeight;
 		mat4 projection = glm::perspective(fov, aspect, 0.001f, range * range);
 
 		vec3 position = GetGlobalPosition();
-		vec3 up(0, 1, 0);
-		mat4 inverse = glm::inverse(GetGlobalRotationMatrix());
-		mat4 view = glm::lookAt(position, position + -glm::normalize((vec3)inverse[2]), up);
+		vec3 up = glm::normalize((vec3)GetGlobalRotationMatrix()[1]);
+		vec3 forward = -glm::normalize((vec3)GetGlobalRotationMatrix()[2]);
+		mat4 view = glm::lookAt(position, position + forward, up);
+		debug->lines.Add(position, position + forward, Colour(0, 1, 1));
+		debug->lines.Add(position, position + up, Colour(0.25, 1, 0.25));
 
 		pvMatrices.push_back(projection * view);
 		break;
@@ -94,7 +96,7 @@ void LightObject::DrawDebug()
 	}
 	else
 	{
-		vec3 direction = -glm::normalize((vec3)GetRotationMatrix()[2]);
+		vec3 direction = -glm::normalize((vec3)GetGlobalRotationMatrix()[2]);
 
 		float outerBaseRadius = range * tan(acos(angle[1]));
 		debug->lines.AddCone(GetGlobalPosition(), direction, range, outerBaseRadius, 32, debugColour);

@@ -220,7 +220,7 @@ float ShadowCalculation(int lightObjectIndex)
 	
 	float closestDepth = texture(ShadowMaps[mapIndex], coords.xy).r;
 	float currentDepth = coords.z;
-	float shadow = currentDepth > closestDepth ? 1.0 : 0.0;
+	float shadow = currentDepth > closestDepth ? 1.0 : 0.0; // 1 means no light, 0 means light
 	
 	return shadow;
 }
