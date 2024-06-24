@@ -53,7 +53,7 @@ namespace FileDialogue
 		{
 			switch (type)
 			{
-			case MBType::Ok:				return "ok";
+			default:							return "ok";
 			case MBType::OkCancel:		return "okcancel";
 			case MBType::YesNo:			return "yesno";
 			case MBType::YesNoCancel:	return "yesnocancel";
@@ -63,7 +63,7 @@ namespace FileDialogue
 		{
 			switch (icon)
 			{
-			case MBIcon::Info:		return "info";
+			default:						return "info";
 			case MBIcon::Warning:	return "warning";
 			case MBIcon::Error:		return "error";
 			case MBIcon::Question:	return "question";

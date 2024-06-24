@@ -5,7 +5,7 @@
 
 std::string FileDialogue::GetSavePath(const PathDetails details, const LimitToAssetFolder limitToAssetsFolder) noexcept
 {
-	const char* const bytes = tinyfd_saveFileDialog(details.title, details.defaultPath, details.extensions.size(), details.extensions.data(), nullptr);
+	const char* const bytes = tinyfd_saveFileDialog(details.title, details.defaultPath, (int)details.extensions.size(), details.extensions.data(), nullptr);
 	if (bytes == nullptr) return std::string(); // Not an error. This happens if user cancels when selecting files.
 	
 	std::string filepath = bytes;
@@ -23,7 +23,7 @@ std::string FileDialogue::GetSavePath(const PathDetails details, const LimitToAs
 
 std::string FileDialogue::GetLoadPath(PathDetails details, LimitToAssetFolder limitToAssetsFolder) noexcept
 {
-	const char* const bytes = tinyfd_openFileDialog(details.title, details.defaultPath, details.extensions.size(), details.extensions.data(), nullptr, false);
+	const char* const bytes = tinyfd_openFileDialog(details.title, details.defaultPath, (int)details.extensions.size(), details.extensions.data(), nullptr, false);
 	if (bytes == nullptr) return std::string(); // Not an error. This happens if user cancels when selecting files.
 	
 	std::string filepath = bytes;
@@ -43,7 +43,7 @@ std::vector<std::string> FileDialogue::GetLoadPaths(PathDetails details, LimitTo
 {
 	std::vector<std::string> filepaths;
 	{
-		char* bytes = tinyfd_openFileDialog(details.title, details.defaultPath, details.extensions.size(), details.extensions.data(), nullptr, true);
+		char* bytes = tinyfd_openFileDialog(details.title, details.defaultPath, (int)details.extensions.size(), details.extensions.data(), nullptr, true);
 		if (bytes == nullptr) return std::vector<std::string>(); // Not an error. This happens if user cancels when selecting files.
 		
 		std::string filepathPack = bytes;

@@ -291,7 +291,7 @@ void ParticleEmitterGUI::DrawParticleEmitterGUI(ParticleEmitter* particleEmitter
 
 						if (newFilepath.size() > 0)
 						{
-							properties.spriteFilepathLength = newFilepath.size();
+							properties.spriteFilepathLength = (uint)newFilepath.size();
 							memcpy(properties.spriteFilepath, newFilepath.c_str(), newFilepath.size() + 1);
 						}
 					}

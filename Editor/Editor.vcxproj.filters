@@ -93,7 +93,9 @@
     <ClCompile Include="MeshHeirarchy.cpp">
       <Filter>GUI\EditorWindows\Tools</Filter>
     </ClCompile>
-    <ClCompile Include="FileDialogue.cpp" />
+    <ClCompile Include="FileDialogue.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="JSON Configs">
