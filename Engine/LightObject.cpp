@@ -50,9 +50,9 @@ vector<mat4> LightObject::GetLightPVMatrices() noexcept
 	default: break;
 	case 1:
 	{
-		float fov = acos(angle[1]);
-		float aspect = 1; //(shadowWidth == 0.0f || shadowHeight == 0.0f) ? 0.0f : shadowWidth / (float)shadowHeight;
-		mat4 projection = glm::perspective(fov, aspect, 0.001f, range * range);
+		float fov = acos(angle[1]) * 2;
+		float aspect = 1;
+		mat4 projection = glm::perspective(fov, aspect, 0.001f, range * range * intensity);
 
 		vec3 position = GetGlobalPosition();
 		vec3 up = glm::normalize((vec3)GetGlobalRotationMatrix()[1]);
@@ -66,9 +66,9 @@ vector<mat4> LightObject::GetLightPVMatrices() noexcept
 	}
 	case 6:
 	{
-		float fov = acos(angle[1]);
-		float aspect = (shadowWidth == 0.0f || shadowHeight == 0.0f) ? 0.0f : shadowWidth / (float)shadowHeight;
-		mat4 projection = glm::perspective(fov, aspect, 0.001f, range * range);
+		float fov = acos(angle[1]) * 2;
+		float aspect = 1;
+		mat4 projection = glm::perspective(fov, aspect, 0.001f, range * range * intensity);
 
 		vec3 position = GetGlobalPosition();
 

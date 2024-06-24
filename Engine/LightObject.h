@@ -15,7 +15,7 @@ public:
 
 	ShadowMode shadowMode = HardShadows;
 	ubyte shadowMapCount = 6U;
-	ushort shadowWidth = 1024U, shadowHeight = 1024U;
+	ushort shadowSideLength = 1024U;
 	uint shadowMaps[6]{ 0U, 0U, 0U, 0U, 0U, 0U };
 
 	vector<mat4> GetLightPVMatrices() noexcept;

@@ -28,6 +28,7 @@ struct LightObject
 	vec2 angle; // X component is inner angle, Y component is outer angle. 0 degree outer angle means point light
 	
 	int shadowMapCount;
+	int softShadows; // this is basically a bool but uniforms can't be bools so using an int
 	int shadowMapIndices[6];
 };
 uniform int LightObjectCount;
@@ -55,7 +56,7 @@ float Geometry(vec3 N, vec3 V, vec3 L, float k); // Smith Geometry Approximation
 vec3 Fresnel(float cosTheta, vec3 F0); // Fresnel-Schlick Fresnel Approximation
 vec3 ReflectanceEquation(vec3 colour, vec3 normal, float roughness, float metallic, float ao, vec3 viewDirection, vec3 lightDirection, float attenuation, vec3 lightColour, vec3 F0);
 
-float ShadowCalculation(int lightObjectIndex);
+float ShadowCalculation(int lightObjectIndex, vec3 lightDirection);
 
 float Remap01(float value, float vMin, float vMax);
 
@@ -86,8 +87,7 @@ void main() // Fragment
 	{
 		float d = length(LightObjects[i].position - FragPos);
 		float dSqr = d * d;
-		float shadow = ShadowCalculation(i);
-		float attenuation = clamp(LightObjects[i].range * (1.0 / dSqr) * (1.0 / d), 0.0, 1.0 - shadow);
+		float attenuation = clamp(LightObjects[i].range * (1.0 / dSqr) * (1.0 / d), 0.0, 1.0);
 		
 		vec3 lightDirection = normalize(LightObjects[i].position - FragPos);
 		if (LightObjects[i].angle.y != 1.0) // Check for no angle. 1.0 is the cosine of 0 degrees
@@ -96,6 +96,9 @@ void main() // Fragment
 			float epsilon = LightObjects[i].angle.x - LightObjects[i].angle.y;
 			attenuation *= clamp((theta - LightObjects[i].angle.y) / epsilon, 0.0, 1.0);
 		}
+		
+		float shadow = ShadowCalculation(i, lightDirection);
+		attenuation *= 1.0 - shadow;
 		
 		Lo += ReflectanceEquation(colour, normal, roughness, metallic, ao, viewDirection, lightDirection, attenuation, LightObjects[i].colour, F0);
 	}
@@ -200,7 +203,7 @@ vec3 ReflectanceEquation(vec3 colour, vec3 normal, float roughness, float metall
 	return (kD * colour / PI + specular) * radiance * NdotL;
 }
 
-float ShadowCalculation(int lightObjectIndex)
+float ShadowCalculation(int lightObjectIndex, vec3 lightDirection)
 {
 	int mapIndex = 0;
 	switch(LightObjects[lightObjectIndex].shadowMapCount)
@@ -211,16 +214,38 @@ float ShadowCalculation(int lightObjectIndex)
 			break;
 		case 6:
 			// Figure out which map to use idk
-			mapIndex = LightObjects[lightObjectIndex].shadowMapIndices[0]; // temporary
+			//mapIndex = LightObjects[lightObjectIndex].shadowMapIndices[0]; // temporary
 			break;
 	}
 	
 	vec3 coords = FragPosLightSpace[mapIndex].xyz / FragPosLightSpace[mapIndex].w;
 	coords = coords * 0.5 + 0.5;
 	
-	float closestDepth = texture(ShadowMaps[mapIndex], coords.xy).r;
+	if (coords.z > 1.0) return 0.0;
+		
 	float currentDepth = coords.z;
-	float shadow = currentDepth > closestDepth ? 1.0 : 0.0; // 1 means no light, 0 means light
+	
+	float shadow = 0.0;
+	
+	if (LightObjects[lightObjectIndex].softShadows == 0) // Hard Shadows
+	{
+		float closestDepth = texture(ShadowMaps[mapIndex], coords.xy).r;
+		shadow = currentDepth > closestDepth ? 1.0 : 0.0; // 1 means no light, 0 means light
+	}
+	else // Soft Shadows
+	{
+		vec2 texelSize = 1.0 / textureSize(ShadowMaps[mapIndex], 0);
+		for (float x = -1.5; x <= 1.5; x += 1.0)
+		{
+			for (float y = -1.5; y <= 1.5; y += 1.0)
+			{
+				float pcfDepth = texture(ShadowMaps[mapIndex], coords.xy + vec2(x,y) * texelSize).r;
+				shadow += currentDepth > pcfDepth ? 1.0 : 0.0; // 1 means no light, 0 means light
+			}
+		}
+		
+		shadow /= 16.0;
+	}
 	
 	return shadow;
 }

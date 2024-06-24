@@ -73,12 +73,15 @@ void MeshRenderer::Draw()
 		sp.BindUniform(StringBuilder("LightObjects[",l,"].range").CStr(), lightObject.range);
 		sp.BindUniform(StringBuilder("LightObjects[",l,"].angle").CStr(), lightObject.angle);
 
+		sp.BindUniform(StringBuilder("LightObjects[",l,"].softShadows").CStr(), int(lightObject.shadowMode == SoftShadows));
 		sp.BindUniform(StringBuilder("LightObjects[",l,"].shadowMapCount").CStr(), lightObject.shadowMapCount);
 		vector<mat4> pvMatrices = lightObject.GetLightPVMatrices();
 		for (int m = 0; m < lightObjects[l]->shadowMapCount; m++)
 		{
 			sp.BindUniform(StringBuilder("LightObjects[",l,"].shadowMapIndices[",m,"]").CStr(), (int)currentMapIndex);
-			sp.BindUniform(StringBuilder("ShadowMaps[",currentMapIndex,"]").CStr(), (int)lightObject.shadowMaps[m]);
+			glActiveTexture(GL_TEXTURE0 + m + 3);
+			glBindTexture(GL_TEXTURE_2D, (int)lightObject.shadowMaps[m]);
+			sp.BindUniform(StringBuilder("ShadowMaps[",currentMapIndex,"]").CStr(), m + 3);
 			sp.BindUniform(StringBuilder("LightSpaceMatrices[",currentMapIndex,"]").CStr(), pvMatrices[m]);
 			currentMapIndex++;
 		}

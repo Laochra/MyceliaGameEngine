@@ -57,8 +57,9 @@ void Editor::Update()
 void Editor::Draw()
 {
 	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
+
+	glCullFace(GL_FRONT);
 
 	// Create Shadowmaps
 	uint shadowMapFBO;
@@ -78,7 +79,7 @@ void Editor::Draw()
 			}
 
 			glBindTexture(GL_TEXTURE_2D, lightObject.shadowMaps[m]);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, lightObject.shadowWidth, lightObject.shadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, lightObject.shadowSideLength, lightObject.shadowSideLength, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -91,7 +92,7 @@ void Editor::Draw()
 			glReadBuffer(GL_NONE);
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-			glViewport(0, 0, lightObject.shadowWidth, lightObject.shadowHeight);
+			glViewport(0, 0, lightObject.shadowSideLength, lightObject.shadowSideLength);
 			glBindFramebuffer(GL_FRAMEBUFFER, shadowMapFBO);
 			glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -101,6 +102,8 @@ void Editor::Draw()
 		}
 	}
 	glDeleteFramebuffers(1, &shadowMapFBO);
+
+	glCullFace(GL_BACK);
 
 	// Scene Drawing Begins
 	glDeleteFramebuffers(1, &EditorGUI::sceneViewFrameBufferHDR);
