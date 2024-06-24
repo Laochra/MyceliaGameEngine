@@ -12,9 +12,10 @@ public:
 
 	using GameObject3D::GameObject3D;
 
-	void Initialise() override;
-	void Draw() override;
-	void DrawDepth(mat4 PVMatrix) override;
+	virtual void Initialise() override;
+	virtual void Draw() override;
+	virtual void DrawDepth(mat4 PVMatrix) override;
+	virtual void DrawGUID() override;
 
 	const Mesh* GetMesh() const;
 	void SetMesh(const char* filepath);

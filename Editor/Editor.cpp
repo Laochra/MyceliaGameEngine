@@ -61,6 +61,12 @@ void Editor::Draw()
 
 	glCullFace(GL_FRONT);
 
+	// Generate GUID Texture
+	uint guidFBO;
+	glGenFramebuffers(1, &guidFBO);
+
+	Updater::CallDrawGUIDs(); // TODO Get GUID to Texture Working Here
+
 	// Create Shadowmaps
 	uint shadowMapFBO;
 	glGenFramebuffers(1, &shadowMapFBO);

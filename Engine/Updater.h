@@ -20,4 +20,5 @@ namespace Updater
 	extern void CallUpdate();
 	extern void CallDraw();
 	extern void CallDrawDepth(mat4 PVMatrix);
+	extern void CallDrawGUIDs();
 }

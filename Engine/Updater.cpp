@@ -96,4 +96,22 @@ namespace Updater
 			i++;
 		}
 	}
+	void CallDrawGUIDs()
+	{
+		int i = 0;
+		while (i < drawList.size())
+		{
+			if (drawList[i]->IsActive())
+			{
+				drawList[i]->DrawGUID();
+			}
+			else if (drawList[i] == GameObject::Destroyed)
+			{
+				drawList.erase(drawList.begin() + i);
+				continue;
+			}
+
+			i++;
+		}
+	}
 }

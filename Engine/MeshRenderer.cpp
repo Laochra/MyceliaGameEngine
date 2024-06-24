@@ -174,6 +174,19 @@ void MeshRenderer::DrawDepth(mat4 PVMatrix)
 	mesh->Draw();
 }
 
+void MeshRenderer::DrawGUID()
+{
+	if (mesh == nullptr) return;
+	
+	ShaderProgram* guidProgram = shaderManager->GetProgram("DrawGUID");
+	guidProgram->Bind();
+
+	unsigned long long guid = GetGUID();
+	guidProgram->BindUniform("GUID", *(vec2*)&guid);
+
+	mesh->Draw();
+}
+
 const Mesh* MeshRenderer::GetMesh() const
 {
 	return mesh;
