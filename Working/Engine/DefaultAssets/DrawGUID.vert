@@ -8,13 +8,13 @@ layout( location = 4) in vec2 TexCoords;
 
 uniform mat4 ProjectionViewModel;
 
-uniform vec2 GUID;
+uniform uvec2 GUID;
 
-out vec4 GUIDColour;
+out flat uvec2 GUIDColour;
 
 void main() // Vertex
 {
 	gl_Position = ProjectionViewModel * Position;
 	
-	GUIDColour = vec4(GUID, 0, 1);
+	GUIDColour = GUID;
 }

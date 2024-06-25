@@ -14,6 +14,10 @@ namespace EditorGUI
 	extern uint sceneViewFrameBufferOutput;
 	extern uint sceneViewColourBufferOutput;
 
+	extern uint guidFBO;
+	extern uint guidDepth;
+	extern uint guidTexture;
+
 	extern map<string, uint> windowIndices;
 
 	class EditorWindow

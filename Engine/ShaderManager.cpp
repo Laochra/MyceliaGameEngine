@@ -38,7 +38,16 @@ ShaderManager::ShaderManager()
       Debug::LogError(LogID::ERR101, "DepthOnly.gpu ", locationinfo);
       delete depthOnly;
    }
-
+   ShaderProgram* drawGUID = new ShaderProgram;
+   if (drawGUID->LoadAndLinkFromJSON("Engine\\DefaultAssets\\DrawGUID.gpu"))
+   {
+      loadedPrograms.insert(std::pair(string("DrawGUID"), drawGUID));
+   }
+   else
+   {
+      Debug::LogError(LogID::ERR101, "DrawGUID.gpu ", locationinfo);
+      delete drawGUID;
+   }
 }
 
 ShaderManager::~ShaderManager()

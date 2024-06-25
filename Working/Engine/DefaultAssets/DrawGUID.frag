@@ -1,8 +1,8 @@
 #version 460
 
-in vec4 GUIDColour;
+in flat uvec2 GUIDColour;
 
-out vec4 Colour;
+out uvec2 Colour;
 
 void main() // Frag
 {

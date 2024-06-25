@@ -181,8 +181,10 @@ void MeshRenderer::DrawGUID()
 	ShaderProgram* guidProgram = shaderManager->GetProgram("DrawGUID");
 	guidProgram->Bind();
 
+	guidProgram->BindUniform("ProjectionViewModel", Camera::main->GetPVMatrix() * GetMatrix());
+
 	unsigned long long guid = GetGUID();
-	guidProgram->BindUniform("GUID", *(vec2*)&guid);
+	guidProgram->BindUniform("GUID", *(glm::uvec2*)&guid);
 
 	mesh->Draw();
 }
