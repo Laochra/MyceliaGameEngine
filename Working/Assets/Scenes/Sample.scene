@@ -24,7 +24,7 @@
       "Position": [
         0.0,
         1.4500000476837158,
-        0.0
+        0.004999999888241291
       ],
       "Range": 1.0,
       "Rotation": [
@@ -43,7 +43,38 @@
     },
     {
       "Active": true,
-      "Children": [],
+      "Children": [
+        {
+          "Active": true,
+          "Children": [],
+          "GUID": 17251623311492162089,
+          "Material": "Assets\\Materials\\Table.mat",
+          "Mesh": "Assets\\Meshes\\TableDrawer.mesh",
+          "Name": "TableDrawer",
+          "Pivot": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Rotation": [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "Scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "TypeID": 181025226017607
+        }
+      ],
       "GUID": 3820639481518720089,
       "Material": "Assets\\Materials\\Table.mat",
       "Mesh": "Assets\\Meshes\\Table.mesh",

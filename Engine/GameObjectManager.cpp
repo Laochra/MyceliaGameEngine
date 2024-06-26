@@ -56,6 +56,32 @@ void GameObjectManager::Move(GameObject* gameObject, int newIndex) noexcept
 		i += direction;
 	}
 }
+GameObject* GameObjectManager::Find(unsigned long long guid) const noexcept
+{
+	for (int c = 0; c < gameObjects.size(); c++)
+	{
+		if (gameObjects[c]->guid == guid) return gameObjects[c];
+
+		if (dynamic_cast<GameObject3D*>(gameObjects[c]) != nullptr)
+		{
+			GameObject3D* potentialMatch = FindChild((GameObject3D*)gameObjects[c], guid);
+			if (potentialMatch != nullptr) return potentialMatch;
+		}
+	}
+	return nullptr;
+}
+GameObject3D* GameObjectManager::FindChild(const GameObject3D* gameObject, unsigned long long guid) const noexcept
+{
+	const std::vector<GameObject3D*>& children = *gameObject->GetChildren();
+
+	for (int c = 0; c < children.size(); c++)
+	{
+		if (children[c]->guid == guid) return children[c];
+		GameObject3D* potentialMatch = FindChild(children[c], guid);
+		if (potentialMatch != nullptr) return potentialMatch;
+	}
+	return nullptr;
+}
 void GameObjectManager::Delete(GameObject* gameObject)
 {
 	if (gameObject == nullptr) return;
