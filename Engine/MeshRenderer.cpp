@@ -36,37 +36,57 @@ void MeshRenderer::Draw()
 	mat4 ProjectionViewMatrix = Camera::main->GetPVMatrix();
 
 	// Bind Shader
-	material->shaderProgram->Bind();
+	ShaderProgram& sp = *material->shaderProgram;
+	sp.Bind();
 
 	// Bind Camera Posiiton
-	material->shaderProgram->BindUniform("CameraPosition", Camera::main->GetGlobalPosition());
+	sp.BindUniform("CameraPosition", Camera::main->GetGlobalPosition());
 
 	// Bind Light
 	//material->shaderProgram->BindUniform("AmbientColour", LightingManager::ambientLight.colour);
 	
-	material->shaderProgram->BindUniform("DirectionalLightCount", (int)1);
-	material->shaderProgram->BindUniform(("DirectionalLights[" + std::to_string(0) + "].colour").c_str(), LightingManager::directionalLight.colour);
-	material->shaderProgram->BindUniform(("DirectionalLights[" + std::to_string(0) + "].direction").c_str(), LightingManager::directionalLight.direction);
+	sp.BindUniform("DirectionalLightCount", (int)1);
+	sp.BindUniform(StringBuilder("DirectionalLights[",0,"].colour").value.c_str(), LightingManager::directionalLight.colour);
+	sp.BindUniform(StringBuilder("DirectionalLights[",0,"].direction").value.c_str(), LightingManager::directionalLight.direction);
 
 	vector<LightObject*> lightObjects = LightingManager::GetClosestLightObjects(GetGlobalPosition(), 4);
-	material->shaderProgram->BindUniform("LightObjectCount", (int)lightObjects.size());
-	for (int i = 0; i < lightObjects.size(); i++)
+	sp.BindUniform("LightObjectCount", (int)lightObjects.size());
+
+	uint currentMapIndex = 0;
+	for (int l = 0; l < lightObjects.size(); l++)
 	{
-		material->shaderProgram->BindUniform(("LightObjects[" + std::to_string(i) + "].colour").c_str(), lightObjects[i]->colour * lightObjects[i]->intensity);
-		material->shaderProgram->BindUniform(("LightObjects[" + std::to_string(i) + "].position").c_str(), lightObjects[i]->GetGlobalPosition());
-		if (lightObjects[i]->angle[1] == 1.0f) // Check for no angle. 1.0 is the cosine of 0 degrees
+		LightObject& lightObject = *lightObjects[l];
+
+		sp.BindUniform(StringBuilder("LightSpaceMatrices[",l,"]").CStr(), glm::inverse(lightObject.GetMatrix()));
+		sp.BindUniform(StringBuilder("LightObjects[",l,"].colour").CStr(), lightObject.colour * lightObject.intensity);
+		sp.BindUniform(StringBuilder("LightObjects[",l,"].position").CStr(), lightObject.GetGlobalPosition());
+		if (lightObjects[l]->angle[1] == 1.0f) // Check for no angle. 1.0 is the cosine of 0 degrees
 		{
-			material->shaderProgram->BindUniform(("LightObjects[" + std::to_string(i) + "].direction").c_str(), vec3(0.0f));
+			sp.BindUniform(StringBuilder("LightObjects[",l,"].direction").CStr(), vec3(0.0f));
 		}
 		else
 		{
-			const mat3& lightRotationMatrix = lightObjects[i]->GetRotationMatrix();
+			const mat3& lightRotationMatrix = lightObjects[l]->GetRotationMatrix();
 			vec3 direction = glm::normalize(vec3(lightRotationMatrix[2]));
-			material->shaderProgram->BindUniform(("LightObjects[" + std::to_string(i) + "].direction").c_str(), direction);
+			sp.BindUniform(StringBuilder("LightObjects[",l,"].direction").CStr(), direction);
 		}
-		material->shaderProgram->BindUniform(("LightObjects[" + std::to_string(i) + "].range").c_str(), lightObjects[i]->range);
-		material->shaderProgram->BindUniform(("LightObjects[" + std::to_string(i) + "].angle").c_str(), lightObjects[i]->angle);
+		sp.BindUniform(StringBuilder("LightObjects[",l,"].range").CStr(), lightObject.range);
+		sp.BindUniform(StringBuilder("LightObjects[",l,"].angle").CStr(), lightObject.angle);
+
+		sp.BindUniform(StringBuilder("LightObjects[",l,"].softShadows").CStr(), int(lightObject.shadowMode == SoftShadows));
+		sp.BindUniform(StringBuilder("LightObjects[",l,"].shadowMapCount").CStr(), lightObject.shadowMapCount);
+		vector<mat4> pvMatrices = lightObject.GetLightPVMatrices();
+		for (int m = 0; m < lightObjects[l]->shadowMapCount; m++)
+		{
+			sp.BindUniform(StringBuilder("LightObjects[",l,"].shadowMapIndices[",m,"]").CStr(), (int)currentMapIndex);
+			glActiveTexture(GL_TEXTURE0 + m + 3);
+			glBindTexture(GL_TEXTURE_2D, (int)lightObject.shadowMaps[m]);
+			sp.BindUniform(StringBuilder("ShadowMaps[",currentMapIndex,"]").CStr(), m + 3);
+			sp.BindUniform(StringBuilder("LightSpaceMatrices[",currentMapIndex,"]").CStr(), pvMatrices[m]);
+			currentMapIndex++;
+		}
 	}
+	sp.BindUniform("LightSpaceMatrixCount", (int)currentMapIndex);
 
 	// Bind Transform
 	material->shaderProgram->BindUniform("ProjectionViewModel", ProjectionViewMatrix * GetMatrix());
@@ -138,6 +158,18 @@ void MeshRenderer::Draw()
 			continue;
 		}
 	}
+
+	mesh->Draw();
+}
+
+void MeshRenderer::DrawDepth(mat4 PVMatrix)
+{
+	if (mesh == nullptr) return;
+
+	ShaderProgram* depthProgram = shaderManager->GetProgram("DepthOnly");
+	depthProgram->Bind();
+
+	depthProgram->BindUniform("ProjectionViewModel", PVMatrix * GetMatrix());
 
 	mesh->Draw();
 }

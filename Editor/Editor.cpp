@@ -57,9 +57,55 @@ void Editor::Update()
 void Editor::Draw()
 {
 	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
 
+	glCullFace(GL_FRONT);
+
+	// Create Shadowmaps
+	uint shadowMapFBO;
+	glGenFramebuffers(1, &shadowMapFBO);
+	for (uint l = 0; l < (uint)LightingManager::lightObjects.size(); l++)
+	{
+		LightObject& lightObject = *LightingManager::lightObjects[l];
+		if (lightObject.shadowMode == NoShadows) continue;
+
+		vector<mat4> pvMatrices = lightObject.GetLightPVMatrices();
+
+		for (uint m = 0; m < lightObject.shadowMapCount; m++)
+		{
+			if (lightObject.shadowMaps[m] == 0U)
+			{
+				glGenTextures(1, &lightObject.shadowMaps[m]);
+			}
+
+			glBindTexture(GL_TEXTURE_2D, lightObject.shadowMaps[m]);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, lightObject.shadowSideLength, lightObject.shadowSideLength, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			glBindTexture(GL_TEXTURE_2D, 0);
+
+			glBindFramebuffer(GL_FRAMEBUFFER, shadowMapFBO);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, lightObject.shadowMaps[m], 0);
+			glDrawBuffer(GL_NONE);
+			glReadBuffer(GL_NONE);
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+			glViewport(0, 0, lightObject.shadowSideLength, lightObject.shadowSideLength);
+			glBindFramebuffer(GL_FRAMEBUFFER, shadowMapFBO);
+			glClear(GL_DEPTH_BUFFER_BIT);
+
+			Updater::CallDrawDepth(pvMatrices[m]);
+
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		}
+	}
+	glDeleteFramebuffers(1, &shadowMapFBO);
+
+	glCullFace(GL_BACK);
+
+	// Scene Drawing Begins
 	glDeleteFramebuffers(1, &EditorGUI::sceneViewFrameBufferHDR);
 	glDeleteTextures(2, &EditorGUI::sceneViewColourBufferHDR[0]);
 	glDeleteRenderbuffers(1, &EditorGUI::sceneViewDepthStencilBuffer);

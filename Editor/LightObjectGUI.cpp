@@ -28,10 +28,67 @@ void LightObjectGUI::DrawLightObjectGUI(LightObject* lightObject)
 			if (ImGui::Selectable("Point Light", angleIs0))
 			{
 				lightObject->angle = vec2(glm::cos(glm::radians(0.0f)));
+
+				if (lightObject->shadowMode)
+				{
+					lightObject->shadowMapCount = 6U;
+				}
 			}
 			if (ImGui::Selectable("Spotlight", !angleIs0))
 			{
 				if (angleIs0) lightObject->angle = vec2(glm::cos(glm::radians(0.0f)), glm::cos(glm::radians(25.0f)));
+
+				if (lightObject->shadowMode)
+				{
+					lightObject->shadowMapCount = 1U;
+					for (uint i = 1; i < 6U; i++)
+					{
+						if (lightObject->shadowMaps[i] != 0U)
+						{
+							glDeleteTextures(1, &lightObject->shadowMaps[i]);
+							lightObject->shadowMaps[i] = 0U;
+						}
+					}
+				}
+			}
+			ImGui::EndCombo();
+		}
+
+		GUI::Spacing(1);
+
+		const char* shadowModeName;
+		switch (lightObject->shadowMode)
+		{
+		case NoShadows: shadowModeName = "No Shadows"; break;
+		case HardShadows: shadowModeName = "Hard Shadows"; break;
+		case SoftShadows: shadowModeName = "Soft Shadows"; break;
+		default: shadowModeName = "Invalid Option Selected"; break;
+		}
+
+		if (ImGui::BeginCombo("Shadow Mode", shadowModeName))
+		{
+			if (ImGui::Selectable("No Shadows", lightObject->shadowMode == NoShadows))
+			{
+				lightObject->shadowMode = NoShadows;
+				lightObject->shadowMapCount = 0U;
+				for (uint i = 0; i < 6U; i++)
+				{
+					if (lightObject->shadowMaps[i] != 0U)
+					{
+						glDeleteTextures(1, &lightObject->shadowMaps[i]);
+						lightObject->shadowMaps[i] = 0U;
+					}
+				}
+			}
+			if (ImGui::Selectable("Hard Shadows", lightObject->shadowMode == HardShadows))
+			{
+				lightObject->shadowMode = HardShadows;
+				lightObject->shadowMapCount = angleIs0 ? 6U : 1U;
+			}
+			if (ImGui::Selectable("Soft Shadows", lightObject->shadowMode == SoftShadows))
+			{
+				lightObject->shadowMode = SoftShadows;
+				lightObject->shadowMapCount = angleIs0 ? 6U : 1U;
 			}
 			ImGui::EndCombo();
 		}

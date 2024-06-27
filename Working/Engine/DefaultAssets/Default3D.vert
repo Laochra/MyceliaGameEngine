@@ -17,9 +17,18 @@ uniform mat4 ProjectionViewModel;
 
 uniform mat4 ModelMatrix;
 
+uniform int LightSpaceMatrixCount;
+uniform mat4 LightSpaceMatrices[24];
+out vec4 FragPosLightSpace[24];
+
 void main() // Vertex
-{	
+{
 	FragPos = (ModelMatrix * Position).xyz;
+	
+	for (int i = 0; i < LightSpaceMatrixCount; i++)
+	{
+		FragPosLightSpace[i] = LightSpaceMatrices[i] * vec4(FragPos, 1.0);
+	}
 	
 	N = normalize((ModelMatrix * Normal).xyz);
 	vec3 T = normalize((ModelMatrix * Tangent).xyz);

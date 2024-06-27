@@ -106,6 +106,7 @@ public:
 	virtual void FixedUpdate();
 	virtual void Update();
 	virtual void Draw();
+	virtual void DrawDepth(mat4 PVMatrix);
 	virtual void DrawDebug();
 	virtual void Initialise();
 	virtual void OnDestroy();

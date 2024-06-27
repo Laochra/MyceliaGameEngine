@@ -18,16 +18,27 @@ ShaderManager::ShaderManager()
       Debug::LogError(LogID::ERR101, "PBRLit.gpu ", locationinfo);
       delete pbrLit;
    }
-   ShaderProgram* pbrUnlit = new ShaderProgram;
-   if (pbrUnlit->LoadAndLinkFromJSON("Engine\\DefaultAssets\\Unlit.gpu"))
+   ShaderProgram* unlit = new ShaderProgram;
+   if (unlit->LoadAndLinkFromJSON("Engine\\DefaultAssets\\Unlit.gpu"))
    {
-      loadedPrograms.insert(std::pair(string("Unlit"), pbrUnlit));
+      loadedPrograms.insert(std::pair(string("Unlit"), unlit));
    }
    else
    {
       Debug::LogError(LogID::ERR101, "Unlit.gpu ", locationinfo);
-      delete pbrUnlit;
+      delete unlit;
    }
+   ShaderProgram* depthOnly = new ShaderProgram;
+   if (depthOnly->LoadAndLinkFromJSON("Engine\\DefaultAssets\\DepthOnly.gpu"))
+   {
+      loadedPrograms.insert(std::pair(string("DepthOnly"), depthOnly));
+   }
+   else
+   {
+      Debug::LogError(LogID::ERR101, "DepthOnly.gpu ", locationinfo);
+      delete depthOnly;
+   }
+
 }
 
 ShaderManager::~ShaderManager()

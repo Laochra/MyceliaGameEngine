@@ -14,6 +14,7 @@ public:
 
 	void Initialise() override;
 	void Draw() override;
+	void DrawDepth(mat4 PVMatrix) override;
 
 	const Mesh* GetMesh() const;
 	void SetMesh(const char* filepath);

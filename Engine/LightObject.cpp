@@ -18,6 +18,8 @@ void LightObject::SerialiseTo(json& jsonObj) const
 	vector<float> hdrColourData(4);
 	memcpy(hdrColourData.data(), &colour[0], 4 * sizeof(float));
 	jsonObj["HDRColour"] = hdrColourData;
+
+	jsonObj["ShadowMode"] = (uint)shadowMode;
 }
 void LightObject::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptions)
 {
@@ -27,10 +29,62 @@ void LightObject::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOption
 
 	vector<float> angleData = jsonObj["Angle"];
 	memcpy(&angle[0], angleData.data(), 2 * sizeof(float));
-
+	
 	vector<float> hdrColourData = jsonObj["HDRColour"];
 	memcpy(&colour[0], hdrColourData.data(), 4 * sizeof(float));
+
+	uint shadowModeData = jsonObj["ShadowMode"];
+	shadowMode = (ShadowMode)shadowModeData;
+
+	if (shadowMode == NoShadows) shadowMapCount = 0U;
+	else if(angle[1] != 1.0f) shadowMapCount = 1U;
+	else shadowMapCount = 6U;
 }
+
+vector<mat4> LightObject::GetLightPVMatrices() noexcept
+{
+	vector<mat4> pvMatrices;
+
+	switch (shadowMapCount)
+	{
+	default: break;
+	case 1:
+	{
+		float fov = acos(angle[1]) * 2;
+		float aspect = 1;
+		mat4 projection = glm::perspective(fov, aspect, 0.001f, range * range * intensity);
+
+		vec3 position = GetGlobalPosition();
+		vec3 up = glm::normalize((vec3)GetGlobalRotationMatrix()[1]);
+		vec3 forward = -glm::normalize((vec3)GetGlobalRotationMatrix()[2]);
+		mat4 view = glm::lookAt(position, position + forward, up);
+		debug->lines.Add(position, position + forward, Colour(0, 1, 1));
+		debug->lines.Add(position, position + up, Colour(0.25, 1, 0.25));
+
+		pvMatrices.push_back(projection * view);
+		break;
+	}
+	case 6:
+	{
+		float fov = acos(angle[1]) * 2;
+		float aspect = 1;
+		mat4 projection = glm::perspective(fov, aspect, 0.001f, range * range * intensity);
+
+		vec3 position = GetGlobalPosition();
+
+		pvMatrices.push_back(projection * glm::lookAt(position, position + glm::vec3( 1, 0, 0), glm::vec3(0,-1, 0)));
+		pvMatrices.push_back(projection * glm::lookAt(position, position + glm::vec3(-1, 0, 0), glm::vec3(0,-1, 0)));
+		pvMatrices.push_back(projection * glm::lookAt(position, position + glm::vec3( 0, 1, 0), glm::vec3(0, 0, 1)));
+		pvMatrices.push_back(projection * glm::lookAt(position, position + glm::vec3( 0,-1, 0), glm::vec3(0, 0,-1)));
+		pvMatrices.push_back(projection * glm::lookAt(position, position + glm::vec3( 0, 0, 1), glm::vec3(0,-1, 0)));
+		pvMatrices.push_back(projection * glm::lookAt(position, position + glm::vec3( 0, 0,-1), glm::vec3(0,-1, 0)));
+		break;
+	}
+	}
+
+	return pvMatrices;
+}
+
 
 void LightObject::DrawDebug()
 {
@@ -42,7 +96,7 @@ void LightObject::DrawDebug()
 	}
 	else
 	{
-		vec3 direction = -glm::normalize((vec3)GetRotationMatrix()[2]);
+		vec3 direction = -glm::normalize((vec3)GetGlobalRotationMatrix()[2]);
 
 		float outerBaseRadius = range * tan(acos(angle[1]));
 		debug->lines.AddCone(GetGlobalPosition(), direction, range, outerBaseRadius, 32, debugColour);
