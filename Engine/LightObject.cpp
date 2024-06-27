@@ -58,8 +58,6 @@ vector<mat4> LightObject::GetLightPVMatrices() noexcept
 		vec3 up = glm::normalize((vec3)GetGlobalRotationMatrix()[1]);
 		vec3 forward = -glm::normalize((vec3)GetGlobalRotationMatrix()[2]);
 		mat4 view = glm::lookAt(position, position + forward, up);
-		debug->lines.Add(position, position + forward, Colour(0, 1, 1));
-		debug->lines.Add(position, position + up, Colour(0.25, 1, 0.25));
 
 		pvMatrices.push_back(projection * view);
 		break;
