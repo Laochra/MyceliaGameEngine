@@ -14,6 +14,8 @@
 
 #include "Debug.h"
 
+typedef unsigned long long ulong;
+
 namespace SceneGUI
 {
 	void SceneGUI::DrawScene(const char* const name, bool& open) noexcept
@@ -38,6 +40,22 @@ namespace SceneGUI
 				ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse; // Disables Imgui's Mouse Input
 			}
 			input->enabled = true;
+
+			if (input->GetKeyPressed(KeyCode::MouseLeft))
+			{
+				ImVec2 windowPos = ImGui::GetWindowPos();
+				vec2 cursorPos = input->cursorPos - vec2(windowPos.x, windowPos.y);
+				cursorPos.y = screenHeight - cursorPos.y;
+
+				const int pixelCount = screenWidth * screenHeight;
+				ulong* guidPixels = new ulong[pixelCount];
+				glGetTextureImage(EditorGUI::guidTexture, 0, GL_RG_INTEGER, GL_UNSIGNED_INT, pixelCount * sizeof(ulong), guidPixels);
+
+				ulong guid = guidPixels[(int)cursorPos.x + (int)cursorPos.y * screenWidth];
+				delete guidPixels;
+
+				inspector->SetTarget(gameObjectManager->Find(guid));
+			}
 		}
 		else if (input->enabled && !EditorCamera::main()->freeCamera.down())
 		{

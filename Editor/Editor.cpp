@@ -57,11 +57,42 @@ void Editor::Update()
 void Editor::Draw()
 {
 	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
 
-	glCullFace(GL_FRONT);
+
+	// Generate GUID Texture
+	if (EditorGUI::guidFBO == 0) glGenFramebuffers(1, &EditorGUI::guidFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, EditorGUI::guidFBO);
+
+	if (EditorGUI::guidDepth == 0) glGenRenderbuffers(1, &EditorGUI::guidDepth);
+	glBindRenderbuffer(GL_RENDERBUFFER, EditorGUI::guidDepth);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, screenWidth, screenHeight);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, EditorGUI::guidDepth);
+
+	if (EditorGUI::guidTexture == 0) glGenTextures(1, &EditorGUI::guidTexture);
+
+	glBindTexture(GL_TEXTURE_2D, EditorGUI::guidTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RG32UI, screenWidth, screenHeight, 0, GL_RG_INTEGER, GL_UNSIGNED_INT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, EditorGUI::guidTexture, 0);
+
+	glClearColor(0, 0, 0, 0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glViewport(0, 0, screenWidth, screenHeight);
+
+	Updater::CallDrawGUIDs();
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	// Create Shadowmaps
+	glCullFace(GL_FRONT);
 	uint shadowMapFBO;
 	glGenFramebuffers(1, &shadowMapFBO);
 	for (uint l = 0; l < (uint)LightingManager::lightObjects.size(); l++)

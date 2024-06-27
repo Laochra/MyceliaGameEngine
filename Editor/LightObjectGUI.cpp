@@ -29,10 +29,22 @@ void LightObjectGUI::DrawLightObjectGUI(LightObject* lightObject)
 			{
 				lightObject->angle = vec2(glm::cos(glm::radians(0.0f)));
 
-				if (lightObject->shadowMode)
+				// Shadows for point lights are currently disabled!
+				lightObject->shadowMode = NoShadows;
+				lightObject->shadowMapCount = 0U;
+				for (uint i = 0; i < 6U; i++)
 				{
-					lightObject->shadowMapCount = 6U;
+					if (lightObject->shadowMaps[i] != 0U)
+					{
+						glDeleteTextures(1, &lightObject->shadowMaps[i]);
+						lightObject->shadowMaps[i] = 0U;
+					}
 				}
+
+				//if (lightObject->shadowMode)
+				//{
+				//	lightObject->shadowMapCount = 6U;
+				//}
 			}
 			if (ImGui::Selectable("Spotlight", !angleIs0))
 			{
@@ -65,6 +77,7 @@ void LightObjectGUI::DrawLightObjectGUI(LightObject* lightObject)
 		default: shadowModeName = "Invalid Option Selected"; break;
 		}
 
+		ImGui::BeginDisabled(angleIs0);
 		if (ImGui::BeginCombo("Shadow Mode", shadowModeName))
 		{
 			if (ImGui::Selectable("No Shadows", lightObject->shadowMode == NoShadows))
@@ -92,6 +105,7 @@ void LightObjectGUI::DrawLightObjectGUI(LightObject* lightObject)
 			}
 			ImGui::EndCombo();
 		}
+		ImGui::EndDisabled();
 
 		GUI::Spacing(1);
 

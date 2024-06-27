@@ -134,6 +134,11 @@ void GameObject::DrawDepth(mat4 PVMatrix)
 
 }
 
+void GameObject::DrawGUID()
+{
+
+}
+
 void GameObject::DrawDebug()
 {
 

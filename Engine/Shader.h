@@ -157,6 +157,7 @@ public:
 
 	// Find a better way of doing this. Name searching may be expensive
 	bool BindUniform(const char* name, int value);
+	bool BindUniform(const char* name, const glm::uvec2& value);
 	bool BindUniform(const char* name, float value);
 	bool BindUniform(const char* name, const vec2& value);
 	bool BindUniform(const char* name, const vec3& value);

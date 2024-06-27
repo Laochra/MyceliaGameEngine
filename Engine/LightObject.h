@@ -13,7 +13,7 @@ public:
 	float range = 1.0f;
 	vec2 angle = { 1.0f, 1.0f };
 
-	ShadowMode shadowMode = HardShadows;
+	ShadowMode shadowMode = NoShadows;
 	ubyte shadowMapCount = 6U;
 	ushort shadowSideLength = 1024U;
 	uint shadowMaps[6]{ 0U, 0U, 0U, 0U, 0U, 0U };

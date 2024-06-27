@@ -174,6 +174,21 @@ void MeshRenderer::DrawDepth(mat4 PVMatrix)
 	mesh->Draw();
 }
 
+void MeshRenderer::DrawGUID()
+{
+	if (mesh == nullptr) return;
+	
+	ShaderProgram* guidProgram = shaderManager->GetProgram("DrawGUID");
+	guidProgram->Bind();
+
+	guidProgram->BindUniform("ProjectionViewModel", Camera::main->GetPVMatrix() * GetMatrix());
+
+	unsigned long long guid = GetGUID();
+	guidProgram->BindUniform("GUID", *(glm::uvec2*)&guid);
+
+	mesh->Draw();
+}
+
 const Mesh* MeshRenderer::GetMesh() const
 {
 	return mesh;

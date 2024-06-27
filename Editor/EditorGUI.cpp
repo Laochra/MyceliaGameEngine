@@ -29,6 +29,10 @@ namespace EditorGUI
 	unsigned int sceneViewFrameBufferOutput = 0;
 	unsigned int sceneViewColourBufferOutput = 0;
 
+	unsigned int guidFBO;
+	unsigned int guidDepth;
+	unsigned int guidTexture;
+
 	vector<EditorWindow> editorWindows;
 	map<string, uint> windowIndices;
 
