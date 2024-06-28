@@ -84,16 +84,11 @@ int Application::Setup()
 		return -1;
 	}
 
-	input = new Input();
-
-	glfwSetKeyCallback(window, KeyCallback);
-	glfwSetCursorPosCallback(window, CursorPosCallback);
-	glfwSetMouseButtonCallback(window, MouseButtonCallback);
-	glfwSetScrollCallback(window, ScrollCallback);
-
 	glfwSetWindowFocusCallback(window, WindowFocusCallback);
 
 	glfwMakeContextCurrent(window);
+
+	input = new Input();
 
 	glfwSwapInterval(0); // Disables VSync
 

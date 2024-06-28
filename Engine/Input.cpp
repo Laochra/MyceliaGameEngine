@@ -9,6 +9,12 @@ Input::Input()
     downKeys = new std::set<KeyCode>();
     pressedKeys = new std::set<KeyCode>();
     releasedKeys = new std::set<KeyCode>();
+
+    GLFWwindow* window = glfwGetCurrentContext();
+    glfwSetKeyCallback(window, KeyCallback);
+    glfwSetCursorPosCallback(window, CursorPosCallback);
+    glfwSetMouseButtonCallback(window, MouseButtonCallback);
+    glfwSetScrollCallback(window, ScrollCallback);
 }
 Input::~Input()
 {

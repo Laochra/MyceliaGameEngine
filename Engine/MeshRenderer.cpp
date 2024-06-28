@@ -79,13 +79,13 @@ void MeshRenderer::Draw()
 		for (int m = 0; m < lightObjects[l]->shadowMapCount; m++)
 		{
 			sp.BindUniform(StringBuilder("LightObjects[",l,"].shadowMapIndices[",m,"]").CStr(), (int)currentMapIndex);
-			glActiveTexture(GL_TEXTURE0 + m + 3);
-			glBindTexture(GL_TEXTURE_2D, (int)lightObject.shadowMaps[m]);
-			sp.BindUniform(StringBuilder("ShadowMaps[",currentMapIndex,"]").CStr(), m + 3);
 			sp.BindUniform(StringBuilder("LightSpaceMatrices[",currentMapIndex,"]").CStr(), pvMatrices[m]);
 			currentMapIndex++;
 		}
 	}
+	glActiveTexture(GL_TEXTURE0 + 3);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, (int)LightingManager::shadowMaps);
+	sp.BindUniform("ShadowMaps", 3);
 	sp.BindUniform("LightSpaceMatrixCount", (int)currentMapIndex);
 
 	// Bind Transform

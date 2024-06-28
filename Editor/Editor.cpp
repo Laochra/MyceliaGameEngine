@@ -93,46 +93,70 @@ void Editor::Draw()
 
 	// Create Shadowmaps
 	glCullFace(GL_FRONT);
-	uint shadowMapFBO;
-	glGenFramebuffers(1, &shadowMapFBO);
+	uint& shadowMapFBO = LightingManager::shadowMapFBO;
+	uint& shadowMaps = LightingManager::shadowMaps;
+	uint& shadowSideLength = LightingManager::shadowMapSideLength;
+
+	if (shadowMapFBO == 0)
+	{
+		glGenFramebuffers(1, &shadowMapFBO);
+		glGenTextures(1, &shadowMaps);
+		glBindFramebuffer(GL_FRAMEBUFFER, shadowMapFBO);
+		glBindTexture(GL_TEXTURE_2D_ARRAY, shadowMaps);
+		glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_DEPTH24_STENCIL8, shadowSideLength, shadowSideLength, LightingManager::maxShadowMaps);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	}
+	glBindFramebuffer(GL_FRAMEBUFFER, shadowMapFBO);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, shadowMaps);
+	uint& mapCount = LightingManager::shadowMapCount;
+	mapCount = 0U;
 	for (uint l = 0; l < (uint)LightingManager::lightObjects.size(); l++)
 	{
-		LightObject& lightObject = *LightingManager::lightObjects[l];
-		if (lightObject.shadowMode == NoShadows) continue;
-
-		vector<mat4> pvMatrices = lightObject.GetLightPVMatrices();
-
-		for (uint m = 0; m < lightObject.shadowMapCount; m++)
+		mapCount += LightingManager::lightObjects[l]->shadowMapCount;
+	}
+	
+	if (mapCount > 0)
+	{
+		if (mapCount > LightingManager::maxShadowMaps)
 		{
-			if (lightObject.shadowMaps[m] == 0U)
+			Debug::LogWarning("There are more shadow maps (", mapCount, ") "
+				"than are allowed (", LightingManager::maxShadowMaps, "). "
+				"Reduce the amount of shadow mapped lights.");
+		}
+
+		uint mapIndex = 0;
+		for (uint l = 0; l < (uint)LightingManager::lightObjects.size() && l < LightingManager::maxShadowMaps; l++)
+		{
+			LightObject& lightObject = *LightingManager::lightObjects[l];
+			if (lightObject.shadowMode == NoShadows) continue;
+
+			vector<mat4> pvMatrices = lightObject.GetLightPVMatrices();
+
+			for (uint m = 0; m < lightObject.shadowMapCount; m++)
 			{
-				glGenTextures(1, &lightObject.shadowMaps[m]);
+				lightObject.shadowMaps[m] = mapIndex;
+
+				glBindFramebuffer(GL_FRAMEBUFFER, shadowMapFBO);
+				glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, LightingManager::shadowMaps, 0, mapIndex);
+				glDrawBuffer(GL_NONE);
+				glReadBuffer(GL_NONE);
+				glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+				glViewport(0, 0, shadowSideLength, shadowSideLength);
+				glBindFramebuffer(GL_FRAMEBUFFER, shadowMapFBO);
+				glClear(GL_DEPTH_BUFFER_BIT);
+
+				Updater::CallDrawDepth(pvMatrices[m]);
+
+				glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+				mapIndex++;
 			}
-
-			glBindTexture(GL_TEXTURE_2D, lightObject.shadowMaps[m]);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, lightObject.shadowSideLength, lightObject.shadowSideLength, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-			glBindTexture(GL_TEXTURE_2D, 0);
-
-			glBindFramebuffer(GL_FRAMEBUFFER, shadowMapFBO);
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, lightObject.shadowMaps[m], 0);
-			glDrawBuffer(GL_NONE);
-			glReadBuffer(GL_NONE);
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-			glViewport(0, 0, lightObject.shadowSideLength, lightObject.shadowSideLength);
-			glBindFramebuffer(GL_FRAMEBUFFER, shadowMapFBO);
-			glClear(GL_DEPTH_BUFFER_BIT);
-
-			Updater::CallDrawDepth(pvMatrices[m]);
-
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
 	}
-	glDeleteFramebuffers(1, &shadowMapFBO);
 
 	glCullFace(GL_BACK);
 

@@ -52,7 +52,7 @@ void EditorCamera::Update()
 
 		if (xzMovement != vec3(0, 0, 0))
 		{
-			if (xzMovement.length() > 1) xzMovement = glm::normalize(xzMovement);
+			xzMovement = glm::normalize(xzMovement);
 
 			Translate(glm::normalize(xzMovement) * (quickMode ? quickFlySpeed : flySpeed) * Time::delta);
 		}

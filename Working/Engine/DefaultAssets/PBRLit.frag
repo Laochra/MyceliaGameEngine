@@ -35,7 +35,7 @@ uniform int LightObjectCount;
 uniform LightObject LightObjects[4];
 
 in vec4 FragPosLightSpace[24];
-uniform sampler2D ShadowMaps[24];
+uniform sampler2DArray ShadowMaps;
 
 uniform sampler2D ColourMap;
 uniform vec3 ColourTint;
@@ -229,17 +229,17 @@ float ShadowCalculation(int lightObjectIndex, vec3 lightDirection)
 	
 	if (LightObjects[lightObjectIndex].softShadows == 0) // Hard Shadows
 	{
-		float closestDepth = texture(ShadowMaps[mapIndex], coords.xy).r;
+		float closestDepth = texture(ShadowMaps, vec3(coords.xy, mapIndex)).r;
 		shadow = currentDepth > closestDepth ? 1.0 : 0.0; // 1 means no light, 0 means light
 	}
 	else // Soft Shadows
 	{
-		vec2 texelSize = 1.0 / textureSize(ShadowMaps[mapIndex], 0);
+		vec2 texelSize = vec2(1.0 / textureSize(ShadowMaps, 0));
 		for (float x = -1.5; x <= 1.5; x += 1.0)
 		{
 			for (float y = -1.5; y <= 1.5; y += 1.0)
 			{
-				float pcfDepth = texture(ShadowMaps[mapIndex], coords.xy + vec2(x,y) * texelSize).r;
+				float pcfDepth = texture(ShadowMaps, vec3(coords.xy + vec2(x,y) * texelSize, mapIndex)).r;
 				shadow += currentDepth > pcfDepth ? 1.0 : 0.0; // 1 means no light, 0 means light
 			}
 		}

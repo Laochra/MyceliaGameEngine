@@ -7,6 +7,12 @@ namespace LightingManager
 	DirectionalLight directionalLight = DirectionalLight();
 	vector<LightObject*> lightObjects;
 
+	uint shadowMapFBO = 0U;
+	uint shadowMaps = 0U;
+	uint shadowMapSideLength = 1024U;
+	uint shadowMapCount = 0U;
+	uint maxShadowMaps = 24U;
+
 	vector<LightObject*> GetClosestLightObjects(const vec3 position, const int count) noexcept
 	{
 		vector<LightObject*> result;
