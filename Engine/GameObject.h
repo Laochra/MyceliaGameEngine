@@ -133,7 +133,9 @@ private:
 	unsigned long long int guid = 0;
 	char* name;
 	GameObjectState state = Active;
-
+public:
+	bool selected = false;
+private:
 
 	// Friends
 	friend class GameObjectManager;

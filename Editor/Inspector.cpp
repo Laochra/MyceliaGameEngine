@@ -11,7 +11,12 @@ Inspector* inspector = new Inspector();
 
 void Inspector::SetTarget(GameObject* target)
 {
-	del(targetGUI);
+	if (targetGUI != nullptr)
+	{
+		targetGUI->target->selected = false;
+		delete targetGUI;
+		targetGUI = nullptr;
+	};
 
 	if (target == nullptr) return;
 
@@ -32,6 +37,8 @@ void Inspector::SetTarget(GameObject* target)
 		);
 		break;
 	}
+
+	target->selected = true;
 }
 
 const GameObjectGUI* Inspector::GetTargetGUI()

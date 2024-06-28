@@ -46,6 +46,8 @@ uniform sampler2D RMAOMap; // Roughness, Metallic, Ambient Occlusion
 uniform vec3 EmissionColour;
 uniform float EmissionIntensity;
 
+uniform int Selected;
+
 // Output
 layout (location = 0) out vec4 FragColour;
 layout (location = 1) out vec4 BrightColour;
@@ -107,6 +109,13 @@ void main() // Fragment
 	vec3 colourResult = ambientResult + Lo;
 	
 	FragColour = vec4(colourResult + emission, 1);
+	
+	if (Selected == 1)
+	{
+		FragColour.xyz *= 5;
+		FragColour.xyz += vec3(0.7, 0.3, 1) * min((1 / abs(dot(viewDirection, normal))), 10);
+		FragColour.xyz /= 6;
+	}
 	
 	const vec3 brightnessConstant = vec3(0.2126, 0.7152, 0.0722);
 	float brightness = dot(FragColour.rgb, brightnessConstant);

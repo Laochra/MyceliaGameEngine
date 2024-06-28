@@ -22,7 +22,7 @@ uniform mat4 LightSpaceMatrices[24];
 out vec4 FragPosLightSpace[24];
 
 void main() // Vertex
-{
+{	
 	FragPos = (ModelMatrix * Position).xyz;
 	
 	for (int i = 0; i < LightSpaceMatrixCount; i++)
@@ -35,7 +35,7 @@ void main() // Vertex
 	vec3 B = normalize((ModelMatrix * BiTangent).xyz);
 	
 	TBN = mat3(T, B, N);
-
+	
 	FragTexCoords = TexCoords;
 	gl_Position = ProjectionViewModel * Position;
 }

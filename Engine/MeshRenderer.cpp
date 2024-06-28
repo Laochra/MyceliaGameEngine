@@ -89,10 +89,10 @@ void MeshRenderer::Draw()
 	sp.BindUniform("LightSpaceMatrixCount", (int)currentMapIndex);
 
 	// Bind Transform
-	material->shaderProgram->BindUniform("ProjectionViewModel", ProjectionViewMatrix * GetMatrix());
+	sp.BindUniform("ProjectionViewModel", ProjectionViewMatrix * GetMatrix());
 
 	// Bind Transform for Lighting
-	material->shaderProgram->BindUniform("ModelMatrix", GetMatrix());
+	sp.BindUniform("ModelMatrix", GetMatrix());
 	
 	// Bind Colour and Normal Maps
 	for (int i = 0; i < material->uniforms.size(); i++)
@@ -105,7 +105,7 @@ void MeshRenderer::Draw()
 			if (filepath == "None") filepath = "DefaultColour";
 
 			textureManager->GetTexture(filepath.c_str(), Texture::NonLinear)->Bind(0);
-			material->shaderProgram->BindUniform("ColourMap", 0);
+			sp.BindUniform("ColourMap", 0);
 			
 			continue;
 		}
@@ -113,7 +113,7 @@ void MeshRenderer::Draw()
 		{
 			vec3 colourTint;
 			material->uniforms[i].Get(&colourTint);
-			material->shaderProgram->BindUniform("ColourTint", colourTint);
+			sp.BindUniform("ColourTint", colourTint);
 
 			continue;
 		}
@@ -125,7 +125,7 @@ void MeshRenderer::Draw()
 			if (filepath == "None") filepath = "DefaultNormal";
 
 			textureManager->GetTexture(filepath.c_str())->Bind(1);
-			material->shaderProgram->BindUniform("NormalMap", 1);
+			sp.BindUniform("NormalMap", 1);
 
 			continue;
 		}
@@ -137,7 +137,7 @@ void MeshRenderer::Draw()
 			if (filepath == "None") filepath = "DefaultRMAO";
 
 			textureManager->GetTexture(filepath.c_str())->Bind(2);
-			material->shaderProgram->BindUniform("RMAOMap", 2);
+			sp.BindUniform("RMAOMap", 2);
 
 			continue;
 		}
@@ -145,7 +145,7 @@ void MeshRenderer::Draw()
 		{
 			vec3 emissionColour;
 			material->uniforms[i].Get(&emissionColour);
-			material->shaderProgram->BindUniform("EmissionColour", emissionColour);
+			sp.BindUniform("EmissionColour", emissionColour);
 
 			continue;
 		}
@@ -153,11 +153,13 @@ void MeshRenderer::Draw()
 		{
 			float emissionIntensity;
 			material->uniforms[i].Get(&emissionIntensity);
-			material->shaderProgram->BindUniform("EmissionIntensity", emissionIntensity);
+			sp.BindUniform("EmissionIntensity", emissionIntensity);
 
 			continue;
 		}
 	}
+	
+	sp.BindUniform("Selected", (int)selected);
 
 	mesh->Draw();
 }
