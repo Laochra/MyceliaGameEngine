@@ -25,11 +25,18 @@ namespace SceneGUI
 		ImVec2 oldPadding = ImGui::GetStyle().WindowPadding;
 		ImGui::GetStyle().WindowPadding = ImVec2(0.0f, 0.0f);
 
-		ImGui::Begin(name, &open);
+		// TODO: Add Menu Bar with commented out flag. Requires some resizing but will allow for buttons.
+		ImGui::Begin(name, &open, ImGuiWindowFlags_NoCollapse /*| ImGuiWindowFlags_MenuBar */ );
 
 		screenWidth = (int)ImGui::GetWindowWidth();
 		float titleBarHeight = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2;
 		screenHeight = (int)(ImGui::GetWindowHeight() - titleBarHeight);
+
+		if (screenWidth <= 0 || screenHeight <= 0)
+		{
+			ImGui::End();
+			return;
+		}
 
 		if (ImGui::IsWindowHovered())
 		{
@@ -51,10 +58,14 @@ namespace SceneGUI
 				ulong* guidPixels = new ulong[pixelCount];
 				glGetTextureImage(EditorGUI::guidTexture, 0, GL_RG_INTEGER, GL_UNSIGNED_INT, pixelCount * sizeof(ulong), guidPixels);
 
-				ulong guid = guidPixels[(int)cursorPos.x + (int)cursorPos.y * screenWidth];
-				delete guidPixels;
+				if (cursorPos.x > 0 && cursorPos.x < screenWidth && cursorPos.y > 0 && cursorPos.y < screenHeight)
+				{
+					uint guidIndex = (int)cursorPos.x + (int)cursorPos.y * screenWidth;
+					ulong guid = guidPixels[guidIndex];
+					inspector->SetTarget(gameObjectManager->Find(guid));
+				}
 
-				inspector->SetTarget(gameObjectManager->Find(guid));
+				delete guidPixels;
 			}
 		}
 		else if (input->enabled && !EditorCamera::main()->freeCamera.down())

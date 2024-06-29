@@ -56,6 +56,12 @@ void Editor::Update()
 }
 void Editor::Draw()
 {
+	if (screenWidth <= 0 || screenHeight <= 0)
+	{
+		EditorGUI::RenderGUI();
+		return;
+	}
+
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
