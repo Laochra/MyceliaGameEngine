@@ -91,4 +91,5 @@ namespace GUI
 	};
 
 	extern EditorColours colours;
+	extern ImFont* font;
 }

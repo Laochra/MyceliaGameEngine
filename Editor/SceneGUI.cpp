@@ -28,9 +28,18 @@ namespace SceneGUI
 		// TODO: Add Menu Bar with commented out flag. Requires some resizing but will allow for buttons.
 		ImGui::Begin(name, &open, ImGuiWindowFlags_NoCollapse /*| ImGuiWindowFlags_MenuBar */ );
 
-		screenWidth = (int)ImGui::GetWindowWidth();
 		float titleBarHeight = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2;
-		screenHeight = (int)(ImGui::GetWindowHeight() - titleBarHeight);
+		glm::ivec2 newScreenSize((int)ImGui::GetWindowWidth(), (int)(ImGui::GetWindowHeight() - titleBarHeight));
+		if (screenWidth != newScreenSize.x || screenHeight != newScreenSize.y)
+		{
+			screenWidth = newScreenSize.x;
+			screenHeight = newScreenSize.y;
+			screenSizeJustChanged = true;
+		}
+		else
+		{
+			screenSizeJustChanged = false;
+		}
 
 		if (screenWidth <= 0 || screenHeight <= 0)
 		{

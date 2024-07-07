@@ -1,4 +1,5 @@
 #include "StringBuilder.h"
+#include <format>
 
 // Uses value to construct string
 std::string ValueAsString(char* value)
@@ -22,6 +23,10 @@ std::string ValueAsString(char value)
 std::string ValueAsString(bool value)
 {
 	return std::string(value == true ? "true" : "false");
+}
+std::string ValueAsString(void* value)
+{
+	return "0x" + std::format("{:X}", (long long)value);
 }
 
 // Just uses std::to_string()

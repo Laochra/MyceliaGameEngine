@@ -29,9 +29,9 @@ namespace EditorGUI
 	unsigned int sceneViewFrameBufferOutput = 0;
 	unsigned int sceneViewColourBufferOutput = 0;
 
-	unsigned int guidFBO;
-	unsigned int guidDepth;
-	unsigned int guidTexture;
+	unsigned int guidFBO = 0;
+	unsigned int guidDepth = 0;
+	unsigned int guidTexture = 0;
 
 	vector<EditorWindow> editorWindows;
 	map<string, uint> windowIndices;
@@ -63,6 +63,7 @@ namespace EditorGUI
 			//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;	// Enable Gamepad Controls
 			ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;			// Enable Docking
 			ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;		// Enable Viewports
+			ImGui::GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
 
 			ImGui_ImplGlfw_InitForOpenGL(window, true);
 			ImGui_ImplOpenGL3_Init();

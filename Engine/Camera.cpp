@@ -2,6 +2,7 @@
 
 int screenWidth = 0;
 int screenHeight = 0;
+bool screenSizeJustChanged = true;
 
 Camera* Camera::main = nullptr;
 

@@ -10,6 +10,7 @@ std::string ValueAsString(std::string value);
 std::string ValueAsString(char value);
 
 std::string ValueAsString(bool value);
+std::string ValueAsString(void* value);
 
 std::string ValueAsString(signed int value);
 std::string ValueAsString(unsigned int value);
@@ -20,8 +21,6 @@ std::string ValueAsString(unsigned long long value);
 std::string ValueAsString(float value);
 std::string ValueAsString(double value);
 std::string ValueAsString(long double value);
-
-//std::string ValueAsString(LogID value);
 
 template<typename Arg1>
 std::string BuildString(Arg1 arg1)

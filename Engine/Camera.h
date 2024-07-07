@@ -27,3 +27,4 @@ public:
 
 extern int screenWidth;
 extern int screenHeight;
+extern bool screenSizeJustChanged;

@@ -25,7 +25,7 @@ map<string, string> GUI::styleMap = {
 };
 
 GUI::EditorColours GUI::colours;
-
+ImFont* GUI::font;
 
 std::string GUI::GenerateID(GameObject* gameObject)
 {
@@ -209,7 +209,10 @@ void GUI::UpdateStyle()
 	ImGuiStyle* style = &ImGui::GetStyle();
 	
 	// Font
-	ImFont* odudoMono = ImGui::GetIO().Fonts->AddFontFromFileTTF("Assets\\Fonts\\OdudoMono-Regular.otf", 16);
+	if (!ImGui::GetIO().Fonts->Locked)
+	{
+		font = ImGui::GetIO().Fonts->AddFontFromFileTTF("Assets\\Fonts\\OdudoMono-Regular.otf", 16);
+	}
 
 	// Text
 	style->Colors[ImGuiCol_Text]						= *(ImVec4*)&colours.text;
