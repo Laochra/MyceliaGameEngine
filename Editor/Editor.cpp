@@ -56,7 +56,6 @@ void Editor::Update()
 }
 void Editor::Draw()
 {
-	Debug::Log(1 / Time::delta);
 	if (screenWidth <= 0 || screenHeight <= 0)
 	{
 		EditorGUI::RenderGUI();

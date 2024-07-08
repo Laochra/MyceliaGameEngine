@@ -14,7 +14,7 @@ public:
 	vec2 angle = { 1.0f, 1.0f };
 
 	ShadowMode shadowMode = NoShadows;
-	ubyte shadowMapCount = 6U;
+	ubyte shadowMapCount = 0U;
 	uint shadowMaps[6]{ 0U, 0U, 0U, 0U, 0U, 0U };
 
 	vector<mat4> GetLightPVMatrices() noexcept;

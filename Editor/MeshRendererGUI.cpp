@@ -48,6 +48,10 @@ void MeshRendererGUI::DrawMeshRendererGUI(MeshRenderer* meshRenderer)
 			{
 				meshRenderer->SetMesh("ProceduralCube");
 			}
+			if (ImGui::Selectable("ProceduralCone", meshFilepath == "ProceduralCone"))
+			{
+				meshRenderer->SetMesh("ProceduralCone");
+			}
 
 			for (int i = 0; i < meshes.size(); i++)
 			{

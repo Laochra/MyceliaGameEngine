@@ -213,7 +213,6 @@ void LineDrawer::AddCone(vec3 point, vec3 direction, float range, float baseRadi
 	const float phi = 2.0f * glm::pi<float>() / baseSides;
 	const float theta = std::atan(baseRadius / range);
 
-	//TODO: This isn't actually facing the correct way it turns out. Not sure if its this or the light thats set up wrong
 	const mat4 coneRotation = glm::inverse(glm::lookAt(point, baseCentre, { 0, 1, 0 }));
 
 	vec3 previousPoint{}, firstPoint{};

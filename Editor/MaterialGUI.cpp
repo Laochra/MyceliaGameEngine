@@ -173,7 +173,7 @@ namespace MaterialGUI
 		{
 			shaderInput = ifstream("Engine\\DefaultAssets\\PBRLit.gpu");
 		}
-		else if (filePathStr == "Unlit")
+		else if (current.shaderFilePath == "Unlit")
 		{
 			shaderInput = ifstream("Engine\\DefaultAssets\\Unlit.gpu");
 		}

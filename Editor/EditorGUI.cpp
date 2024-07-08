@@ -236,10 +236,10 @@ namespace EditorGUI
 				}
 				if (ImGui::BeginMenu(" 3D   "))
 				{
-					if (ImGui::MenuItem(GameObject3D::className)) { GameObject::Instantiate<GameObject3D>(); }
-					if (ImGui::MenuItem(MeshRenderer::className)) { GameObject::Instantiate<MeshRenderer>(); }
-					if (ImGui::MenuItem(LightObject::className)) { GameObject::Instantiate<LightObject>(); }
-					if (ImGui::MenuItem(ParticleEmitter::className)) { GameObject::Instantiate<ParticleEmitter>(); }
+					if (ImGui::MenuItem(GameObject3D::className)) { GameObject3D::Instantiate<GameObject3D>(glm::identity<mat4>()); }
+					if (ImGui::MenuItem(MeshRenderer::className)) { GameObject3D::Instantiate<MeshRenderer>(glm::identity<mat4>()); }
+					if (ImGui::MenuItem(LightObject::className)) { GameObject3D::Instantiate<LightObject>(glm::identity<mat4>()); }
+					if (ImGui::MenuItem(ParticleEmitter::className)) { GameObject3D::Instantiate<ParticleEmitter>(glm::identity<mat4>()); }
 					ImGui::EndMenu();
 				}
 				if (ImGui::MenuItem(" Prefab"))

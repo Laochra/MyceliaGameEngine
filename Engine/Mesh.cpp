@@ -8,7 +8,7 @@
 
 Mesh::~Mesh()
 {
-	if (filepath != nullptr && strcmp(filepath, "None") != 0 && strcmp(filepath, "ProceduralQuad") != 0 && strcmp(filepath, "ProceduralCube") != 0)
+	if (filepath != nullptr && strcmp(filepath, "None") != 0 && strcmp(filepath, "ProceduralQuad") != 0 && strcmp(filepath, "ProceduralCone") != 0 != 0 && strcmp(filepath, "ProceduralCube") != 0)
 	{
 		delete filepath;
 	}
@@ -256,6 +256,86 @@ void Mesh::InitialiseCube()
 	};
 
 	this->Initialise(24, vertices, 36, indices);
+}
+
+void Mesh::InitialiseCone()
+{
+	filepath = new char[15];
+	const char* newFilepath = "ProceduralCone";
+	for (int i = 0; i < 15; i++) { filepath[i] = newFilepath[i]; }
+
+	const int baseSides = 32;
+
+	Vertex vertices[2 + 2 * baseSides]{};
+
+	// Point
+	vertices[0].position		= { 0, 0, 0, 1 };
+	vertices[0].normal		= { 0, 0, 0, 0 };
+	vertices[0].texCoord		= { 0.5f, 0.5f };
+
+	// Base Centre
+	vertices[1].position		= { 0, 0, 1, 1 };
+	vertices[1].normal		= { 0, 0, 1, 0 };
+	vertices[1].texCoord		= { 0.5f, 0.5f };
+
+	// Base Ring
+	const float phi = 2.0f * glm::pi<float>() / baseSides;
+	const float theta = std::atan(0.5f / 1.0f);
+	const mat4 coneRotation = glm::inverse(glm::lookAt((vec3)vertices[0].position, (vec3)vertices[1].position, { 0, 1, 0 }));
+	mat4 newRotation{};
+	vec3 newDirection{};
+	for (uint i = 0; i < baseSides; i++)
+	{
+		newRotation = glm::rotate(coneRotation, (float)i * phi, vec3(0, 0, 1));
+		newRotation = glm::rotate(newRotation, theta, vec3(1, 0, 0));
+
+		newDirection = glm::normalize(-newRotation[2]);
+
+		// Out Facing
+		vertices[i + 2].position = vec4((vec3)vertices[0].position + newDirection * sqrt(1.0f * 1.0f + 0.5f * 0.5f), 1);
+		vertices[i + 2].normal = glm::normalize(-newRotation[0]);
+		vertices[i + 2].texCoord = (vec2)vertices[i + 2].position;
+		vertices[i + 2].tangent = glm::normalize(newRotation[2]);
+		vertices[i + 2].biTangent = glm::normalize(-newRotation[1]);
+		
+		// Down Facing
+		vertices[i + 2 + baseSides].position = vertices[i + 2].position;
+		vertices[i + 2 + baseSides].normal = { 0, 0, 1, 0 };
+		vertices[i + 2 + baseSides].texCoord = (vec2)vertices[i + 2 + baseSides].position;
+	}
+
+	vector<uint> indices;
+	for (uint i = 0; i < baseSides; i++)
+	{
+		indices.push_back(0);
+		indices.push_back(i + 2);
+		if (i + 1 == baseSides)
+		{
+			indices.push_back(2);
+		}
+		else
+		{
+			indices.push_back(i + 3);
+		}
+	}
+	for (uint i = 0; i < baseSides; i++)
+	{
+		indices.push_back(1);
+		if (i + 1 == baseSides)
+		{
+			indices.push_back(baseSides + 2);
+			GenerateTriTangBitang(vertices[1], vertices[i + baseSides + 3], vertices[i + baseSides + 2]);
+		}
+		else
+		{
+			indices.push_back(i + baseSides + 3);
+			GenerateTriTangBitang(vertices[1], vertices[baseSides + 2], vertices[i + baseSides + 2]);
+		}
+		indices.push_back(i + baseSides + 2);
+	}
+	
+
+	this->Initialise(2 + 2 * baseSides, vertices, indices.size(), indices.data());
 }
 
 bool Mesh::LoadFromFile(const char* filepathInit)
