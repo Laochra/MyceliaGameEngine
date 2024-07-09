@@ -13,7 +13,7 @@ layout (location = 1) out vec4 BrightColour;
 
 
 void main() // Fragment
-{	
+{
 	vec3 colour = texture(ColourMap, FragTexCoords).rgb * ColourTint;
 	
 	FragColour = vec4(colour, 1);

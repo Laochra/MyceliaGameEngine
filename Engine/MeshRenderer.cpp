@@ -113,6 +113,7 @@ void MeshRenderer::Draw()
 		{
 			vec3 colourTint;
 			material->uniforms[i].Get(&colourTint);
+			colourTint = vec3(powf(colourTint.x, 2.2f), powf(colourTint.y, 2.2f), powf(colourTint.z, 2.2f));
 			sp.BindUniform("ColourTint", colourTint);
 
 			continue;
@@ -145,6 +146,7 @@ void MeshRenderer::Draw()
 		{
 			vec3 emissionColour;
 			material->uniforms[i].Get(&emissionColour);
+			emissionColour = vec3(powf(emissionColour.x, 2.2f), powf(emissionColour.y, 2.2f), powf(emissionColour.z, 2.2f));
 			sp.BindUniform("EmissionColour", emissionColour);
 
 			continue;
