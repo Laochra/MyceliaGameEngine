@@ -145,7 +145,13 @@ vec3 GameObject3D::GetGlobalPosition() noexcept
 {
 	return vec3(GetMatrix()[3]);
 }
-
+vec3 GameObject3D::GetGlobalPivot() noexcept
+{
+	return GetGlobalPosition() +
+		(vec3)GetMatrix()[0] * pivot.x +
+		(vec3)GetMatrix()[1] * pivot.y +
+		(vec3)GetMatrix()[2] * pivot.z;
+}
 mat3 GameObject3D::GetGlobalRotationMatrix() noexcept
 {
 	const mat4 t(GetMatrix());

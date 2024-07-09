@@ -11,6 +11,8 @@
 
 #include "ParticleEmitter.h"
 
+#include "TransformEdit.h"
+
 void Editor::Initialise()
 {
 	EditorGUI::Initialise();
@@ -24,8 +26,6 @@ void Editor::Initialise()
 
 	LightingManager::ambientLight = Light(vec3(0.1f, 0.1f, 0.1f));
 	LightingManager::directionalLight = DirectionalLight(vec3(1.0f, 1.0f, 1.0f), glm::normalize(vec3(-0.1f, -1, -1)));
-
-	debug->lines.AddXYZLines(-FLT_MAX);
 	
 	input->enabled = false;
 
@@ -53,6 +53,7 @@ void Editor::Update()
 {	
 	EditorGUI::Draw();
 	Updater::CallUpdate();
+	TransformEdit::Update();
 }
 void Editor::Draw()
 {
@@ -97,7 +98,10 @@ void Editor::Draw()
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
 	Updater::CallDrawGUIDs();
+	glClear(GL_DEPTH_BUFFER_BIT);
+	TransformEdit::DrawIDs();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -236,6 +240,9 @@ void Editor::Draw()
 	debug->lines.AddGrid(vec3((int)cameraPos.x, 0, (int)cameraPos.z), 50);
 
 	debug->lines.Draw();
+
+	glClear(GL_DEPTH_BUFFER_BIT);
+	TransformEdit::Draw();
 
 	/// Screen Post Processing
 	glDisable(GL_CULL_FACE);

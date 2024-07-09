@@ -195,6 +195,7 @@
     <ClCompile Include="PostProcessingGUI.cpp" />
     <ClCompile Include="SceneGUI.cpp" />
     <ClCompile Include="ShaderProgramGUI.cpp" />
+    <ClCompile Include="TransformEdit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\External\imgui\imconfig.h" />
@@ -235,6 +236,7 @@
     <ClInclude Include="SceneGUI.h" />
     <ClInclude Include="ShaderProgramGUI.h" />
     <ClInclude Include="Table.h" />
+    <ClInclude Include="TransformEdit.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\External\imgui\imgui.natstepfilter" />

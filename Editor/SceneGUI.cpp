@@ -12,7 +12,9 @@
 
 #include "GeneralMacros.h"
 
+#include "TransformEdit.h"
 #include "Debug.h"
+#include <iostream>
 
 typedef unsigned long long ulong;
 
@@ -55,6 +57,13 @@ namespace SceneGUI
 				if (glfwRawMouseMotionSupported()) glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 				ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse; // Disables Imgui's Mouse Input
 			}
+			else
+			{
+				if (input->GetKeyPressed(KeyCode::Q)) TransformEdit::mode = TransformEdit::Mode::Select;
+				if (input->GetKeyPressed(KeyCode::W)) TransformEdit::mode = TransformEdit::Mode::Translate;
+				if (input->GetKeyPressed(KeyCode::E)) TransformEdit::mode = TransformEdit::Mode::Rotate;
+				if (input->GetKeyPressed(KeyCode::T)) TransformEdit::space = (TransformEdit::Space)!(bool)TransformEdit::space;
+			}
 			input->enabled = true;
 
 			if (input->GetKeyPressed(KeyCode::MouseLeft))
@@ -71,11 +80,23 @@ namespace SceneGUI
 				{
 					uint guidIndex = (int)cursorPos.x + (int)cursorPos.y * screenWidth;
 					ulong guid = guidPixels[guidIndex];
-					inspector->SetTarget(gameObjectManager->Find(guid));
+					switch (guid)
+					{
+					case (ulong)TransformEdit::Handle::X:
+					case (ulong)TransformEdit::Handle::Y:
+					case (ulong)TransformEdit::Handle::Z:
+						vec2 normalisedMousePos = vec2(cursorPos.x / screenWidth, cursorPos.y / screenHeight);
+						normalisedMousePos *= 2.0f;
+						normalisedMousePos -= 1.0f;
+						TransformEdit::BeginTransform((TransformEdit::Handle)guid, normalisedMousePos);
+						break;
+					default: inspector->SetTarget(gameObjectManager->Find(guid)); break;
+					}
 				}
 
 				delete guidPixels;
 			}
+
 		}
 		else if (input->enabled && !EditorCamera::main()->freeCamera.down())
 		{

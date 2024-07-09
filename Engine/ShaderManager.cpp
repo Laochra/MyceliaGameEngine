@@ -48,6 +48,17 @@ ShaderManager::ShaderManager()
       Debug::LogError(LogID::ERR101, "DrawGUID.gpu ", locationinfo);
       delete drawGUID;
    }
+
+   //ShaderProgram* drawLineID = new ShaderProgram;
+   //if (drawLineID->LoadAndLinkFromJSON("Engine\\DefaultAssets\\DrawLineID.gpu"))
+   //{
+   //   loadedPrograms.insert(std::pair(string("DrawLineID"), drawLineID));
+   //}
+   //else
+   //{
+   //   Debug::LogError(LogID::ERR101, "DrawLineID.gpu ", locationinfo);
+   //   delete drawLineID;
+   //}
 }
 
 ShaderManager::~ShaderManager()

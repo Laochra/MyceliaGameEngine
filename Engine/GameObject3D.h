@@ -33,6 +33,7 @@ public:
 	void SetDirty();
 
 	vec3 GetGlobalPosition() noexcept;
+	vec3 GetGlobalPivot() noexcept;
 	mat3 GetGlobalRotationMatrix() noexcept;
 	quat GetGlobalRotationQuat() noexcept;
 	vec3 GetGlobalScale() noexcept;
