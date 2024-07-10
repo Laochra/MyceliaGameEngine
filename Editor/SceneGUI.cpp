@@ -20,6 +20,8 @@ typedef unsigned long long ulong;
 
 namespace SceneGUI
 {
+	vec2 normalisedMousePos = vec2(0.0f, 0.0f);
+
 	void SceneGUI::DrawScene(const char* const name, bool& open) noexcept
 	{
 		GLFWwindow* window = glfwGetCurrentContext();
@@ -49,29 +51,54 @@ namespace SceneGUI
 			return;
 		}
 
+		if (input->GetKeyPressed(KeyCode::Esc))
+		{
+			TransformEdit::CancelTransform();
+		}
+
 		if (ImGui::IsWindowHovered())
 		{
 			if (EditorCamera::main()->freeCamera.pressed())
 			{
+				TransformEdit::CancelTransform();
+
 				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 				if (glfwRawMouseMotionSupported()) glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 				ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse; // Disables Imgui's Mouse Input
 			}
 			else
 			{
-				if (input->GetKeyPressed(KeyCode::Q)) TransformEdit::mode = TransformEdit::Mode::Select;
-				if (input->GetKeyPressed(KeyCode::W)) TransformEdit::mode = TransformEdit::Mode::Translate;
-				if (input->GetKeyPressed(KeyCode::E)) TransformEdit::mode = TransformEdit::Mode::Rotate;
-				if (input->GetKeyPressed(KeyCode::T)) TransformEdit::space = (TransformEdit::Space)!(bool)TransformEdit::space;
+				if (input->GetKeyPressed(KeyCode::Q))
+				{
+					TransformEdit::CancelTransform();
+					TransformEdit::mode = TransformEdit::Mode::Select;
+				}
+				if (input->GetKeyPressed(KeyCode::W))
+				{
+					TransformEdit::CancelTransform();
+					TransformEdit::mode = TransformEdit::Mode::Translate;
+				}
+				if (input->GetKeyPressed(KeyCode::E))
+				{
+					TransformEdit::CancelTransform();
+					TransformEdit::mode = TransformEdit::Mode::Rotate;
+				}
+				if (input->GetKeyPressed(KeyCode::T))
+				{
+					TransformEdit::CancelTransform();
+					TransformEdit::space = (TransformEdit::Space)!(bool)TransformEdit::space;
+				}
 			}
 			input->enabled = true;
 
+			ImVec2 windowPos = ImGui::GetWindowPos();
+			vec2 cursorPos = input->cursorPos - vec2(windowPos.x, windowPos.y);
+			cursorPos.y = screenHeight - cursorPos.y;
+			normalisedMousePos = vec2(cursorPos.x / screenWidth, cursorPos.y / screenHeight);
+			normalisedMousePos = (normalisedMousePos * 2.0f) - 1.0f;
+
 			if (input->GetKeyPressed(KeyCode::MouseLeft))
 			{
-				ImVec2 windowPos = ImGui::GetWindowPos();
-				vec2 cursorPos = input->cursorPos - vec2(windowPos.x, windowPos.y);
-				cursorPos.y = screenHeight - cursorPos.y;
-
 				const int pixelCount = screenWidth * screenHeight;
 				ulong* guidPixels = new ulong[pixelCount];
 				glGetTextureImage(EditorGUI::guidTexture, 0, GL_RG_INTEGER, GL_UNSIGNED_INT, pixelCount * sizeof(ulong), guidPixels);

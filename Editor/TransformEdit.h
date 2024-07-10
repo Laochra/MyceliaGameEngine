@@ -33,4 +33,5 @@ namespace TransformEdit
 	extern void Draw() noexcept;
 
 	extern void BeginTransform(Handle handle, vec2 normalisedMousePos) noexcept;
+	extern void CancelTransform() noexcept;
 }

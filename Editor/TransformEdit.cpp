@@ -1,12 +1,14 @@
 #include "TransformEdit.h"
 
 #include "Inspector.h"
+#include "SceneGUI.h"
+
 #include "GameObject3D.h"
+#include "Camera.h"
 
 #include "MeshManager.h"
 #include "ShaderManager.h"
 #include "TextureManager.h"
-#include "Camera.h"
 
 #include "Debug.h"
 
@@ -20,7 +22,11 @@ namespace TransformEdit
 
 	vec2 normalisedMouseStart = { 0.0f, 0.0f };
 
+	vec3 targetStartPos = { 0.0f, 0.0f, 0.0f };
+	vec3 targetStartPosRelative = { 0.0f, 0.0f, 0.0f };
+
 	Mesh* coneMesh;
+	Mesh* cubeMesh;
 
 	void Update() noexcept
 	{
@@ -33,6 +39,7 @@ namespace TransformEdit
 		GameObject3D* target = dynamic_cast<GameObject3D*>(inspector->GetTarget());
 		if (target == nullptr) return;
 
+
 		vec3 axis;
 		switch (selectedHandle)
 		{
@@ -41,11 +48,39 @@ namespace TransformEdit
 		case Handle::Y: axis = { 0, 1, 0 }; break;
 		case Handle::Z: axis = { 0, 0, 1 }; break;
 		}
+		Colour colour(axis.x * 0.5f + 0.5f, axis.y * 0.5f + 0.5f, axis.z * 0.5f + 0.5f);
 		if (space == Space::Local)
 		{
 			axis = glm::normalize(vec3((mat4)target->GetGlobalRotationMatrix() * vec4(axis, 1)));
 		}
-		// Use this axis with the normalised mouse position to translate the object
+
+		vec2 displacement = SceneGUI::normalisedMousePos - normalisedMouseStart;
+
+		vec3 cameraSpaceDisplacement =
+			vec3(glm::inverse(Camera::main->GetProjectionMatrix(screenWidth, screenHeight)) *
+			vec4(displacement.x, displacement.y, 0.0f, 0.0f));
+
+		vec3 cameraSpaceAxis =
+			vec3(Camera::main->GetViewMatrix() *
+			vec4(axis, 0.0f));
+
+		float amountToMove = glm::dot(cameraSpaceAxis, cameraSpaceDisplacement);
+		float distanceFactor = glm::length(targetStartPos - Camera::main->GetGlobalPosition());
+
+		debug->lines.Add(
+			targetStartPos,
+			targetStartPos + axis * distanceFactor * amountToMove,
+			colour
+		);
+
+		if (target->GetParent() == nullptr)
+		{
+			target->SetPosition((targetStartPosRelative + axis * distanceFactor * amountToMove));
+		}
+		else
+		{
+			target->SetPosition((targetStartPosRelative + axis * distanceFactor * amountToMove * (1.0f / target->GetParent()->GetGlobalScale())));
+		}
 	}
 
 	void DrawIDs() noexcept
@@ -117,11 +152,11 @@ namespace TransformEdit
 	}
 	void Draw() noexcept
 	{
-		if (mode == Mode::Select) return;
 		GameObject3D* target = dynamic_cast<GameObject3D*>(inspector->GetTarget());
 		if (target == nullptr) return;
 
 		if (coneMesh == nullptr) coneMesh == meshManager->GetMesh("ProceduralCone");
+		if (cubeMesh == nullptr) cubeMesh = meshManager->GetMesh("ProceduralCube");
 
 		ShaderProgram* unlit = shaderManager->GetProgram("Unlit");
 		unlit->Bind();
@@ -186,11 +221,55 @@ namespace TransformEdit
 				coneMesh->Draw();
 			}
 		}
+
+		// Centre
+		{
+			unlit->BindUniform("ProjectionViewModel",
+				Camera::main->GetPVMatrix() *
+				glm::scale(modelTranslationMatrix, scale * 0.5f)
+			);
+
+			textureManager->GetTexture("DefaultColour", Texture::NonLinear)->Bind(0);
+			unlit->BindUniform("ColourMap", 0);
+
+			unlit->BindUniform("ColourTint", vec3(1, 1, 1));
+
+			cubeMesh->Draw();
+		}
 	}
 
 	void BeginTransform(Handle handle, vec2 normalisedMousePos) noexcept
 	{
+		GameObject3D* target = dynamic_cast<GameObject3D*>(inspector->GetTarget());
+		if (target == nullptr) return;
+
 		selectedHandle = handle;
 		normalisedMouseStart = normalisedMousePos;
+
+		if (mode == Mode::Translate)
+		{
+			targetStartPos = target->GetGlobalPivot();
+			if (target->GetParent() == nullptr)
+			{
+				targetStartPosRelative = targetStartPos;
+			}
+			else
+			{
+				targetStartPosRelative = target->GetPosition();
+			}
+		}
+	}
+	void CancelTransform() noexcept
+	{
+		if (selectedHandle == Handle::None) return;
+		GameObject3D* target = dynamic_cast<GameObject3D*>(inspector->GetTarget());
+		if (target == nullptr) return;
+
+		if (mode == Mode::Translate)
+		{
+			target->SetPosition(targetStartPosRelative);
+		}
+
+		selectedHandle = Handle::None;
 	}
 }

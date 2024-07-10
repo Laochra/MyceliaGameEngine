@@ -69,11 +69,6 @@ void GameObject3D::OnDestroy()
 	GameObject::OnDestroy();
 }
 
-void GameObject3D::DrawDebug()
-{
-	debug->lines.AddSphere(GetGlobalPosition(), glm::length(GetGlobalScale()) * 0.5f * 0.1f, 32);
-}
-
 
 
 bool GameObject3D::IsActive() noexcept

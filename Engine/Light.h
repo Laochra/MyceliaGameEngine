@@ -12,7 +12,7 @@ class Light
 {
 public:
 	vec3 colour;
-	float intensity; 
+	float intensity = 1.0f; 
 	
 	Light(vec3 colourInit = vec3(1.0f)) : colour(colourInit) {}
 };

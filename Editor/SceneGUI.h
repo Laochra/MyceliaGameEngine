@@ -2,8 +2,12 @@
 
 #include "GUI.h"
 
+#include "MathIncludes.h"
+
 namespace SceneGUI
 {
+	extern vec2 normalisedMousePos;
+
 	extern void DrawScene(const char* const name, bool& open) noexcept;
 	extern void DrawFileDropdown() noexcept;
 
