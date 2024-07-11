@@ -22,6 +22,8 @@ void LineDrawer::Draw() noexcept
 {
 	if (!initialised) Initialise();
 
+	glLineWidth((float)lineWidth);
+
 	int i = 0;
 	while (i < lifetimes.size())
 	{
@@ -295,8 +297,6 @@ void LineDrawer::AddConicalFrustum(vec3 point, vec3 direction, float innerRange,
 void LineDrawer::Initialise() noexcept
 {
 	initialised = true;
-
-	glLineWidth(3.0f);
 
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &positionBuffer);

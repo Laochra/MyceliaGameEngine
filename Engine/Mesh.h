@@ -10,7 +10,7 @@ typedef unsigned int uint;
 class Mesh
 {
 public:
-	Mesh() : triCount(0), vao(0), vbo(0), ibo(0), filepath((char*)"None") { }
+	Mesh() : primitiveCount(0), vao(0), vbo(0), ibo(0), filepath((char*)"None") { }
 	virtual ~Mesh();
 	uncopyable(Mesh)
 
@@ -18,6 +18,7 @@ public:
 	void InitialiseQuad();
 	void InitialiseCube();
 	void InitialiseCone(); // TODO: Fix the normals / tangents / bitangents for using with lit shaders
+	void InitialiseRing(uint ringSides = 32);
 
 	bool LoadFromFile(const char* filepath);
 
@@ -27,7 +28,9 @@ public:
 	virtual void DrawWireframe();
 
 protected:
-	unsigned int triCount;
+	unsigned int primitiveCount;
+	unsigned int primitiveType = GL_TRIANGLES;
+	unsigned int pointsPerPrimitive = 3;
 	unsigned int vao, vbo, ibo;
 
 	char* filepath;

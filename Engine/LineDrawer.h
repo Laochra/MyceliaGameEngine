@@ -16,6 +16,9 @@ typedef unsigned int uint;
 class LineDrawer
 {
 public:
+	// Can range from 1-10
+	uint lineWidth = 3;
+
 	LineDrawer() noexcept = default;
 	~LineDrawer() noexcept;
 	uncopyable(LineDrawer)

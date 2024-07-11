@@ -27,6 +27,7 @@ namespace TransformEdit
 
 	Mesh* coneMesh;
 	Mesh* cubeMesh;
+	Mesh* ringMesh;
 
 	void Update() noexcept
 	{
@@ -54,43 +55,57 @@ namespace TransformEdit
 			axis = glm::normalize(vec3((mat4)target->GetGlobalRotationMatrix() * vec4(axis, 1)));
 		}
 
-		vec2 displacement = SceneGUI::normalisedMousePos - normalisedMouseStart;
-
-		vec3 cameraSpaceDisplacement =
-			vec3(glm::inverse(Camera::main->GetProjectionMatrix(screenWidth, screenHeight)) *
-			vec4(displacement.x, displacement.y, 0.0f, 0.0f));
-
-		vec3 cameraSpaceAxis =
-			vec3(Camera::main->GetViewMatrix() *
-			vec4(axis, 0.0f));
-
-		float amountToMove = glm::dot(cameraSpaceAxis, cameraSpaceDisplacement);
-		float distanceFactor = glm::length(targetStartPos - Camera::main->GetGlobalPosition());
-
-		debug->lines.Add(
-			targetStartPos,
-			targetStartPos + axis * distanceFactor * amountToMove,
-			colour
-		);
-
-		if (target->GetParent() == nullptr)
+		if (mode == Mode::Translate)
 		{
-			target->SetPosition((targetStartPosRelative + axis * distanceFactor * amountToMove));
+			vec2 displacement = SceneGUI::normalisedMousePos - normalisedMouseStart;
+
+			vec3 cameraSpaceDisplacement =
+				vec3(glm::inverse(Camera::main->GetProjectionMatrix(screenWidth, screenHeight)) *
+					vec4(displacement.x, displacement.y, 0.0f, 0.0f));
+
+			vec3 cameraSpaceAxis =
+				vec3(Camera::main->GetViewMatrix() *
+					vec4(axis, 0.0f));
+
+			float amountToMove = glm::dot(cameraSpaceAxis, cameraSpaceDisplacement);
+			float distanceFactor = glm::length(targetStartPos - Camera::main->GetGlobalPosition());
+
+			debug->lines.Add(
+				targetStartPos,
+				targetStartPos + axis * distanceFactor * amountToMove,
+				colour
+			);
+
+			if (target->GetParent() == nullptr)
+			{
+				target->SetPosition((targetStartPosRelative + axis * distanceFactor * amountToMove));
+			}
+			else
+			{
+				target->SetPosition((targetStartPosRelative + axis * distanceFactor * amountToMove * (1.0f / target->GetParent()->GetGlobalScale())));
+			}
 		}
-		else
+		if (mode == Mode::Rotate)
 		{
-			target->SetPosition((targetStartPosRelative + axis * distanceFactor * amountToMove * (1.0f / target->GetParent()->GetGlobalScale())));
+			// Rotate???
 		}
 	}
 
 	void DrawIDs() noexcept
 	{
+		glLineWidth(10.0f);
+
 		if (mode == Mode::Select) return;
 		if (selectedHandle != Handle::None) return;
 		GameObject3D* target = dynamic_cast<GameObject3D*>(inspector->GetTarget());
 		if (target == nullptr) return;
 
 		if (coneMesh == nullptr) coneMesh = meshManager->GetMesh("ProceduralCone");
+		if (ringMesh == nullptr)
+		{
+			ringMesh = new Mesh;
+			ringMesh->InitialiseRing(32);
+		}
 
 		ShaderProgram* guidProgram = shaderManager->GetProgram("DrawGUID");
 		guidProgram->Bind();
@@ -99,10 +114,11 @@ namespace TransformEdit
 		mat4 unscaledModelMatrix = modelTranslationMatrix * (mat4)target->GetRotationMatrix();
 
 		float distanceFactor = 0.25f * glm::length(target->GetGlobalPivot() - Camera::main->GetGlobalPosition());
-		vec3 scale = vec3(distanceFactor * 0.2f);
-
+		
 		if (mode == Mode::Translate)
 		{
+			vec3 scale = vec3(distanceFactor * 0.2f);
+
 			// X Arrow
 			{
 				mat4 coneOffset = glm::translate(glm::identity<mat4>(), vec3(1, 0, 0) * distanceFactor);
@@ -133,7 +149,7 @@ namespace TransformEdit
 
 				coneMesh->Draw();
 			}
-			// Y Arrow
+			// Z Arrow
 			{
 				mat4 coneOffset = glm::translate(glm::identity<mat4>(), vec3(0, 0, 1) * distanceFactor);
 				coneOffset = glm::rotate(coneOffset, glm::radians(180.0f), vec3(0, 1, 0));
@@ -149,14 +165,67 @@ namespace TransformEdit
 				coneMesh->Draw();
 			}
 		}
+		else if (mode == Mode::Rotate)
+		{
+			vec3 scale = vec3(distanceFactor);
+
+			// X Ring
+			{
+				mat4 ringOffset = glm::rotate(glm::identity<mat4>(), glm::radians(-90.0f), vec3(0, 1, 0));
+				ringOffset = glm::scale(ringOffset, scale);
+				guidProgram->BindUniform("ProjectionViewModel",
+					Camera::main->GetPVMatrix() *
+					(space == Space::Local ? unscaledModelMatrix : modelTranslationMatrix) *
+					ringOffset);
+
+				ulong id = (ulong)Handle::X;
+				guidProgram->BindUniform("GUID", *(glm::uvec2*)&id);
+
+				ringMesh->Draw();
+			}
+			// Y Ring
+			{
+				mat4 ringOffset = glm::rotate(glm::identity<mat4>(), glm::radians(90.0f), vec3(1, 0, 0));
+				ringOffset = glm::scale(ringOffset, scale);
+				guidProgram->BindUniform("ProjectionViewModel",
+					Camera::main->GetPVMatrix() *
+					(space == Space::Local ? unscaledModelMatrix : modelTranslationMatrix) *
+					ringOffset);
+
+				ulong id = (ulong)Handle::Y;
+				guidProgram->BindUniform("GUID", *(glm::uvec2*)&id);
+
+				ringMesh->Draw();
+			}
+			// Z Ring
+			{
+				mat4 ringOffset = glm::scale(glm::identity<mat4>(), scale);
+				guidProgram->BindUniform("ProjectionViewModel",
+					Camera::main->GetPVMatrix() *
+					(space == Space::Local ? unscaledModelMatrix : modelTranslationMatrix) *
+					ringOffset);
+
+				ulong id = (ulong)Handle::Z;
+				guidProgram->BindUniform("GUID", *(glm::uvec2*)&id);
+
+				ringMesh->Draw();
+			}
+		}
 	}
 	void Draw() noexcept
 	{
+		glLineWidth(5.0f);
+
 		GameObject3D* target = dynamic_cast<GameObject3D*>(inspector->GetTarget());
 		if (target == nullptr) return;
 
 		if (coneMesh == nullptr) coneMesh == meshManager->GetMesh("ProceduralCone");
 		if (cubeMesh == nullptr) cubeMesh = meshManager->GetMesh("ProceduralCube");
+		if (ringMesh == nullptr)
+		{
+			ringMesh = new Mesh;
+			ringMesh->InitialiseRing(32);
+		}
 
 		ShaderProgram* unlit = shaderManager->GetProgram("Unlit");
 		unlit->Bind();
@@ -165,10 +234,11 @@ namespace TransformEdit
 		mat4 unscaledModelMatrix = modelTranslationMatrix * (mat4)target->GetRotationMatrix();
 
 		float distanceFactor = 0.25f * glm::length(target->GetGlobalPivot() - Camera::main->GetGlobalPosition());
-		vec3 scale = vec3(distanceFactor * 0.2f);
-
+		
 		if (mode == Mode::Translate)
 		{
+			vec3 scale(distanceFactor * 0.2f);
+
 			if (selectedHandle == Handle::X || selectedHandle == Handle::None)
 			{
 				mat4 coneOffset = glm::translate(glm::identity<mat4>(), vec3(1, 0, 0) * distanceFactor);
@@ -221,12 +291,65 @@ namespace TransformEdit
 				coneMesh->Draw();
 			}
 		}
+		else if (mode == Mode::Rotate)
+		{
+			vec3 scale(distanceFactor);
 
+			if (selectedHandle == Handle::X || selectedHandle == Handle::None)
+			{
+				mat4 ringOffset = glm::rotate(glm::identity<mat4>(), glm::radians(-90.0f), vec3(0, 1, 0));
+				ringOffset = glm::scale(ringOffset, scale);
+				unlit->BindUniform("ProjectionViewModel",
+					Camera::main->GetPVMatrix() *
+					(space == Space::Local ? unscaledModelMatrix : modelTranslationMatrix) *
+					ringOffset);
+
+				textureManager->GetTexture("DefaultColour", Texture::NonLinear)->Bind(0);
+				unlit->BindUniform("ColourMap", 0);
+
+				unlit->BindUniform("ColourTint", vec3(1, 0, 0));
+
+				ringMesh->Draw();
+			}
+			if (selectedHandle == Handle::Y || selectedHandle == Handle::None)
+			{
+				mat4 ringOffset = glm::rotate(glm::identity<mat4>(), glm::radians(90.0f), vec3(1, 0, 0));
+				ringOffset = glm::scale(ringOffset, scale);
+				unlit->BindUniform("ProjectionViewModel",
+					Camera::main->GetPVMatrix() *
+					(space == Space::Local ? unscaledModelMatrix : modelTranslationMatrix) *
+					ringOffset);
+
+				textureManager->GetTexture("DefaultColour", Texture::NonLinear)->Bind(0);
+				unlit->BindUniform("ColourMap", 0);
+
+				unlit->BindUniform("ColourTint", vec3(0, 1, 0));
+
+				ringMesh->Draw();
+			}
+			if (selectedHandle == Handle::Z || selectedHandle == Handle::None)
+			{
+				mat4 ringOffset = glm::scale(glm::identity<mat4>(), scale);
+				unlit->BindUniform("ProjectionViewModel",
+					Camera::main->GetPVMatrix() *
+					(space == Space::Local ? unscaledModelMatrix : modelTranslationMatrix) *
+					ringOffset);
+
+				textureManager->GetTexture("DefaultColour", Texture::NonLinear)->Bind(0);
+				unlit->BindUniform("ColourMap", 0);
+
+				unlit->BindUniform("ColourTint", vec3(0, 0, 1));
+
+				ringMesh->Draw();
+			}
+		}
 		// Centre
 		{
+			vec3 scale(distanceFactor * 0.1f);
+
 			unlit->BindUniform("ProjectionViewModel",
 				Camera::main->GetPVMatrix() *
-				glm::scale(modelTranslationMatrix, scale * 0.5f)
+				glm::scale(modelTranslationMatrix, scale)
 			);
 
 			textureManager->GetTexture("DefaultColour", Texture::NonLinear)->Bind(0);

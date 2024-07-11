@@ -98,6 +98,22 @@ void Mesh::Initialise(uint vertexCount, const Vertex* vertices, uint indexCount,
 	glEnableVertexAttribArray(4);
 	glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, texCoord)));
 
+	// Set Points Per Primitive Based on Primitive Type
+	switch (primitiveType)
+	{
+	case GL_LINES:
+		pointsPerPrimitive = 2;
+		break;
+	case GL_TRIANGLES:
+		pointsPerPrimitive = 3;
+		break;
+	default:
+		primitiveType = GL_TRIANGLES;
+		pointsPerPrimitive = 3;
+		Debug::LogError("Unaccounted for primitive type with mask: ", std::format("{:#010x}", primitiveType), ". Defaulted to GL_TRIANGLES");
+		break;
+	}
+
 	// Bind Indices if there Are Any
 	if (indexCount != 0)
 	{
@@ -109,11 +125,11 @@ void Mesh::Initialise(uint vertexCount, const Vertex* vertices, uint indexCount,
 		// Fill Vertex Buffer
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexCount * sizeof(uint), indices, GL_STATIC_DRAW);
 
-		triCount = indexCount / 3;
+		primitiveCount = indexCount / pointsPerPrimitive;
 	}
 	else
 	{
-		triCount = vertexCount / 3;
+		primitiveCount = vertexCount / pointsPerPrimitive;
 	}
 
 	// Unbind Buffers
@@ -123,6 +139,8 @@ void Mesh::Initialise(uint vertexCount, const Vertex* vertices, uint indexCount,
 }
 void Mesh::InitialiseQuad()
 {
+	primitiveType = GL_TRIANGLES;
+
 	filepath = new char[15];
 	const char* newFilepath = "ProceduralQuad";
 	for (int i = 0; i < 15; i++) { filepath[i] = newFilepath[i]; }
@@ -154,6 +172,8 @@ void Mesh::InitialiseQuad()
 }
 void Mesh::InitialiseCube()
 {
+	primitiveType = GL_TRIANGLES;
+
 	filepath = new char[15];
 	const char* newFilepath = "ProceduralCube";
 	for (int i = 0; i < 15; i++) { filepath[i] = newFilepath[i]; }
@@ -260,6 +280,7 @@ void Mesh::InitialiseCube()
 
 void Mesh::InitialiseCone()
 {
+	primitiveType = GL_TRIANGLES;
 	filepath = new char[15];
 	const char* newFilepath = "ProceduralCone";
 	for (int i = 0; i < 15; i++) { filepath[i] = newFilepath[i]; }
@@ -338,8 +359,48 @@ void Mesh::InitialiseCone()
 	this->Initialise(2 + 2 * baseSides, vertices, indices.size(), indices.data());
 }
 
+void Mesh::InitialiseRing(uint ringSides)
+{
+	primitiveType = GL_LINES;
+
+	filepath = new char[15];
+	const char* newFilepath = "ProceduralRing";
+	for (int i = 0; i < 15; i++) { filepath[i] = newFilepath[i]; }
+
+	vector<Vertex> vertices;
+	const float phi = 2.0f * glm::pi<float>() / ringSides;
+	for (int i = 0; i < ringSides; i++)
+	{
+		mat4 newRotation = glm::rotate((float)i * phi, vec3(0, 0, 1));
+		Vertex newVertex{};
+		newVertex.position = vec4(glm::normalize((vec3)newRotation[1]), 1);
+		vertices.push_back(newVertex);
+	}
+
+
+	vector<uint> indices;
+	for (uint i = 0; i < ringSides; i++)
+	{
+		if (i + 1 != ringSides)
+		{
+			indices.push_back(i);
+			indices.push_back(i + 1);
+		}
+		else
+		{
+			indices.push_back(i);
+			indices.push_back(0);
+		}
+	}
+
+
+	this->Initialise(vertices.size(), vertices.data(), indices.size(), indices.data());
+}
+
 bool Mesh::LoadFromFile(const char* filepathInit)
 {
+	primitiveType = GL_TRIANGLES;
+
 	assert(string(filepathInit).find(".mesh") != string::npos);
 
 	std::ifstream filestream(filepathInit, std::ios::binary);
@@ -388,11 +449,11 @@ void Mesh::Draw()
 	// Using Indices or Just Vertices?
 	if (ibo != 0)
 	{
-		glDrawElements(GL_TRIANGLES, 3 * triCount, GL_UNSIGNED_INT, 0);
+		glDrawElements(primitiveType, pointsPerPrimitive * primitiveCount, GL_UNSIGNED_INT, 0);
 	}
 	else
 	{
-		glDrawArrays(GL_TRIANGLES, 0, 3 * triCount);
+		glDrawArrays(primitiveType, 0, pointsPerPrimitive * primitiveCount);
 	}
 }
 
