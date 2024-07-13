@@ -149,17 +149,13 @@ vec3 GameObject3D::GetGlobalPivot() noexcept
 }
 mat3 GameObject3D::GetGlobalRotationMatrix() noexcept
 {
-	const mat4 t(GetMatrix());
-	const vec3 scale(GetGlobalScale());
-	const mat3 rotMat((vec3)t[0] / scale[0], (vec3)t[1] / scale[1], (vec3)t[2] / scale[2]);
-	return rotMat;
+	if (parent == nullptr) return glm::toMat3(rotation);
+	return glm::toMat3(parent->rotation * rotation);
 }
 quat GameObject3D::GetGlobalRotationQuat() noexcept
 {
-	const mat4 t(GetMatrix());
-	const vec3 scale(GetGlobalScale());
-	const mat3 rotMat((vec3)t[0] / scale[0], (vec3)t[1] / scale[1], (vec3)t[2] / scale[2]);
-	return glm::quat_cast(rotMat);
+	if (parent == nullptr) return rotation;
+	return parent->rotation * rotation;
 }
 
 vec3 GameObject3D::GetGlobalScale() noexcept
