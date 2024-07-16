@@ -44,6 +44,7 @@ namespace SceneGUI
 		if (screenWidth <= 0 || screenHeight <= 0)
 		{
 			ImGui::End();
+			ImGui::GetStyle().WindowPadding = oldPadding;
 			return;
 		}
 
