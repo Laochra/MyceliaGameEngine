@@ -1,12 +1,14 @@
 #pragma once
 
 #include "JsonIncludes.h"
+#include <string>
+using std::string;
 
 namespace Scene
 {
 	typedef unsigned int uint;
 
-	extern const char* currentPath;
+	extern string currentPath;
 	extern const uint currentFormatVersion;
 	extern bool dirty;
 

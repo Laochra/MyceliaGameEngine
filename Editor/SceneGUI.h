@@ -10,6 +10,7 @@ namespace SceneGUI
 
 	extern void DrawScene(const char* const name, bool& open) noexcept;
 	extern void DrawFileDropdown() noexcept;
+	extern void CheckForFileShortcuts() noexcept;
 
 	extern bool EnsureClearIsIntentional() noexcept;
 

@@ -22,7 +22,7 @@
 
 namespace Scene
 {
-	const char* currentPath = nullptr;
+	string currentPath = "";
 	constexpr uint currentFormatVersion = (VMillions << 6) + (VThousands << 3) + (VHundreds);
 	bool dirty = false;
 

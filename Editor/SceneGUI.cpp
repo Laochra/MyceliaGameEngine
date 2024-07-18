@@ -29,11 +29,83 @@ namespace SceneGUI
 		ImVec2 oldPadding = ImGui::GetStyle().WindowPadding;
 		ImGui::GetStyle().WindowPadding = ImVec2(0.0f, 0.0f);
 
-		// TODO: Add Menu Bar with commented out flag. Requires some resizing but will allow for buttons.
-		ImGui::Begin(name, &open, ImGuiWindowFlags_NoCollapse /*| ImGuiWindowFlags_MenuBar */ );
+		ImGui::Begin(name, &open, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_MenuBar );
+
+		if (ImGui::BeginMenuBar())
+		{
+			ImVec4 shortcutColour = ImGui::GetStyle().Colors[ImGuiCol_TextDisabled];
+
+			GUI::Spacing(2);
+
+			ImGui::PushItemWidth(ImGui::GetWindowWidth() / 10);
+			const char* modeName;
+			switch (TransformEdit::mode)
+			{
+			default:											modeName = "Select";		break;
+			case TransformEdit::Mode::Translate:	modeName = "Translate"; break;
+			case TransformEdit::Mode::Rotate:		modeName = "Rotate";		break;
+			}
+			if (ImGui::BeginCombo("##Mode", modeName))
+			{
+				ImGui::Spacing();
+				if (ImGui::Selectable(" Select    ", TransformEdit::mode == TransformEdit::Mode::Select))
+				{
+					TransformEdit::mode = TransformEdit::Mode::Select;
+				}
+				ImGui::SameLine();
+				ImGui::TextColored(shortcutColour, "Q");
+				ImGui::Spacing();
+				if (ImGui::Selectable(" Translate ", TransformEdit::mode == TransformEdit::Mode::Translate))
+				{
+					TransformEdit::mode = TransformEdit::Mode::Translate;
+				}
+				ImGui::SameLine();
+				ImGui::TextColored(shortcutColour, "W");
+				ImGui::Spacing();
+				if (ImGui::Selectable(" Rotate    ", TransformEdit::mode == TransformEdit::Mode::Rotate))
+				{
+					TransformEdit::mode = TransformEdit::Mode::Rotate;
+				}
+				ImGui::SameLine();
+				ImGui::TextColored(shortcutColour, "E");
+				ImGui::Spacing();
+				ImGui::EndCombo();
+			}
+
+			GUI::Spacing(3);
+
+			const char* spaceName;
+			switch (TransformEdit::space)
+			{
+			default:										spaceName = "Global";	break;
+			case TransformEdit::Space::Local:	spaceName = "Local";	break;
+			}
+			if (ImGui::BeginCombo("##Space", spaceName))
+			{
+				ImGui::Spacing();
+				if (ImGui::Selectable(" Global    ", TransformEdit::space == TransformEdit::Space::Global))
+				{
+					TransformEdit::space = TransformEdit::Space::Global;
+				}
+				ImGui::SameLine();
+				ImGui::TextColored(shortcutColour, "T");
+				ImGui::Spacing();
+				if (ImGui::Selectable(" Local     ", TransformEdit::space == TransformEdit::Space::Local))
+				{
+					TransformEdit::space = TransformEdit::Space::Local;
+				}
+				ImGui::SameLine();
+				ImGui::TextColored(shortcutColour, "T");
+				ImGui::Spacing();
+				ImGui::EndCombo();
+			}
+			ImGui::PopItemWidth();
+			ImGui::EndMenuBar();
+		}
+		ImVec2 menuBarSize = ImGui::GetItemRectSize();
 
 		float titleBarHeight = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2;
-		glm::ivec2 newScreenSize((int)ImGui::GetWindowWidth(), (int)(ImGui::GetWindowHeight() - titleBarHeight));
+		glm::ivec2 newScreenSize((int)ImGui::GetWindowWidth(), (int)(ImGui::GetWindowHeight() - (titleBarHeight + menuBarSize.y)));
 		if (screenWidth != newScreenSize.x || screenHeight != newScreenSize.y)
 		{
 			screenWidth = newScreenSize.x;
@@ -56,7 +128,17 @@ namespace SceneGUI
 			TransformEdit::CancelTransform();
 		}
 
-		if (ImGui::IsWindowHovered())
+		if (EditorCamera::main()->freeCamera.released())
+		{
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse; // Re-enables Imgui's Mouse Input
+			input->enabled = false;
+		}
+
+		uintptr_t image = (uintptr_t)EditorGUI::sceneViewColourBufferOutput; // Casting to a uintptr_t is required to stop a warning with converting 32bit uint to 64bit void*. ImGui::Image works regardless.
+		ImGui::Image((void*)image, ImVec2((float)screenWidth, (float)screenHeight), ImVec2(0, 1), ImVec2(1, 0));
+		
+		if (ImGui::IsItemHovered())
 		{
 			if (EditorCamera::main()->freeCamera.pressed())
 			{
@@ -132,16 +214,6 @@ namespace SceneGUI
 			input->enabled = false;
 		}
 
-		if (EditorCamera::main()->freeCamera.released())
-		{
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-			ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse; // Re-enables Imgui's Mouse Input
-			input->enabled = false;
-		}
-
-		uintptr_t image = (uintptr_t)EditorGUI::sceneViewColourBufferOutput; // Casting to a uintptr_t is required to stop a warning with converting 32bit uint to 64bit void*. ImGui::Image works regardless.
-		ImGui::Image((void*)image, ImVec2((float)screenWidth, (float)screenHeight), ImVec2(0, 1), ImVec2(1, 0));
-		
 		ImGui::End();
 
 		ImGui::GetStyle().WindowPadding = oldPadding;
@@ -149,21 +221,34 @@ namespace SceneGUI
 
 	void SceneGUI::DrawFileDropdown() noexcept
 	{
-		if (ImGui::MenuItem(" New Scene", "Ctrl+N"))
+		if (ImGui::MenuItem(" New Scene ", "Ctrl+N"))
 		{
 			NewScene();
 		}
-		if (ImGui::MenuItem(" Open Scene", "Ctrl+O"))
+		if (ImGui::MenuItem(" Open Scene ", "Ctrl+O"))
 		{
 			OpenScene();
 		}
-		if (ImGui::MenuItem(" Save Scene", "Ctrl+S"))
+		if (ImGui::MenuItem(" Save Scene ", "Ctrl+S"))
 		{
 			SaveScene();
 		}
-		if (ImGui::MenuItem(" Save Scene As", "Ctrl+Shift+S"))
+		if (ImGui::MenuItem(" Save Scene As ", "Ctrl+Shift+S"))
 		{
 			SaveSceneAs();
+		}
+	}
+	void CheckForFileShortcuts() noexcept
+	{
+		if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl) || ImGui::IsKeyDown(ImGuiKey_RightCtrl))
+		{
+			if (ImGui::IsKeyPressed(ImGuiKey_N)) NewScene();
+			if (ImGui::IsKeyPressed(ImGuiKey_O)) OpenScene();
+			if (ImGui::IsKeyPressed(ImGuiKey_S))
+			{
+				if (ImGui::IsKeyDown(ImGuiKey_LeftShift)) SaveSceneAs();
+				else SaveScene();
+			}
 		}
 	}
 
@@ -199,7 +284,7 @@ namespace SceneGUI
 	{
 		if (!EnsureClearIsIntentional()) return false;
 		Scene::Clear();
-		Scene::currentPath = nullptr;
+		Scene::currentPath.clear();
 		Scene::dirty = false;
 		return true;
 	}
@@ -217,7 +302,7 @@ namespace SceneGUI
 
 	bool SaveScene() noexcept
 	{
-		if (Scene::currentPath == nullptr) return SaveSceneAs();
+		if (Scene::currentPath.size() == 0) return SaveSceneAs();
 		else return Scene::Save();
 	}
 

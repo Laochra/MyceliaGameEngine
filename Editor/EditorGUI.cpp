@@ -173,6 +173,7 @@ namespace EditorGUI
 				SceneGUI::DrawFileDropdown();
 				ImGui::EndMenu();
 			}
+			SceneGUI::CheckForFileShortcuts();
 			GUI::Spacing(4);
 			if (ImGui::BeginMenu("Windows"))
 			{
