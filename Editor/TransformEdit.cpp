@@ -59,41 +59,38 @@ namespace TransformEdit
 		GameObject3D* target = dynamic_cast<GameObject3D*>(inspector->GetTarget());
 		if (target == nullptr) return;
 
-
-		vec3 axis, relativeTranslateAxis, relativeRotateAxis;
+		vec3 relativeAxis;
 		mat4 axisModelMatrix;
 		switch (selectedHandle)
 		{
-		default: return;
+		default:
+			return;
 		case Handle::X:
-			axis = vec3(1, 0, 0);
-			axisModelMatrix = glm::translate(glm::identity<mat4>(), target->GetGlobalPivot());
-			axisModelMatrix = glm::rotate(axisModelMatrix, glm::radians(-90.0f), vec3(0, 1, 0));
+			relativeAxis = vec3(1, 0, 0);
+			axisModelMatrix = glm::rotate(glm::identity<mat4>(), glm::radians(-90.0f), vec3(0, 1, 0));
 			break;
 		case Handle::Y:
-			axis = vec3(0, 1, 0);
-			axisModelMatrix = glm::translate(glm::identity<mat4>(), target->GetGlobalPivot());
-			axisModelMatrix = glm::rotate(axisModelMatrix, glm::radians(90.0f), vec3(1, 0, 0));
+			relativeAxis = vec3(0, 1, 0);
+			axisModelMatrix = glm::rotate(glm::identity<mat4>(), glm::radians(90.0f), vec3(1, 0, 0));
 			break;
 		case Handle::Z:
-			axis = vec3(0, 0, 1);
-			axisModelMatrix = glm::translate(glm::identity<mat4>(), target->GetGlobalPivot());
+			relativeAxis = vec3(0, 0, 1);
+			axisModelMatrix = glm::rotate(glm::identity<mat4>(), glm::radians(180.0f), vec3(0, 1, 0));
 			break;
 		}
-		relativeTranslateAxis = axis;
-		Colour colour(axis.x * 0.5f + 0.5f, axis.y * 0.5f + 0.5f, axis.z * 0.5f + 0.5f);
+		Colour colour(relativeAxis.x * 0.5f + 0.5f, relativeAxis.y * 0.5f + 0.5f, relativeAxis.z * 0.5f + 0.5f);
 		if (space == Space::Local)
 		{
 			switch (mode)
 			{
 			case Mode::Translate:
-				axis = glm::normalize(vec3((mat4)target->GetGlobalRotationMatrix() * vec4(axis, 1)));
-				relativeTranslateAxis = glm::normalize(vec3((mat4)target->GetRotationMatrix() * vec4(relativeTranslateAxis, 1)));
+				axisModelMatrix = (mat4)target->GetGlobalRotationMatrix() * axisModelMatrix;
+				relativeAxis = glm::normalize(vec3((mat4)target->GetRotationMatrix() * vec4(relativeAxis, 1)));
 				break;
 			case Mode::Rotate:
-				relativeRotateAxis = axis;
-				axis = glm::normalize(vec3(rotate.start * vec4(axis, 1)));
-				axisModelMatrix = glm::toMat4(rotate.start) * axisModelMatrix;
+				mat4 globalTranslation = glm::translate(glm::identity<mat4>(), target->GetGlobalPivot());
+				mat4 globalRotation = glm::toMat4(rotate.start) * axisModelMatrix;
+				axisModelMatrix = globalTranslation * globalRotation;
 				break;
 			}
 		}
@@ -104,11 +101,12 @@ namespace TransformEdit
 			case Mode::Translate:
 				if (target->GetParent() != nullptr)
 				{
-					relativeTranslateAxis = glm::normalize(vec3(glm::inverse(target->GetParent()->GetGlobalRotationMatrix()) * vec4(relativeTranslateAxis, 1)));
+					relativeAxis = glm::normalize(vec3(glm::inverse(target->GetParent()->GetGlobalRotationMatrix()) * vec4(relativeAxis, 1)));
 				}
 				break;
 			case Mode::Rotate:
-				relativeRotateAxis = glm::normalize(vec3(glm::inverse(rotate.start) * vec4(axis, 1)));
+				axisModelMatrix = glm::translate(glm::identity<mat4>(), target->GetGlobalPivot()) * axisModelMatrix;
+				relativeAxis = glm::normalize(vec3(glm::inverse(rotate.start) * vec4(relativeAxis, 1)));
 				break;
 			}
 		}
@@ -125,24 +123,24 @@ namespace TransformEdit
 
 			vec3 cameraSpaceAxis =
 				vec3(Camera::main->GetViewMatrix() *
-					vec4(axis, 0.0f));
+					vec4(-(vec3)axisModelMatrix[2], 0.0f));
 
 			float amountToMove = glm::dot(cameraSpaceAxis, cameraSpaceDisplacement);
 			float distanceFactor = glm::length(translate.start - Camera::main->GetGlobalPosition());
 
 			debug->lines.Add(
 				translate.start,
-				translate.start + axis * distanceFactor * amountToMove,
+				translate.start + -(vec3)axisModelMatrix[2] * distanceFactor * amountToMove,
 				colour
 			);
 
 			if (target->GetParent() == nullptr)
 			{
-				target->SetPosition((translate.relativeStart + relativeTranslateAxis * distanceFactor * amountToMove));
+				target->SetPosition((translate.relativeStart + relativeAxis * distanceFactor * amountToMove));
 			}
 			else
 			{
-				target->SetPosition((translate.relativeStart + relativeTranslateAxis * distanceFactor * amountToMove * (1.0f / target->GetParent()->GetGlobalScale())));
+				target->SetPosition((translate.relativeStart + relativeAxis * distanceFactor * amountToMove * (1.0f / target->GetParent()->GetGlobalScale())));
 			}
 			break;
 		}
@@ -168,8 +166,10 @@ namespace TransformEdit
 
 			// Find the intersecting point on the plane
 			vec3 currentCollisionPoint(0, 0, 0);
+			bool broughtBackOntoPlane = false;
 			if (ray.z < 0 != rayOrigin.z < 0)
 			{
+				broughtBackOntoPlane = true;
 				// If the ray happens to be facing away from the plane
 				// this will make it just *barely* face towards it.
 				ray.z = ray.z < 0 ? 0.001f : -0.001f;
@@ -184,25 +184,19 @@ namespace TransformEdit
 			rotate.currentDirection = vec4(glm::normalize(worldSpaceCollisionPoint - target->GetGlobalPivot()), 0.0f);
 			if (rotate.initialDirection == vec4(0.0f)) rotate.initialDirection = rotate.currentDirection;
 
-			float amountToRotate = acos(std::clamp(glm::dot(rotate.initialDirection, rotate.currentDirection), -1.0f, 1.0f));
-			float sign = glm::sign(glm::dot(axis, glm::cross((vec3)rotate.initialDirection, (vec3)rotate.currentDirection)));
-			target->SetRotation(glm::rotate(rotate.relativeStart, amountToRotate * sign, vec3(vec4(relativeRotateAxis, 1.0f))));
+			float amountToRotate = acos(std::clamp(glm::dot((vec3)rotate.initialDirection, (vec3)rotate.currentDirection), -1.0f, 1.0f));
+			float sign = glm::sign(glm::dot(-(vec3)axisModelMatrix[2], glm::cross((vec3)rotate.initialDirection, (vec3)rotate.currentDirection)));
+			target->SetRotation(glm::rotate(rotate.relativeStart, amountToRotate * sign, vec3(vec4(relativeAxis, 1.0f))));
 
 
 			// Render lines to visualise directions
 			// TODO: Do this with TransformEdit's Draw function so they are visible through objects
-			float distanceFactor = glm::length(translate.start - Camera::main->GetGlobalPosition());
+			float distanceFactor = glm::length(target->GetGlobalPivot() - Camera::main->GetGlobalPosition());
 			float scale = distanceFactor * 0.25f;
 			
 			debug->lines.Add(target->GetGlobalPivot(), target->GetGlobalPivot() + vec3(rotate.initialDirection) * scale, colour);
 			debug->lines.Add(target->GetGlobalPivot(), target->GetGlobalPivot() + vec3(rotate.currentDirection) * scale, colour);
 			
-			debug->lines.Add(target->GetGlobalPivot(), target->GetGlobalPivot() + vec3(axisModelMatrix[0]) * scale, Colour(1, 0, 0));
-			debug->lines.Add(target->GetGlobalPivot(), target->GetGlobalPivot() + vec3(axisModelMatrix[1]) * scale, Colour(0, 1, 0));
-			debug->lines.Add(target->GetGlobalPivot(), target->GetGlobalPivot() + vec3(axisModelMatrix[2]) * scale, Colour(0, 0, 1));
-
-			debug->lines.Add(target->GetGlobalPivot() + vec3(rotate.currentDirection) * scale, worldSpaceCollisionPoint, Colour(1, 0, 1));
-			debug->lines.Add(target->GetGlobalPivot(), target->GetGlobalPivot() + axis * scale, Colour(0, 1, 1));
 			break;
 		}
 		}
