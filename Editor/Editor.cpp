@@ -13,6 +13,8 @@
 
 #include "TransformEdit.h"
 
+#include "EditHistory.h"
+
 void Editor::Initialise()
 {
 	EditorGUI::Initialise();
@@ -20,6 +22,39 @@ void Editor::Initialise()
 
 	gameObjectManager = new GameObjectManager();
 	
+	//
+	GameObject3D* go = GameObject::Instantiate<GameObject3D>();
+	go->SetName("TestObj");
+	EditHistory::Begin(go);
+	go->Translate(vec3(-6, 5, 17));
+	EditHistory::End();
+
+	EditHistory::Undo();
+	EditHistory::Redo();
+
+	int intToWatch = 1;
+	float floatToWatch = 1.0f;
+	string stringToWatch = "1";
+	EditHistory::Begin(intToWatch);
+	intToWatch = 2;
+	EditHistory::End();
+	EditHistory::Begin(floatToWatch);
+	floatToWatch = 2.0f;
+	EditHistory::End();
+	EditHistory::Begin(stringToWatch);
+	stringToWatch = "2";
+	EditHistory::End();
+	
+	EditHistory::Undo();
+	EditHistory::Undo();
+	EditHistory::Undo();
+	EditHistory::Undo();
+	EditHistory::Redo();
+	EditHistory::Redo();
+	EditHistory::Redo();
+	EditHistory::Redo();
+	//
+
 	Camera::main = GameObject3D::Instantiate<EditorCamera>(vec3(-0.25f, 1.0f, 1.5f));
 	EditorCamera::main()->xRotation = -80;
 	EditorCamera::main()->yRotation = -20;

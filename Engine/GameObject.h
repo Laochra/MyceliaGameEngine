@@ -117,8 +117,12 @@ public:
 	template<GameObjectClass T> static T* Instantiate(GameObjectState stateInit = Active);
 	/// <summary>Creates a new instance of a GameObject by deserialising from json</summary> <returns>A pointer to the created instance</returns>
 	static GameObject* InstantiateFrom(json serialisedObject, GuidGeneration guidOptions = GuidGeneration::Keep) noexcept;
-	/// <summary>Calls OnDestroy() on the GameObject instance and permanently sets its state to Destroyed</summary> <param name="gameObject"></param>
+	/// <summary>Calls OnDestroy() on the GameObject instance and sets its state to Destroyed until it is Restore()'d</summary> <param name="gameObject"></param>
 	static void Destroy(GameObject* gameObject);
+	/// <summary>Brings back a GameObject from the Destroyed state and populates it by deserialising from json</summary> <returns>A pointer to the created instance</returns>
+	static GameObject* RestoreFrom(GameObject* gameObject, json serialisedObject, GuidGeneration guidOptions = GuidGeneration::Keep) noexcept;
+	/// <summary>Brings back a GameObject from the Destroyed state</summary> <param name="gameObject"></param>
+	static void Restore(GameObject* gameObject, GameObjectState stateInit = Active);
 
 protected:
 	GameObject() = default;
@@ -162,13 +166,4 @@ template<GameObjectClass T> inline T* GameObject::Instantiate(GameObjectState st
 	gameObject->Initialise();
 
 	return (T*)gameObject;
-}
-inline void GameObject::Destroy(GameObject* gameObject)
-{
-	if (gameObject == nullptr) return;
-	if (gameObject == Destroyed) return;
-
-	gameObject->OnDestroy();
-
-	gameObject->state = Destroyed;
 }

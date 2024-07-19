@@ -162,6 +162,44 @@ void GameObject::OnDeactivate()
 
 }
 
+void GameObject::Destroy(GameObject* gameObject)
+{
+	if (gameObject == nullptr) return;
+	if (gameObject == Destroyed) return;
+
+	gameObject->OnDestroy();
+
+	gameObject->state = Destroyed;
+}
+
+GameObject* GameObject::RestoreFrom(GameObject* gameObject, json jsonObj, GuidGeneration guidOptions) noexcept
+{
+	const unsigned long long typeID = jsonObj["TypeID"];
+	if (typeID != gameObject->GetClassID())
+	{
+		Debug::LogError(LogID::ERR150, "TypeID of restored GameObject does not match the serialised file. ", locationinfo);
+		return gameObject;
+	}
+
+	gameObjectManager->Unbury(gameObject);
+
+	gameObject->DeserialiseFrom(jsonObj, guidOptions);
+
+	gameObject->Initialise();
+
+	return gameObject;
+}
+
+void GameObject::Restore(GameObject* gameObject, GameObjectState stateInit)
+{
+	if (gameObject == nullptr) return;
+	if (gameObject != Destroyed) return;
+
+	gameObjectManager->Unbury(gameObject);
+
+	gameObject->state = stateInit;
+}
+
 bool operator==(GameObject* gameObject, GameObject::GameObjectState state) noexcept
 {
 	return gameObject->state == state;

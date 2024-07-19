@@ -162,6 +162,7 @@
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Colour.cpp" />
     <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="EditHistory.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObject3D.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="Colour.h" />
     <ClInclude Include="ComputeShader.h" />
     <ClInclude Include="Debug.h" />
+    <ClInclude Include="EditHistory.h" />
     <ClInclude Include="FilesIncludes.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObject3D.h" />

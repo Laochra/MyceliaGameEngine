@@ -36,6 +36,17 @@ void GameObjectManager::Bury(GameObject* gameObject) noexcept
 {
 	graveyard.push_back(gameObject);
 }
+void GameObjectManager::Unbury(GameObject* gameObject) noexcept
+{
+	for (int i = 0; i < graveyard.size(); i++)
+	{
+		if (*graveyard[i] == *gameObject)
+		{
+			graveyard.erase(graveyard.begin() + i);
+			break;
+		}
+	}
+}
 void GameObjectManager::Move(GameObject* gameObject, int newIndex) noexcept
 {
 	int i = GetIndexOf(gameObject);

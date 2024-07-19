@@ -101,6 +101,9 @@
     <ClCompile Include="LogID.cpp">
       <Filter>Utility\Debugging</Filter>
     </ClCompile>
+    <ClCompile Include="EditHistory.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -243,6 +246,9 @@
       <Filter>Utility\Debugging</Filter>
     </ClInclude>
     <ClInclude Include="FilesIncludes.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="EditHistory.h">
       <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
