@@ -135,8 +135,8 @@ namespace EditorGUI
 	bool EditorGUI::CleanUp() noexcept
 	{
 		bool isForceCloseComboPressed =
-			ImGui::IsKeyPressed(ImGuiKey_LeftCtrl) &&
-			ImGui::IsKeyPressed(ImGuiKey_LeftShift);
+			ImGui::IsKeyDown(ImGuiKey_LeftCtrl) &&
+			ImGui::IsKeyDown(ImGuiKey_LeftShift);
 		if (!isForceCloseComboPressed && !SceneGUI::EnsureClearIsIntentional()) return false;
 
 		json editorSettings;
@@ -174,6 +174,30 @@ namespace EditorGUI
 				ImGui::EndMenu();
 			}
 			SceneGUI::CheckForFileShortcuts();
+			GUI::Spacing(4);
+			if (ImGui::BeginMenu("Edit"))
+			{
+				if (ImGui::MenuItem(" Undo ", "Ctrl+Z", false, GUI::editHistory.CanUndo()))
+				{
+					GUI::editHistory.Undo();
+				}
+				if (ImGui::MenuItem(" Redo ", "Ctrl+Y", false, GUI::editHistory.CanRedo()))
+				{
+					GUI::editHistory.Redo();
+				}
+				ImGui::EndMenu();
+			}
+			if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
+			{
+				if (ImGui::IsKeyPressed(ImGuiKey_Z, false) && GUI::editHistory.CanUndo())
+				{
+					GUI::editHistory.Undo();
+				}
+				else if (ImGui::IsKeyPressed(ImGuiKey_Y, false) && GUI::editHistory.CanRedo())
+				{
+					GUI::editHistory.Redo();
+				}
+			}
 			GUI::Spacing(4);
 			if (ImGui::BeginMenu("Windows"))
 			{

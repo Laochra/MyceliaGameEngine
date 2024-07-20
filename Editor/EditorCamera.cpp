@@ -5,6 +5,7 @@
 
 void EditorCamera::SerialiseTo(json& jsonObj) const {}
 void EditorCamera::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptions) {}
+void EditorCamera::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions) {}
 
 glm::mat4 EditorCamera::GetViewMatrix()
 {

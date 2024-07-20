@@ -1,87 +1,96 @@
 #include "EditHistory.h"
 
-EditHistory::Edit* EditHistory::currentWatch = nullptr;
-vector<EditHistory::Edit*> EditHistory::historyStack = vector<EditHistory::Edit*>();
-ulong EditHistory::currentStackIndex = 0Ui64;
-
 #include "GameObject3D.h"
 
 #pragma region struct EditGameObject
-	EditHistory::EditGameObject::EditGameObject(GameObject*& gameObjectInit) noexcept :
-		gameObject(gameObjectInit)
+	EditHistory::EditGameObject::EditGameObject(GameObject* gameObjectInit) noexcept :
+		gameObjectEditRef(gameObjectInit)
 	{
-		if (gameObject != nullptr)
+		if (gameObjectEditRef != nullptr)
 		{
-			before = new json();
-			gameObject->SerialiseTo(*before);
+			gameObjectEditRef->SerialiseTo(before);
 
-			if (dynamic_cast<GameObject3D*>(gameObject) != nullptr)
+			const GameObject3D* gameObject3D = dynamic_cast<GameObject3D*>(gameObjectEditRef);
+			if (gameObject3D != nullptr)
 			{
-				parentingData.oldParent = ((GameObject3D*)gameObject)->GetParent();
-				parentingData.oldIndex = ((GameObject3D*)gameObject)->GetIndex();
+				const GameObject3D* parent = gameObject3D->GetParent();
+				parentingData.oldParentGUID = parent == nullptr ? 0 : parent->GetGUID();
+				parentingData.oldIndex = gameObject3D->GetIndex();
 			}
 		}
 	}
-	EditHistory::EditGameObject::~EditGameObject() noexcept
-	{
-		if (before == nullptr) delete before;
-		if (after == nullptr) delete after;
-	}
 	bool EditHistory::EditGameObject::Finalise() noexcept
 	{
-		if (gameObject == nullptr) // This isn't checking for deleted GameObject, its checking for uninitialised GameObject
+		if (gameObjectEditRef == nullptr) // This isn't checking for deleted GameObject, its checking for uninitialised GameObject
 		{
 			Debug::LogWarning("EditHistory::Begin/End(GameObject*) failed because GameObject* was nullptr");
 			return false;
 		}
 
-		if (gameObject != GameObject::Destroyed)
+		if (gameObjectEditRef != GameObject::Destroyed)
 		{
-			after = new json();
-			gameObject->SerialiseTo(*after);
+			gameObjectEditRef->SerialiseTo(after);
 
-			if (dynamic_cast<GameObject3D*>(gameObject) != nullptr)
+			const GameObject3D* gameObject3D = dynamic_cast<GameObject3D*>(gameObjectEditRef);
+			if (gameObject3D != nullptr)
 			{
-				parentingData.newParent = ((GameObject3D*)gameObject)->GetParent();
-				parentingData.newIndex = ((GameObject3D*)gameObject)->GetIndex();
+				const GameObject3D* parent = gameObject3D->GetParent();
+				parentingData.newParentGUID = parent == nullptr ? 0 : parent->GetGUID();
+				parentingData.newIndex = gameObject3D->GetIndex();
 			}
 		}
-		
 
 		bool noChange = (
-			before != nullptr &&
-			after != nullptr &&
-			*before == *after &&
-			parentingData.oldParent == parentingData.newParent &&
+			!before.empty() &&
+			!after.empty() &&
+			before == after &&
+			parentingData.oldParentGUID == parentingData.newParentGUID &&
 			parentingData.oldIndex == parentingData.newIndex
 		);
+
+		guid = gameObjectEditRef->GetGUID(); // From this point gameObjectEditRef becomes invalid and guid becomes valid
 
 		return !noChange;
 	}
 
 	void EditHistory::EditGameObject::Undo() noexcept
 	{
-		if (before == nullptr) // Object was instantiated
+		GameObject* gameObject = gameObjectManager->Find(guid);
+		if (gameObject == nullptr) gameObject = gameObjectManager->FindInGraveyard(guid);
+
+		if (before.empty()) // Object was instantiated
 		{
 			GameObject::Destroy(gameObject);
 		}
 		else
 		{
-			if (after == nullptr) // Object was destroyed
+			if (after.empty()) // Object was destroyed
 			{
-				GameObject::RestoreFrom(gameObject, *before, GuidGeneration::Keep);
+				GameObject::Restore(gameObject);
+				gameObject->UpdateFrom(before, GuidGeneration::File);
 			}
 			else
 			{
-				gameObject->DeserialiseFrom(*before, GuidGeneration::Keep);
+				gameObject->UpdateFrom(before, GuidGeneration::File);
 			}
 
 			GameObject3D* gameObject3D = dynamic_cast<GameObject3D*>(gameObject);
 			if (gameObject3D != nullptr)
 			{
-				if (gameObject3D->GetParent() != parentingData.oldParent)
+				const GameObject3D* currentParent = gameObject3D->GetParent();
+				bool parentChanged = false;
+				if (currentParent == nullptr)
 				{
-					gameObject3D->SetParent(parentingData.oldParent);
+					if (parentingData.oldParentGUID != 0) parentChanged = true;
+				}
+				else
+				{
+					if (currentParent->GetGUID() != parentingData.oldParentGUID) parentChanged = true;
+				}
+
+				if (parentChanged)
+				{
+					gameObject3D->SetParent((GameObject3D*)gameObjectManager->Find(parentingData.oldParentGUID));
 					gameObject3D->MoveTo(parentingData.oldIndex);
 				}
 				else if (gameObject3D->GetIndex() != parentingData.oldIndex)
@@ -93,27 +102,42 @@ ulong EditHistory::currentStackIndex = 0Ui64;
 	}
 	void EditHistory::EditGameObject::Redo() noexcept
 	{
-		if (after == nullptr) // Object was destroyed
+		GameObject* gameObject = gameObjectManager->Find(guid);
+		if (gameObject == nullptr) gameObject = gameObjectManager->FindInGraveyard(guid);
+
+		if (after.empty()) // Object was destroyed
 		{
 			GameObject::Destroy(gameObject);
 		}
 		else
 		{
-			if (before == nullptr) // Object was instantiated
+			if (before.empty()) // Object was instantiated
 			{
-				GameObject::RestoreFrom(gameObject, *after, GuidGeneration::Keep);
+				GameObject::Restore(gameObject);
+				gameObject->UpdateFrom(after, GuidGeneration::File);
 			}
 			else
 			{
-				gameObject->DeserialiseFrom(*after, GuidGeneration::Keep);
+				gameObject->UpdateFrom(after, GuidGeneration::File);
 			}
 
 			GameObject3D* gameObject3D = dynamic_cast<GameObject3D*>(gameObject);
 			if (gameObject3D != nullptr)
 			{
-				if (gameObject3D->GetParent() != parentingData.newParent)
+				const GameObject3D* currentParent = gameObject3D->GetParent();
+				bool parentChanged = false;
+				if (currentParent == nullptr)
 				{
-					gameObject3D->SetParent(parentingData.newParent);
+					if (parentingData.newParentGUID != 0) parentChanged = true;
+				}
+				else
+				{
+					if (currentParent->GetGUID() != parentingData.newParentGUID) parentChanged = true;
+				}
+
+				if (parentChanged)
+				{
+					gameObject3D->SetParent((GameObject3D*)gameObjectManager->Find(parentingData.newParentGUID));
 					gameObject3D->MoveTo(parentingData.newIndex);
 				}
 				else if (gameObject3D->GetIndex() != parentingData.newIndex)
@@ -127,7 +151,7 @@ ulong EditHistory::currentStackIndex = 0Ui64;
 
 void EditHistory::End() noexcept
 {
-	if (currentWatch == nullptr)
+	if (currentEdit == nullptr)
 	{
 		Debug::LogWarning("EditHistory::Begin/End() Mismatch! Begin an edit before trying to end it.", locationinfo);
 		return;
@@ -135,20 +159,25 @@ void EditHistory::End() noexcept
 
 	if (CanRedo())
 	{
-		for (ulong i = currentStackIndex; i < historyStack.size(); i++)
+		for (ulong i = currentStackIndex; i < editStack.size(); i++)
 		{
-			delete historyStack[i];
+			delete editStack[i];
 		}
-		historyStack.erase(historyStack.begin() + currentStackIndex, historyStack.end());
+		editStack.erase(editStack.begin() + currentStackIndex, editStack.end());
 	}
 
-	if (currentWatch->Finalise())
+	if (currentEdit->Finalise())
 	{
-		historyStack.push_back(currentWatch);
+		editStack.push_back(currentEdit);
 		currentStackIndex++;
 	}
-	else delete currentWatch;
-	currentWatch = nullptr;
+	else delete currentEdit;
+	currentEdit = nullptr;
+}
+
+void EditHistory::Clear() noexcept
+{
+	editStack.clear();
 }
 
 bool EditHistory::CanUndo() noexcept
@@ -157,18 +186,18 @@ bool EditHistory::CanUndo() noexcept
 }
 bool EditHistory::CanRedo() noexcept
 {
-	return currentStackIndex < historyStack.size();
+	return currentStackIndex < editStack.size();
 }
 
 void EditHistory::Undo() noexcept
 {
 	assert(CanUndo());
 	currentStackIndex--;
-	historyStack[currentStackIndex]->Undo();
+	editStack[currentStackIndex]->Undo();
 }
 void EditHistory::Redo() noexcept
 {
 	assert(CanRedo());
-	historyStack[currentStackIndex]->Redo();
+	editStack[currentStackIndex]->Redo();
 	currentStackIndex++;
 }

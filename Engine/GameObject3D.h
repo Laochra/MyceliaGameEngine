@@ -20,6 +20,7 @@ public:
 	using GameObject::GameObject;
 
 	virtual void OnDestroy() override;
+	virtual void OnRestore() override;
 
 	bool IsActive() noexcept override;
 

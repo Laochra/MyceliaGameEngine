@@ -96,7 +96,9 @@
     <ClCompile Include="FileDialogue.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
-    <ClCompile Include="TransformEdit.cpp" />
+    <ClCompile Include="TransformEdit.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="JSON Configs">

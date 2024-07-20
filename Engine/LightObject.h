@@ -23,4 +23,5 @@ public:
 
 	virtual void Initialise() override;
 	virtual void OnDestroy() override;
+	virtual void OnRestore() override;
 };

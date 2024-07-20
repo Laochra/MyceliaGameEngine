@@ -22,6 +22,14 @@ void Camera::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptions)
 	nearClip = jsonObj["NearClip"];
 	farClip = jsonObj["FarClip"];
 }
+void Camera::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
+{
+	GameObject3D::UpdateFrom(jsonObj, guidOptions);
+
+	fov = jsonObj["FOV"];
+	nearClip = jsonObj["NearClip"];
+	farClip = jsonObj["FarClip"];
+}
 
 glm::mat4 Camera::GetViewMatrix()
 {

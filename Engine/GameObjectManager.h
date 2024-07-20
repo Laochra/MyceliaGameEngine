@@ -25,6 +25,7 @@ public:
 	void Move(GameObject* gameObject, int newIndex) noexcept;
 
 	GameObject* Find(unsigned long long guid) const noexcept;
+	GameObject* FindInGraveyard(unsigned long long guid) const noexcept;
 	GameObject3D* FindChild(const GameObject3D* gameObject, unsigned long long guid) const noexcept;
 
 	int GetIndexOf(GameObject* gameObject) const noexcept;

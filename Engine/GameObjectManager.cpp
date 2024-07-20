@@ -81,6 +81,20 @@ GameObject* GameObjectManager::Find(unsigned long long guid) const noexcept
 	}
 	return nullptr;
 }
+GameObject* GameObjectManager::FindInGraveyard(unsigned long long guid) const noexcept
+{
+	for (int c = 0; c < graveyard.size(); c++)
+	{
+		if (graveyard[c]->guid == guid) return graveyard[c];
+
+		if (dynamic_cast<GameObject3D*>(graveyard[c]) != nullptr)
+		{
+			GameObject3D* potentialMatch = FindChild((GameObject3D*)graveyard[c], guid);
+			if (potentialMatch != nullptr) return potentialMatch;
+		}
+	}
+	return nullptr;
+}
 GameObject3D* GameObjectManager::FindChild(const GameObject3D* gameObject, unsigned long long guid) const noexcept
 {
 	const std::vector<GameObject3D*>& children = *gameObject->GetChildren();

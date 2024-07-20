@@ -56,17 +56,87 @@ void GameObject3D::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptio
 		child->parent = this;
 	}
 }
+void GameObject3D::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
+{
+	// Populate this properly
+	GameObject::UpdateFrom(jsonObj, guidOptions);
+
+	vector<float> positionData = jsonObj["Position"];
+	memcpy(&position[0], positionData.data(), 3 * sizeof(float));
+
+	vector<float> rotationData = jsonObj["Rotation"];
+	memcpy(&rotation[0], rotationData.data(), 4 * sizeof(float));
+
+	vector<float> scaleData = jsonObj["Scale"];
+	memcpy(&scale[0], scaleData.data(), 3 * sizeof(float));
+
+	vector<float> pivotData = jsonObj["Pivot"];
+	memcpy(&pivot[0], pivotData.data(), 3 * sizeof(float));
+
+	dirty = true;
+
+	vector<json> childrenData = jsonObj["Children"];
+	for (GameObject3D* child : children)
+	{
+		bool matchFound = false;
+		for (vector<json>::const_iterator iter = childrenData.begin(); iter != childrenData.end(); iter++)
+		{
+			const json& childData = iter[0];
+			if (childData["GUID"] == child->GetGUID()) // If child still exists, update it
+			{
+				child->UpdateFrom(childData);
+				childrenData.erase(iter);
+				matchFound = true;
+				break;
+			}
+		}
+		if (!matchFound) GameObject::Destroy(child); // If child no longer exists, destroy it
+	}
+	for (const json& childData : childrenData)
+	{
+		GameObject3D* child = (GameObject3D*)GameObject::InstantiateFrom(childData, guidOptions);
+		children.push_back(child); // If child now exists, add it
+		child->parent = this;
+	}
+
+	childrenData = jsonObj["Children"]; // Restoring to json version since some may have been deleted from the copy
+	
+	// Reorder children to be in line with json
+	for (unsigned long long i = 0; i < childrenData.size(); i++)
+	{
+		const json& childData = childrenData[i];
+
+		for (GameObject3D* child : children)
+		{
+			if (childData["GUID"] == child->GetGUID())
+			{
+				child->MoveTo(i);
+				break;
+			}
+		}
+	}
+}
 
 void GameObject3D::OnDestroy()
 {
+	if (parent == nullptr || parent != Destroyed) GameObject::OnDestroy();
+
 	for (GameObject3D* child : children)
 	{
 		GameObject::Destroy(child);
 	}
 
-	if (parent != nullptr) SetParent(nullptr);
-	
-	GameObject::OnDestroy();
+	if (parent != nullptr && parent != Destroyed) SetParent(nullptr);
+}
+void GameObject3D::OnRestore()
+{
+	if (parent == nullptr) GameObject::OnRestore();
+	else GameObject::Initialise();
+
+	for (GameObject3D* child : children)
+	{
+		GameObject::Restore(child, GetState());
+	}
 }
 
 

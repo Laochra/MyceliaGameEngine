@@ -42,11 +42,25 @@ void GameObject::SerialiseTo(json& jsonObj) const
 void GameObject::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptions)
 {
 	string nameStr = string(jsonObj["Name"]);
-	name = new char[nameStr.size() + 1];
-	memcpy(name, nameStr.c_str(), nameStr.size() + 1);
+	SetName(nameStr.c_str());
 
-	if (guidOptions == GuidGeneration::Keep) guid = jsonObj["GUID"];
+	if (guidOptions == GuidGeneration::File) guid = jsonObj["GUID"];
 	else guid = GuidGenerator::NewGuid();
+
+	state = bool(jsonObj["Active"]) ? GameObject::Active : GameObject::Inactive;
+}
+void GameObject::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
+{
+	const unsigned long long typeID = jsonObj["TypeID"];
+	if (typeID != GetClassID())
+	{
+		Debug::LogError(LogID::ERR150, "TypeID of the GameObject does not match the serialised file it is being updated with.", locationinfo);
+		return;
+	}
+
+	string nameStr = string(jsonObj["Name"]);
+	SetName(nameStr.c_str());
+	if (guidOptions == GuidGeneration::File) guid = jsonObj["GUID"];
 
 	state = bool(jsonObj["Active"]) ? GameObject::Active : GameObject::Inactive;
 }
@@ -150,8 +164,15 @@ void GameObject::Initialise()
 }
 void GameObject::OnDestroy()
 {
+	Updater::UpdateRemove(this);
 	gameObjectManager->Remove(this);
 	gameObjectManager->Bury(this);
+}
+void GameObject::OnRestore()
+{
+	GameObject::Initialise();
+	gameObjectManager->Unbury(this);
+	gameObjectManager->Add(this);
 }
 void GameObject::OnActivate()
 {
@@ -167,27 +188,9 @@ void GameObject::Destroy(GameObject* gameObject)
 	if (gameObject == nullptr) return;
 	if (gameObject == Destroyed) return;
 
-	gameObject->OnDestroy();
-
 	gameObject->state = Destroyed;
-}
 
-GameObject* GameObject::RestoreFrom(GameObject* gameObject, json jsonObj, GuidGeneration guidOptions) noexcept
-{
-	const unsigned long long typeID = jsonObj["TypeID"];
-	if (typeID != gameObject->GetClassID())
-	{
-		Debug::LogError(LogID::ERR150, "TypeID of restored GameObject does not match the serialised file. ", locationinfo);
-		return gameObject;
-	}
-
-	gameObjectManager->Unbury(gameObject);
-
-	gameObject->DeserialiseFrom(jsonObj, guidOptions);
-
-	gameObject->Initialise();
-
-	return gameObject;
+	gameObject->OnDestroy();
 }
 
 void GameObject::Restore(GameObject* gameObject, GameObjectState stateInit)
@@ -195,9 +198,9 @@ void GameObject::Restore(GameObject* gameObject, GameObjectState stateInit)
 	if (gameObject == nullptr) return;
 	if (gameObject != Destroyed) return;
 
-	gameObjectManager->Unbury(gameObject);
-
 	gameObject->state = stateInit;
+	
+	gameObject->OnRestore();
 }
 
 bool operator==(GameObject* gameObject, GameObject::GameObjectState state) noexcept

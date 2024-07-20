@@ -173,7 +173,7 @@ namespace Heirarchy
 
 			if (ImGui::IsWindowHovered()) isHovered = true;
 
-			if (!isHovered && ImGui::IsKeyPressed(ImGuiKey_MouseLeft)) { rightClickMenu.Close(); }
+			if (!isHovered && ImGui::IsKeyPressed(ImGuiKey_MouseLeft, false)) { rightClickMenu.Close(); }
 
 			ImGui::End();
 		}
@@ -181,14 +181,14 @@ namespace Heirarchy
 		{
 			if (!input->enabled)
 			{
-				if (ImGui::IsKeyPressed(ImGuiKey_Delete) || ImGui::IsKeyPressed(ImGuiKey_KeypadDecimal))
+				if (ImGui::IsKeyPressed(ImGuiKey_Delete, false) || ImGui::IsKeyPressed(ImGuiKey_KeypadDecimal, false))
 				{
 					GameObject::Destroy(inspector->GetTarget());
 				}
 
-				if (ImGui::IsKeyPressed(ImGuiKey_LeftCtrl) || ImGui::IsKeyPressed(ImGuiKey_RightCtrl))
+				if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl) || ImGui::IsKeyDown(ImGuiKey_RightCtrl))
 				{
-					if (ImGui::IsKeyPressed(ImGuiKey_D) && dynamic_cast<GameObject3D*>(rightClickMenu.target) != nullptr)
+					if (ImGui::IsKeyPressed(ImGuiKey_D, false) && dynamic_cast<GameObject3D*>(rightClickMenu.target) != nullptr)
 					{
 						Duplicate((GameObject3D*)inspector->GetTarget());
 					}
