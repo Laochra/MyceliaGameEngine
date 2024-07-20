@@ -175,7 +175,7 @@ namespace SceneGUI
 			input->enabled = true;
 
 			ImVec2 windowPos = ImGui::GetWindowPos();
-			vec2 cursorPos = input->cursorPos - vec2(windowPos.x, windowPos.y);
+			vec2 cursorPos = input->cursorPos - vec2(windowPos.x, windowPos.y + menuBarSize.y);
 			cursorPos.y = screenHeight - cursorPos.y;
 			normalisedMousePos = vec2(cursorPos.x / screenWidth, cursorPos.y / screenHeight);
 			normalisedMousePos = (normalisedMousePos * 2.0f) - 1.0f;
