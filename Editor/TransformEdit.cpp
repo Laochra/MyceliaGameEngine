@@ -118,7 +118,7 @@ namespace TransformEdit
 			vec2 displacement = SceneGUI::normalisedMousePos - normalisedMouseStart;
 
 			vec3 cameraSpaceDisplacement =
-				vec3(glm::inverse(Camera::main->GetProjectionMatrix(screenWidth, screenHeight)) *
+				vec3(glm::inverse(Camera::main->GetProjectionMatrix((float)screenWidth, (float)screenHeight)) *
 					vec4(displacement.x, displacement.y, 0.0f, 0.0f));
 
 			vec3 cameraSpaceAxis =
@@ -150,7 +150,7 @@ namespace TransformEdit
 			vec4 rayOrigin;
 
 			// Convert from clip space to view space (including perspective divide)
-			mat4 clipToView = glm::inverse(Camera::main->GetProjectionMatrix(screenWidth, screenHeight));
+			mat4 clipToView = glm::inverse(Camera::main->GetProjectionMatrix((float)screenWidth, (float)screenHeight));
 			rayOrigin = clipToView * vec4(SceneGUI::normalisedMousePos, 0.0f, 1.0f);
 			rayOrigin /= rayOrigin.w;
 
@@ -335,7 +335,7 @@ namespace TransformEdit
 		GameObject3D* target = dynamic_cast<GameObject3D*>(inspector->GetTarget());
 		if (target == nullptr) return;
 
-		if (coneMesh == nullptr) coneMesh == meshManager->GetMesh("ProceduralCone");
+		if (coneMesh == nullptr) coneMesh = meshManager->GetMesh("ProceduralCone");
 		if (cubeMesh == nullptr) cubeMesh = meshManager->GetMesh("ProceduralCube");
 		if (ringMesh == nullptr)
 		{

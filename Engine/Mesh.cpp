@@ -356,7 +356,7 @@ void Mesh::InitialiseCone()
 	}
 	
 
-	this->Initialise(2 + 2 * baseSides, vertices, indices.size(), indices.data());
+	this->Initialise(2 + 2 * baseSides, vertices, (uint)indices.size(), indices.data());
 }
 
 void Mesh::InitialiseRing(uint ringSides)
@@ -369,7 +369,7 @@ void Mesh::InitialiseRing(uint ringSides)
 
 	vector<Vertex> vertices;
 	const float phi = 2.0f * glm::pi<float>() / ringSides;
-	for (int i = 0; i < ringSides; i++)
+	for (uint i = 0; i < ringSides; i++)
 	{
 		mat4 newRotation = glm::rotate((float)i * phi, vec3(0, 0, 1));
 		Vertex newVertex{};
@@ -394,7 +394,7 @@ void Mesh::InitialiseRing(uint ringSides)
 	}
 
 
-	this->Initialise(vertices.size(), vertices.data(), indices.size(), indices.data());
+	this->Initialise((uint)vertices.size(), vertices.data(), (uint)indices.size(), indices.data());
 }
 
 bool Mesh::LoadFromFile(const char* filepathInit)
