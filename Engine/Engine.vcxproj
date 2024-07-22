@@ -77,6 +77,9 @@
     <PublicModuleDirectories>
     </PublicModuleDirectories>
     <AllProjectBMIsArePublic>false</AllProjectBMIsArePublic>
+    <OutDir>$(SolutionDir)Game</OutDir>
+    <TargetName>$(ProjectName)Debug</TargetName>
+    <IntDir>$(SolutionDir)Intermediate\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <PublicIncludeDirectories>$(SolutionDir)Engine; $(SolutionDir)External; $(SolutionDir)External/GLFW; $(SolutionDir)External/glad; $(SolutionDir)External/glm; $(SolutionDir)External/nlohmannjson; $(SolutionDir)External/stb; $(SolutionDir)External/assimp/include; $(SolutionDir)External/aie</PublicIncludeDirectories>
@@ -84,6 +87,8 @@
     <PublicModuleDirectories>
     </PublicModuleDirectories>
     <AllProjectBMIsArePublic>false</AllProjectBMIsArePublic>
+    <OutDir>$(SolutionDir)Game</OutDir>
+    <IntDir>$(SolutionDir)Intermediate\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
