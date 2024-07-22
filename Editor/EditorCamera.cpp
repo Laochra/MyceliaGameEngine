@@ -33,6 +33,8 @@ void EditorCamera::Initialise()
 
 		freeCamera.Bind(MouseRight);
 		quickMode.Bind(LShift);
+
+		EditorCameraConfig::Save(this);
 	}
 }
 

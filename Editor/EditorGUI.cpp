@@ -94,7 +94,23 @@ namespace EditorGUI
 		};
 		map<string, uint> windowIndices;
 
-		ifstream editorSettingsFile("UserSettings\\EditorSettings.json");
+		const char* editorSettingsFilepath = "UserSettings\\EditorSettings.json";
+		ifstream editorSettingsFile(editorSettingsFilepath);
+
+		if (!editorSettingsFile.good())
+		{
+			ofstream defaults(editorSettingsFilepath);
+			defaults <<
+				"{\n"
+				"  \"OpenWindows\": [\n"
+				"    \"Console\",\n"
+				"    \"Heirarchy\",\n"
+				"    \"Inspector\",\n"
+				"    \"Scene\"\n"
+				"  ]\n"
+				"}\n";
+			editorSettingsFile = ifstream(editorSettingsFilepath);
+		}
 
 		json editorSettings;
 		editorSettingsFile >> editorSettings;

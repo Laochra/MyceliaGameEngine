@@ -46,6 +46,7 @@ Game/Debug.log
 
 # Temp Files
 Game/Engine/Temp/*
+!Game/Engine/Temp/temp.meta
 Game/Engine.lib
 Game/EngineDebug.lib
 
