@@ -12,6 +12,10 @@ MeshManager::MeshManager()
    proceduralQuad->InitialiseQuad();
    loadedMeshes.insert(std::pair(string("ProceduralQuad"), proceduralQuad));
 
+   Mesh* proceduralHexagon = new Mesh();
+   proceduralHexagon->InitialiseHexagon();
+   loadedMeshes.insert(std::pair(string("ProceduralHexagon"), proceduralHexagon));
+
    Mesh* proceduralCube = new Mesh();
    proceduralCube->InitialiseCube();
    loadedMeshes.insert(std::pair(string("ProceduralCube"), proceduralCube));

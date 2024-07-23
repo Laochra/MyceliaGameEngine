@@ -16,6 +16,7 @@ public:
 
 	void Initialise(uint vertexCount, const Vertex* vertices, uint indexCount = 0, uint* indices = nullptr);
 	void InitialiseQuad();
+	void InitialiseHexagon();
 	void InitialiseCube();
 	void InitialiseCone(); // TODO: Fix the normals / tangents / bitangents for using with lit shaders
 	void InitialiseRing(uint ringSides = 32);

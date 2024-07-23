@@ -44,6 +44,10 @@ void MeshRendererGUI::DrawMeshRendererGUI(MeshRenderer* meshRenderer)
 			{
 				meshRenderer->SetMesh("ProceduralQuad");
 			}
+			if (ImGui::Selectable("ProceduralHexagon", meshFilepath == "ProceduralHexagon"))
+			{
+				meshRenderer->SetMesh("ProceduralHexagon");
+			}
 			if (ImGui::Selectable("ProceduralCube", meshFilepath == "ProceduralCube"))
 			{
 				meshRenderer->SetMesh("ProceduralCube");
