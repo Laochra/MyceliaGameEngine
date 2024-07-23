@@ -1,0 +1,95 @@
+{
+  "FormatVersion": 1,
+  "GameObjects": [
+    {
+      "Active": true,
+      "Children": [],
+      "GUID": 4811995665966858697,
+      "Material": "Assets\\Materials\\Red.mat",
+      "Mesh": "ProceduralHexagon",
+      "Name": "Red",
+      "Pivot": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "Position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "Rotation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "Scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "TypeID": 181025226017607
+    },
+    {
+      "Active": true,
+      "Children": [],
+      "GUID": 3968632429204981772,
+      "Material": "Assets\\Materials\\Green.mat",
+      "Mesh": "ProceduralHexagon",
+      "Name": "Green",
+      "Pivot": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "Position": [
+        0.8659999966621399,
+        0.0,
+        -0.5
+      ],
+      "Rotation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "Scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "TypeID": 181025226017607
+    },
+    {
+      "Active": true,
+      "Children": [],
+      "GUID": 15442049729030427257,
+      "Material": "Assets\\Materials\\Blue.mat",
+      "Mesh": "ProceduralHexagon",
+      "Name": "Blue",
+      "Pivot": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "Position": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "Rotation": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "Scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "TypeID": 181025226017607
+    }
+  ]
+}

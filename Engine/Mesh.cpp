@@ -174,13 +174,12 @@ void Mesh::InitialiseHexagon()
 {
 	primitiveType = GL_TRIANGLES;
 
-	filepath = new char[15];
-	const char* newFilepath = "ProceduralQuad";
-	for (int i = 0; i < 15; i++) { filepath[i] = newFilepath[i]; }
+	filepath = new char[18];
+	const char* newFilepath = "ProceduralHexagon";
+	for (int i = 0; i < 18; i++) { filepath[i] = newFilepath[i]; }
 
 	Vertex vertices[7]{};
 	vertices[0].position = {  0.0000f,	 0.0000f,	 0.0000f,	 1.0000f };
-
 	vertices[1].position = { -0.2886f,	 0.0000f,	 0.5000f,	 1.0000f };
 	vertices[2].position = {  0.2886f,	 0.0000f,	 0.5000f,	 1.0000f };
 	vertices[3].position = {  0.5774f,	 0.0000f,	 0.0000f,	 1.0000f };
@@ -188,14 +187,13 @@ void Mesh::InitialiseHexagon()
 	vertices[5].position = { -0.2886f,	 0.0000f,	-0.5000f,	 1.0000f };
 	vertices[6].position = { -0.5774f,   0.0000f,	 0.0000f,	 1.0000f };
 
-	vertices[0].texCoord = { 0.50f, 0.50f };
-
-	vertices[1].texCoord = { 0.250f, 0.866f };
-	vertices[2].texCoord = { 0.750f, 0.866f };
-	vertices[3].texCoord = { 1.000f, 0.000f };
-	vertices[4].texCoord = { 0.750f, 0.134f };
-	vertices[5].texCoord = { 0.250f, 0.134f };
-	vertices[6].texCoord = { 0.000f, 0.000f };
+	vertices[0].texCoord = { 0.500f, 0.500f };
+	vertices[1].texCoord = { 0.250f, 0.933f };
+	vertices[2].texCoord = { 0.750f, 0.933f };
+	vertices[3].texCoord = { 1.000f, 0.500f };
+	vertices[4].texCoord = { 0.750f, 0.067f };
+	vertices[5].texCoord = { 0.250f, 0.067f };
+	vertices[6].texCoord = { 0.000f, 0.500f };
 
 	vertices[0].normal = { 0, 1, 0, 0 };
 	vertices[1].normal = { 0, 1, 0, 0 };
@@ -206,11 +204,8 @@ void Mesh::InitialiseHexagon()
 	vertices[6].normal = { 0, 1, 0, 0 };
 
 	GenerateTriTangBitang(vertices[1], vertices[2], vertices[0]);
-	GenerateTriTangBitang(vertices[2], vertices[3], vertices[0]);
 	GenerateTriTangBitang(vertices[3], vertices[4], vertices[0]);
-	GenerateTriTangBitang(vertices[4], vertices[5], vertices[0]);
 	GenerateTriTangBitang(vertices[5], vertices[6], vertices[0]);
-	GenerateTriTangBitang(vertices[6], vertices[1], vertices[0]);
 
 	uint indices[18] =
 	{

@@ -54,3 +54,6 @@ Game/EngineDebug.lib
 Intermediate/*
 *.pdb
 *idb
+
+#Executable
+Game/EditorDebug.exe
