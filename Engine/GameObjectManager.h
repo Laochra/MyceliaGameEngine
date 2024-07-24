@@ -15,7 +15,7 @@ public:
 	GameObjectManager& operator=(const GameObjectManager&) noexcept = delete;
 
 	//GameObject2D* root2D;
-	GameObject3D* root3D;
+	//GameObject3D* root3D;
 
 	vector<GameObject*> gameObjects = vector<GameObject*>();
 	void Add(GameObject* gameObject) noexcept;

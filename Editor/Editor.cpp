@@ -13,7 +13,10 @@
 
 #include "TransformEdit.h"
 
+
 #include "AppInfo.h"
+
+#include "LinkedHexGrid.h"
 
 void Editor::Initialise()
 {
@@ -44,6 +47,20 @@ void Editor::Initialise()
 		fxaaProgram.LoadShader(VertexStage, "Engine\\DefaultAssets\\FullScreenQuad.vert");
 		fxaaProgram.LoadShader(FragmentStage, "Engine\\DefaultAssets\\FXAA.frag");
 		fxaaProgram.Link();
+	}
+
+	LinkedHexGrid hexGrid;
+	hexGrid.AddTile(vec3(0, 0, 0), HexDir::NorthWest);
+	hexGrid.AddTile(vec3(0, 0, 0), HexDir::North);
+	hexGrid.AddTile(vec3(0, 0, 0), HexDir::NorthEast);
+	hexGrid.AddTile(vec3(0, 0, 0), HexDir::SouthEast);
+	hexGrid.AddTile(vec3(0, 0, 0), HexDir::South);
+	hexGrid.AddTile(vec3(0, 0, 0), HexDir::SouthWest);
+	for (HexPair hexPair : hexGrid.lookupTable)
+	{
+		MeshRenderer* obj = GameObject::Instantiate<MeshRenderer>();
+		obj->SetPosition(hexPair.first);
+		obj->SetMesh("ProceduralHexagon");
 	}
 }
 
@@ -76,17 +93,14 @@ void Editor::Draw()
 	glBindFramebuffer(GL_FRAMEBUFFER, EditorGUI::guidFBO);
 
 	if (EditorGUI::guidDepth == 0) glGenRenderbuffers(1, &EditorGUI::guidDepth);
+	if (EditorGUI::guidTexture == 0) glGenTextures(1, &EditorGUI::guidTexture);
 	if (screenSizeJustChanged)
 	{
 		glBindRenderbuffer(GL_RENDERBUFFER, EditorGUI::guidDepth);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, screenWidth, screenHeight);
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, EditorGUI::guidDepth);
-	}
-
-	if (EditorGUI::guidTexture == 0) glGenTextures(1, &EditorGUI::guidTexture);
-	if (screenSizeJustChanged)
-	{
+	
 		glBindTexture(GL_TEXTURE_2D, EditorGUI::guidTexture);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RG32UI, screenWidth, screenHeight, 0, GL_RG_INTEGER, GL_UNSIGNED_INT, NULL);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);

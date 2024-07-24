@@ -102,6 +102,12 @@
       <Filter>Utility\Debugging</Filter>
     </ClCompile>
     <ClCompile Include="AppInfo.cpp" />
+    <ClCompile Include="HexTile.cpp">
+      <Filter>Data Structures</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkedHexGrid.cpp">
+      <Filter>Data Structures</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -247,6 +253,12 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="AppInfo.h" />
+    <ClInclude Include="HexTile.h">
+      <Filter>Data Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkedHexGrid.h">
+      <Filter>Data Structures</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">

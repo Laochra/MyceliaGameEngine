@@ -172,6 +172,7 @@
     <ClCompile Include="GameObject3D.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="GuidGenerator.cpp" />
+    <ClCompile Include="HexTile.cpp" />
     <ClCompile Include="KeyAxis.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Input.cpp" />
@@ -179,6 +180,7 @@
     <ClCompile Include="LightingManager.cpp" />
     <ClCompile Include="LightObject.cpp" />
     <ClCompile Include="LineDrawer.cpp" />
+    <ClCompile Include="LinkedHexGrid.cpp" />
     <ClCompile Include="LogID.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="MaterialManager.cpp" />
@@ -220,12 +222,14 @@
     <ClInclude Include="GuidGenerator.h" />
     <ClInclude Include="Heirarchical.h" />
     <ClInclude Include="HeirarchicalDefinitions.h" />
+    <ClInclude Include="HexTile.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="JsonIncludes.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LightingManager.h" />
     <ClInclude Include="LightObject.h" />
     <ClInclude Include="LineDrawer.h" />
+    <ClInclude Include="LinkedHexGrid.h" />
     <ClInclude Include="LogID.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MaterialManager.h" />
