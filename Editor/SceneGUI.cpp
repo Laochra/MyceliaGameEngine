@@ -201,12 +201,14 @@ namespace SceneGUI
 					}
 				}
 
-				ImVec2 windowPos = ImGui::GetWindowPos();
-				vec2 cursorPos = AppInfo::input->cursorPos - vec2(windowPos.x, windowPos.y + menuBarSize.y);
+				ImVec2 imguiWindowPos = ImGui::GetWindowPos();
+				int mainWindowX, mainWindowY;
+				glfwGetWindowPos(window, &mainWindowX, &mainWindowY);
+				vec2 cursorPos = AppInfo::input->cursorPos - vec2(imguiWindowPos.x, imguiWindowPos.y + menuBarSize.y + 23) + vec2(mainWindowX, mainWindowY);
 				cursorPos.y = screenHeight - cursorPos.y;
 				normalisedMousePos = vec2(cursorPos.x / screenWidth, cursorPos.y / screenHeight);
 				normalisedMousePos = (normalisedMousePos * 2.0f) - 1.0f;
-
+				
 				if (AppInfo::input->GetKeyPressed(KeyCode::MouseLeft))
 				{
 					const int pixelCount = screenWidth * screenHeight;

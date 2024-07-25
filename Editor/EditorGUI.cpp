@@ -309,6 +309,11 @@ namespace EditorGUI
 
 		glEnable(GL_DEPTH_TEST);
 
+		int width, height;
+		glfwGetWindowSize(window, &width, &height);
+
+		glViewport(0, 0, width, height);
+
 		// Draw ImGui UI
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
