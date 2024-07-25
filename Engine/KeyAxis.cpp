@@ -1,6 +1,7 @@
 #include "Input.h"
 
 #include "GeneralMacros.h"
+#include "AppInfo.h"
 
 KeyAxis::KeyAxis() noexcept
 {
@@ -27,7 +28,7 @@ float KeyAxis::value() const noexcept
 
     for (int i = 0; i < positiveKeys->size(); i++)
     {
-        if (input->GetKeyDown((*positiveKeys)[i]))
+        if (AppInfo::input->GetKeyDown((*positiveKeys)[i]))
         {
             positive = true;
             break;
@@ -35,7 +36,7 @@ float KeyAxis::value() const noexcept
     }
     for (int i = 0; i < negativeKeys->size(); i++)
     {
-        if (input->GetKeyDown((*negativeKeys)[i]))
+        if (AppInfo::input->GetKeyDown((*negativeKeys)[i]))
         {
             negative = true;
             break;

@@ -13,6 +13,8 @@
 
 #include "GeneralMacros.h"
 
+#include "AppInfo.h"
+
 bool applicationFocused = true;
 
 int Application::Run()
@@ -24,7 +26,7 @@ int Application::Run()
 		int returnCode = Setup();
 		if (returnCode != 0)
 		{
-			Debug::LogError(LogID::ERR001, "Application setup failed", locationinfo "\n", "dfhskf");
+			Debug::LogError(LogID::ERR001, "Application setup failed", locationinfo);
 			return returnCode;
 		}
 		Debug::LogSubtle("Application setup successful\n");
@@ -88,8 +90,6 @@ int Application::Setup()
 
 	glfwMakeContextCurrent(window);
 
-	input = new Input();
-
 	glfwSwapInterval(0); // Disables VSync
 
 	if (!gladLoadGL())
@@ -114,6 +114,8 @@ int Application::Setup()
 	glfwSetErrorCallback(GLFWErrorCallback);
 #endif
 
+	AppInfo::input = new Input();
+
 	shaderManager = new ShaderManager();
 	materialManager = new MaterialManager();
 	textureManager = new TextureManager();
@@ -131,7 +133,7 @@ void Application::GameLoop()
 	{
 		while (isRunning && !glfwWindowShouldClose(window))
 		{
-			input->Update();
+			AppInfo::input->Update();
 			glfwPollEvents();
 
 			Time::Tick((float)glfwGetTime());
@@ -161,7 +163,7 @@ void Application::GameLoop()
 
 void Application::Close()
 {
-	del(input);
+	del(AppInfo::input);
 
 	del(shaderManager);
 	del(materialManager);

@@ -18,8 +18,6 @@ HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 #define SetConsoleTextColour(colour) SetConsoleTextAttribute(console, colour);
 #endif
 
-Debug* debug;
-
 Debug::Debug() noexcept
 {
 	outputFile = new std::ofstream("Debug.log");

@@ -164,6 +164,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\External\glad\glad.c" />
+    <ClCompile Include="AppInfo.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Colour.cpp" />
     <ClCompile Include="Debug.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="..\External\nlohmannjson\json_fwd.hpp" />
     <ClInclude Include="..\External\stb\stb_image.h" />
     <ClInclude Include="..\External\stb\stb_image_write.h" />
+    <ClInclude Include="AppInfo.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Colour.h" />

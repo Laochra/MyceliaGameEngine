@@ -3,6 +3,8 @@
 
 #include "TimeManager.h"
 
+#include "AppInfo.h"
+
 void EditorCamera::SerialiseTo(json& jsonObj) const {}
 void EditorCamera::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptions) {}
 
@@ -47,7 +49,7 @@ void EditorCamera::Update()
 	vec3 right(-sin(thetaR), 0, cos(thetaR));
 	vec3 up(0, 1, 0);
 
-	if (freeCamera)
+	if (AppInfo::state == AppState::Editor && freeCamera)
 	{
 		// Keyboard Movement
 		vec3 xzMovement = ((float)xInput * right) + ((float)zInput * forward);
@@ -65,8 +67,8 @@ void EditorCamera::Update()
 		}
 
 		// Mouse Look
-		xRotation += input->cursorMovement.x * turnSpeed * Time::delta;
-		yRotation += -input->cursorMovement.y * turnSpeed * Time::delta;
+		xRotation += AppInfo::input->cursorMovement.x * turnSpeed * Time::delta;
+		yRotation += -AppInfo::input->cursorMovement.y * turnSpeed * Time::delta;
 		if (yRotation > 85) yRotation = 85;
 		if (yRotation < -85) yRotation = -85;
 	}

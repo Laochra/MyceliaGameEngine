@@ -128,7 +128,7 @@ namespace TransformEdit
 			float amountToMove = glm::dot(cameraSpaceAxis, cameraSpaceDisplacement);
 			float distanceFactor = glm::length(translate.start - Camera::main->GetGlobalPosition());
 
-			debug->lines.Add(
+			AppInfo::debug->lines.Add(
 				translate.start,
 				translate.start + -(vec3)axisModelMatrix[2] * distanceFactor * amountToMove,
 				colour
@@ -194,8 +194,8 @@ namespace TransformEdit
 			float distanceFactor = glm::length(target->GetGlobalPivot() - Camera::main->GetGlobalPosition());
 			float scale = distanceFactor * 0.25f;
 			
-			debug->lines.Add(target->GetGlobalPivot(), target->GetGlobalPivot() + vec3(rotate.initialDirection) * scale, colour);
-			debug->lines.Add(target->GetGlobalPivot(), target->GetGlobalPivot() + vec3(rotate.currentDirection) * scale, colour);
+			AppInfo::debug->lines.Add(target->GetGlobalPivot(), target->GetGlobalPivot() + vec3(rotate.initialDirection) * scale, colour);
+			AppInfo::debug->lines.Add(target->GetGlobalPivot(), target->GetGlobalPivot() + vec3(rotate.currentDirection) * scale, colour);
 			
 			break;
 		}

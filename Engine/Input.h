@@ -178,8 +178,6 @@ public:
 	void Update();
 };
 
-extern Input* input;
-
 extern const int keyAmount;
 extern const char* keys[];
 

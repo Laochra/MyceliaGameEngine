@@ -1,6 +1,7 @@
 #include "Input.h"
 
 #include "GeneralMacros.h"
+#include "AppInfo.h"
 
 Keybind::Keybind() noexcept
 {
@@ -21,7 +22,7 @@ bool Keybind::down() const noexcept
 {
     for (int i = 0; i < keys->size(); i++)
     {
-        if (input->GetKeyDown((*keys)[i]))
+        if (AppInfo::input->GetKeyDown((*keys)[i]))
         {
             return true;
         }
@@ -33,7 +34,7 @@ bool Keybind::pressed() const noexcept
 {
     for (int i = 0; i < keys->size(); i++)
     {
-        if (input->GetKeyPressed((*keys)[i]))
+        if (AppInfo::input->GetKeyPressed((*keys)[i]))
         {
             return true;
         }
@@ -45,7 +46,7 @@ bool Keybind::released() const noexcept
 {
     for (int i = 0; i < keys->size(); i++)
     {
-        if (input->GetKeyReleased((*keys)[i]))
+        if (AppInfo::input->GetKeyReleased((*keys)[i]))
         {
             return true;
         }
