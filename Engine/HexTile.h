@@ -4,25 +4,22 @@
 #include <unordered_map>
 #include <vector>
 
-enum class HexDir : unsigned char
-{
-	NorthWest,
-	North,
-	NorthEast,
-	SouthEast,
-	South,
-	SouthWest
-};
+#include "MeshRenderer.h"
 
-class HexTile
+enum class HexDir : unsigned char { NorthWest, North, NorthEast, SouthEast, South, SouthWest };
+
+class HexTile : public MeshRenderer
 {
 public:
-	vec3 position;
+	SerialiseAs(HexTile)
+
+	using MeshRenderer::MeshRenderer;
+
 	HexTile* adjacent[6] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, };
 
-	HexTile() noexcept = default;
-	HexTile(vec3 positionInit) noexcept;
-
+	virtual void Initialise() override;
+	void DrawHexPos() noexcept;
+	
 	HexTile*& operator[](HexDir direction) noexcept;
 
 	const static std::vector<vec3> DirVec;

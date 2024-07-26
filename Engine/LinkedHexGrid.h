@@ -29,7 +29,6 @@ public:
 	HexMap lookupTable;
 
 	LinkedHexGrid() noexcept;
-	~LinkedHexGrid() noexcept;
 
 	void AddTile(vec3 originPosition, HexDir direction) noexcept;
 	void AddTile(HexTile* origin, HexDir direction) noexcept;

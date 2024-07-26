@@ -204,6 +204,8 @@ namespace TransformEdit
 
 	void DrawIDs() noexcept
 	{
+		if (AppInfo::state != AppState::Editor) return;
+
 		glLineWidth(10.0f);
 
 		if (mode == Mode::Select) return;
@@ -330,6 +332,8 @@ namespace TransformEdit
 	}
 	void Draw() noexcept
 	{
+		if (AppInfo::state != AppState::Editor) return;
+
 		glLineWidth(5.0f);
 
 		GameObject3D* target = dynamic_cast<GameObject3D*>(inspector->GetTarget());

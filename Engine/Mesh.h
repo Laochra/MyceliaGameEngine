@@ -25,8 +25,8 @@ public:
 
 	const char* GetFilePath() const;
 
-	virtual void Draw();
-	virtual void DrawWireframe();
+	virtual void Draw() const;
+	virtual void DrawWireframe() const;
 
 protected:
 	unsigned int primitiveCount;

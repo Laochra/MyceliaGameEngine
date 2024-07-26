@@ -161,7 +161,10 @@ void MeshRenderer::Draw()
 		}
 	}
 	
-	sp.BindUniform("Selected", (int)selected);
+	if (AppInfo::state == AppState::Editor)
+	{
+		sp.BindUniform("Selected", (int)selected);
+	}
 
 	mesh->Draw();
 }

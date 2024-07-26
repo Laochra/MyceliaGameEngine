@@ -491,7 +491,7 @@ const char* Mesh::GetFilePath() const
 	return filepath;
 }
 
-void Mesh::Draw()
+void Mesh::Draw() const
 {
 	glBindVertexArray(vao);
 
@@ -506,7 +506,7 @@ void Mesh::Draw()
 	}
 }
 
-void Mesh::DrawWireframe()
+void Mesh::DrawWireframe() const
 {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	Draw();

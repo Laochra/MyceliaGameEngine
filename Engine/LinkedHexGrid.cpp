@@ -4,16 +4,8 @@
 
 LinkedHexGrid::LinkedHexGrid() noexcept
 {
-	centre = new HexTile(vec3(0, 0, 0));
-	lookupTable.insert(HexPair(centre->position, centre));
-}
-
-LinkedHexGrid::~LinkedHexGrid() noexcept
-{
-	for (HexPair hexPair : lookupTable)
-	{
-		delete hexPair.second;
-	}
+	centre = GameObject::Instantiate<HexTile>();
+	lookupTable.insert(HexPair(centre->GetPosition(), centre));
 }
 
 void LinkedHexGrid::AddTile(vec3 originPosition, HexDir direction) noexcept
@@ -36,11 +28,12 @@ void LinkedHexGrid::AddTile(HexTile* origin, HexDir direction) noexcept
 		return;
 	}
 
-	newTile = new HexTile(origin->position + HexTile::DirVec[(uint)direction]);
+	newTile = GameObject::Instantiate<HexTile>();
+	newTile->SetPosition(origin->GetPosition() + HexTile::DirVec[(uint)direction]);
 
 	for (uint i = 0; i < 6; i++)
 	{
-		HexMap::iterator hexTileIt = lookupTable.find(newTile->position + HexTile::DirVec[i]);
+		HexMap::iterator hexTileIt = lookupTable.find(newTile->GetPosition() + HexTile::DirVec[i]);
 		if (hexTileIt != lookupTable.end())
 		{
 			(*newTile)[(HexDir)i] = hexTileIt->second;
@@ -48,5 +41,5 @@ void LinkedHexGrid::AddTile(HexTile* origin, HexDir direction) noexcept
 		}
 	}
 
-	lookupTable.insert(HexPair(newTile->position, newTile));
+	lookupTable.insert(HexPair(newTile->GetPosition(), newTile));
 }

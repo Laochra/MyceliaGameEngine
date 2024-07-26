@@ -17,6 +17,8 @@
 
 #include "GameObjectManager.h"
 
+#include "LinkedHexGrid.h"
+
 class Editor : public Application
 {
 public:
@@ -34,4 +36,9 @@ private:
 	ShaderProgram hdrProgram;
 	ShaderProgram blurProgram;
 	ShaderProgram fxaaProgram;
+
+	LinkedHexGrid* hexGrid;
+	uint hexPosFBO;
+	uint hexPosTexture;
+	uint hexPosDepth;
 };
