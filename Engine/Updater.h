@@ -14,6 +14,9 @@ namespace Updater
 	extern void FixedUpdateAdd(GameObject* gameObject);
 	extern void UpdateAdd(GameObject* gameObject);
 	extern void DrawAdd(GameObject* gameObject);
+	extern void FixedUpdateRemove(GameObject* gameObject);
+	extern void UpdateRemove(GameObject* gameObject);
+	extern void DrawRemove(GameObject* gameObject);
 
 
 	extern void CallFixedUpdate();

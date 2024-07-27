@@ -286,9 +286,9 @@ namespace SceneGUI
 
 		if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl) || ImGui::IsKeyDown(ImGuiKey_RightCtrl))
 		{
-			if (ImGui::IsKeyPressed(ImGuiKey_N)) NewScene();
-			if (ImGui::IsKeyPressed(ImGuiKey_O)) OpenScene();
-			if (ImGui::IsKeyPressed(ImGuiKey_S))
+			if (ImGui::IsKeyPressed(ImGuiKey_N, false)) NewScene();
+			if (ImGui::IsKeyPressed(ImGuiKey_O, false)) OpenScene();
+			if (ImGui::IsKeyPressed(ImGuiKey_S, false))
 			{
 				if (ImGui::IsKeyDown(ImGuiKey_LeftShift)) SaveSceneAs();
 				else SaveScene();

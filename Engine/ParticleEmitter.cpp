@@ -94,6 +94,57 @@ void ParticleEmitter::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOp
 	shaderProgram = new ShaderProgram();
 	shaderProgram->LoadAndLinkFromJSON(shaderProgramFilepath.c_str());
 }
+void ParticleEmitter::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
+{
+	GameObject3D::UpdateFrom(jsonObj, guidOptions);
+
+	// Particle Properties
+	{
+		json properties = jsonObj["ParticleProperties"];
+
+		del(particleSystem);
+		particleSystem = new ParticleSystem();
+		ParticleSystem::Properties& p = particleSystem->properties;
+
+		p.autoplay = properties["Autoplay"];
+		p.loop = properties["Loop"];
+		p.duration = properties["Duration"];
+		p.delay = properties["Delay"];
+		p.maxCount = properties["MaxCount"];
+		p.gravity = properties["Gravity"];
+
+		vector<float> sizeRange = properties["SizeRange"];
+		memcpy(p.sizeRange, sizeRange.data(), sizeRange.size() * sizeof(float));
+		vector<float> lifetimeRange = properties["LifetimeRange"];
+		memcpy(p.lifetimeRange, lifetimeRange.data(), lifetimeRange.size() * sizeof(float));
+		vector<float> speedRange = properties["SpeedRange"];
+		memcpy(p.speedRange, speedRange.data(), speedRange.size() * sizeof(float));
+		vector<float> colour = properties["ColourRange"];
+		memcpy(p.colourRange, colour.data(), colour.size() * sizeof(float));
+
+		p.emitOverTime = properties["EmitOverTime"];
+		p.particlesPerSecond = properties["ParticlesPerSecond"];
+		p.shape = (ParticleSystem::Shape)(uint)properties["ShapeID"];
+		vector<float> shapeData = properties["ShapeData"];
+		memcpy(&p.shapeData0, shapeData.data(), shapeData.size() * sizeof(float));
+
+		string spriteFilepath = properties["Sprite"];
+		p.spriteFilepathLength = (uint)spriteFilepath.size();
+		memcpy(p.spriteFilepath, spriteFilepath.c_str(), spriteFilepath.size() + 1);
+		p.alphaClippingThreshold = properties["AlphaThreshold"];
+	}
+
+	string computeShaderFilepath = jsonObj["ComputeShader"];
+	del(computeShader);
+	computeShader = new ComputeShader(computeShaderFilepath.c_str());
+	computeShader->filepath = new char[computeShaderFilepath.size() + 1];
+	memcpy(computeShader->filepath, computeShaderFilepath.c_str(), computeShaderFilepath.size() + 1);
+
+	string shaderProgramFilepath = jsonObj["ShaderProgram"];
+	del(shaderProgram);
+	shaderProgram = new ShaderProgram();
+	shaderProgram->LoadAndLinkFromJSON(shaderProgramFilepath.c_str());
+}
 
 void ParticleEmitter::Draw()
 {	
@@ -248,6 +299,21 @@ void ParticleEmitter::OnDestroy()
 	del(particleSystem);
 
 	GameObject3D::OnDestroy();
+
+	Updater::DrawRemove(this);
+}
+void ParticleEmitter::OnRestore()
+{
+	GameObject3D::OnRestore();
+
+	glGenVertexArrays(1, &vao);
+	glPointSize(5.0f);
+	if (shaderProgram == nullptr) shaderProgram = new ShaderProgram();
+	shaderProgram->LoadAndLinkFromJSON("Assets\\Shaders\\ParticleSystem.gpu");
+	if (computeShader == nullptr) computeShader = new ComputeShader("Assets\\Shaders\\Particles.comp");
+	if (particleSystem == nullptr) particleSystem = new ParticleSystem();
+
+	Updater::DrawAdd(this);
 }
 
 const ShaderProgram& ParticleEmitter::GetShaderProgram() const noexcept

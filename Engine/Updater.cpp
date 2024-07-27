@@ -23,6 +23,24 @@ namespace Updater
 		drawList.push_back(gameObject);
 	}
 
+	void FixedUpdateRemove(GameObject* gameObject)
+	{
+		std::vector<GameObject*>::iterator it = std::find(fixedUpdateList.begin(), fixedUpdateList.end(), gameObject);
+		if (it != fixedUpdateList.end()) fixedUpdateList.erase(it);
+	}
+
+	void UpdateRemove(GameObject* gameObject)
+	{
+		std::vector<GameObject*>::iterator it = std::find(updateList.begin(), updateList.end(), gameObject);
+		if (it != updateList.end()) updateList.erase(it);
+	}
+
+	void DrawRemove(GameObject* gameObject)
+	{
+		std::vector<GameObject*>::iterator it = std::find(drawList.begin(), drawList.end(), gameObject);
+		if (it != drawList.end()) drawList.erase(it);
+	}
+
 
 	void CallFixedUpdate()
 	{

@@ -41,6 +41,26 @@ void LightObject::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOption
 	else if(angle[1] != 1.0f) shadowMapCount = 1U;
 	else shadowMapCount = 6U;
 }
+void LightObject::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
+{
+	// Populate this properly
+	GameObject3D::UpdateFrom(jsonObj, guidOptions);
+
+	range = jsonObj["Range"];
+
+	vector<float> angleData = jsonObj["Angle"];
+	memcpy(&angle[0], angleData.data(), 2 * sizeof(float));
+
+	vector<float> hdrColourData = jsonObj["HDRColour"];
+	memcpy(&colour[0], hdrColourData.data(), 4 * sizeof(float));
+
+	uint shadowModeData = jsonObj["ShadowMode"];
+	shadowMode = (ShadowMode)shadowModeData;
+
+	if (shadowMode == NoShadows) shadowMapCount = 0U;
+	else if (angle[1] != 1.0f) shadowMapCount = 1U;
+	else shadowMapCount = 6U;
+}
 
 vector<mat4> LightObject::GetLightPVMatrices() noexcept
 {
@@ -124,4 +144,10 @@ void LightObject::OnDestroy()
 		}
 	}
 	GameObject3D::OnDestroy();
+}
+
+void LightObject::OnRestore()
+{
+	GameObject3D::OnRestore();
+	LightingManager::lightObjects.push_back(this);
 }

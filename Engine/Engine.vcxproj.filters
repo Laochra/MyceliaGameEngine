@@ -101,6 +101,9 @@
     <ClCompile Include="LogID.cpp">
       <Filter>Utility\Debugging</Filter>
     </ClCompile>
+    <ClCompile Include="EditHistory.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
     <ClCompile Include="AppInfo.cpp" />
     <ClCompile Include="HexTile.cpp">
       <Filter>Data Structures</Filter>
@@ -250,6 +253,9 @@
       <Filter>Utility\Debugging</Filter>
     </ClInclude>
     <ClInclude Include="FilesIncludes.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="EditHistory.h">
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="AppInfo.h" />

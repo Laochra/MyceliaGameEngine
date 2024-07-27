@@ -45,19 +45,39 @@ namespace TransformEdit
 
 	void Update() noexcept
 	{
+		if (mode == Mode::Select) return;
+
+		GameObject3D* target = dynamic_cast<GameObject3D*>(inspector->GetTarget());
+		if (target == nullptr) return;
+
 		if (selectedHandle != Handle::None && ImGui::IsKeyReleased(ImGuiKey_MouseLeft))
 		{
 			selectedHandle = Handle::None;
 			switch (mode)
 			{
-			case Mode::Translate: translate = TranslateData(); break;
-			case Mode::Rotate: rotate = RotateData(); break;
+			case Mode::Translate: // Temporarily set back the position so we can track the change with EditHistory
+				vec3 newPosition = target->GetPosition();
+				target->SetPosition(translate.relativeStart);
+
+				GUI::editHistory.Begin(target);
+				target->SetPosition(newPosition);
+				GUI::editHistory.End();
+
+				translate = TranslateData();
+				break;
+			case Mode::Rotate: // Temporarily set back the rotation so we can track the change with EditHistory
+				quat newRotation = target->GetRotationQuat();
+				target->SetRotation(rotate.relativeStart);
+
+				GUI::editHistory.Begin(target);
+				target->SetRotation(newRotation);
+				GUI::editHistory.End();
+
+				rotate = RotateData();
+				break;
 			}
 		}
-		if (mode == Mode::Select) return;
 
-		GameObject3D* target = dynamic_cast<GameObject3D*>(inspector->GetTarget());
-		if (target == nullptr) return;
 
 		vec3 relativeAxis;
 		mat4 axisModelMatrix;

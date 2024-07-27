@@ -36,6 +36,17 @@ void GameObjectManager::Bury(GameObject* gameObject) noexcept
 {
 	graveyard.push_back(gameObject);
 }
+void GameObjectManager::Unbury(GameObject* gameObject) noexcept
+{
+	for (int i = 0; i < graveyard.size(); i++)
+	{
+		if (*graveyard[i] == *gameObject)
+		{
+			graveyard.erase(graveyard.begin() + i);
+			break;
+		}
+	}
+}
 void GameObjectManager::Move(GameObject* gameObject, int newIndex) noexcept
 {
 	int i = GetIndexOf(gameObject);
@@ -65,6 +76,20 @@ GameObject* GameObjectManager::Find(unsigned long long guid) const noexcept
 		if (dynamic_cast<GameObject3D*>(gameObjects[c]) != nullptr)
 		{
 			GameObject3D* potentialMatch = FindChild((GameObject3D*)gameObjects[c], guid);
+			if (potentialMatch != nullptr) return potentialMatch;
+		}
+	}
+	return nullptr;
+}
+GameObject* GameObjectManager::FindInGraveyard(unsigned long long guid) const noexcept
+{
+	for (int c = 0; c < graveyard.size(); c++)
+	{
+		if (graveyard[c]->guid == guid) return graveyard[c];
+
+		if (dynamic_cast<GameObject3D*>(graveyard[c]) != nullptr)
+		{
+			GameObject3D* potentialMatch = FindChild((GameObject3D*)graveyard[c], guid);
 			if (potentialMatch != nullptr) return potentialMatch;
 		}
 	}
