@@ -77,6 +77,9 @@
     <PublicModuleDirectories>
     </PublicModuleDirectories>
     <AllProjectBMIsArePublic>false</AllProjectBMIsArePublic>
+    <OutDir>$(SolutionDir)Game\</OutDir>
+    <TargetName>$(ProjectName)Debug</TargetName>
+    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <PublicIncludeDirectories>$(SolutionDir)Engine; $(SolutionDir)External; $(SolutionDir)External/GLFW; $(SolutionDir)External/glad; $(SolutionDir)External/glm; $(SolutionDir)External/nlohmannjson; $(SolutionDir)External/stb; $(SolutionDir)External/assimp/include; $(SolutionDir)External/aie</PublicIncludeDirectories>
@@ -84,6 +87,8 @@
     <PublicModuleDirectories>
     </PublicModuleDirectories>
     <AllProjectBMIsArePublic>false</AllProjectBMIsArePublic>
+    <OutDir>$(SolutionDir)Game\</OutDir>
+    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -159,6 +164,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\External\glad\glad.c" />
+    <ClCompile Include="AppInfo.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Colour.cpp" />
     <ClCompile Include="Debug.cpp" />
@@ -201,6 +207,7 @@
     <ClInclude Include="..\External\nlohmannjson\json_fwd.hpp" />
     <ClInclude Include="..\External\stb\stb_image.h" />
     <ClInclude Include="..\External\stb\stb_image_write.h" />
+    <ClInclude Include="AppInfo.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Colour.h" />

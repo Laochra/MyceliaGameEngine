@@ -3,6 +3,8 @@
 #include "TimeManager.h"
 #include "Input.h"
 
+#include "AppInfo.h"
+
 glm::mat4 OrbitalCamera::GetViewMatrix()
 {
     vec3 up = vec3(0, 1, 0);
@@ -41,18 +43,18 @@ void OrbitalCamera::Update()
 	// Mouse Orbitting
 	if (cursorToggle)
 	{
-		Translate(input->cursorMovement.x * right * 2.0f * Time::delta);
+		Translate(AppInfo::input->cursorMovement.x * right * 2.0f * Time::delta);
 
-		vec3 zoom = input->cursorMovement.y * forward * 2.0f * Time::delta;
+		vec3 zoom = AppInfo::input->cursorMovement.y * forward * 2.0f * Time::delta;
 
 		vec3 position = GetPosition();
 		bool minZoomOverflow = glm::distance(vec3(position.x + zoom.x, 0, position.z + zoom.z), vec3(centre.x, 0, centre.z)) < minZoom;
 		bool maxZoomOverflow = glm::distance(vec3(position.x, 0, position.z), vec3(centre.x, 0, centre.z)) > maxZoom;
 
-		if ((!minZoomOverflow || input->cursorMovement.y > 0) && (!maxZoomOverflow || input->cursorMovement.y < 0))
+		if ((!minZoomOverflow || AppInfo::input->cursorMovement.y > 0) && (!maxZoomOverflow || AppInfo::input->cursorMovement.y < 0))
 		{
 			Translate(zoom);
-			Translate(input->cursorMovement.y * up * 0.75f * Time::delta);
+			Translate(AppInfo::input->cursorMovement.y * up * 0.75f * Time::delta);
 		}
 	}
 }

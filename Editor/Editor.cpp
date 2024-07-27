@@ -13,6 +13,8 @@
 
 #include "TransformEdit.h"
 
+#include "AppInfo.h"
+
 void Editor::Initialise()
 {
 	EditorGUI::Initialise();
@@ -27,7 +29,7 @@ void Editor::Initialise()
 	LightingManager::ambientLight = Light(vec3(0.1f, 0.1f, 0.1f));
 	LightingManager::directionalLight = DirectionalLight(vec3(1.0f, 1.0f, 1.0f), glm::normalize(vec3(-0.1f, -1, -1)));
 	
-	input->enabled = false;
+	AppInfo::input->enabled = false;
 
 	// Initialise Post Processing Shaders // TODO: Move this into its own place
 	{
@@ -237,9 +239,9 @@ void Editor::Draw()
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	vec3 cameraPos(Camera::main->GetPosition());
-	debug->lines.AddGrid(vec3((int)cameraPos.x, 0, (int)cameraPos.z), 50);
+	AppInfo::debug->lines.AddGrid(vec3((int)cameraPos.x, 0, (int)cameraPos.z), 50);
 
-	debug->lines.Draw();
+	AppInfo::debug->lines.Draw();
 
 	glClear(GL_DEPTH_BUFFER_BIT);
 	TransformEdit::Draw();

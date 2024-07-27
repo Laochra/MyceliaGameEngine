@@ -25,7 +25,6 @@
 *.a
 
 # Executables
-*.exe
 *.out
 *.app
 
@@ -43,7 +42,15 @@ x64/
 # Assimp
 External/assimp/*
 !External/assimp/assimp.zip
-Working/Debug.log
+Game/Debug.log
 
 # Temp Files
-Working/Engine/Temp/*
+Game/Engine/Temp/*
+!Game/Engine/Temp/temp.meta
+Game/Engine.lib
+Game/EngineDebug.lib
+
+#Intermediate
+Intermediate/*
+*.pdb
+*idb

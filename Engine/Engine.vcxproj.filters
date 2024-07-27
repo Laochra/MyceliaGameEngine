@@ -104,6 +104,7 @@
     <ClCompile Include="EditHistory.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
+    <ClCompile Include="AppInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -251,6 +252,7 @@
     <ClInclude Include="EditHistory.h">
       <Filter>Utility</Filter>
     </ClInclude>
+    <ClInclude Include="AppInfo.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">

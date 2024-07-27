@@ -136,26 +136,50 @@ void GUI::LoadStyle(string styleName)
 {
 	currentStyle = styleName;
 
-	string stylePath;
-	if (styleName == "Custom") stylePath = "UserSettings\\EditorStyle.style";
-	else stylePath = styleMap[styleName];
-
-	ifstream input(stylePath.c_str());
-
-	if (!input.good())
-	{
-		Debug::LogWarning(LogID::WRN101, styleName, " style could not be found at filepath ", stylePath, ". Reverted to defaults.", locationinfo);
-		return;
-	}
-
 	json style;
-
-	try { input >> style; }
-	catch (parse_error)
+	if (styleName == "Custom")
 	{
-		Debug::LogWarning(LogID::WRN102, styleName, " (", stylePath, ")", locationinfo);
-		return;
+		string stylePath = "UserSettings\\EditorStyle.style";
+		ifstream input(stylePath);
+		if (!input.good())
+		{
+			input = ifstream(styleMap["Orchid"]);
+		}
+		if (!input.good())
+		{
+			Debug::LogWarning(LogID::WRN101, "Orchid", " style could not be found at filepath ", styleMap["Orchid"], ". Reverted to defaults.", locationinfo);
+			return;
+		}
+
+		try { input >> style; }
+		catch (parse_error)
+		{
+			Debug::LogWarning(LogID::WRN102, "Orchid", " (", styleMap["Orchid"], ")", locationinfo);
+			return;
+		}
+
+		ofstream output(stylePath);
+		output << std::setw(2) << style;
 	}
+	else
+	{
+		string stylePath = styleMap[styleName];
+		ifstream input = ifstream(stylePath);
+		if (!input.good())
+		{
+			Debug::LogWarning(LogID::WRN101, styleName, " style could not be found at filepath ", stylePath, ". Reverted to defaults.", locationinfo);
+			return;
+		}
+
+		try { input >> style; }
+		catch (parse_error)
+		{
+			Debug::LogWarning(LogID::WRN102, styleName, " (", stylePath, ")", locationinfo);
+			return;
+		}
+	}
+
+	
 
 #define DeserialiseColour(style, colour, group, name, var) vector<float> var = style[group][name]; memcpy(&colour, var.data(), 4 * sizeof(float))
 

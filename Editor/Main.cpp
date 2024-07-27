@@ -1,6 +1,7 @@
 #include "Editor.h"
 
 #include "EditorDebug.h"
+#include "AppInfo.h"
 
 #ifdef _DEBUG
 int main(int argCount, char* args[])
@@ -11,11 +12,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #error No release platform other than windows has been accounted for
 #endif
 {
-	debug = new EditorDebug();
-
+	AppInfo::debug = new EditorDebug();
+	AppInfo::state = AppState::Editor;
 	Application* application = new Editor();
+
 	int exitCode = application->Run();
 
-	delete debug;
+	delete AppInfo::debug;
 	return exitCode;
 }

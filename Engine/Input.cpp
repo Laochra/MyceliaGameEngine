@@ -2,7 +2,7 @@
 
 #include "GeneralMacros.h"
 
-Input* input = nullptr;
+#include "AppInfo.h"
 
 Input::Input()
 {
@@ -41,8 +41,8 @@ void Input::Update()
     pressedKeys->clear();
     releasedKeys->clear();
 
-    input->cursorMovement = vec2(0, 0);
-    input->scrollInput = vec2(0, 0);
+    AppInfo::input->cursorMovement = vec2(0, 0);
+    AppInfo::input->scrollInput = vec2(0, 0);
 }
 
 
@@ -51,44 +51,44 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 {
     if (action == GLFW_PRESS)
     {
-        input->pressedKeys->insert((KeyCode)key);
-        input->downKeys->insert((KeyCode)key);
+        AppInfo::input->pressedKeys->insert((KeyCode)key);
+        AppInfo::input->downKeys->insert((KeyCode)key);
     }
     else if (action == GLFW_RELEASE)
     {
-        input->releasedKeys->insert((KeyCode)key);
-        input->downKeys->erase((KeyCode)key);
+        AppInfo::input->releasedKeys->insert((KeyCode)key);
+        AppInfo::input->downKeys->erase((KeyCode)key);
     }
 }
 
 void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 {
-    if (!input->enabled) return;
+    if (!AppInfo::input->enabled) return;
 
     if (action == GLFW_PRESS)
     {
-        input->pressedKeys->insert((KeyCode)button);
-        input->downKeys->insert((KeyCode)button);
+        AppInfo::input->pressedKeys->insert((KeyCode)button);
+        AppInfo::input->downKeys->insert((KeyCode)button);
     }
     else
     {
-        input->releasedKeys->insert((KeyCode)button);
-        input->downKeys->erase((KeyCode)button);
+        AppInfo::input->releasedKeys->insert((KeyCode)button);
+        AppInfo::input->downKeys->erase((KeyCode)button);
     }
 }
 
 void ScrollCallback(GLFWwindow* window, double x, double y)
 {
-    if (!input->enabled) return;
+    if (!AppInfo::input->enabled) return;
 
-    input->scrollInput = vec2(x, y);
+    AppInfo::input->scrollInput = vec2(x, y);
 }
 
 void CursorPosCallback(GLFWwindow* window, double x, double y)
 {
-    if (!input->enabled) return;
+    if (!AppInfo::input->enabled) return;
 
     vec2 newPos(x, y);
-    input->cursorMovement = newPos - input->cursorPos;
-    input->cursorPos = newPos;
+    AppInfo::input->cursorMovement = newPos - AppInfo::input->cursorPos;
+    AppInfo::input->cursorPos = newPos;
 }

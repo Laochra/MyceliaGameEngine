@@ -11,6 +11,8 @@
 
 #include "Input.h"
 
+#include "AppInfo.h"
+
 namespace Heirarchy
 {
 	const float dragDropLineWidth = 2.5f;
@@ -179,7 +181,7 @@ namespace Heirarchy
 		}
 		else if (ImGui::IsWindowHovered())
 		{
-			if (!input->enabled)
+			if (!AppInfo::input->enabled)
 			{
 				if (ImGui::IsKeyPressed(ImGuiKey_Delete, false) || ImGui::IsKeyPressed(ImGuiKey_KeypadDecimal, false))
 				{
@@ -313,11 +315,11 @@ namespace Heirarchy
 
 	void Heirarchy::AcceptInputFor(GameObject3D* gameObject3D)
 	{
-		if (!input->enabled && ImGui::IsKeyReleased(ImGuiKey_MouseLeft))
+		if (!AppInfo::input->enabled && ImGui::IsKeyReleased(ImGuiKey_MouseLeft))
 		{
 			inspector->SetTarget(gameObject3D);
 		}
-		if (!input->enabled && ImGui::IsKeyReleased(ImGuiKey_MouseRight))
+		if (!AppInfo::input->enabled && ImGui::IsKeyReleased(ImGuiKey_MouseRight))
 		{
 			inspector->SetTarget(gameObject3D);
 			rightClickMenu.Open(gameObject3D, ImGui::GetCursorScreenPos());

@@ -20,8 +20,7 @@ typedef std::initializer_list<string> StringParams;
 
 #include "LogID.h"
 
-class Debug;
-extern Debug* debug;
+#include "AppInfo.h"
 
 template<typename T> concept MsgType =
 	requires(T t) { std::same_as<decltype(ValueAsString(t)), std::string>; };
@@ -67,7 +66,7 @@ public:
 	template<MsgType Req, MsgType... Opt>
 	static DebugLog Log(Req message, Opt... messageContinued)
 	{
-		return debug->LogImplementation(StringBuilder(message, messageContinued...).value, LogType::Message);
+		return AppInfo::debug->LogImplementation(StringBuilder(message, messageContinued...).value, LogType::Message);
 	}
 
 	/// <summary>
@@ -78,7 +77,7 @@ public:
 	template<MsgType Req, MsgType... Opt>
 	static DebugLog LogSubtle(Req message, Opt... messageContinued)
 	{
-		return debug->LogImplementation(StringBuilder(message, messageContinued...).value, LogType::Subtle);
+		return AppInfo::debug->LogImplementation(StringBuilder(message, messageContinued...).value, LogType::Subtle);
 	}
 
 	/// <summary>
@@ -92,11 +91,11 @@ public:
 	{
 		if constexpr (std::is_same_v<Req, LogID>)
 		{
-			return debug->LogImplementation(StringBuilder(messageContinued...).value, LogType::Warning, messageOrWarningCode);
+			return AppInfo::debug->LogImplementation(StringBuilder(messageContinued...).value, LogType::Warning, messageOrWarningCode);
 		}
 		else
 		{
-			return debug->LogImplementation(StringBuilder(messageOrWarningCode, messageContinued...).value, LogType::Warning);
+			return AppInfo::debug->LogImplementation(StringBuilder(messageOrWarningCode, messageContinued...).value, LogType::Warning);
 		}
 	}
 
@@ -114,16 +113,16 @@ public:
 		{
 			if constexpr (sizeof...(Opt) > 0)
 			{
-				return debug->LogImplementation(StringBuilder(messageContinued...).value, LogType::Error, messageOrErrorCode);
+				return AppInfo::debug->LogImplementation(StringBuilder(messageContinued...).value, LogType::Error, messageOrErrorCode);
 			}
 			else
 			{
-				return debug->LogImplementation(std::string(), LogType::Error, messageOrErrorCode);
+				return AppInfo::debug->LogImplementation(std::string(), LogType::Error, messageOrErrorCode);
 			}
 		}
 		else
 		{
-			return debug->LogImplementation(StringBuilder(messageOrErrorCode, messageContinued...).value, LogType::Error);
+			return AppInfo::debug->LogImplementation(StringBuilder(messageOrErrorCode, messageContinued...).value, LogType::Error);
 		}
 		
 	}

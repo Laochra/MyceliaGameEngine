@@ -4,6 +4,7 @@
 
 #include "Debug.h"
 
+#include "AppInfo.h"
 
 void LightObject::SerialiseTo(json& jsonObj) const
 {
@@ -110,19 +111,19 @@ void LightObject::DrawDebug()
 
 	if (angle[1] == 1.0f) // Check for no angle. 1.0 is the cosine of 0 degrees
 	{
-		debug->lines.AddSphere(GetGlobalPosition(), range, 32, debugColour);
+		AppInfo::debug->lines.AddSphere(GetGlobalPosition(), range, 32, debugColour);
 	}
 	else
 	{
 		vec3 direction = -glm::normalize((vec3)GetGlobalRotationMatrix()[2]);
 
 		float outerBaseRadius = range * tan(acos(angle[1]));
-		debug->lines.AddCone(GetGlobalPosition(), direction, range, outerBaseRadius, 32, debugColour);
+		AppInfo::debug->lines.AddCone(GetGlobalPosition(), direction, range, outerBaseRadius, 32, debugColour);
 
 		if (angle[0] != 1.0f && angle[0] != angle[1]) // Check for no or same angle. 1.0 is the cosine of 0 degrees
 		{ 
 			float innerBaseRadius = range * tan(acos(angle[0]));
-			debug->lines.AddCone(GetGlobalPosition(), direction, range, innerBaseRadius, 32, debugColour);
+			AppInfo::debug->lines.AddCone(GetGlobalPosition(), direction, range, innerBaseRadius, 32, debugColour);
 		}
 	}
 }

@@ -195,15 +195,15 @@ void ParticleEmitter::DrawDebug()
 	{
 	case Shape::Sphere:
 	{
-		debug->lines.AddSphere(GetGlobalPosition(), properties->innerRadius, 32);
-		debug->lines.AddSphere(GetGlobalPosition(), properties->outerRadius, 32);
+		AppInfo::debug->lines.AddSphere(GetGlobalPosition(), properties->innerRadius, 32);
+		AppInfo::debug->lines.AddSphere(GetGlobalPosition(), properties->outerRadius, 32);
 		break;
 	}
 	case Shape::Cone:
 	{
 		vec3 direction = (vec3)glm::normalize(glm::inverse(GetMatrix())[2]);
 
-		debug->lines.AddConicalFrustum(
+		AppInfo::debug->lines.AddConicalFrustum(
 			GetGlobalPosition(),
 			direction,
 			properties->innerRadius,
@@ -215,7 +215,7 @@ void ParticleEmitter::DrawDebug()
 	}
 	case Shape::Box:
 	{
-		debug->lines.AddCuboid(GetGlobalPosition(), vec3(properties->width, properties->height, properties->depth));
+		AppInfo::debug->lines.AddCuboid(GetGlobalPosition(), vec3(properties->width, properties->height, properties->depth));
 		break;
 	}
 	case Shape::Quad:
