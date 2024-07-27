@@ -2,10 +2,35 @@
 
 #include "Debug.h"
 
-LinkedHexGrid::LinkedHexGrid() noexcept
+void LinkedHexGrid::SerialiseTo(json& jsonObj) const
 {
-	centre = GameObject::Instantiate<HexTile>();
+	GameObject3D::SerialiseTo(jsonObj);
+
+	//...
+}
+void LinkedHexGrid::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptions)
+{
+	GameObject3D::DeserialiseFrom(jsonObj, guidOptions);
+
+	//...
+}
+
+void LinkedHexGrid::Initialise() noexcept
+{
+	GameObject3D::Initialise();
+
+	ifstream availablePrefabFile("Assets\\Prefabs\\AvailableHex.prefab");
+	availablePrefabFile >> HexTile::availablePrefab;
+	ifstream grassPrefabFile("Assets\\Prefabs\\GrassHex.prefab");
+	grassPrefabFile >> HexTile::grassPrefab;
+	ifstream waterPrefabFile("Assets\\Prefabs\\WaterHex.prefab");
+	waterPrefabFile >> HexTile::waterPrefab;
+
+	centre = (HexTile*)GameObject::InstantiateFrom(HexTile::grassPrefab, GuidGeneration::New);
+	gameObjectManager->Add(centre);
+	centre->SetParent(this);
 	lookupTable.insert(HexPair(centre->GetPosition(), centre));
+	centre->type = HexType::Grass;
 }
 
 void LinkedHexGrid::AddTile(vec3 originPosition, HexDir direction) noexcept
@@ -28,7 +53,9 @@ void LinkedHexGrid::AddTile(HexTile* origin, HexDir direction) noexcept
 		return;
 	}
 
-	newTile = GameObject::Instantiate<HexTile>();
+	newTile = (HexTile*)GameObject::InstantiateFrom(HexTile::availablePrefab, GuidGeneration::New);
+	gameObjectManager->Add(newTile);
+	newTile->SetParent(this);
 	newTile->SetPosition(origin->GetPosition() + HexTile::DirVec[(uint)direction]);
 
 	for (uint i = 0; i < 6; i++)

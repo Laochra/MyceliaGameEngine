@@ -6,6 +6,8 @@ Inspector* inspector = new Inspector();
 #include "MeshRendererGUI.h"
 #include "LightObjectGUI.h"
 #include "ParticleEmitterGUI.h"
+#include "LinkedHexGridGUI.h"
+#include "HexTileGUI.h"
 
 #include "GeneralMacros.h"
 
@@ -27,6 +29,8 @@ void Inspector::SetTarget(GameObject* target)
 	case MeshRenderer::classID: targetGUI = new MeshRendererGUI(target); break;
 	case LightObject::classID: targetGUI = new LightObjectGUI(target); break;
 	case ParticleEmitter::classID: targetGUI = new ParticleEmitterGUI(target); break;
+	case LinkedHexGrid::classID: targetGUI = new LinkedHexGridGUI(target); break;
+	case HexTile::classID: targetGUI = new HexTileGUI(target); break;
 	default:
 		targetGUI = new GameObjectGUI(target);
 		Debug::LogError(LogID::ERR151,

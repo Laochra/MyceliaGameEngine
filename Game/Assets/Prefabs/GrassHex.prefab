@@ -1,0 +1,31 @@
+{
+  "Active": true,
+  "Children": [],
+  "GUID": 5583686451678822603,
+  "HexType": 1,
+  "Material": "Assets\\Materials\\Green.mat",
+  "Mesh": "ProceduralHexagon",
+  "Name": "GrassHex",
+  "Pivot": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Position": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Rotation": [
+    1.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Scale": [
+    1.0,
+    1.0,
+    1.0
+  ],
+  "TypeID": 73778508
+}

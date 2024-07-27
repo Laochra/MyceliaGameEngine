@@ -7,13 +7,13 @@ void HexTile::SerialiseTo(json& jsonObj) const
 {
 	MeshRenderer::SerialiseTo(jsonObj);
 
-	//...
+	jsonObj["HexType"] = (int)type;
 }
 void HexTile::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptions)
 {
 	MeshRenderer::DeserialiseFrom(jsonObj, guidOptions);
 
-	//...
+	type = (HexType)(int)jsonObj["HexType"];
 }
 
 
@@ -26,6 +26,9 @@ const std::vector<vec3> HexTile::DirVec =
 	vec3( 0,			0,  1   ),
 	vec3(-0.866f,	0,  0.5f)
 };
+json HexTile::availablePrefab;
+json HexTile::grassPrefab;
+json HexTile::waterPrefab;
 
 void HexTile::Initialise()
 {

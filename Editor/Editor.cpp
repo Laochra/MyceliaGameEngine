@@ -47,7 +47,7 @@ void Editor::Initialise()
 		fxaaProgram.Link();
 	}
 
-	hexGrid = new LinkedHexGrid();
+	hexGrid = GameObject::Instantiate<LinkedHexGrid>();
 
 	hexGrid->AddTile(vec3(0, 0, 0), HexDir::NorthWest);
 	hexGrid->AddTile(vec3(0, 0, 0), HexDir::North);
@@ -441,8 +441,6 @@ bool Editor::OnClose()
 	del(Camera::main);
 
 	del(gameObjectManager);
-
-	del(hexGrid);
 
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();

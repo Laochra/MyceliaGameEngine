@@ -282,6 +282,8 @@ namespace SceneGUI
 	}
 	void CheckForFileShortcuts() noexcept
 	{
+		if (AppInfo::input->enabled && ((EditorCamera*)Camera::main)->freeCamera.down()) return;
+
 		if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl) || ImGui::IsKeyDown(ImGuiKey_RightCtrl))
 		{
 			if (ImGui::IsKeyPressed(ImGuiKey_N)) NewScene();

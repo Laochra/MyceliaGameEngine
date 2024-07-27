@@ -94,5 +94,7 @@ void MeshRendererGUI::DrawMeshRendererGUI(MeshRenderer* meshRenderer)
 
 			ImGui::EndCombo();
 		}
+
+		GUI::Spacing(3);
 	}
 }

@@ -3,6 +3,8 @@
 #include "MeshRenderer.h"
 #include "LightObject.h"
 #include "ParticleEmitter.h"
+#include "LinkedHexGrid.h"
+#include "HexTile.h"
 
 #include "GeneralMacros.h"
 
@@ -19,6 +21,8 @@ GameObject* GameObject::InstantiateFrom(json jsonObj, GuidGeneration guidOptions
 	case MeshRenderer::classID: gameObject = new MeshRenderer(); break;
 	case LightObject::classID: gameObject = new LightObject(); break;
 	case ParticleEmitter::classID: gameObject = new ParticleEmitter(); break;
+	case LinkedHexGrid::classID: gameObject = new LinkedHexGrid(); break;
+	case HexTile::classID: gameObject = new HexTile(); break;
 	default:
 		gameObject = new GameObject();
 		Debug::LogError(LogID::ERR151, "'", typeID, "' DO NOT SAVE! Data will be lost. ", locationinfo);

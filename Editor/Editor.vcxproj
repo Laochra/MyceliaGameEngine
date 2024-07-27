@@ -192,9 +192,11 @@
     <ClCompile Include="GameObjectGUI.cpp" />
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="Heirarchy.cpp" />
+    <ClCompile Include="HexTileGUI.cpp" />
     <ClCompile Include="InputEditor.cpp" />
     <ClCompile Include="Inspector.cpp" />
     <ClCompile Include="LightObjectGUI.cpp" />
+    <ClCompile Include="LinkedHexGridGUI.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MaterialGUI.cpp" />
     <ClCompile Include="ArtImporter.cpp" />
@@ -231,9 +233,11 @@
     <ClInclude Include="GUI.h" />
     <ClInclude Include="FileDialogue.h" />
     <ClInclude Include="Heirarchy.h" />
+    <ClInclude Include="HexTileGUI.h" />
     <ClInclude Include="ImGuiIncludes.h" />
     <ClInclude Include="InputEditor.h" />
     <ClInclude Include="LightObjectGUI.h" />
+    <ClInclude Include="LinkedHexGridGUI.h" />
     <ClInclude Include="MaterialGUI.h" />
     <ClInclude Include="Inspector.h" />
     <ClInclude Include="ArtImporter.h" />
