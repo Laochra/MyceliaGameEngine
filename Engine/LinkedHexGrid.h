@@ -13,16 +13,16 @@ typedef unsigned long long ulong;
 
 struct HexPosHash
 {
-	ulong operator()(const vec3& k) const
+	ulong operator()(const glm::ivec2& k) const
 	{
 		ulong x = *(uint*)&k.x;
-		ulong z = *(uint*)&k.z;
+		ulong z = *(uint*)&k.y;
 		return (x << 32) + z;
 	}
 };
 
-typedef std::unordered_map<vec3, HexTile*, HexPosHash> HexMap;
-typedef std::pair<vec3, HexTile*> HexPair;
+typedef std::unordered_map<glm::ivec2, HexTile*, HexPosHash> HexMap;
+typedef std::pair<glm::ivec2, HexTile*> HexPair;
 
 class LinkedHexGrid : public GameObject3D
 {
@@ -36,6 +36,9 @@ public:
 
 	virtual void Initialise() noexcept override;
 
-	void AddTile(vec3 originPosition, HexDir direction) noexcept;
+	void UpdateTile(glm::ivec2 position, HexType hexType) noexcept;
+	void UpdateTile(HexTile* hexTile, HexType hexType) noexcept;
+
+	void AddTile(glm::ivec2 originPosition, HexDir direction) noexcept;
 	void AddTile(HexTile* origin, HexDir direction) noexcept;
 };

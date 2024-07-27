@@ -8,9 +8,9 @@ layout( location = 4) in vec2 TexCoords;
 
 uniform mat4 ProjectionViewModel;
 
-uniform vec3 HexPos;
+uniform ivec2 HexPos;
 
-out flat vec3 HexPosition;
+out flat ivec2 HexPosition;
 
 void main() // Vertex
 {

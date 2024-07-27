@@ -15,16 +15,22 @@ void HexTile::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptions)
 
 	type = (HexType)(int)jsonObj["HexType"];
 }
-
-
-const std::vector<vec3> HexTile::DirVec =
+void HexTile::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
 {
-	vec3(-0.866f,	0, -0.5f),
-	vec3( 0,			0, -1   ),
-	vec3( 0.866f,	0, -0.5f),
-	vec3( 0.866f,	0,  0.5f),
-	vec3( 0,			0,  1   ),
-	vec3(-0.866f,	0,  0.5f)
+	MeshRenderer::UpdateFrom(jsonObj, guidOptions);
+
+	type = (HexType)(int)jsonObj["HexType"];
+}
+
+
+const std::vector<glm::ivec2> HexTile::DirVec =
+{
+	glm::ivec2(-1,	-1),
+	glm::ivec2( 0,	-2),
+	glm::ivec2( 1,	-1),
+	glm::ivec2( 1,	 1),
+	glm::ivec2( 0,	 2),
+	glm::ivec2(-1,	 1)
 };
 json HexTile::availablePrefab;
 json HexTile::grassPrefab;
@@ -35,7 +41,7 @@ void HexTile::Initialise()
 	MeshRenderer::Initialise();
 	SetMesh("ProceduralHexagon");
 }
-static void DrawHexPosRecursive(GameObject3D* gameObject, ShaderProgram* hexPosProgram, vec3 hexPos)
+static void DrawHexPosRecursive(GameObject3D* gameObject, ShaderProgram* hexPosProgram, glm::ivec2 hexPos)
 {
 	MeshRenderer* meshRenderer = dynamic_cast<MeshRenderer*>(gameObject);
 	if (meshRenderer != nullptr && meshRenderer->GetMesh() != nullptr)
@@ -56,7 +62,12 @@ void HexTile::DrawHexPos() noexcept
 	ShaderProgram* hexPosProgram = shaderManager->GetProgram("Assets\\Shaders\\DrawHexPos.gpu");
 	hexPosProgram->Bind();
 
-	DrawHexPosRecursive(this, hexPosProgram, GetPosition());
+	DrawHexPosRecursive(this, hexPosProgram, GetHexPos());
+}
+
+glm::ivec2 HexTile::GetHexPos() const noexcept
+{
+	return HexTile::RealPosToHexPos(GetPosition());
 }
 
 HexTile*& HexTile::operator[](HexDir direction) noexcept
@@ -64,6 +75,14 @@ HexTile*& HexTile::operator[](HexDir direction) noexcept
 	return adjacent[(unsigned int)direction];
 }
 
+vec3 HexTile::HexPosToRealPos(glm::ivec2 hexPos)
+{
+	return vec3(hexPos.x * 0.866f, 0, hexPos.y * 0.5f);
+}
+glm::ivec2 HexTile::RealPosToHexPos(vec3 realPos)
+{
+	return glm::ivec2(std::nearbyintf(realPos.x * (1 / 0.866f)), std::nearbyintf(realPos.z * (1 / 0.5f)));
+}
 HexDir HexTile::OppositeDir(HexDir dir)
 {
 	switch (dir)

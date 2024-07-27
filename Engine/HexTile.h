@@ -23,9 +23,13 @@ public:
 	virtual void Initialise() override;
 	void DrawHexPos() noexcept;
 	
+	glm::ivec2 GetHexPos() const noexcept;
+
 	HexTile*& operator[](HexDir direction) noexcept;
 
-	const static std::vector<vec3> DirVec;
+	const static std::vector<glm::ivec2> DirVec;
+	static vec3 HexPosToRealPos(glm::ivec2 hexPos);
+	static glm::ivec2 RealPosToHexPos(vec3 hexPos);
 	static HexDir OppositeDir(HexDir dir);
 
 	static json availablePrefab;

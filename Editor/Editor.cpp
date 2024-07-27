@@ -67,6 +67,37 @@ void Editor::Update()
 	EditorGUI::Draw();
 	Updater::CallUpdate();
 	TransformEdit::Update();
+
+	if (AppInfo::state == AppState::Playing)
+	{
+		if (AppInfo::input->screenCursorPos.x >= 0 &&
+			AppInfo::input->screenCursorPos.y >= 0 &&
+			AppInfo::input->screenCursorPos.x < screenWidth &&
+			AppInfo::input->screenCursorPos.y < screenHeight)
+		{
+			int clickResult = 0;
+			if (AppInfo::input->GetKeyPressed(KeyCode::MouseLeft))
+			{
+				clickResult = 1;
+			}
+			else if (AppInfo::input->GetKeyPressed(KeyCode::MouseRight))
+			{
+				clickResult = 2;
+			}
+			if (clickResult != 0)
+			{
+				const int pixelCount = screenWidth * screenHeight;
+				glm::ivec4 * hexPosPixels = new glm::ivec4[pixelCount];
+				glGetTextureImage(hexPosTexture, 0, GL_RGBA_INTEGER, GL_INT, pixelCount * sizeof(glm::ivec4), hexPosPixels);
+				uint hexPosIndex = (int)AppInfo::input->screenCursorPos.x + (int)AppInfo::input->screenCursorPos.y * screenWidth;
+				glm::ivec4 hexPos = hexPosPixels[hexPosIndex];
+				if (hexPos.a != 0)
+				{
+					hexGrid->UpdateTile((glm::ivec2)hexPos, (HexType)clickResult);
+				}
+			}
+		}
+	}
 }
 void Editor::Draw()
 {
@@ -139,7 +170,7 @@ void Editor::Draw()
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, hexPosDepth);
 
 		glBindTexture(GL_TEXTURE_2D, hexPosTexture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, screenWidth, screenHeight, 0, GL_RGBA, GL_FLOAT, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32I, screenWidth, screenHeight, 0, GL_RGBA_INTEGER, GL_INT, NULL);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

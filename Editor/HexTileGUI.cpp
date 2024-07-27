@@ -1,4 +1,5 @@
 #include "HexTileGUI.h"
+#include "LinkedHexGrid.h"
 
 #include "GUI.h"
 
@@ -30,21 +31,36 @@ void HexTileGUI::DrawHexTileGUI(HexTile* hexTile)
 		{
 			if (ImGui::Selectable("Available", hexTile->type == HexType::Available))
 			{
-				hexTile->type = HexType::Available;
-				//hexTile->UpdateFrom(HexTile::availablePrefab);
+				LinkedHexGrid* grid = dynamic_cast<LinkedHexGrid*>(hexTile->GetParent());
+
+				if (grid != nullptr) grid->UpdateTile(hexTile, HexType::Available);
+				else Debug::LogError("HexTiles should be children of a LinkedHexGrid", locationinfo);
 			}
 			if (ImGui::Selectable("Grass", hexTile->type == HexType::Grass))
 			{
-				hexTile->type = HexType::Grass;
-				//hexTile->UpdateFrom(HexTile::grassPrefab);
+				LinkedHexGrid* grid = dynamic_cast<LinkedHexGrid*>(hexTile->GetParent());
+
+				if (grid != nullptr) grid->UpdateTile(hexTile, HexType::Grass);
+				else Debug::LogError("HexTiles should be children of a LinkedHexGrid", locationinfo);
 			}
 			if (ImGui::Selectable("Water", hexTile->type == HexType::Water))
 			{
-				hexTile->type = HexType::Water;
-				//hexTile->UpdateFrom(HexTile::waterPrefab);
+				LinkedHexGrid* grid = dynamic_cast<LinkedHexGrid*>(hexTile->GetParent());
+
+				if (grid != nullptr) grid->UpdateTile(hexTile, HexType::Water);
+				else Debug::LogError("HexTiles should be children of a LinkedHexGrid", locationinfo);
 			}
 			ImGui::EndCombo();
 		}
+
+		int adjacentHexes = 0;
+		for (int i = 0; i < 6; i++)
+		{
+			if (hexTile->adjacent[i] != nullptr) adjacentHexes++;
+		}
+		glm::ivec2 hexPos(hexTile->GetHexPos());
+		ImGui::DragInt2("HexPos", (int*)&hexPos);
+		ImGui::Text(StringBuilder("Adjacent Hexes: ", adjacentHexes).CStr());
 
 		GUI::Spacing(3);
 	}

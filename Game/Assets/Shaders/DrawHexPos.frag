@@ -1,10 +1,10 @@
 #version 460
 
-in flat vec3 HexPosition;
+in flat ivec2 HexPosition;
 
-out vec4 Colour;
+out ivec4 Colour;
 
 void main() // Frag
 {
-	Colour = vec4(HexPosition, 1.0);
+	Colour = ivec4(HexPosition.x, HexPosition.y, 0, 1);
 }

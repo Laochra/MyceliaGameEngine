@@ -163,6 +163,15 @@ namespace SceneGUI
 		uintptr_t image = (uintptr_t)EditorGUI::sceneViewColourBufferOutput; // Casting to a uintptr_t is required to stop a warning with converting 32bit uint to 64bit void*. ImGui::Image works regardless.
 		ImGui::Image((void*)image, ImVec2((float)screenWidth, (float)screenHeight), ImVec2(0, 1), ImVec2(1, 0));
 		
+		ImVec2 imguiWindowPos = ImGui::GetWindowPos();
+		int mainWindowX, mainWindowY;
+		glfwGetWindowPos(window, &mainWindowX, &mainWindowY);
+		vec2& cursorPos = AppInfo::input->screenCursorPos;
+		cursorPos = AppInfo::input->cursorPos - vec2(imguiWindowPos.x, imguiWindowPos.y + menuBarSize.y + 23) + vec2(mainWindowX, mainWindowY);
+		cursorPos.y = screenHeight - cursorPos.y;
+		normalisedMousePos = vec2(cursorPos.x / screenWidth, cursorPos.y / screenHeight);
+		normalisedMousePos = (normalisedMousePos * 2.0f) - 1.0f;
+
 		if (AppInfo::state == AppState::Editor)
 		{
 			if (ImGui::IsItemHovered())
@@ -201,14 +210,6 @@ namespace SceneGUI
 					}
 				}
 
-				ImVec2 imguiWindowPos = ImGui::GetWindowPos();
-				int mainWindowX, mainWindowY;
-				glfwGetWindowPos(window, &mainWindowX, &mainWindowY);
-				vec2 cursorPos = AppInfo::input->cursorPos - vec2(imguiWindowPos.x, imguiWindowPos.y + menuBarSize.y + 23) + vec2(mainWindowX, mainWindowY);
-				cursorPos.y = screenHeight - cursorPos.y;
-				normalisedMousePos = vec2(cursorPos.x / screenWidth, cursorPos.y / screenHeight);
-				normalisedMousePos = (normalisedMousePos * 2.0f) - 1.0f;
-				
 				if (AppInfo::input->GetKeyPressed(KeyCode::MouseLeft))
 				{
 					const int pixelCount = screenWidth * screenHeight;
