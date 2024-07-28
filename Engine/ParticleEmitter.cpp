@@ -94,6 +94,57 @@ void ParticleEmitter::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOp
 	shaderProgram = new ShaderProgram();
 	shaderProgram->LoadAndLinkFromJSON(shaderProgramFilepath.c_str());
 }
+void ParticleEmitter::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
+{
+	GameObject3D::UpdateFrom(jsonObj, guidOptions);
+
+	// Particle Properties
+	{
+		json properties = jsonObj["ParticleProperties"];
+
+		del(particleSystem);
+		particleSystem = new ParticleSystem();
+		ParticleSystem::Properties& p = particleSystem->properties;
+
+		p.autoplay = properties["Autoplay"];
+		p.loop = properties["Loop"];
+		p.duration = properties["Duration"];
+		p.delay = properties["Delay"];
+		p.maxCount = properties["MaxCount"];
+		p.gravity = properties["Gravity"];
+
+		vector<float> sizeRange = properties["SizeRange"];
+		memcpy(p.sizeRange, sizeRange.data(), sizeRange.size() * sizeof(float));
+		vector<float> lifetimeRange = properties["LifetimeRange"];
+		memcpy(p.lifetimeRange, lifetimeRange.data(), lifetimeRange.size() * sizeof(float));
+		vector<float> speedRange = properties["SpeedRange"];
+		memcpy(p.speedRange, speedRange.data(), speedRange.size() * sizeof(float));
+		vector<float> colour = properties["ColourRange"];
+		memcpy(p.colourRange, colour.data(), colour.size() * sizeof(float));
+
+		p.emitOverTime = properties["EmitOverTime"];
+		p.particlesPerSecond = properties["ParticlesPerSecond"];
+		p.shape = (ParticleSystem::Shape)(uint)properties["ShapeID"];
+		vector<float> shapeData = properties["ShapeData"];
+		memcpy(&p.shapeData0, shapeData.data(), shapeData.size() * sizeof(float));
+
+		string spriteFilepath = properties["Sprite"];
+		p.spriteFilepathLength = (uint)spriteFilepath.size();
+		memcpy(p.spriteFilepath, spriteFilepath.c_str(), spriteFilepath.size() + 1);
+		p.alphaClippingThreshold = properties["AlphaThreshold"];
+	}
+
+	string computeShaderFilepath = jsonObj["ComputeShader"];
+	del(computeShader);
+	computeShader = new ComputeShader(computeShaderFilepath.c_str());
+	computeShader->filepath = new char[computeShaderFilepath.size() + 1];
+	memcpy(computeShader->filepath, computeShaderFilepath.c_str(), computeShaderFilepath.size() + 1);
+
+	string shaderProgramFilepath = jsonObj["ShaderProgram"];
+	del(shaderProgram);
+	shaderProgram = new ShaderProgram();
+	shaderProgram->LoadAndLinkFromJSON(shaderProgramFilepath.c_str());
+}
 
 void ParticleEmitter::Draw()
 {	
@@ -144,15 +195,15 @@ void ParticleEmitter::DrawDebug()
 	{
 	case Shape::Sphere:
 	{
-		debug->lines.AddSphere(GetGlobalPosition(), properties->innerRadius, 32);
-		debug->lines.AddSphere(GetGlobalPosition(), properties->outerRadius, 32);
+		AppInfo::debug->lines.AddSphere(GetGlobalPosition(), properties->innerRadius, 32);
+		AppInfo::debug->lines.AddSphere(GetGlobalPosition(), properties->outerRadius, 32);
 		break;
 	}
 	case Shape::Cone:
 	{
 		vec3 direction = (vec3)glm::normalize(glm::inverse(GetMatrix())[2]);
 
-		debug->lines.AddConicalFrustum(
+		AppInfo::debug->lines.AddConicalFrustum(
 			GetGlobalPosition(),
 			direction,
 			properties->innerRadius,
@@ -164,7 +215,7 @@ void ParticleEmitter::DrawDebug()
 	}
 	case Shape::Box:
 	{
-		debug->lines.AddCuboid(GetGlobalPosition(), vec3(properties->width, properties->height, properties->depth));
+		AppInfo::debug->lines.AddCuboid(GetGlobalPosition(), vec3(properties->width, properties->height, properties->depth));
 		break;
 	}
 	case Shape::Quad:
@@ -248,6 +299,21 @@ void ParticleEmitter::OnDestroy()
 	del(particleSystem);
 
 	GameObject3D::OnDestroy();
+
+	Updater::DrawRemove(this);
+}
+void ParticleEmitter::OnRestore()
+{
+	GameObject3D::OnRestore();
+
+	glGenVertexArrays(1, &vao);
+	glPointSize(5.0f);
+	if (shaderProgram == nullptr) shaderProgram = new ShaderProgram();
+	shaderProgram->LoadAndLinkFromJSON("Assets\\Shaders\\ParticleSystem.gpu");
+	if (computeShader == nullptr) computeShader = new ComputeShader("Assets\\Shaders\\Particles.comp");
+	if (particleSystem == nullptr) particleSystem = new ParticleSystem();
+
+	Updater::DrawAdd(this);
 }
 
 const ShaderProgram& ParticleEmitter::GetShaderProgram() const noexcept

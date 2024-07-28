@@ -15,11 +15,15 @@ using std::pair;
 #include <initializer_list>
 typedef std::initializer_list<string> StringParams;
 
+#include "EditHistory.h"
+
 class GameObject;
 
 namespace GUI
 {
 	typedef unsigned int uint;
+
+	extern EditHistory editHistory;
 
 	extern string GenerateID(GameObject* gameObject);
 	extern string GenerateID(const char* name, GameObject* gameObject);

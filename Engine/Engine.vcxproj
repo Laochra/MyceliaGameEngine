@@ -164,13 +164,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\External\glad\glad.c" />
+    <ClCompile Include="AppInfo.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Colour.cpp" />
     <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="EditHistory.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObject3D.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="GuidGenerator.cpp" />
+    <ClCompile Include="HexTile.cpp" />
     <ClCompile Include="KeyAxis.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Input.cpp" />
@@ -178,6 +181,7 @@
     <ClCompile Include="LightingManager.cpp" />
     <ClCompile Include="LightObject.cpp" />
     <ClCompile Include="LineDrawer.cpp" />
+    <ClCompile Include="LinkedHexGrid.cpp" />
     <ClCompile Include="LogID.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="MaterialManager.cpp" />
@@ -205,11 +209,13 @@
     <ClInclude Include="..\External\nlohmannjson\json_fwd.hpp" />
     <ClInclude Include="..\External\stb\stb_image.h" />
     <ClInclude Include="..\External\stb\stb_image_write.h" />
+    <ClInclude Include="AppInfo.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Colour.h" />
     <ClInclude Include="ComputeShader.h" />
     <ClInclude Include="Debug.h" />
+    <ClInclude Include="EditHistory.h" />
     <ClInclude Include="FilesIncludes.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObject3D.h" />
@@ -218,12 +224,14 @@
     <ClInclude Include="GuidGenerator.h" />
     <ClInclude Include="Heirarchical.h" />
     <ClInclude Include="HeirarchicalDefinitions.h" />
+    <ClInclude Include="HexTile.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="JsonIncludes.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LightingManager.h" />
     <ClInclude Include="LightObject.h" />
     <ClInclude Include="LineDrawer.h" />
+    <ClInclude Include="LinkedHexGrid.h" />
     <ClInclude Include="LogID.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MaterialManager.h" />

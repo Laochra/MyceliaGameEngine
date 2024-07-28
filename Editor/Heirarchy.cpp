@@ -11,6 +11,8 @@
 
 #include "Input.h"
 
+#include "AppInfo.h"
+
 namespace Heirarchy
 {
 	const float dragDropLineWidth = 2.5f;
@@ -173,22 +175,22 @@ namespace Heirarchy
 
 			if (ImGui::IsWindowHovered()) isHovered = true;
 
-			if (!isHovered && ImGui::IsKeyPressed(ImGuiKey_MouseLeft)) { rightClickMenu.Close(); }
+			if (!isHovered && ImGui::IsKeyPressed(ImGuiKey_MouseLeft, false)) { rightClickMenu.Close(); }
 
 			ImGui::End();
 		}
 		else if (ImGui::IsWindowHovered())
 		{
-			if (!input->enabled)
+			if (!AppInfo::input->enabled)
 			{
-				if (ImGui::IsKeyPressed(ImGuiKey_Delete) || ImGui::IsKeyPressed(ImGuiKey_KeypadDecimal))
+				if (ImGui::IsKeyPressed(ImGuiKey_Delete, false) || ImGui::IsKeyPressed(ImGuiKey_KeypadDecimal, false))
 				{
 					GameObject::Destroy(inspector->GetTarget());
 				}
 
-				if (ImGui::IsKeyPressed(ImGuiKey_LeftCtrl) || ImGui::IsKeyPressed(ImGuiKey_RightCtrl))
+				if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl) || ImGui::IsKeyDown(ImGuiKey_RightCtrl))
 				{
-					if (ImGui::IsKeyPressed(ImGuiKey_D) && dynamic_cast<GameObject3D*>(rightClickMenu.target) != nullptr)
+					if (ImGui::IsKeyPressed(ImGuiKey_D, false) && dynamic_cast<GameObject3D*>(rightClickMenu.target) != nullptr)
 					{
 						Duplicate((GameObject3D*)inspector->GetTarget());
 					}
@@ -313,11 +315,11 @@ namespace Heirarchy
 
 	void Heirarchy::AcceptInputFor(GameObject3D* gameObject3D)
 	{
-		if (!input->enabled && ImGui::IsKeyReleased(ImGuiKey_MouseLeft))
+		if (!AppInfo::input->enabled && ImGui::IsKeyReleased(ImGuiKey_MouseLeft))
 		{
 			inspector->SetTarget(gameObject3D);
 		}
-		if (!input->enabled && ImGui::IsKeyReleased(ImGuiKey_MouseRight))
+		if (!AppInfo::input->enabled && ImGui::IsKeyReleased(ImGuiKey_MouseRight))
 		{
 			inspector->SetTarget(gameObject3D);
 			rightClickMenu.Open(gameObject3D, ImGui::GetCursorScreenPos());

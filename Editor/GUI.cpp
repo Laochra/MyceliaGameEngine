@@ -13,6 +13,8 @@
 
 #include "Debug.h"
 
+EditHistory GUI::editHistory;
+
 string GUI::currentStyle = "Orchid";
 map<string, string> GUI::styleMap = {
 	{ "Forest", "Engine\\EditorStyles\\Forest.style" },

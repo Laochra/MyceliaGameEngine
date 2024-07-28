@@ -20,6 +20,7 @@ public:
 	using GameObject::GameObject;
 
 	virtual void OnDestroy() override;
+	virtual void OnRestore() override;
 
 	bool IsActive() noexcept override;
 
@@ -75,12 +76,12 @@ public:
 	
 private:
 	vec3 position = vec3();
-	quat rotation = quat();
+	quat rotation = glm::identity<quat>();
 	vec3 scale = vec3(1);
 	vec3 pivot = vec3();
 
-	mat4 globalMatrix = mat4();
-	mat4 localMatrix = mat4();
+	mat4 globalMatrix = glm::identity<mat4>();
+	mat4 localMatrix = glm::identity<mat4>();
 	bool dirty = true;
 
 

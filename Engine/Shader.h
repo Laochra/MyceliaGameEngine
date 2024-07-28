@@ -25,8 +25,8 @@ const int ShaderStagesCount = 6;
 enum ShaderInputType : unsigned int
 {
 	UndefinedTypeGL = 0,
-
 	TextureGL = GL_SAMPLER_2D,
+	TextureArrayGL = GL_SAMPLER_2D_ARRAY,
 	CubemapGL = GL_SAMPLER_CUBE,
 
 	FloatGL = GL_FLOAT,
@@ -158,6 +158,7 @@ public:
 	// Find a better way of doing this. Name searching may be expensive
 	bool BindUniform(const char* name, int value);
 	bool BindUniform(const char* name, const glm::uvec2& value);
+	bool BindUniform(const char* name, const glm::ivec2& value);
 	bool BindUniform(const char* name, float value);
 	bool BindUniform(const char* name, const vec2& value);
 	bool BindUniform(const char* name, const vec3& value);

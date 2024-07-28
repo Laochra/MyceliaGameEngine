@@ -16,6 +16,8 @@
 
 #include "Debug.h"
 
+#include "AppInfo.h"
+
 namespace ArtImporter
 {
 	vector<string> fileQueue;
@@ -52,7 +54,7 @@ namespace ArtImporter
 		{
 			if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenOverlapped))
 			{
-				if (!input->enabled && ImGui::IsKeyReleased(ImGuiKey_MouseLeft))
+				if (!AppInfo::input->enabled && ImGui::IsKeyReleased(ImGuiKey_MouseLeft))
 				{
 					selectedTempMesh = tempMesh;
 				}
@@ -67,7 +69,7 @@ namespace ArtImporter
 		{
 			if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenOverlapped))
 			{
-				if (!input->enabled && ImGui::IsKeyReleased(ImGuiKey_MouseLeft))
+				if (!AppInfo::input->enabled && ImGui::IsKeyReleased(ImGuiKey_MouseLeft))
 				{
 					selectedTempMesh = tempMesh;
 				}

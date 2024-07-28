@@ -163,6 +163,8 @@ public:
 	std::set<KeyCode>* releasedKeys;
 
 	vec2 cursorPos = vec2(0, 0);
+	// This acts differently based on the application, if the game view exists inside a sub-window this will need to be set relative to that
+	vec2 screenCursorPos = vec2(0, 0);
 	vec2 cursorMovement = vec2(0, 0);
 	vec2 scrollInput = vec2(0, 0);
 
@@ -177,8 +179,6 @@ public:
 
 	void Update();
 };
-
-extern Input* input;
 
 extern const int keyAmount;
 extern const char* keys[];

@@ -13,6 +13,9 @@
 
 #include "TransformEdit.h"
 
+
+#include "AppInfo.h"
+
 void Editor::Initialise()
 {
 	EditorGUI::Initialise();
@@ -27,7 +30,7 @@ void Editor::Initialise()
 	LightingManager::ambientLight = Light(vec3(0.1f, 0.1f, 0.1f));
 	LightingManager::directionalLight = DirectionalLight(vec3(1.0f, 1.0f, 1.0f), glm::normalize(vec3(-0.1f, -1, -1)));
 	
-	input->enabled = false;
+	AppInfo::input->enabled = false;
 
 	// Initialise Post Processing Shaders // TODO: Move this into its own place
 	{
@@ -43,6 +46,16 @@ void Editor::Initialise()
 		fxaaProgram.LoadShader(FragmentStage, "Engine\\DefaultAssets\\FXAA.frag");
 		fxaaProgram.Link();
 	}
+
+	hexGrid = GameObject::Instantiate<LinkedHexGrid>();
+
+	hexGrid->AddTile(vec3(0, 0, 0), HexDir::NorthWest);
+	hexGrid->AddTile(vec3(0, 0, 0), HexDir::North);
+	hexGrid->AddTile(vec3(0, 0, 0), HexDir::NorthEast);
+	hexGrid->AddTile(vec3(0, 0, 0), HexDir::SouthEast);
+	hexGrid->AddTile(vec3(0, 0, 0), HexDir::South);
+	hexGrid->AddTile(vec3(0, 0, 0), HexDir::SouthWest);
+	
 }
 
 void Editor::FixedUpdate()
@@ -54,6 +67,37 @@ void Editor::Update()
 	EditorGUI::Draw();
 	Updater::CallUpdate();
 	TransformEdit::Update();
+
+	if (AppInfo::state == AppState::Playing)
+	{
+		if (AppInfo::input->screenCursorPos.x >= 0 &&
+			AppInfo::input->screenCursorPos.y >= 0 &&
+			AppInfo::input->screenCursorPos.x < screenWidth &&
+			AppInfo::input->screenCursorPos.y < screenHeight)
+		{
+			int clickResult = 0;
+			if (AppInfo::input->GetKeyPressed(KeyCode::MouseLeft))
+			{
+				clickResult = 1;
+			}
+			else if (AppInfo::input->GetKeyPressed(KeyCode::MouseRight))
+			{
+				clickResult = 2;
+			}
+			if (clickResult != 0)
+			{
+				const int pixelCount = screenWidth * screenHeight;
+				glm::ivec4 * hexPosPixels = new glm::ivec4[pixelCount];
+				glGetTextureImage(hexPosTexture, 0, GL_RGBA_INTEGER, GL_INT, pixelCount * sizeof(glm::ivec4), hexPosPixels);
+				uint hexPosIndex = (int)AppInfo::input->screenCursorPos.x + (int)AppInfo::input->screenCursorPos.y * screenWidth;
+				glm::ivec4 hexPos = hexPosPixels[hexPosIndex];
+				if (hexPos.a != 0)
+				{
+					hexGrid->UpdateTile((glm::ivec2)hexPos, (HexType)clickResult);
+				}
+			}
+		}
+	}
 }
 void Editor::Draw()
 {
@@ -70,21 +114,22 @@ void Editor::Draw()
 	glViewport(0, 0, screenWidth, screenHeight);
 
 	// Generate GUID Texture
-	if (EditorGUI::guidFBO == 0) glGenFramebuffers(1, &EditorGUI::guidFBO);
-	glBindFramebuffer(GL_FRAMEBUFFER, EditorGUI::guidFBO);
-
-	if (EditorGUI::guidDepth == 0) glGenRenderbuffers(1, &EditorGUI::guidDepth);
-	if (screenSizeJustChanged)
+	bool initialisingGuidBuffers = EditorGUI::guidFBO == 0;
+	if (initialisingGuidBuffers)
 	{
+		glGenFramebuffers(1, &EditorGUI::guidFBO);
+		glGenRenderbuffers(1, &EditorGUI::guidDepth);
+		glGenTextures(1, &EditorGUI::guidTexture);
+	}
+	if (screenSizeJustChanged || initialisingGuidBuffers)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, EditorGUI::guidFBO);
+
 		glBindRenderbuffer(GL_RENDERBUFFER, EditorGUI::guidDepth);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, screenWidth, screenHeight);
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, EditorGUI::guidDepth);
-	}
 
-	if (EditorGUI::guidTexture == 0) glGenTextures(1, &EditorGUI::guidTexture);
-	if (screenSizeJustChanged)
-	{
 		glBindTexture(GL_TEXTURE_2D, EditorGUI::guidTexture);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RG32UI, screenWidth, screenHeight, 0, GL_RG_INTEGER, GL_UNSIGNED_INT, NULL);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -94,14 +139,57 @@ void Editor::Draw()
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, EditorGUI::guidTexture, 0);
 	}
+	if (AppInfo::state == AppState::Editor)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, EditorGUI::guidFBO);
 
-	glClearColor(0, 0, 0, 0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClearColor(0, 0, 0, 0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-	Updater::CallDrawGUIDs();
-	glClear(GL_DEPTH_BUFFER_BIT);
-	TransformEdit::DrawIDs();
+		Updater::CallDrawGUIDs();
+		glClear(GL_DEPTH_BUFFER_BIT);
+		TransformEdit::DrawIDs();
+	}
+
+	// Generate HexPos Texture
+	bool initialisingHexPosBuffers = hexPosFBO == 0;
+	if (initialisingHexPosBuffers)
+	{
+		glGenFramebuffers(1, &hexPosFBO);
+		glGenRenderbuffers(1, &hexPosDepth);
+		glGenTextures(1, &hexPosTexture);
+	}
+	if (screenSizeJustChanged || initialisingHexPosBuffers)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, hexPosFBO);
+
+		glBindRenderbuffer(GL_RENDERBUFFER, hexPosDepth);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, screenWidth, screenHeight);
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, hexPosDepth);
+
+		glBindTexture(GL_TEXTURE_2D, hexPosTexture);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32I, screenWidth, screenHeight, 0, GL_RGBA_INTEGER, GL_INT, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, hexPosTexture, 0);
+	}
+	if (AppInfo::state == AppState::Playing)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, hexPosFBO);
+
+		glClearColor(0, 0, 0, 0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		for (HexPair hexPair : hexGrid->lookupTable)
+		{
+			hexPair.second->DrawHexPos();
+		}
+	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -236,10 +324,12 @@ void Editor::Draw()
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	vec3 cameraPos(Camera::main->GetPosition());
-	debug->lines.AddGrid(vec3((int)cameraPos.x, 0, (int)cameraPos.z), 50);
-
-	debug->lines.Draw();
+	if (AppInfo::state == AppState::Editor)
+	{
+		vec3 cameraPos(Camera::main->GetPosition());
+		AppInfo::debug->lines.AddGrid(vec3((int)cameraPos.x, 0, (int)cameraPos.z), 50);
+	}
+	AppInfo::debug->lines.Draw();
 
 	glClear(GL_DEPTH_BUFFER_BIT);
 	TransformEdit::Draw();

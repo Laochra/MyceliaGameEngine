@@ -142,3 +142,7 @@
 	#define foreachf_case(value) case value:
 	#define cases(...) foreachf(foreachf_case, __VA_ARGS__)
 #endif
+
+#ifndef deletewithmsg
+	#define deletewithmsg(errorMsg) [[deprecated("DELETED FUNCTION! " errorMsg)]]
+#endif

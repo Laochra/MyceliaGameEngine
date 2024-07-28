@@ -26,6 +26,15 @@ void MeshRenderer::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptio
 	string materialFilePath = jsonObj["Material"];
 	material = materialManager->GetMaterial(materialFilePath.c_str());
 }
+void MeshRenderer::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
+{
+	GameObject3D::UpdateFrom(jsonObj, guidOptions);
+
+	string meshFilePath = jsonObj["Mesh"];
+	mesh = meshManager->GetMesh(meshFilePath.c_str());
+	string materialFilePath = jsonObj["Material"];
+	material = materialManager->GetMaterial(materialFilePath.c_str());
+}
 
 void MeshRenderer::Draw()
 {
@@ -95,6 +104,12 @@ void MeshRenderer::Draw()
 	sp.BindUniform("ModelMatrix", GetMatrix());
 	
 	// Bind Colour and Normal Maps
+	bool colourMapBound = false;
+	bool colourTintBound = false;
+	bool normalMapBound = false;
+	bool rmaoMapBound = false;
+	bool emissionColourBound = false;
+	bool emissionIntensityBound = false;
 	for (int i = 0; i < material->uniforms.size(); i++)
 	{
 		if (material->uniforms[i].name == "ColourMap")
@@ -106,7 +121,7 @@ void MeshRenderer::Draw()
 
 			textureManager->GetTexture(filepath.c_str(), Texture::NonLinear)->Bind(0);
 			sp.BindUniform("ColourMap", 0);
-			
+			colourMapBound = true;
 			continue;
 		}
 		else if (material->uniforms[i].name == "ColourTint")
@@ -115,7 +130,7 @@ void MeshRenderer::Draw()
 			material->uniforms[i].Get(&colourTint);
 			colourTint = vec3(powf(colourTint.x, 2.2f), powf(colourTint.y, 2.2f), powf(colourTint.z, 2.2f));
 			sp.BindUniform("ColourTint", colourTint);
-
+			colourTintBound = true;
 			continue;
 		}
 		else if (material->uniforms[i].name == "NormalMap")
@@ -127,7 +142,7 @@ void MeshRenderer::Draw()
 
 			textureManager->GetTexture(filepath.c_str())->Bind(1);
 			sp.BindUniform("NormalMap", 1);
-
+			normalMapBound = true;
 			continue;
 		}
 		else if (material->uniforms[i].name == "RMAOMap")
@@ -139,7 +154,7 @@ void MeshRenderer::Draw()
 
 			textureManager->GetTexture(filepath.c_str())->Bind(2);
 			sp.BindUniform("RMAOMap", 2);
-
+			rmaoMapBound = true;
 			continue;
 		}
 		else if (material->uniforms[i].name == "EmissionColour")
@@ -148,7 +163,7 @@ void MeshRenderer::Draw()
 			material->uniforms[i].Get(&emissionColour);
 			emissionColour = vec3(powf(emissionColour.x, 2.2f), powf(emissionColour.y, 2.2f), powf(emissionColour.z, 2.2f));
 			sp.BindUniform("EmissionColour", emissionColour);
-
+			emissionColourBound = true;
 			continue;
 		}
 		else if (material->uniforms[i].name == "EmissionIntensity")
@@ -156,12 +171,32 @@ void MeshRenderer::Draw()
 			float emissionIntensity;
 			material->uniforms[i].Get(&emissionIntensity);
 			sp.BindUniform("EmissionIntensity", emissionIntensity);
-
+			emissionIntensityBound = true;
 			continue;
 		}
 	}
 	
-	sp.BindUniform("Selected", (int)selected);
+	if (!colourMapBound)
+	{
+		textureManager->GetTexture("DefaultColour", Texture::NonLinear)->Bind(0);
+		sp.BindUniform("ColourMap", 0);
+	}
+	if (!colourTintBound) sp.BindUniform("ColourTint", vec3(1.0f, 1.0f, 1.0f));
+	if (!normalMapBound)
+	{
+		textureManager->GetTexture("DefaultNormal", Texture::NonLinear)->Bind(1);
+		sp.BindUniform("NormalMap", 1);
+	}
+	if (!rmaoMapBound)
+	{
+		textureManager->GetTexture("DefaultRMAO", Texture::NonLinear)->Bind(2);
+		sp.BindUniform("RMAOMap", 2);
+	}
+	if (!emissionColourBound) sp.BindUniform("EmissionColour", vec3(1.0f, 1.0f, 1.0f));
+	if (!emissionIntensityBound) sp.BindUniform("EmissionIntensity", 0.0f);
+
+	if (AppInfo::state == AppState::Editor) sp.BindUniform("Selected", (int)selected);
+	else sp.BindUniform("Selected", (int)false);
 
 	mesh->Draw();
 }
@@ -216,6 +251,23 @@ void MeshRenderer::SetMaterial(const char* filepath)
 void MeshRenderer::Initialise()
 {
 	GameObject3D::Initialise();
+
+	Updater::DrawAdd(this);
+
+	if (mesh == nullptr) mesh = meshManager->GetMesh("ProceduralCube");
+	if (material == nullptr) material = materialManager->GetMaterial("Default");
+}
+
+void MeshRenderer::OnDestroy()
+{
+	GameObject3D::OnDestroy();
+
+	Updater::DrawRemove(this);
+}
+
+void MeshRenderer::OnRestore()
+{
+	GameObject3D::OnRestore();
 
 	Updater::DrawAdd(this);
 

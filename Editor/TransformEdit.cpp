@@ -45,19 +45,39 @@ namespace TransformEdit
 
 	void Update() noexcept
 	{
+		if (mode == Mode::Select) return;
+
+		GameObject3D* target = dynamic_cast<GameObject3D*>(inspector->GetTarget());
+		if (target == nullptr) return;
+
 		if (selectedHandle != Handle::None && ImGui::IsKeyReleased(ImGuiKey_MouseLeft))
 		{
 			selectedHandle = Handle::None;
 			switch (mode)
 			{
-			case Mode::Translate: translate = TranslateData(); break;
-			case Mode::Rotate: rotate = RotateData(); break;
+			case Mode::Translate: // Temporarily set back the position so we can track the change with EditHistory
+				vec3 newPosition = target->GetPosition();
+				target->SetPosition(translate.relativeStart);
+
+				GUI::editHistory.Begin(target);
+				target->SetPosition(newPosition);
+				GUI::editHistory.End();
+
+				translate = TranslateData();
+				break;
+			case Mode::Rotate: // Temporarily set back the rotation so we can track the change with EditHistory
+				quat newRotation = target->GetRotationQuat();
+				target->SetRotation(rotate.relativeStart);
+
+				GUI::editHistory.Begin(target);
+				target->SetRotation(newRotation);
+				GUI::editHistory.End();
+
+				rotate = RotateData();
+				break;
 			}
 		}
-		if (mode == Mode::Select) return;
 
-		GameObject3D* target = dynamic_cast<GameObject3D*>(inspector->GetTarget());
-		if (target == nullptr) return;
 
 		vec3 relativeAxis;
 		mat4 axisModelMatrix;
@@ -128,7 +148,7 @@ namespace TransformEdit
 			float amountToMove = glm::dot(cameraSpaceAxis, cameraSpaceDisplacement);
 			float distanceFactor = glm::length(translate.start - Camera::main->GetGlobalPosition());
 
-			debug->lines.Add(
+			AppInfo::debug->lines.Add(
 				translate.start,
 				translate.start + -(vec3)axisModelMatrix[2] * distanceFactor * amountToMove,
 				colour
@@ -194,8 +214,8 @@ namespace TransformEdit
 			float distanceFactor = glm::length(target->GetGlobalPivot() - Camera::main->GetGlobalPosition());
 			float scale = distanceFactor * 0.25f;
 			
-			debug->lines.Add(target->GetGlobalPivot(), target->GetGlobalPivot() + vec3(rotate.initialDirection) * scale, colour);
-			debug->lines.Add(target->GetGlobalPivot(), target->GetGlobalPivot() + vec3(rotate.currentDirection) * scale, colour);
+			AppInfo::debug->lines.Add(target->GetGlobalPivot(), target->GetGlobalPivot() + vec3(rotate.initialDirection) * scale, colour);
+			AppInfo::debug->lines.Add(target->GetGlobalPivot(), target->GetGlobalPivot() + vec3(rotate.currentDirection) * scale, colour);
 			
 			break;
 		}
@@ -204,6 +224,8 @@ namespace TransformEdit
 
 	void DrawIDs() noexcept
 	{
+		if (AppInfo::state != AppState::Editor) return;
+
 		glLineWidth(10.0f);
 
 		if (mode == Mode::Select) return;
@@ -330,6 +352,8 @@ namespace TransformEdit
 	}
 	void Draw() noexcept
 	{
+		if (AppInfo::state != AppState::Editor) return;
+
 		glLineWidth(5.0f);
 
 		GameObject3D* target = dynamic_cast<GameObject3D*>(inspector->GetTarget());

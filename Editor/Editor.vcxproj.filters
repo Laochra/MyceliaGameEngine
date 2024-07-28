@@ -96,7 +96,15 @@
     <ClCompile Include="FileDialogue.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
-    <ClCompile Include="TransformEdit.cpp" />
+    <ClCompile Include="TransformEdit.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="HexTileGUI.cpp">
+      <Filter>GUI\EditorWindows\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkedHexGridGUI.cpp">
+      <Filter>GUI\EditorWindows\GameObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="JSON Configs">
@@ -251,6 +259,12 @@
     </ClInclude>
     <ClInclude Include="TransformEdit.h">
       <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="HexTileGUI.h">
+      <Filter>GUI\EditorWindows\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkedHexGridGUI.h">
+      <Filter>GUI\EditorWindows\GameObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -15,6 +15,7 @@ using std::ifstream;
 const std::map<ShaderInputType, const char*> shaderInputTypeToString = {
    {UndefinedTypeGL, "Undefined"},
 	{TextureGL, "Texture"},
+	{TextureArrayGL, "Texture[]"},
    {CubemapGL, "Cubemap"},
 
 	{FloatGL, "Float"},
@@ -61,6 +62,7 @@ const std::map<ShaderInputType, const char*> shaderInputTypeToString = {
 const std::map<string, ShaderInputType> cStringToShaderInputType = {
 	{"Undefined", UndefinedTypeGL},
 	{"Texture", TextureGL},
+	{"Texture[]", TextureArrayGL},
 	{"Cubemap", CubemapGL},
 
  	{"Float", FloatGL},
@@ -480,6 +482,18 @@ bool ShaderProgram::BindUniform(const char* name, const glm::uvec2& value)
 		return false;
 	}
 	glUniform2ui(i, value.x, value.y);
+	return true;
+}
+
+bool ShaderProgram::BindUniform(const char* name, const glm::ivec2& value)
+{
+	assert(program > 0 && "Invalid shader program");
+	int i = glGetUniformLocation(program, name);
+	if (i < 0) {
+		printf("Shader uniform [%s] not found! Is it being used?\n", name);
+		return false;
+	}
+	glUniform2i(i, value.x, value.y);
 	return true;
 }
 
