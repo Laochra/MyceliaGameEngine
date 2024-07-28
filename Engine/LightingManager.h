@@ -24,4 +24,12 @@ namespace LightingManager
 	extern uint maxShadowMaps;
 
 	extern vector<LightObject*> GetClosestLightObjects(const vec3 position, const int count = 4) noexcept;
+
+	void DrawToShadowMaps(
+		uint& framebuffer = LightingManager::shadowMapFBO,
+		uint& shadowMaps = LightingManager::shadowMaps,
+		uint& mapCount = LightingManager::shadowMapCount,
+		uint maxShadowMaps = LightingManager::maxShadowMaps,
+		uint shadowSideLength = LightingManager::shadowMapSideLength,
+		vector<LightObject*>& lightObjects = LightingManager::lightObjects);
 }

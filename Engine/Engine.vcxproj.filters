@@ -105,6 +105,10 @@
       <Filter>Utility</Filter>
     </ClCompile>
     <ClCompile Include="AppInfo.cpp" />
+    <ClCompile Include="PostProcessing.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="ExampleGame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -253,6 +257,11 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="AppInfo.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="PostProcessing.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="ExampleGame.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">

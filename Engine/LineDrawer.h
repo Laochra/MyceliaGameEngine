@@ -64,6 +64,11 @@ public:
 	/// <summary> Adds a conical frustum originating from the inner range and extending to the outer range, using point as the origin of the angle. </summary> <param name="direction">= The direction from the point to the outer base.</param> <param name="innerRange">= The distance from the point to the inner base.</param> <param name="outerRange">= The distance from the point to the outer base.</param> <param name="angle">= The angle in radians from the direction to the outside of the conical frustum.</param> <param name="baseSides">= The amount of sides the bases have.</param> <param name="lifetime">= How many seconds the conical frustum will stay. FLT_MIN for single frame or -FLT_MAX for indefinite.</param>
 	void AddConicalFrustum(vec3 point, vec3 direction, float innerRange, float outerRange, float angle, int baseSides, Colour colour, float lifetime = FLT_MIN) noexcept;
 
+	/// <summary> Adds a frustum from a projection view matrix. <para>Uses current default colour. See overloads to specify a colour.</para></summary> <param name="lifetime">= How many seconds the conical frustum will stay. FLT_MIN for single frame or -FLT_MAX for indefinite.</param>
+	void AddFrustum(mat4 pvMatrix, float lifetime = FLT_MIN) noexcept;
+	/// <summary> Adds a frustum from a projection view matrix. </summary> <param name="lifetime">= How many seconds the conical frustum will stay. FLT_MIN for single frame or -FLT_MAX for indefinite.</param>
+	void AddFrustum(mat4 pvMatrix, Colour colour, float lifetime = FLT_MIN) noexcept;
+
 protected:
 	vector<vec3> positions;
 	vector<Colour> colours;

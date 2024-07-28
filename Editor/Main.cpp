@@ -1,7 +1,9 @@
 #include "Editor.h"
+#include "AppInfo.h"
 
 #include "EditorDebug.h"
-#include "AppInfo.h"
+
+#include "ExampleGame.h"
 
 #ifdef _DEBUG
 int main(int argCount, char* args[])
@@ -14,7 +16,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 {
 	AppInfo::debug = new EditorDebug();
 	AppInfo::state = AppState::Editor;
-	Application* application = new Editor();
+	Application* application = new Editor(new ExampleGame());
 
 	int exitCode = application->Run();
 

@@ -180,6 +180,7 @@
     <ClCompile Include="..\External\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\External\imgui\imgui_widgets.cpp" />
     <ClCompile Include="..\External\tinyfiledialogs\tinyfiledialogs.cpp" />
+    <ClCompile Include="CameraGUI.cpp" />
     <ClCompile Include="ConsoleGUI.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="EditorCamera.cpp" />
@@ -218,6 +219,7 @@
     <ClInclude Include="..\External\imgui\imstb_textedit.h" />
     <ClInclude Include="..\External\imgui\imstb_truetype.h" />
     <ClInclude Include="..\External\tinyfiledialogs\tinyfiledialogs.h" />
+    <ClInclude Include="CameraGUI.h" />
     <ClInclude Include="ConsoleGUI.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="EditorCamera.h" />

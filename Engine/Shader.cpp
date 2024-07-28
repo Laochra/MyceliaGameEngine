@@ -209,6 +209,26 @@ bool Shader::CreateShader(ShaderStage stageInit, const char* string)
 	return true;
 }
 
+ShaderProgram::ShaderProgram() : program(0), lastError(nullptr)
+{
+	m_shaders[0] = m_shaders[1] = m_shaders[2] = m_shaders[3] = m_shaders[4] = 0;
+}
+ShaderProgram::ShaderProgram(const char* jsonFilename) : lastError(nullptr)
+{
+	m_shaders[0] = m_shaders[1] = m_shaders[2] = m_shaders[3] = m_shaders[4] = 0;
+
+	LoadAndLinkFromJSON(jsonFilename);
+}
+
+ShaderProgram::ShaderProgram(const char* vertex, const char* fragment)
+{
+	m_shaders[1] = m_shaders[2] = m_shaders[3] = 0;
+
+	LoadShader(VertexStage, vertex);
+	LoadShader(FragmentStage, fragment);
+	Link();
+}
+
 ShaderProgram::~ShaderProgram()
 {
 	delete[] lastError;

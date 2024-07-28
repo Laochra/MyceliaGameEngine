@@ -169,6 +169,7 @@
     <ClCompile Include="Colour.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="EditHistory.cpp" />
+    <ClCompile Include="ExampleGame.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObject3D.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
@@ -189,6 +190,7 @@
     <ClCompile Include="OrbitalCamera.cpp" />
     <ClCompile Include="ParticleEmitter.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
+    <ClCompile Include="PostProcessing.cpp" />
     <ClCompile Include="RandomGen.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -214,7 +216,9 @@
     <ClInclude Include="ComputeShader.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="EditHistory.h" />
+    <ClInclude Include="ExampleGame.h" />
     <ClInclude Include="FilesIncludes.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObject3D.h" />
     <ClInclude Include="GameObjectManager.h" />
@@ -239,6 +243,7 @@
     <ClInclude Include="GLIncludes.h" />
     <ClInclude Include="ParticleEmitter.h" />
     <ClInclude Include="ParticleSystem.h" />
+    <ClInclude Include="PostProcessing.h" />
     <ClInclude Include="RandomGen.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />

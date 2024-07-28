@@ -11,20 +11,17 @@ public:
 
 	using GameObject3D::GameObject3D;
 
-	static Camera* main;
-
 	float fov = 0;
-	float nearClip = 0.1f;
+	float nearClip = 0.01f;
 	float farClip = 1000;
 
 
 	virtual glm::mat4 GetViewMatrix();
 	virtual glm::mat4 GetProjectionMatrix(float w, float h);
+	glm::mat4 GetProjectionMatrix();
 	glm::mat4 GetPVMatrix();
 
 	void Initialise() override;
-};
 
-extern int screenWidth;
-extern int screenHeight;
-extern bool screenSizeJustChanged;
+	virtual void DrawDebug() override;
+};

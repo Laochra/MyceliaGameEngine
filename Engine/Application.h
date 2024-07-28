@@ -1,22 +1,21 @@
 #pragma once
 
-#include "Camera.h"
-
 #include "GLIncludes.h"
+
+#include "Game.h"
 
 class Application
 {
 public:
 	bool isRunning = false;
+	Game* game = nullptr;
 
 	int Run();
 
-	Application() noexcept { }
+	Application(Game* const gameInit) noexcept { game = gameInit; }
 
 
-protected:
-	GLFWwindow* window = nullptr;
-	
+protected:	
 	virtual void Initialise();
 	virtual void FixedUpdate();
 	virtual void Update();

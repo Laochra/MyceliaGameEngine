@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include "GameObject3D.h"
+#include "Camera.h"
 #include "MeshRenderer.h"
 #include "LightObject.h"
 #include "ParticleEmitter.h"
@@ -16,6 +17,7 @@ GameObject* GameObject::InstantiateFrom(json jsonObj, GuidGeneration guidOptions
 	{
 	case GameObject::classID: gameObject = new GameObject(); break;
 	case GameObject3D::classID: gameObject = new GameObject3D(); break;
+	case Camera::classID: gameObject = new Camera(); break;
 	case MeshRenderer::classID: gameObject = new MeshRenderer(); break;
 	case LightObject::classID: gameObject = new LightObject(); break;
 	case ParticleEmitter::classID: gameObject = new ParticleEmitter(); break;
