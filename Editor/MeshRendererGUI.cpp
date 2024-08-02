@@ -2,7 +2,8 @@
 
 #include "GUI.h"
 
-#include "MaterialGUI.h"
+#include "MeshManager.h"
+#include "MaterialManager.h"
 
 void MeshRendererGUI::Draw()
 {
@@ -24,15 +25,6 @@ void MeshRendererGUI::DrawMeshRendererGUI(MeshRenderer* meshRenderer)
 		if (meshRenderer->GetMesh() == nullptr) meshFilepath = "None";
 		else meshFilepath = meshRenderer->GetMesh()->GetFilePath();
 
-		vector<path> meshes;
-		for (const directory_entry& entry : directory_iterator("Assets\\Meshes"))
-		{
-			path filePath = entry.path();
-			string extension = filePath.extension().string();
-
-			if (extension == ".mesh") meshes.push_back(filePath);
-		}
-
 		if (ImGui::BeginCombo("Mesh", meshFilepath.c_str()))
 		{
 			if (ImGui::Selectable("None", meshFilepath == "None"))
@@ -40,52 +32,51 @@ void MeshRendererGUI::DrawMeshRendererGUI(MeshRenderer* meshRenderer)
 				meshRenderer->SetMesh("None");
 			}
 
-			if (ImGui::Selectable("ProceduralQuad", meshFilepath == "ProceduralQuad"))
+			for (int i = 0; i < meshManager->defaultMeshes.size(); i++)
 			{
-				meshRenderer->SetMesh("ProceduralQuad");
-			}
-			if (ImGui::Selectable("ProceduralCube", meshFilepath == "ProceduralCube"))
-			{
-				meshRenderer->SetMesh("ProceduralCube");
-			}
-			if (ImGui::Selectable("ProceduralCone", meshFilepath == "ProceduralCone"))
-			{
-				meshRenderer->SetMesh("ProceduralCone");
-			}
-
-			for (int i = 0; i < meshes.size(); i++)
-			{
-				bool isCurrent = meshes[i].string() == meshFilepath;
-				if (ImGui::Selectable(meshes[i].filename().string().c_str(), isCurrent))
+				bool isCurrent = meshManager->defaultMeshes[i] == meshFilepath;
+				if (ImGui::Selectable(meshManager->defaultMeshes[i].c_str(), isCurrent))
 				{
-					meshRenderer->SetMesh(meshes[i].string().c_str());
+					meshRenderer->SetMesh(meshManager->defaultMeshes[i].c_str());
 				}
 				if (isCurrent) ImGui::SetItemDefaultFocus();
 			}
 
+			if (ImGui::Selectable("Load From File"))
+			{
+				string loadPath = FileDialogue::GetLoadPath(FileDialogue::PathDetails("Load Mesh", "Assets\\", { "*.mesh" }), FileDialogue::LimitToAssetFolder::True);
+				if (!loadPath.empty())
+				{
+					meshRenderer->SetMesh(loadPath.c_str());
+				}
+			}
+
+
 			ImGui::EndCombo();
 		}
-
-		MaterialGUI::Initialise();
 
 		string materialFilepath = meshRenderer->GetMaterial()->GetFilePath();
 		if (materialFilepath == "Engine\\DefaultAssets\\Default.mat") materialFilepath = "Default";
 
 		if (ImGui::BeginCombo("Material", materialFilepath.c_str()))
 		{
-			if (ImGui::Selectable("Default", materialFilepath == "Default"))
+			for (int i = 0; i < materialManager->defaultMaterials.size(); i++)
 			{
-				meshRenderer->SetMaterial("Default");
-			}
-
-			for (int i = 0; i < MaterialGUI::materials.size(); i++)
-			{
-				bool isCurrent = MaterialGUI::materials[i].string() == materialFilepath;
-				if (ImGui::Selectable(MaterialGUI::materials[i].filename().string().c_str(), isCurrent))
+				bool isCurrent = materialManager->defaultMaterials[i] == materialFilepath;
+				if (ImGui::Selectable(materialManager->defaultMaterials[i].c_str(), isCurrent))
 				{
-					meshRenderer->SetMaterial(MaterialGUI::materials[i].string().c_str());
+					meshRenderer->SetMaterial(materialManager->defaultMaterials[i].c_str());
 				}
 				if (isCurrent) ImGui::SetItemDefaultFocus();
+			}
+
+			if (ImGui::Selectable("Load From File"))
+			{
+				string loadPath = FileDialogue::GetLoadPath(FileDialogue::PathDetails("Load Material", "Assets\\", { "*.mat" }), FileDialogue::LimitToAssetFolder::True);
+				if (!loadPath.empty())
+				{
+					meshRenderer->SetMaterial(loadPath.c_str());
+				}
 			}
 
 			ImGui::EndCombo();

@@ -8,6 +8,7 @@ ShaderManager* shaderManager = nullptr;
 
 ShaderManager::ShaderManager()
 {
+   // Accessible Defaults
    ShaderProgram* pbrLit = new ShaderProgram;
    if (pbrLit->LoadAndLinkFromJSON("Engine\\DefaultAssets\\PBRLit.gpu"))
    {
@@ -18,6 +19,7 @@ ShaderManager::ShaderManager()
       Debug::LogError(LogID::ERR101, "PBRLit.gpu ", locationinfo);
       delete pbrLit;
    }
+
    ShaderProgram* unlit = new ShaderProgram;
    if (unlit->LoadAndLinkFromJSON("Engine\\DefaultAssets\\Unlit.gpu"))
    {
@@ -28,6 +30,10 @@ ShaderManager::ShaderManager()
       Debug::LogError(LogID::ERR101, "Unlit.gpu ", locationinfo);
       delete unlit;
    }
+   defaultPrograms.push_back("PBRLit");
+   defaultPrograms.push_back("Unlit");
+
+   // Code-Only Defaults
    ShaderProgram* depthOnly = new ShaderProgram;
    if (depthOnly->LoadAndLinkFromJSON("Engine\\DefaultAssets\\DepthOnly.gpu"))
    {
@@ -48,17 +54,6 @@ ShaderManager::ShaderManager()
       Debug::LogError(LogID::ERR101, "DrawGUID.gpu ", locationinfo);
       delete drawGUID;
    }
-
-   //ShaderProgram* drawLineID = new ShaderProgram;
-   //if (drawLineID->LoadAndLinkFromJSON("Engine\\DefaultAssets\\DrawLineID.gpu"))
-   //{
-   //   loadedPrograms.insert(std::pair(string("DrawLineID"), drawLineID));
-   //}
-   //else
-   //{
-   //   Debug::LogError(LogID::ERR101, "DrawLineID.gpu ", locationinfo);
-   //   delete drawLineID;
-   //}
 }
 
 ShaderManager::~ShaderManager()

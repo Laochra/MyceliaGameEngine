@@ -13,6 +13,8 @@ using std::string;
 class ShaderManager
 {
 public:
+	vector<string> defaultPrograms;
+
 	ShaderManager();
 	~ShaderManager();
 	uncopyable(ShaderManager);

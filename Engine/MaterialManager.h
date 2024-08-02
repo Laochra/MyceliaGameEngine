@@ -13,6 +13,8 @@ using std::string;
 class MaterialManager
 {
 public:
+	vector<string> defaultMaterials;
+
 	MaterialManager();
 	~MaterialManager();
 	uncopyable(MaterialManager);
@@ -22,7 +24,7 @@ public:
 	void ReloadMaterial(const char* filepath);
 
 private:
-	map<string, Material*> loadedMaterials = map<string, Material*>();
+	map<string, Material*> loadedMaterials;
 
 	Material* AddMaterial(const char* filepath);
 };

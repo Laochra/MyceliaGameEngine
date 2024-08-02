@@ -27,6 +27,7 @@ enum ShaderInputType : unsigned int
 	UndefinedTypeGL = 0,
 
 	TextureGL = GL_SAMPLER_2D,
+	TextureArrayGL = GL_SAMPLER_2D_ARRAY,
 	CubemapGL = GL_SAMPLER_CUBE,
 
 	FloatGL = GL_FLOAT,

@@ -15,6 +15,7 @@ using std::ifstream;
 const std::map<ShaderInputType, const char*> shaderInputTypeToString = {
    {UndefinedTypeGL, "Undefined"},
 	{TextureGL, "Texture"},
+	{TextureArrayGL, "Texture[]"},
    {CubemapGL, "Cubemap"},
 
 	{FloatGL, "Float"},
@@ -61,6 +62,7 @@ const std::map<ShaderInputType, const char*> shaderInputTypeToString = {
 const std::map<string, ShaderInputType> cStringToShaderInputType = {
 	{"Undefined", UndefinedTypeGL},
 	{"Texture", TextureGL},
+	{"Texture[]", TextureArrayGL},
 	{"Cubemap", CubemapGL},
 
  	{"Float", FloatGL},
