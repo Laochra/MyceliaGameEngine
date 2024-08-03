@@ -426,15 +426,6 @@ namespace MaterialGUI
 
 			if (ImGui::BeginCombo("##Shader Program", current.shaderFilePath.c_str()))
 			{
-				if (ImGui::Selectable("PBRLit", current.shaderFilePath == "PBRLit"))
-				{
-					LoadShaderProgram("PBRLit");
-				}
-				if (ImGui::Selectable("Unlit", current.shaderFilePath == "Unlit"))
-				{
-					LoadShaderProgram("Unlit");
-				}
-
 				for (int i = 0; i < shaderManager->defaultPrograms.size(); i++)
 				{
 					bool isCurrent = shaderManager->defaultPrograms[i] == current.shaderFilePath;

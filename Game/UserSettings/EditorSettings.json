@@ -3,7 +3,6 @@
     "Console",
     "Heirarchy",
     "Inspector",
-    "Scene",
-    "Shader Program Editor"
+    "Scene"
   ]
 }
