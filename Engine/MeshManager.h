@@ -8,11 +8,16 @@ using std::map;
 #include <string>
 using std::string;
 
+#include <vector>
+using std::vector;
+
 #include "GeneralMacros.h"
 
 class MeshManager
 {
 public:
+	vector<string> defaultMeshes;
+
 	MeshManager();
 	~MeshManager();
 	uncopyable(MeshManager);

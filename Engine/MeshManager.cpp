@@ -23,6 +23,10 @@ MeshManager::MeshManager()
    Mesh* proceduralCone = new Mesh();
    proceduralCone->InitialiseCone();
    loadedMeshes.insert(std::pair(string("ProceduralCone"), proceduralCone));
+
+   defaultMeshes.push_back("ProceduralQuad");
+   defaultMeshes.push_back("ProceduralCube");
+   defaultMeshes.push_back("ProceduralCone");
 }
 
 MeshManager::~MeshManager()

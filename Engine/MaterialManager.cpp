@@ -29,6 +29,7 @@ MaterialManager::MaterialManager()
       Debug::LogError(LogID::ERR101, "Default.mat", locationinfo);
       delete defaultMaterial;
    }
+   defaultMaterials.push_back("Default");
 }
 
 MaterialManager::~MaterialManager()
