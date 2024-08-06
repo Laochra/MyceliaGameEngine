@@ -124,6 +124,10 @@ namespace SceneGUI
 			}
 			ImGui::EndDisabled();
 
+			GUI::Spacing(3);
+
+			ImGui::Checkbox("Game UI", &EditorGUI::displayUI);
+
 			ImGui::EndMenuBar();
 		}
 		ImVec2 menuBarSize = ImGui::GetItemRectSize();

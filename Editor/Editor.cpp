@@ -13,6 +13,7 @@
 
 #include "TransformEdit.h"
 
+#include "stb_image.h"
 
 #include "AppInfo.h"
 
@@ -56,6 +57,23 @@ void Editor::Initialise()
 	hexGrid->AddTile(vec3(0, 0, 0), HexDir::South);
 	hexGrid->AddTile(vec3(0, 0, 0), HexDir::SouthWest);
 	
+
+	radialMenuProgram.LoadAndLinkFromJSON("Assets\\Shaders\\RadialMenu.gpu");
+
+	int x1, y1, channels1, x2, y2, channels2;
+	unsigned char* img1 = stbi_load("Assets\\Textures\\RadialMenuSprite.png", &x1, &y1, &channels1, STBI_default);
+	unsigned char* img2 = stbi_load("Assets\\Textures\\RadialMenuSpriteHovered.png", &x2, &y2, &channels2, STBI_default);
+
+	glGenTextures(1, &radialTextures);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, radialTextures);
+	glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, x1, x2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	glTextureSubImage3D(radialTextures, 0, 0, 0, 0, x1, y1, 1, GL_RGB, GL_UNSIGNED_BYTE, img1);
+	glTextureSubImage3D(radialTextures, 0, 0, 0, 1, x2, y2, 1, GL_RGB, GL_UNSIGNED_BYTE, img2);
 }
 
 void Editor::FixedUpdate()
@@ -301,7 +319,6 @@ void Editor::Draw()
 
 	Updater::CallDraw();
 
-
 	// Draw Debug Gizmos Unaffected by Post Processing
 	if (EditorGUI::sceneViewColourBufferGizmos == 0)
 	{
@@ -333,6 +350,57 @@ void Editor::Draw()
 
 	glClear(GL_DEPTH_BUFFER_BIT);
 	TransformEdit::Draw();
+
+	/// Render UI Unaffected by Post Processing
+	static uint uiFramebuffer;
+	static uint uiTexture;
+	static uint uiDepth;
+	if (uiFramebuffer == 0)
+	{
+		glGenFramebuffers(1, &uiFramebuffer);
+		glGenTextures(1, &uiTexture);
+		glGenRenderbuffers(1, &uiDepth);
+	}
+	if (screenSizeJustChanged)
+	{
+		glBindTexture(GL_TEXTURE_2D, uiTexture);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, screenWidth, screenHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glBindRenderbuffer(GL_RENDERBUFFER, uiDepth);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, screenWidth, screenHeight);
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, uiDepth);
+	}
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, uiTexture, 0);
+
+	glEnable(GL_DEPTH_TEST);
+	glClearColor(0, 0, 0, 0);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	Mesh spriteMesh;
+	spriteMesh.InitialiseSpriteQuad();
+	radialMenuProgram.Bind();
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, radialTextures);
+	radialMenuProgram.BindUniform("Sprites", 0);
+	radialMenuProgram.BindUniform("Aspect", 1.0f / (screenHeight == 0 ? 0.0f : (screenWidth / (float)screenHeight)));
+	radialMenuProgram.BindUniform("Scale", 0.75f);
+	radialMenuProgram.BindUniform("AcceptedHalfAngle", std::cos(glm::radians(60.0f)));
+	vec2 cursorDir = AppInfo::input->screenCursorPos / vec2(screenWidth, screenHeight) * 2.0f - 1.0f;
+	float deg1 = glm::radians(120.0f);
+	vec2 dir1(std::sin(deg1), std::cos(deg1));
+	float deg2 = glm::radians(240.0f);
+	vec2 dir2(std::sin(deg2), std::cos(deg2));
+	float angle0 = glm::dot(cursorDir, vec2(0, 1));
+	float angle1 = glm::dot(cursorDir, dir1);
+	float angle2 = glm::dot(cursorDir, dir2);
+
+	radialMenuProgram.BindUniform("HoveredSliceDirection", angle0 > angle1 ? (angle0 > angle2 ? vec2(0, 1) : dir2) : (angle1 > angle2 ? dir1 : dir2));
+	spriteMesh.Draw();
 
 	/// Screen Post Processing
 	glDisable(GL_CULL_FACE);
@@ -424,9 +492,13 @@ void Editor::Draw()
 	glBindTexture(GL_TEXTURE_2D, EditorGUI::sceneViewColourBufferGizmos);
 	hdrProgram.BindUniform("GizmosTexture", 2);
 	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, uiTexture);
+	hdrProgram.BindUniform("UITexture", 3);
+	glActiveTexture(GL_TEXTURE4);
 	glBindTexture(GL_TEXTURE_2D, ldrColourBuffer);
-	hdrProgram.BindUniform("CurrentColourBuffer", 3);
+	hdrProgram.BindUniform("CurrentColourBuffer", 4);
 	hdrProgram.BindUniform("Exposure", PostProcessingGUI::exposure);
+	hdrProgram.BindUniform("DisplayUI", int(EditorGUI::displayUI || AppInfo::state == AppState::Playing));
 
 	screenQuad.Draw();
 

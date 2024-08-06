@@ -18,6 +18,8 @@ namespace EditorGUI
 	extern uint guidDepth;
 	extern uint guidTexture;
 
+	extern bool displayUI;
+
 	extern map<string, uint> windowIndices;
 
 	class EditorWindow

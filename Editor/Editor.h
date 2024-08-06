@@ -41,4 +41,7 @@ private:
 	uint hexPosFBO;
 	uint hexPosTexture;
 	uint hexPosDepth;
+
+	ShaderProgram radialMenuProgram;
+	uint radialTextures;
 };

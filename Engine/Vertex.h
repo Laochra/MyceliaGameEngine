@@ -12,3 +12,9 @@ struct Vertex
 
 	vec2 texCoord;
 };
+
+struct SpriteVertex
+{
+	vec2 position;
+	vec2 texCoord;
+};

@@ -33,6 +33,8 @@ namespace EditorGUI
 	unsigned int guidDepth = 0;
 	unsigned int guidTexture = 0;
 
+	bool displayUI = false;
+
 	vector<EditorWindow> editorWindows;
 	map<string, uint> windowIndices;
 

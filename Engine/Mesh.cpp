@@ -8,7 +8,7 @@
 
 Mesh::~Mesh()
 {
-	if (filepath != nullptr && strcmp(filepath, "None") != 0 && strcmp(filepath, "ProceduralQuad") != 0 && strcmp(filepath, "ProceduralHexagon") != 0 && strcmp(filepath, "ProceduralCone") != 0 != 0 && strcmp(filepath, "ProceduralCube") != 0)
+	if (filepath != nullptr && strcmp(filepath, "None") != 0 && strcmp(filepath, "ProceduralQuad") != 0 && strcmp(filepath, "ProceduralHexagon") != 0 && strcmp(filepath, "ProceduralCone") != 0 != 0 && strcmp(filepath, "ProceduralCube") != 0 && strcmp(filepath, "SpriteQuad"))
 	{
 		delete filepath;
 	}
@@ -97,6 +97,70 @@ void Mesh::Initialise(uint vertexCount, const Vertex* vertices, uint indexCount,
 	// Texture Coords
 	glEnableVertexAttribArray(4);
 	glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, texCoord)));
+
+	// Set Points Per Primitive Based on Primitive Type
+	switch (primitiveType)
+	{
+	case GL_LINES:
+		pointsPerPrimitive = 2;
+		break;
+	case GL_TRIANGLES:
+		pointsPerPrimitive = 3;
+		break;
+	default:
+		primitiveType = GL_TRIANGLES;
+		pointsPerPrimitive = 3;
+		Debug::LogError("Unaccounted for primitive type with mask: ", std::format("{:#010x}", primitiveType), ". Defaulted to GL_TRIANGLES");
+		break;
+	}
+
+	// Bind Indices if there Are Any
+	if (indexCount != 0)
+	{
+		glGenBuffers(1, &ibo);
+
+		// Bind Vertex Buffer
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+
+		// Fill Vertex Buffer
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexCount * sizeof(uint), indices, GL_STATIC_DRAW);
+
+		primitiveCount = indexCount / pointsPerPrimitive;
+	}
+	else
+	{
+		primitiveCount = vertexCount / pointsPerPrimitive;
+	}
+
+	// Unbind Buffers
+	glBindVertexArray(0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+void Mesh::Initialise(uint vertexCount, const SpriteVertex* vertices, uint indexCount, uint* indices)
+{
+	assert(vao == 0); // Check this is the first initialisation
+
+	// Generate Buffers
+	glGenBuffers(1, &vbo);
+	glGenVertexArrays(1, &vao);
+
+	// Bind Vertex Array
+	glBindVertexArray(vao);
+
+	// Bind Vertex Buffer
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+	//Fill Vertex Buffer
+	glBufferData(GL_ARRAY_BUFFER, vertexCount * sizeof(SpriteVertex), vertices, GL_STATIC_DRAW);
+
+	// Position
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteVertex), 0);
+
+	// Texture Coords
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteVertex), (void*)(offsetof(SpriteVertex, texCoord)));
 
 	// Set Points Per Primitive Based on Primitive Type
 	switch (primitiveType)
@@ -444,6 +508,32 @@ void Mesh::InitialiseRing(uint ringSides)
 
 
 	this->Initialise((uint)vertices.size(), vertices.data(), (uint)indices.size(), indices.data());
+}
+void Mesh::InitialiseSpriteQuad()
+{
+	primitiveType = GL_TRIANGLES;
+
+	filepath = new char[11];
+	const char* newFilepath = "SpriteQuad";
+	for (int i = 0; i < 15; i++) { filepath[i] = newFilepath[i]; }
+
+	SpriteVertex vertices[4]{};
+	vertices[0].position = { -1, -1 };
+	vertices[1].position = { -1,  1 };
+	vertices[2].position = {  1,  1 };
+	vertices[3].position = {  1, -1 };
+
+	vertices[0].texCoord = { 0, 1 };
+	vertices[1].texCoord = { 0, 0 };
+	vertices[2].texCoord = { 1, 0 };
+	vertices[3].texCoord = { 1, 1 };
+
+	uint indices[6] =
+	{
+		0, 2, 1, 0, 3, 2
+	};
+
+	this->Initialise(4, vertices, 6, indices);
 }
 
 bool Mesh::LoadFromFile(const char* filepathInit)
