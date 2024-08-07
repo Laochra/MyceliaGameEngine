@@ -19,6 +19,8 @@
 
 #include "LinkedHexGrid.h"
 
+#include "RadialMenu.h"
+
 class Editor : public Application
 {
 public:
@@ -42,6 +44,5 @@ private:
 	uint hexPosTexture;
 	uint hexPosDepth;
 
-	ShaderProgram radialMenuProgram;
-	uint radialTextures;
+	RadialMenu* radialMenu;
 };

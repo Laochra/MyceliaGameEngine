@@ -12,14 +12,12 @@ out vec4 Colour;
 
 void main() // Frag
 {
-	if (dot(normalize(FragDirection), HoveredSliceDirection) > 1.0 - AcceptedHalfAngle)
+	if (HoveredSliceDirection == vec2(0.0, 0.0) || dot(normalize(FragDirection), HoveredSliceDirection) <= 1.0 - AcceptedHalfAngle)
 	{
-		Colour = texture(Sprites, vec3(FragTexCoords, 1));
-		//Colour = vec4(0, 1, 0, 1);
+		Colour = texture(Sprites, vec3(FragTexCoords, 0));
 	}
 	else
 	{
-		Colour = texture(Sprites, vec3(FragTexCoords, 0));
-		//Colour = vec4(1, 0, 0, 1);
+		Colour = texture(Sprites, vec3(FragTexCoords, 1));
 	}
 }

@@ -56,24 +56,8 @@ void Editor::Initialise()
 	hexGrid->AddTile(vec3(0, 0, 0), HexDir::SouthEast);
 	hexGrid->AddTile(vec3(0, 0, 0), HexDir::South);
 	hexGrid->AddTile(vec3(0, 0, 0), HexDir::SouthWest);
-	
 
-	radialMenuProgram.LoadAndLinkFromJSON("Assets\\Shaders\\RadialMenu.gpu");
-
-	int x1, y1, channels1, x2, y2, channels2;
-	unsigned char* img1 = stbi_load("Assets\\Textures\\RadialMenuSprite.png", &x1, &y1, &channels1, STBI_default);
-	unsigned char* img2 = stbi_load("Assets\\Textures\\RadialMenuSpriteHovered.png", &x2, &y2, &channels2, STBI_default);
-
-	glGenTextures(1, &radialTextures);
-	glBindTexture(GL_TEXTURE_2D_ARRAY, radialTextures);
-	glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB, x1, x2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-	glTextureSubImage3D(radialTextures, 0, 0, 0, 0, x1, y1, 1, GL_RGB, GL_UNSIGNED_BYTE, img1);
-	glTextureSubImage3D(radialTextures, 0, 0, 0, 1, x2, y2, 1, GL_RGB, GL_UNSIGNED_BYTE, img2);
+	radialMenu = new RadialMenu();
 }
 
 void Editor::FixedUpdate()
@@ -381,26 +365,8 @@ void Editor::Draw()
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	Mesh spriteMesh;
-	spriteMesh.InitialiseSpriteQuad();
-	radialMenuProgram.Bind();
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D_ARRAY, radialTextures);
-	radialMenuProgram.BindUniform("Sprites", 0);
-	radialMenuProgram.BindUniform("Aspect", 1.0f / (screenHeight == 0 ? 0.0f : (screenWidth / (float)screenHeight)));
-	radialMenuProgram.BindUniform("Scale", 0.75f);
-	radialMenuProgram.BindUniform("AcceptedHalfAngle", std::cos(glm::radians(60.0f)));
-	vec2 cursorDir = AppInfo::input->screenCursorPos / vec2(screenWidth, screenHeight) * 2.0f - 1.0f;
-	float deg1 = glm::radians(120.0f);
-	vec2 dir1(std::sin(deg1), std::cos(deg1));
-	float deg2 = glm::radians(240.0f);
-	vec2 dir2(std::sin(deg2), std::cos(deg2));
-	float angle0 = glm::dot(cursorDir, vec2(0, 1));
-	float angle1 = glm::dot(cursorDir, dir1);
-	float angle2 = glm::dot(cursorDir, dir2);
-
-	radialMenuProgram.BindUniform("HoveredSliceDirection", angle0 > angle1 ? (angle0 > angle2 ? vec2(0, 1) : dir2) : (angle1 > angle2 ? dir1 : dir2));
-	spriteMesh.Draw();
+	vec2 cursorNormalised = AppInfo::input->screenCursorPos / vec2(screenWidth, screenHeight) * 2.0f - 1.0f;
+	radialMenu->Draw(cursorNormalised);
 
 	/// Screen Post Processing
 	glDisable(GL_CULL_FACE);
@@ -542,6 +508,7 @@ bool Editor::OnClose()
 	if (!EditorGUI::CleanUp()) return false;
 
 	del(Camera::main);
+	del(radialMenu);
 
 	del(gameObjectManager);
 

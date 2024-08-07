@@ -111,6 +111,9 @@
     <ClCompile Include="LinkedHexGrid.cpp">
       <Filter>Data Structures</Filter>
     </ClCompile>
+    <ClCompile Include="RadialMenu.cpp">
+      <Filter>Rendering\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -265,6 +268,9 @@
     <ClInclude Include="LinkedHexGrid.h">
       <Filter>Data Structures</Filter>
     </ClInclude>
+    <ClInclude Include="RadialMenu.h">
+      <Filter>Rendering\GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">
@@ -296,6 +302,9 @@
     </Filter>
     <Filter Include="Utility\Debugging">
       <UniqueIdentifier>{19e4841b-cb28-4577-a362-7a96252a24d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\GUI">
+      <UniqueIdentifier>{42e96c5e-fe21-4732-86ba-406660351c66}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
