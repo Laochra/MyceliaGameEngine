@@ -21,6 +21,8 @@
 
 #include "RadialMenu.h"
 
+inline HexType currentTileType = HexType::Grass;
+
 class Editor : public Application
 {
 public:

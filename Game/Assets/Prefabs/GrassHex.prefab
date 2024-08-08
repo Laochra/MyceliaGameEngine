@@ -1,7 +1,38 @@
 {
   "Active": true,
-  "Children": [],
-  "GUID": 5583686451678822603,
+  "Children": [
+    {
+      "Active": true,
+      "Children": [],
+      "GUID": 11063416489707925687,
+      "Material": "Assets\\Materials\\Mush.mat",
+      "Mesh": "ProceduralCube",
+      "Name": "ShroomCube",
+      "Pivot": [
+        0.0,
+        -0.5,
+        0.0
+      ],
+      "Position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "Rotation": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "Scale": [
+        0.25,
+        0.25,
+        0.25
+      ],
+      "TypeID": 181025226017607
+    }
+  ],
+  "GUID": 3422642626850647220,
   "HexType": 1,
   "Material": "Assets\\Materials\\Green.mat",
   "Mesh": "ProceduralHexagon",

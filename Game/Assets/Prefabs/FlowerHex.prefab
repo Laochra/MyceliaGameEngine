@@ -4,10 +4,10 @@
     {
       "Active": true,
       "Children": [],
-      "GUID": 6457960954850337312,
-      "Material": "Assets\\Materials\\Marill.mat",
-      "Mesh": "Assets\\Meshes\\Marill.mesh",
-      "Name": "Marill",
+      "GUID": 9223598199299112362,
+      "Material": "Assets\\Materials\\Metallic.mat",
+      "Mesh": "Assets\\Meshes\\Teapot.mesh",
+      "Name": "Teapot",
       "Pivot": [
         0.0,
         0.0,
@@ -16,27 +16,27 @@
       "Position": [
         0.0,
         0.0,
-        0.0
+        -3.4041612195778725e-08
       ],
       "Rotation": [
-        -0.7071070671081543,
-        0.7071071863174438,
-        2.9802320611338473e-08,
-        2.980232594040899e-08
+        1.0,
+        2.1855694143368964e-08,
+        0.0,
+        0.0
       ],
       "Scale": [
-        0.10000000149011612,
-        0.10000000149011612,
-        0.10000000149011612
+        0.20000000298023224,
+        0.20000000298023224,
+        0.20000000298023224
       ],
       "TypeID": 181025226017607
     }
   ],
   "GUID": 3422642626850647220,
-  "HexType": 2,
-  "Material": "Assets\\Materials\\Blue.mat",
+  "HexType": 3,
+  "Material": "Assets\\Materials\\Red.mat",
   "Mesh": "ProceduralHexagon",
-  "Name": "WaterHex",
+  "Name": "FlowerHex",
   "Pivot": [
     0.0,
     0.0,

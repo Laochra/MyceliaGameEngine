@@ -35,6 +35,7 @@ const std::vector<glm::ivec2> HexTile::DirVec =
 json HexTile::availablePrefab;
 json HexTile::grassPrefab;
 json HexTile::waterPrefab;
+json HexTile::flowerPrefab;
 
 void HexTile::Initialise()
 {

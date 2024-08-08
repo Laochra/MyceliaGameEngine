@@ -31,6 +31,8 @@ void LinkedHexGrid::Initialise() noexcept
 	grassPrefabFile >> HexTile::grassPrefab;
 	ifstream waterPrefabFile("Assets\\Prefabs\\WaterHex.prefab");
 	waterPrefabFile >> HexTile::waterPrefab;
+	ifstream flowerPrefabFile("Assets\\Prefabs\\FlowerHex.prefab");
+	flowerPrefabFile >> HexTile::flowerPrefab;
 
 	centre = (HexTile*)GameObject::InstantiateFrom(HexTile::grassPrefab, GuidGeneration::New);
 	gameObjectManager->Add(centre);
@@ -69,6 +71,7 @@ void LinkedHexGrid::UpdateTile(HexTile* hexTile, HexType hexType) noexcept
 	case HexType::Available: hexTile->UpdateFrom(HexTile::availablePrefab, GuidGeneration::Keep); break;
 	case HexType::Grass:		 hexTile->UpdateFrom(HexTile::grassPrefab, GuidGeneration::Keep); break;
 	case HexType::Water:		 hexTile->UpdateFrom(HexTile::waterPrefab, GuidGeneration::Keep); break;
+	case HexType::Flower:	 hexTile->UpdateFrom(HexTile::flowerPrefab, GuidGeneration::Keep); break;
 	default: break;
 	}
 	hexTile->SetPosition(position);
@@ -99,7 +102,6 @@ void LinkedHexGrid::AddTile(HexTile* origin, HexDir direction) noexcept
 	newTile->SetParent(this);
 	newTile->SetPosition(HexTile::HexPosToRealPos(origin->GetHexPos() + HexTile::DirVec[(uint)direction]));
 
-	int newConnections = 0;
 	for (uint i = 0; i < 6; i++)
 	{
 		HexMap::iterator hexTileIt = lookupTable.find(newTile->GetHexPos() + HexTile::DirVec[i]);
@@ -107,10 +109,8 @@ void LinkedHexGrid::AddTile(HexTile* origin, HexDir direction) noexcept
 		{
 			(*newTile)[(HexDir)i] = hexTileIt->second;
 			(*hexTileIt->second)[HexTile::OppositeDir((HexDir)i)] = newTile;
-			newConnections++;
 		}
 	}
-	Debug::Log(newConnections, " new connections made by Hex ", newTile->GetGUID() );
 
 	lookupTable.insert(HexPair(newTile->GetHexPos(), newTile));
 }

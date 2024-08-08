@@ -25,6 +25,7 @@ void HexTileGUI::DrawHexTileGUI(HexTile* hexTile)
 		case HexType::Available:	hexTypeName = "Available";	break;
 		case HexType::Grass:			hexTypeName = "Grass";		break;
 		case HexType::Water:			hexTypeName = "Water";		break;
+		case HexType::Flower:		hexTypeName = "Flower";		break;
 		default:							hexTypeName = "Invalid";	break;
 		}
 		if (ImGui::BeginCombo("HexType", hexTypeName))
@@ -48,6 +49,13 @@ void HexTileGUI::DrawHexTileGUI(HexTile* hexTile)
 				LinkedHexGrid* grid = dynamic_cast<LinkedHexGrid*>(hexTile->GetParent());
 
 				if (grid != nullptr) grid->UpdateTile(hexTile, HexType::Water);
+				else Debug::LogError("HexTiles should be children of a LinkedHexGrid", locationinfo);
+			}
+			if (ImGui::Selectable("Flower", hexTile->type == HexType::Flower))
+			{
+				LinkedHexGrid* grid = dynamic_cast<LinkedHexGrid*>(hexTile->GetParent());
+
+				if (grid != nullptr) grid->UpdateTile(hexTile, HexType::Flower);
 				else Debug::LogError("HexTiles should be children of a LinkedHexGrid", locationinfo);
 			}
 			ImGui::EndCombo();

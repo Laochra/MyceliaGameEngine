@@ -5,17 +5,26 @@
 
 #include "Mesh.h"
 
+#include "Input.h"
+
+
 class RadialMenu
 {
 public:
+	typedef void (*InteractFunc)(uint selection) noexcept;
+
 	float scale = 0.75f;
 	float deadzoneMagnitudeSqr = 0.15f * 0.15f;
-	unsigned int sliceCount = 3;
+	vec2 lastInput;
+	InteractFunc interactionHandler;
+	uint radialSlices = 3;
+	bool enabled = false;
 
 	RadialMenu() noexcept;
 	~RadialMenu() noexcept;
 
-	void Draw(vec2 input) noexcept;
+	void Update(vec2 input, Keybind interactKey) noexcept;
+	void Draw() noexcept;
 
 private:
 	ShaderProgram program;

@@ -7,7 +7,7 @@
 #include "MeshRenderer.h"
 
 enum class HexDir : unsigned char { NorthWest, North, NorthEast, SouthEast, South, SouthWest };
-enum class HexType { Available, Grass, Water };
+enum class HexType { Available, Grass, Water, Flower };
 
 class HexTile : public MeshRenderer
 {
@@ -35,4 +35,5 @@ public:
 	static json availablePrefab;
 	static json grassPrefab;
 	static json waterPrefab;
+	static json flowerPrefab;
 };

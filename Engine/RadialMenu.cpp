@@ -1,8 +1,10 @@
 #include "RadialMenu.h"
+#include "AppInfo.h"
 
 #include "stb_image.h"
 
 #include "Camera.h"
+
 
 RadialMenu::RadialMenu() noexcept
 {
@@ -39,12 +41,49 @@ RadialMenu::~RadialMenu() noexcept
 	glDeleteTextures(1, &spriteArray);
 }
 
-void RadialMenu::Draw(vec2 input) noexcept
+void RadialMenu::Update(vec2 input, Keybind interactKey) noexcept
 {
-	float aspect = 1.0f / (screenHeight == 0 ? 0.0f : (screenWidth / (float)screenHeight));
-	vec2 inputDirection = vec2(input.x / aspect, input.y);
-	float inputMagSqr = glm::length2(inputDirection);
-	inputDirection /= sqrt(inputMagSqr);
+	if (!enabled) return;
+	lastInput = input;
+
+	if (interactKey.pressed())
+	{
+		enabled = false;
+
+		float inputMagSqr = glm::length2(input);
+		vec2 inputDirection = input / sqrt(inputMagSqr);
+
+		if (inputMagSqr < deadzoneMagnitudeSqr) return;
+
+		float increment = 360.0f / radialSlices;
+		vector<vec2> directions;
+		for (uint i = 0; i < radialSlices; i++)
+		{
+			float deg = glm::radians(increment * i);
+			vec2 dir(std::sin(deg), std::cos(deg));
+
+			directions.push_back(dir);
+		}
+
+		uint correctIndex = 0;
+		for (uint i = 1; i != (uint)directions.size(); i++)
+		{
+			if (glm::dot(inputDirection, directions[i]) > glm::dot(inputDirection, directions[correctIndex]))
+			{
+				correctIndex = i;
+			}
+		}
+
+		interactionHandler(correctIndex);
+	}
+}
+
+void RadialMenu::Draw() noexcept
+{
+	if (!enabled) return;
+
+	float inputMagSqr = glm::length2(lastInput);
+	vec2 inputDirection = lastInput / sqrt(inputMagSqr);
 
 	program.Bind();
 
@@ -52,15 +91,16 @@ void RadialMenu::Draw(vec2 input) noexcept
 	glBindTexture(GL_TEXTURE_2D_ARRAY, spriteArray);
 	program.BindUniform("Sprites", 0);
 
+	float aspect = 1.0f / (screenHeight == 0 ? 0.0f : (screenWidth / (float)screenHeight));
 	program.BindUniform("Aspect", aspect);
 	
 	program.BindUniform("Scale", scale);
 
-	float increment = 360.0f / sliceCount;
+	float increment = 360.0f / radialSlices;
 	float acceptedHalfAngle = 1.0f - std::cos(glm::radians(increment / 2));
 	program.BindUniform("AcceptedHalfAngle", acceptedHalfAngle);
 
-	if (inputMagSqr < deadzoneMagnitudeSqr * scale)
+	if (inputMagSqr < deadzoneMagnitudeSqr)
 	{
 		program.BindUniform("HoveredSliceDirection", vec2(0.0f));
 		spriteMesh.Draw();
@@ -68,7 +108,7 @@ void RadialMenu::Draw(vec2 input) noexcept
 	}
 
 	vector<vec2> sortedDirections;
-	for (unsigned int i = 0; i < sliceCount; i++)
+	for (uint i = 0; i < radialSlices; i++)
 	{
 		float deg = glm::radians(increment * i);
 		vec2 dir(std::sin(deg), std::cos(deg));

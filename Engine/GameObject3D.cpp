@@ -58,7 +58,6 @@ void GameObject3D::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptio
 }
 void GameObject3D::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
 {
-	// Populate this properly
 	GameObject::UpdateFrom(jsonObj, guidOptions);
 
 	vector<float> positionData = jsonObj["Position"];
@@ -85,7 +84,7 @@ void GameObject3D::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
 			if (childData["GUID"] == child->GetGUID()) // If child still exists, update it
 			{
 				child->UpdateFrom(childData);
-				childrenData.erase(iter);
+				iter = childrenData.erase(iter);
 				matchFound = true;
 				break;
 			}
@@ -119,14 +118,17 @@ void GameObject3D::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
 
 void GameObject3D::OnDestroy()
 {
-	if (parent == nullptr || parent != Destroyed) GameObject::OnDestroy();
+	if (parent == nullptr) GameObject::OnDestroy();
+	else if (parent != Destroyed)
+	{
+		SetParent(nullptr);
+		GameObject::OnDestroy();
+	}
 
 	for (GameObject3D* child : children)
 	{
 		GameObject::Destroy(child);
 	}
-
-	if (parent != nullptr && parent != Destroyed) SetParent(nullptr);
 }
 void GameObject3D::OnRestore()
 {

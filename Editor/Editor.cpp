@@ -17,6 +17,11 @@
 
 #include "AppInfo.h"
 
+void static RadialInteractionHandler(uint selection)
+{
+	currentTileType = (HexType)(selection + 1);
+}
+
 void Editor::Initialise()
 {
 	EditorGUI::Initialise();
@@ -58,6 +63,7 @@ void Editor::Initialise()
 	hexGrid->AddTile(vec3(0, 0, 0), HexDir::SouthWest);
 
 	radialMenu = new RadialMenu();
+	radialMenu->interactionHandler = { (RadialMenu::InteractFunc)RadialInteractionHandler };
 }
 
 void Editor::FixedUpdate()
@@ -77,16 +83,7 @@ void Editor::Update()
 			AppInfo::input->screenCursorPos.x < screenWidth &&
 			AppInfo::input->screenCursorPos.y < screenHeight)
 		{
-			int clickResult = 0;
-			if (AppInfo::input->GetKeyPressed(KeyCode::MouseLeft))
-			{
-				clickResult = 1;
-			}
-			else if (AppInfo::input->GetKeyPressed(KeyCode::MouseRight))
-			{
-				clickResult = 2;
-			}
-			if (clickResult != 0)
+			if (!radialMenu->enabled && AppInfo::input->GetKeyPressed(KeyCode::MouseLeft))
 			{
 				const int pixelCount = screenWidth * screenHeight;
 				glm::ivec4 * hexPosPixels = new glm::ivec4[pixelCount];
@@ -95,10 +92,16 @@ void Editor::Update()
 				glm::ivec4 hexPos = hexPosPixels[hexPosIndex];
 				if (hexPos.a != 0)
 				{
-					hexGrid->UpdateTile((glm::ivec2)hexPos, (HexType)clickResult);
+					hexGrid->UpdateTile((glm::ivec2)hexPos, currentTileType);
 				}
 			}
-		}
+
+			if (AppInfo::input->GetKeyPressed(KeyCode::Space)) radialMenu->enabled = true;
+
+			vec2 cursorNormalised = AppInfo::input->screenCursorPos / vec2(screenWidth, screenHeight) * 2.0f - 1.0f;
+			float aspect = 1.0f / (screenHeight == 0 ? 0.0f : (screenWidth / (float)screenHeight));
+			radialMenu->Update(vec2(cursorNormalised.x / aspect, cursorNormalised.y), Keybind(KeyCode::MouseLeft));
+		}		
 	}
 }
 void Editor::Draw()
@@ -365,8 +368,7 @@ void Editor::Draw()
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	vec2 cursorNormalised = AppInfo::input->screenCursorPos / vec2(screenWidth, screenHeight) * 2.0f - 1.0f;
-	radialMenu->Draw(cursorNormalised);
+	radialMenu->Draw();
 
 	/// Screen Post Processing
 	glDisable(GL_CULL_FACE);
