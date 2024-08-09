@@ -2,12 +2,7 @@
 
 #include "Application.h"
 
-#include "LinkedHexGrid.h"
-#include "RadialMenu.h"
-
-inline HexType currentTileType = HexType::Grass;
-
-class Editor : public Application
+class Standalone : public Application
 {
 public:
 	using Application::Application;
@@ -18,12 +13,6 @@ protected:
 	virtual void Update() override;
 	virtual void Draw() override;
 	virtual bool OnClose() override;
-
-private:
-	LinkedHexGrid* hexGrid;
-	uint hexPosFBO;
-	uint hexPosTexture;
-	uint hexPosDepth;
-
-	RadialMenu* radialMenu;
 };
+
+extern void ScreenResizeCallback(GLFWwindow* window, int width, int height);

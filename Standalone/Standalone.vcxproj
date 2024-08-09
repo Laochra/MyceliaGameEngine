@@ -19,10 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <VCProjectVersion>16.0</VCProjectVersion>
+    <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{ac87f54a-864c-47aa-878e-0542bc022bca}</ProjectGuid>
-    <RootNamespace>Editor</RootNamespace>
+    <ProjectGuid>{e12f3986-56e8-4207-94cf-107503a1da1b}</ProjectGuid>
+    <RootNamespace>Standalone</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -71,13 +71,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)Game\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)Game\</OutDir>
     <TargetName>$(ProjectName)Debug</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)Game\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)Game\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -111,28 +111,16 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);EDITOR</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)External/imgui; $(SolutionDir)External/tinyfiledialogs; $(SolutionDir)External/assimp/include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <UseFullPaths>true</UseFullPaths>
-      <AdditionalOptions>/d1trimfile:"$(SolutionDir)\" %(AdditionalOptions)</AdditionalOptions>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)External/GLFW; $(SolutionDir)External/assimp/lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies); glfw3.lib; assimp-vc143-mtd.lib; zlibstaticd.lib</AdditionalDependencies>
-      <IgnoreAllDefaultLibraries>
-      </IgnoreAllDefaultLibraries>
-      <IgnoreSpecificDefaultLibraries>
-      </IgnoreSpecificDefaultLibraries>
+      <AdditionalLibraryDirectories>$(SolutionDir)External/GLFW;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);glfw3.lib;</AdditionalDependencies>
     </Link>
-    <ResourceCompile>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -140,30 +128,17 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);EDITOR</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)External/imgui; $(SolutionDir)External/tinyfiledialogs</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp20</LanguageStandard>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <UseFullPaths>true</UseFullPaths>
-      <AdditionalOptions>/d1trimfile:"$(SolutionDir)\" %(AdditionalOptions)</AdditionalOptions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)External/GLFW; $(SolutionDir)External/assimp/lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies); glfw3.lib; assimp-vc143-mt.lib; zlibstatic.lib</AdditionalDependencies>
-      <IgnoreAllDefaultLibraries>
-      </IgnoreAllDefaultLibraries>
-      <IgnoreSpecificDefaultLibraries>
-      </IgnoreSpecificDefaultLibraries>
+      <AdditionalLibraryDirectories>$(SolutionDir)External/GLFW;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);glfw3.lib;</AdditionalDependencies>
     </Link>
-    <ResourceCompile>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.vcxproj">
@@ -171,99 +146,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\External\imgui\imgui.cpp" />
-    <ClCompile Include="..\External\imgui\imgui_demo.cpp" />
-    <ClCompile Include="..\External\imgui\imgui_draw.cpp" />
-    <ClCompile Include="..\External\imgui\imgui_impl_glfw.cpp" />
-    <ClCompile Include="..\External\imgui\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="..\External\imgui\imgui_stdlib.cpp" />
-    <ClCompile Include="..\External\imgui\imgui_tables.cpp" />
-    <ClCompile Include="..\External\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="..\External\tinyfiledialogs\tinyfiledialogs.cpp" />
-    <ClCompile Include="CameraGUI.cpp" />
-    <ClCompile Include="ConsoleGUI.cpp" />
-    <ClCompile Include="Editor.cpp" />
-    <ClCompile Include="EditorCamera.cpp" />
-    <ClCompile Include="EditorCameraGUI.cpp" />
-    <ClCompile Include="EditorDebug.cpp" />
-    <ClCompile Include="EditorGUI.cpp" />
-    <ClCompile Include="EditorStyler.cpp" />
-    <ClCompile Include="FileDialogue.cpp" />
-    <ClCompile Include="GameObject3DGUI.cpp" />
-    <ClCompile Include="GameObjectGUI.cpp" />
-    <ClCompile Include="GUI.cpp" />
-    <ClCompile Include="Heirarchy.cpp" />
-    <ClCompile Include="HexTileGUI.cpp" />
-    <ClCompile Include="InputEditor.cpp" />
-    <ClCompile Include="Inspector.cpp" />
-    <ClCompile Include="LightObjectGUI.cpp" />
-    <ClCompile Include="LinkedHexGridGUI.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="MaterialGUI.cpp" />
-    <ClCompile Include="ArtImporter.cpp" />
-    <ClCompile Include="MeshHeirarchy.cpp" />
-    <ClCompile Include="MeshRendererGUI.cpp" />
-    <ClCompile Include="ParticleEmitterGUI.cpp" />
-    <ClCompile Include="PostProcessingGUI.cpp" />
-    <ClCompile Include="SceneGUI.cpp" />
-    <ClCompile Include="ShaderProgramGUI.cpp" />
-    <ClCompile Include="TransformEdit.cpp" />
+    <ClCompile Include="Standalone.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\External\imgui\imconfig.h" />
-    <ClInclude Include="..\External\imgui\imgui.h" />
-    <ClInclude Include="..\External\imgui\imgui_impl_glfw.h" />
-    <ClInclude Include="..\External\imgui\imgui_impl_opengl3.h" />
-    <ClInclude Include="..\External\imgui\imgui_impl_opengl3_loader.h" />
-    <ClInclude Include="..\External\imgui\imgui_internal.h" />
-    <ClInclude Include="..\External\imgui\imgui_stdlib.h" />
-    <ClInclude Include="..\External\imgui\imstb_rectpack.h" />
-    <ClInclude Include="..\External\imgui\imstb_textedit.h" />
-    <ClInclude Include="..\External\imgui\imstb_truetype.h" />
-    <ClInclude Include="..\External\tinyfiledialogs\tinyfiledialogs.h" />
-    <ClInclude Include="CameraGUI.h" />
-    <ClInclude Include="ConsoleGUI.h" />
-    <ClInclude Include="Editor.h" />
-    <ClInclude Include="EditorCamera.h" />
-    <ClInclude Include="EditorCameraConfig.h" />
-    <ClInclude Include="EditorCameraGUI.h" />
-    <ClInclude Include="EditorDebug.h" />
-    <ClInclude Include="EditorGUI.h" />
-    <ClInclude Include="EditorStyler.h" />
-    <ClInclude Include="GameObjectGUI.h" />
-    <ClInclude Include="GameObject3DGUI.h" />
-    <ClInclude Include="GUI.h" />
-    <ClInclude Include="FileDialogue.h" />
-    <ClInclude Include="Heirarchy.h" />
-    <ClInclude Include="HexTileGUI.h" />
-    <ClInclude Include="ImGuiIncludes.h" />
-    <ClInclude Include="InputEditor.h" />
-    <ClInclude Include="LightObjectGUI.h" />
-    <ClInclude Include="LinkedHexGridGUI.h" />
-    <ClInclude Include="MaterialGUI.h" />
-    <ClInclude Include="Inspector.h" />
-    <ClInclude Include="ArtImporter.h" />
-    <ClInclude Include="MeshHeirarchy.h" />
-    <ClInclude Include="MeshRendererGUI.h" />
-    <ClInclude Include="ParticleEmitterGUI.h" />
-    <ClInclude Include="PostProcessingGUI.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="SceneGUI.h" />
-    <ClInclude Include="ShaderProgramGUI.h" />
-    <ClInclude Include="Table.h" />
-    <ClInclude Include="TransformEdit.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\External\imgui\imgui.natstepfilter" />
-  </ItemGroup>
-  <ItemGroup>
-    <Natvis Include="..\External\imgui\imgui.natvis" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Editor.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Editor.ico" />
+    <ClInclude Include="Standalone.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

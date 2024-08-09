@@ -1,10 +1,8 @@
 #include "Camera.h"
+#include "AppInfo.h"
 
-int screenWidth = 0;
-int screenHeight = 0;
-bool screenSizeJustChanged = true;
+#include "Debug.h"
 
-Camera* Camera::main = nullptr;
 
 void Camera::SerialiseTo(json& jsonObj) const
 {
@@ -21,6 +19,8 @@ void Camera::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptions)
 	fov = jsonObj["FOV"];
 	nearClip = jsonObj["NearClip"];
 	farClip = jsonObj["FarClip"];
+
+	if (AppInfo::gameCamera == nullptr) AppInfo::gameCamera = this;
 }
 void Camera::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
 {
@@ -33,7 +33,7 @@ void Camera::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
 
 glm::mat4 Camera::GetViewMatrix()
 {
-	return glm::mat4();
+	return glm::inverse(GetMatrix());
 }
 
 glm::mat4 Camera::GetProjectionMatrix(float w, float h)
@@ -45,9 +45,14 @@ glm::mat4 Camera::GetProjectionMatrix(float w, float h)
    return glm::perspective(fov, aspect, nearClip, farClip);
 }
 
+glm::mat4 Camera::GetProjectionMatrix()
+{
+	return GetProjectionMatrix(AppInfo::screenWidth, AppInfo::screenHeight);
+}
+
 glm::mat4 Camera::GetPVMatrix()
 {
-	return GetProjectionMatrix((float)screenWidth, (float)screenHeight) * GetViewMatrix();;
+	return GetProjectionMatrix((float)AppInfo::screenWidth, (float)AppInfo::screenHeight) * GetViewMatrix();;
 }
 
 void Camera::Initialise()
@@ -55,4 +60,9 @@ void Camera::Initialise()
 	Updater::UpdateAdd(this);
 
 	fov = glm::radians(80.0f);
+}
+
+void Camera::DrawDebug()
+{
+	AppInfo::debug->lines.AddFrustum(GetPVMatrix());
 }

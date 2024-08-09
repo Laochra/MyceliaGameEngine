@@ -2,6 +2,8 @@
 
 #include "GameObjectManager.h"
 #include "GameObject.h"
+#include "GameObject3D.h"
+#include "Camera.h"
 
 #include "GeneralMacros.h"
 
@@ -29,6 +31,17 @@ namespace Scene
 	void Clear() noexcept
 	{
 		gameObjectManager->Clear();
+		AppInfo::gameCamera = nullptr;
+	}
+
+	void NewScene() noexcept
+	{
+		Clear();
+
+		if (AppInfo::gameCamera == nullptr)
+		{
+			AppInfo::gameCamera = GameObject3D::Instantiate<Camera>(vec3(0.0f, 0.0f, 0.0f));
+		}
 	}
 
 	bool Open(const char* filepath) noexcept
@@ -67,18 +80,28 @@ namespace Scene
 
 		uint formatVersion = scene["FormatVersion"];
 
+		bool loadStatus;
 		switch (formatVersion)
 		{
-		case FormatVersion(000, 000, 000):	return LoadLatest(scene);
-		case FormatVersion(000, 000, 001):	return LoadFormat(000, 000, 001, scene);
+		case FormatVersion(000, 000, 000): loadStatus = LoadLatest(scene); break;
+		case FormatVersion(000, 000, 001): loadStatus = LoadFormat(000, 000, 001, scene); break;
 		default:
-		{
 			Debug::LogWarning(LogID::WRN152, " Scene Loading Failed ", formatVersion, " ", locationinfo);
-			return false;
-		}
+			loadStatus = false;
+			break;
 		}
 
-		dirty = false;
+		if (loadStatus = true)
+		{
+			if (AppInfo::gameCamera == nullptr)
+			{
+				AppInfo::gameCamera = GameObject3D::Instantiate<Camera>(vec3(0.0f, 0.0f, 0.0f));
+			}
+
+			dirty = false;
+		}
+
+		return loadStatus;
 	}
 
 #pragma region SaveVersions // Purely keeping old versions for archival reasons

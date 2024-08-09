@@ -114,6 +114,10 @@
     <ClCompile Include="RadialMenu.cpp">
       <Filter>Rendering\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="PostProcessing.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="ExampleGame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -271,6 +275,11 @@
     <ClInclude Include="RadialMenu.h">
       <Filter>Rendering\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="PostProcessing.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="ExampleGame.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">

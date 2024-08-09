@@ -64,7 +64,7 @@ void LineDrawer::Draw() noexcept
 
 	// Bind Program and View Projection Matrix
 	linesProgram.Bind();
-	linesProgram.BindUniform("PVMatrix", Camera::main->GetPVMatrix());
+	linesProgram.BindUniform("PVMatrix", AppInfo::ActiveCamera()->GetPVMatrix());
 
 	// Draw the Lines!
 	glDrawArrays(GL_LINES, 0, (int)positions.size());
@@ -132,38 +132,33 @@ void LineDrawer::AddCuboid(vec3 centre, vec3 size, Colour colour, float lifetime
 {
 	vec3 halfSize = size * 0.5f;
 	
-	#define PointAAA vec3(centre.x - halfSize.x, centre.y - halfSize.y, centre.z - halfSize.z)
-	#define PointAAB vec3(centre.x - halfSize.x, centre.y - halfSize.y, centre.z + halfSize.z)
-	#define PointABA vec3(centre.x - halfSize.x, centre.y + halfSize.y, centre.z - halfSize.z)
-	#define PointABB vec3(centre.x - halfSize.x, centre.y + halfSize.y, centre.z + halfSize.z)
-	#define PointBAA vec3(centre.x + halfSize.x, centre.y - halfSize.y, centre.z - halfSize.z)
-	#define PointBAB vec3(centre.x + halfSize.x, centre.y - halfSize.y, centre.z + halfSize.z)
-	#define PointBBA vec3(centre.x + halfSize.x, centre.y + halfSize.y, centre.z - halfSize.z)
-	#define PointBBB vec3(centre.x + halfSize.x, centre.y + halfSize.y, centre.z + halfSize.z)
+	vec3 vNNN(centre.x - halfSize.x, centre.y - halfSize.y, centre.z - halfSize.z);
+	vec3 vNPN(centre.x - halfSize.x, centre.y + halfSize.y, centre.z - halfSize.z);
+	vec3 vPNN(centre.x + halfSize.x, centre.y - halfSize.y, centre.z - halfSize.z);
+	vec3 vPPN(centre.x + halfSize.x, centre.y + halfSize.y, centre.z - halfSize.z);
+
+	vec3 vNNP(centre.x - halfSize.x, centre.y - halfSize.y, centre.z + halfSize.z);
+	vec3 vNPP(centre.x - halfSize.x, centre.y + halfSize.y, centre.z + halfSize.z);
+	vec3 vPNP(centre.x + halfSize.x, centre.y - halfSize.y, centre.z + halfSize.z);
+	vec3 vPPP(centre.x + halfSize.x, centre.y + halfSize.y, centre.z + halfSize.z);
 	
-	Add(PointAAB, PointABB, colour, lifetime);
-	Add(PointABB, PointBBB, colour, lifetime);
-	Add(PointBBB, PointBAB, colour, lifetime);
-	Add(PointBAB, PointAAB, colour, lifetime);
+	// Near Quad
+	Add(vNNN, vNPN, colour, lifetime);
+	Add(vNPN, vPPN, colour, lifetime);
+	Add(vPPN, vPNN, colour, lifetime);
+	Add(vPNN, vNNN, colour, lifetime);
 
-	Add(PointAAA, PointABA, colour, lifetime);
-	Add(PointABA, PointBBA, colour, lifetime);
-	Add(PointBBA, PointBAA, colour, lifetime);
-	Add(PointBAA, PointAAA, colour, lifetime);
+	// Far Quad
+	Add(vNNP, vNPP, colour, lifetime);
+	Add(vNPP, vPPP, colour, lifetime);
+	Add(vPPP, vPNP, colour, lifetime);
+	Add(vPNP, vNNP, colour, lifetime);
 
-	Add(PointAAB, PointAAA, colour, lifetime);
-	Add(PointABB, PointABA, colour, lifetime);
-	Add(PointBBB, PointBBA, colour, lifetime);
-	Add(PointBAB, PointBAA, colour, lifetime);
-
-	#undef PointAAA
-	#undef PointAAB
-	#undef PointABA
-	#undef PointABB
-	#undef PointBAA
-	#undef PointBAB
-	#undef PointBBA
-	#undef PointBBB
+	// Near-Far Lines
+	Add(vNNP, vNNN, colour, lifetime);
+	Add(vNPP, vNPN, colour, lifetime);
+	Add(vPPP, vPPN, colour, lifetime);
+	Add(vPNP, vPNN, colour, lifetime);
 }
 
 void LineDrawer::AddSphere(vec3 centre, float radius, int ringSides, float lifetime) noexcept
@@ -292,6 +287,43 @@ void LineDrawer::AddConicalFrustum(vec3 point, vec3 direction, float innerRange,
 		previousInnerPoint = newInnerPoint;
 		previousOuterPoint = newOuterPoint;
 	}
+}
+
+void LineDrawer::AddFrustum(mat4 pvMatrix, float lifetime) noexcept
+{
+	AddFrustum(pvMatrix, currentColour, lifetime);
+}
+void LineDrawer::AddFrustum(mat4 pvMatrix, Colour colour, float lifetime) noexcept
+{
+	mat4 toWorld = glm::inverse(pvMatrix);
+
+	vec4 vNNN(toWorld * vec4(-1.0f, -1.0f, -1.0f, 1.0f));	vNNN /= vNNN.w;
+	vec4 vNPN(toWorld * vec4(-1.0f, 1.0f, -1.0f, 1.0f));	vNPN /= vNPN.w;
+	vec4 vPPN(toWorld * vec4(1.0f, 1.0f, -1.0f, 1.0f));	vPPN /= vPPN.w;
+	vec4 vPNN(toWorld * vec4(1.0f, -1.0f, -1.0f, 1.0f));	vPNN /= vPNN.w;
+
+	vec4 vNNP(toWorld * vec4(-1.0f, -1.0f, 1.0f, 1.0f));	vNNP /= vNNP.w;
+	vec4 vNPP(toWorld * vec4(-1.0f, 1.0f, 1.0f, 1.0f));	vNPP /= vNPP.w;
+	vec4 vPPP(toWorld * vec4(1.0f, 1.0f, 1.0f, 1.0f));		vPPP /= vPPP.w;
+	vec4 vPNP(toWorld * vec4(1.0f, -1.0f, 1.0f, 1.0f));	vPNP /= vPNP.w;
+
+	// Near Quad
+	Add(vNNN, vNPN, colour, lifetime);
+	Add(vNPN, vPPN, colour, lifetime);
+	Add(vPPN, vPNN, colour, lifetime);
+	Add(vPNN, vNNN, colour, lifetime);
+
+	// Far Quad
+	Add(vNNP, vNPP, colour, lifetime);
+	Add(vNPP, vPPP, colour, lifetime);
+	Add(vPPP, vPNP, colour, lifetime);
+	Add(vPNP, vNNP, colour, lifetime);
+
+	// Near-Far Lines
+	Add(vNNN, vNNP, colour, lifetime);
+	Add(vNPN, vNPP, colour, lifetime);
+	Add(vPPN, vPPP, colour, lifetime);
+	Add(vPNN, vPNP, colour, lifetime);
 }
 
 void LineDrawer::Initialise() noexcept

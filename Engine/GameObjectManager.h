@@ -6,6 +6,8 @@ using std::vector;
 class GameObject;
 class GameObject3D;
 
+typedef unsigned int uint;
+
 class GameObjectManager
 {
 public:
@@ -31,6 +33,10 @@ public:
 	int GetIndexOf(GameObject* gameObject) const noexcept;
 
 	void Clear() noexcept;
+
+	typedef void(*DrawFunc)() noexcept;
+	static void DrawGUIDs(uint& framebuffer, uint& texture, uint& depth, DrawFunc drawTransformIDsFunction = nullptr) noexcept;
+	static void DrawScene(uint& framebuffer, uint& texture, uint& depth, uint& bloomTexture, uint& gizmosTexture, DrawFunc drawTransformsFunction = nullptr) noexcept;
 
 private:
 	vector<GameObject*> graveyard = vector<GameObject*>();

@@ -1,7 +1,7 @@
-#include "Editor.h"
+#include "Standalone.h"
 #include "AppInfo.h"
 
-#include "EditorDebug.h"
+#include "Debug.h"
 
 #include "ExampleGame.h"
 
@@ -14,9 +14,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #error No release platform other than windows has been accounted for
 #endif
 {
-	AppInfo::debug = new EditorDebug();
-	AppInfo::state = AppState::Editor;
-	Application* application = new Editor(new ExampleGame());
+	AppInfo::debug = new Debug();
+	AppInfo::state = AppState::Playing;
+	Application* application = new Standalone(new ExampleGame());
 
 	int exitCode = application->Run();
 

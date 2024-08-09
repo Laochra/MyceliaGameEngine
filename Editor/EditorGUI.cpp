@@ -22,12 +22,7 @@
 namespace EditorGUI
 {
 	// Scene Buffers
-	unsigned int sceneViewFrameBufferHDR = 0;
-	unsigned int sceneViewColourBufferHDR[2] = { 0, 0 };
-	unsigned int sceneViewColourBufferGizmos = 0;
-	unsigned int sceneViewDepthStencilBuffer = 0;
-	unsigned int sceneViewFrameBufferOutput = 0;
-	unsigned int sceneViewColourBufferOutput = 0;
+	unsigned int sceneViewTexture = 0;
 
 	unsigned int guidFBO = 0;
 	unsigned int guidDepth = 0;
@@ -43,8 +38,6 @@ namespace EditorGUI
 		// Window
 		GLFWwindow* window = glfwGetCurrentContext();
 		{
-			glfwSetWindowTitle(window, "Editor");
-
 			GLFWimage icons[4]{};
 			icons[0].pixels = stbi_load("Engine\\Icons\\shroom16x16.png", &icons[0].width, &icons[0].height, 0, 4);
 			icons[1].pixels = stbi_load("Engine\\Icons\\shroom32x32.png", &icons[1].width, &icons[1].height, 0, 4);

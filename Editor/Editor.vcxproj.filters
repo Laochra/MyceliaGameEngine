@@ -105,6 +105,9 @@
     <ClCompile Include="LinkedHexGridGUI.cpp">
       <Filter>GUI\EditorWindows\GameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="CameraGUI.cpp">
+      <Filter>GUI\EditorWindows\GameObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="JSON Configs">
@@ -264,6 +267,9 @@
       <Filter>GUI\EditorWindows\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="LinkedHexGridGUI.h">
+      <Filter>GUI\EditorWindows\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraGUI.h">
       <Filter>GUI\EditorWindows\GameObjects</Filter>
     </ClInclude>
   </ItemGroup>

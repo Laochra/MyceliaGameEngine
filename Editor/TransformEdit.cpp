@@ -138,15 +138,15 @@ namespace TransformEdit
 			vec2 displacement = SceneGUI::normalisedMousePos - normalisedMouseStart;
 
 			vec3 cameraSpaceDisplacement =
-				vec3(glm::inverse(Camera::main->GetProjectionMatrix((float)screenWidth, (float)screenHeight)) *
+				vec3(glm::inverse(AppInfo::ActiveCamera()->GetProjectionMatrix()) *
 					vec4(displacement.x, displacement.y, 0.0f, 0.0f));
 
 			vec3 cameraSpaceAxis =
-				vec3(Camera::main->GetViewMatrix() *
+				vec3(AppInfo::ActiveCamera()->GetViewMatrix() *
 					vec4(-(vec3)axisModelMatrix[2], 0.0f));
 
 			float amountToMove = glm::dot(cameraSpaceAxis, cameraSpaceDisplacement);
-			float distanceFactor = glm::length(translate.start - Camera::main->GetGlobalPosition());
+			float distanceFactor = glm::length(translate.start - AppInfo::ActiveCamera()->GetGlobalPosition());
 
 			AppInfo::debug->lines.Add(
 				translate.start,
@@ -170,14 +170,14 @@ namespace TransformEdit
 			vec4 rayOrigin;
 
 			// Convert from clip space to view space (including perspective divide)
-			mat4 clipToView = glm::inverse(Camera::main->GetProjectionMatrix((float)screenWidth, (float)screenHeight));
+			mat4 clipToView = glm::inverse(AppInfo::ActiveCamera()->GetProjectionMatrix());
 			rayOrigin = clipToView * vec4(SceneGUI::normalisedMousePos, 0.0f, 1.0f);
 			rayOrigin /= rayOrigin.w;
 
 			// Convert from view space to world space and create rays
-			mat4 viewToWorld = glm::inverse(Camera::main->GetViewMatrix());
+			mat4 viewToWorld = glm::inverse(AppInfo::ActiveCamera()->GetViewMatrix());
 			rayOrigin = viewToWorld * rayOrigin;
-			ray = vec4(glm::normalize(Camera::main->GetGlobalPosition() - (vec3)rayOrigin), 0.0f);
+			ray = vec4(glm::normalize(AppInfo::ActiveCamera()->GetGlobalPosition() - (vec3)rayOrigin), 0.0f);
 
 			// Convert from view space to plane space
 			mat4 worldToPlane = glm::inverse(axisModelMatrix);
@@ -211,7 +211,7 @@ namespace TransformEdit
 
 			// Render lines to visualise directions
 			// TODO: Do this with TransformEdit's Draw function so they are visible through objects
-			float distanceFactor = glm::length(target->GetGlobalPivot() - Camera::main->GetGlobalPosition());
+			float distanceFactor = glm::length(target->GetGlobalPivot() - AppInfo::ActiveCamera()->GetGlobalPosition());
 			float scale = distanceFactor * 0.25f;
 			
 			AppInfo::debug->lines.Add(target->GetGlobalPivot(), target->GetGlobalPivot() + vec3(rotate.initialDirection) * scale, colour);
@@ -246,7 +246,7 @@ namespace TransformEdit
 		mat4 modelTranslationMatrix = glm::translate(glm::identity<mat4>(), target->GetGlobalPivot());
 		mat4 unscaledModelMatrix = modelTranslationMatrix * (mat4)target->GetGlobalRotationMatrix();
 
-		float distanceFactor = 0.25f * glm::length(target->GetGlobalPivot() - Camera::main->GetGlobalPosition());
+		float distanceFactor = 0.25f * glm::length(target->GetGlobalPivot() - AppInfo::ActiveCamera()->GetGlobalPosition());
 		
 		switch (mode)
 		{
@@ -260,7 +260,7 @@ namespace TransformEdit
 				coneOffset = glm::rotate(coneOffset, glm::radians(-90.0f), vec3(0, 1, 0));
 				coneOffset = glm::scale(coneOffset, scale);
 				guidProgram->BindUniform("ProjectionViewModel",
-					Camera::main->GetPVMatrix() *
+					AppInfo::ActiveCamera()->GetPVMatrix() *
 					(space == Space::Local ? unscaledModelMatrix : modelTranslationMatrix) *
 					coneOffset);
 
@@ -275,7 +275,7 @@ namespace TransformEdit
 				coneOffset = glm::rotate(coneOffset, glm::radians(90.0f), vec3(1, 0, 0));
 				coneOffset = glm::scale(coneOffset, scale);
 				guidProgram->BindUniform("ProjectionViewModel",
-					Camera::main->GetPVMatrix() *
+					AppInfo::ActiveCamera()->GetPVMatrix() *
 					(space == Space::Local ? unscaledModelMatrix : modelTranslationMatrix) *
 					coneOffset);
 
@@ -290,7 +290,7 @@ namespace TransformEdit
 				coneOffset = glm::rotate(coneOffset, glm::radians(180.0f), vec3(0, 1, 0));
 				coneOffset = glm::scale(coneOffset, scale);
 				guidProgram->BindUniform("ProjectionViewModel",
-					Camera::main->GetPVMatrix() *
+					AppInfo::ActiveCamera()->GetPVMatrix() *
 					(space == Space::Local ? unscaledModelMatrix : modelTranslationMatrix) *
 					coneOffset);
 
@@ -310,7 +310,7 @@ namespace TransformEdit
 				mat4 ringOffset = glm::rotate(glm::identity<mat4>(), glm::radians(-90.0f), vec3(0, 1, 0));
 				ringOffset = glm::scale(ringOffset, scale);
 				guidProgram->BindUniform("ProjectionViewModel",
-					Camera::main->GetPVMatrix() *
+					AppInfo::ActiveCamera()->GetPVMatrix() *
 					(space == Space::Local ? unscaledModelMatrix : modelTranslationMatrix) *
 					ringOffset);
 
@@ -324,7 +324,7 @@ namespace TransformEdit
 				mat4 ringOffset = glm::rotate(glm::identity<mat4>(), glm::radians(90.0f), vec3(1, 0, 0));
 				ringOffset = glm::scale(ringOffset, scale);
 				guidProgram->BindUniform("ProjectionViewModel",
-					Camera::main->GetPVMatrix() *
+					AppInfo::ActiveCamera()->GetPVMatrix() *
 					(space == Space::Local ? unscaledModelMatrix : modelTranslationMatrix) *
 					ringOffset);
 
@@ -337,7 +337,7 @@ namespace TransformEdit
 			{
 				mat4 ringOffset = glm::scale(glm::identity<mat4>(), scale);
 				guidProgram->BindUniform("ProjectionViewModel",
-					Camera::main->GetPVMatrix() *
+					AppInfo::ActiveCamera()->GetPVMatrix() *
 					(space == Space::Local ? unscaledModelMatrix : modelTranslationMatrix) *
 					ringOffset);
 
@@ -373,7 +373,7 @@ namespace TransformEdit
 		mat4 modelTranslationMatrix = glm::translate(glm::identity<mat4>(), target->GetGlobalPivot());
 		mat4 unscaledModelMatrix = modelTranslationMatrix * (mat4)target->GetGlobalRotationMatrix();
 
-		float distanceFactor = 0.25f * glm::length(target->GetGlobalPivot() - Camera::main->GetGlobalPosition());
+		float distanceFactor = 0.25f * glm::length(target->GetGlobalPivot() - AppInfo::ActiveCamera()->GetGlobalPosition());
 		
 		switch (mode)
 		{
@@ -387,7 +387,7 @@ namespace TransformEdit
 				coneOffset = glm::rotate(coneOffset, glm::radians(-90.0f), vec3(0, 1, 0));
 				coneOffset = glm::scale(coneOffset, scale);
 				unlit->BindUniform("ProjectionViewModel",
-					Camera::main->GetPVMatrix() *
+					AppInfo::ActiveCamera()->GetPVMatrix() *
 					(space == Space::Local ? unscaledModelMatrix : modelTranslationMatrix) *
 					coneOffset);
 
@@ -404,7 +404,7 @@ namespace TransformEdit
 				coneOffset = glm::rotate(coneOffset, glm::radians(90.0f), vec3(1, 0, 0));
 				coneOffset = glm::scale(coneOffset, scale);
 				unlit->BindUniform("ProjectionViewModel",
-					Camera::main->GetPVMatrix() *
+					AppInfo::ActiveCamera()->GetPVMatrix() *
 					(space == Space::Local ? unscaledModelMatrix : modelTranslationMatrix) *
 					coneOffset);
 
@@ -421,7 +421,7 @@ namespace TransformEdit
 				coneOffset = glm::rotate(coneOffset, glm::radians(180.0f), vec3(0, 1, 0));
 				coneOffset = glm::scale(coneOffset, scale);
 				unlit->BindUniform("ProjectionViewModel",
-					Camera::main->GetPVMatrix() *
+					AppInfo::ActiveCamera()->GetPVMatrix() *
 					(space == Space::Local ? unscaledModelMatrix : modelTranslationMatrix) *
 					coneOffset);
 
@@ -443,7 +443,7 @@ namespace TransformEdit
 				mat4 ringOffset = glm::rotate(glm::identity<mat4>(), glm::radians(-90.0f), vec3(0, 1, 0));
 				ringOffset = glm::scale(ringOffset, scale);
 				unlit->BindUniform("ProjectionViewModel",
-					Camera::main->GetPVMatrix() *
+					AppInfo::ActiveCamera()->GetPVMatrix() *
 					(space == Space::Local ? unscaledModelMatrix : modelTranslationMatrix) *
 					ringOffset);
 
@@ -459,7 +459,7 @@ namespace TransformEdit
 				mat4 ringOffset = glm::rotate(glm::identity<mat4>(), glm::radians(90.0f), vec3(1, 0, 0));
 				ringOffset = glm::scale(ringOffset, scale);
 				unlit->BindUniform("ProjectionViewModel",
-					Camera::main->GetPVMatrix() *
+					AppInfo::ActiveCamera()->GetPVMatrix() *
 					(space == Space::Local ? unscaledModelMatrix : modelTranslationMatrix) *
 					ringOffset);
 
@@ -474,7 +474,7 @@ namespace TransformEdit
 			{
 				mat4 ringOffset = glm::scale(glm::identity<mat4>(), scale);
 				unlit->BindUniform("ProjectionViewModel",
-					Camera::main->GetPVMatrix() *
+					AppInfo::ActiveCamera()->GetPVMatrix() *
 					(space == Space::Local ? unscaledModelMatrix : modelTranslationMatrix) *
 					ringOffset);
 
@@ -494,7 +494,7 @@ namespace TransformEdit
 			vec3 scale(distanceFactor * 0.1f);
 
 			unlit->BindUniform("ProjectionViewModel",
-				Camera::main->GetPVMatrix() *
+				AppInfo::ActiveCamera()->GetPVMatrix() *
 				glm::scale(modelTranslationMatrix, scale)
 			);
 
