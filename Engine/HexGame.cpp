@@ -192,6 +192,15 @@ void HexGame::Update()
 		float aspect = 1.0f / (AppInfo::screenHeight == 0 ? 0.0f : (AppInfo::screenWidth / (float)AppInfo::screenHeight));
 		radialMenu->Update(vec2(cursorNormalised.x / aspect, cursorNormalised.y), Keybind(KeyCode::MouseLeft));
 	}
+
+	KeyAxis xMovement(KeyCode::A, KeyCode::D);
+	KeyAxis zMovement(KeyCode::W, KeyCode::S);
+	vec2 moveDir = xMovement == 0.0f && zMovement == 0.0f ?
+		vec2(0.0f) :
+		glm::normalize(vec2((float)xMovement, (float)zMovement));
+
+	vec3 moveStep = vec3(moveDir.x, 0, moveDir.y) * 3.0f * Time::delta;
+	AppInfo::gameCamera->Translate(moveStep);
 }
 void HexGame::Draw()
 {
