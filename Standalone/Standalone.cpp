@@ -17,14 +17,12 @@ void Standalone::Initialise()
 	glfwSetFramebufferSizeCallback(AppInfo::window, ScreenResizeCallback);
 	glfwGetFramebufferSize(AppInfo::window, &AppInfo::screenWidth, &AppInfo::screenHeight);
 
-	Scene::Open("Assets\\Scenes\\Sample.scene");
-
-	AppInfo::gameCamera = GameObject3D::Instantiate<Camera>(vec3(-0.25f, 1.0f, 1.5f));
+	AppInfo::gameCamera = GameObject3D::Instantiate<Camera>(vec3(0.0f));
 
 	LightingManager::ambientLight = Light(vec3(0.1f, 0.1f, 0.1f));
 	LightingManager::directionalLight = DirectionalLight(vec3(1.0f, 1.0f, 1.0f), glm::normalize(vec3(-0.1f, -1, -1)));
 
-	AppInfo::input->enabled = false;
+	AppInfo::input->enabled = true;
 
 	game->Initialise();
 	game->OnStart();
@@ -40,6 +38,7 @@ void Standalone::FixedUpdate()
 
 void Standalone::Update()
 {
+	AppInfo::input->screenCursorPos = vec2(AppInfo::input->cursorPos.x, AppInfo::screenHeight - AppInfo::input->cursorPos.y);
 	Updater::CallUpdate();
 	game->Update();
 }
