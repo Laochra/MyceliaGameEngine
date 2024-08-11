@@ -20,4 +20,5 @@ void main() // Frag
 	{
 		Colour = texture(Sprites, vec3(FragTexCoords, 1));
 	}
+	if (Colour.a == 0.0) discard;
 }

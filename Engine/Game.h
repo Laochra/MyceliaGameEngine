@@ -5,6 +5,8 @@
 class Game // Abstract
 {
 public:
+	bool displayUI = true;
+
 	// Required for editor contexts to be able to display transform gizmos
 	// at the correct stage in the render loop.
 	GameObjectManager::DrawFunc transformsDrawFunc = nullptr;

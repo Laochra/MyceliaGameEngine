@@ -91,7 +91,7 @@ void RadialMenu::Draw() noexcept
 	glBindTexture(GL_TEXTURE_2D_ARRAY, spriteArray);
 	program.BindUniform("Sprites", 0);
 
-	float aspect = 1.0f / (screenHeight == 0 ? 0.0f : (screenWidth / (float)screenHeight));
+	float aspect = 1.0f / (AppInfo::screenHeight == 0 ? 0.0f : (AppInfo::screenWidth / (float)AppInfo::screenHeight));
 	program.BindUniform("Aspect", aspect);
 	
 	program.BindUniform("Scale", scale);

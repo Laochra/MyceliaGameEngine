@@ -53,16 +53,17 @@ public:
 			vector<uint*>& textures) noexcept;
 
 		static float exposure;
+		static bool displayUI;
 		// Programs: 0(HDR To LDR Program)
 		// Framebuffers: 0(HDR To LDR FBO)
-		// Textures: 0(HDR Texture), 1(Bloom Texture), 2(Gizmos Texture), 3(Output Texture)
+		// Textures: 0(HDR Texture), 1(Bloom Texture), 2(Gizmos Texture), 3(UI Texture), 4(Output Texture)
 		static void RefreshHDRToLDR(
 			vector<ShaderProgram*>& programs,
 			vector<uint*>& framebuffers,
 			vector<uint*>& textures) noexcept;
 		// Programs: 0(HDR To LDR Program)
 		// Framebuffers: 0(HDR To LDR FBO)
-		// Textures: 0(HDR Texture), 1(Bloom Texture), 2(Gizmos Texture), 3(Output Texture)
+		// Textures: 0(HDR Texture), 1(Bloom Texture), 2(Gizmos Texture), 3(UI Texture), 4(Output Texture)
 		static void DrawHDRToLDR(
 			vector<ShaderProgram*>& programs,
 			vector<uint*>& framebuffers,

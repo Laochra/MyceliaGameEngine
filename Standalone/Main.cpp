@@ -3,7 +3,7 @@
 
 #include "Debug.h"
 
-#include "ExampleGame.h"
+#include "HexGame.h"
 
 #ifdef _DEBUG
 int main(int argCount, char* args[])
@@ -16,7 +16,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 {
 	AppInfo::debug = new Debug();
 	AppInfo::state = AppState::Playing;
-	Application* application = new Standalone(new ExampleGame());
+	Application* application = new Standalone(new HexGame());
 
 	int exitCode = application->Run();
 

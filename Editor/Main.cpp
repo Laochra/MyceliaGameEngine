@@ -3,7 +3,7 @@
 
 #include "EditorDebug.h"
 
-#include "ExampleGame.h"
+#include "HexGame.h"
 
 #ifdef _DEBUG
 int main(int argCount, char* args[])
@@ -16,7 +16,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 {
 	AppInfo::debug = new EditorDebug();
 	AppInfo::state = AppState::Editor;
-	Application* application = new Editor(new ExampleGame());
+	Application* application = new Editor(new HexGame());
 
 	int exitCode = application->Run();
 

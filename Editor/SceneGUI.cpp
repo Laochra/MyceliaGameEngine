@@ -170,7 +170,8 @@ namespace SceneGUI
 		ImVec2 imguiWindowPos = ImGui::GetWindowPos();
 		int mainWindowX, mainWindowY;
 		glfwGetWindowPos(window, &mainWindowX, &mainWindowY);
-		vec2 cursorPos = AppInfo::input->cursorPos - vec2(imguiWindowPos.x, imguiWindowPos.y + menuBarSize.y + 23) + vec2(mainWindowX, mainWindowY);
+		vec2& cursorPos = AppInfo::input->screenCursorPos;
+		cursorPos = AppInfo::input->cursorPos - vec2(imguiWindowPos.x, imguiWindowPos.y + menuBarSize.y + 23) + vec2(mainWindowX, mainWindowY);
 		cursorPos.y = AppInfo::screenHeight - cursorPos.y;
 		normalisedMousePos = vec2(cursorPos.x / AppInfo::screenWidth, cursorPos.y / AppInfo::screenHeight);
 		normalisedMousePos = (normalisedMousePos * 2.0f) - 1.0f;
@@ -286,7 +287,7 @@ namespace SceneGUI
 	}
 	void CheckForFileShortcuts() noexcept
 	{
-		if (AppInfo::input->enabled && ((EditorCamera*)Camera::main)->freeCamera.down()) return;
+		if (AppInfo::input->enabled && ((EditorCamera*)AppInfo::editorCamera)->freeCamera.down()) return;
 
 		if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl) || ImGui::IsKeyDown(ImGuiKey_RightCtrl))
 		{

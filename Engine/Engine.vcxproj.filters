@@ -118,6 +118,7 @@
       <Filter>Rendering</Filter>
     </ClCompile>
     <ClCompile Include="ExampleGame.cpp" />
+    <ClCompile Include="HexGame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -280,6 +281,7 @@
       <Filter>Rendering</Filter>
     </ClInclude>
     <ClInclude Include="ExampleGame.h" />
+    <ClInclude Include="HexGame.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">

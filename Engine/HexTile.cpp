@@ -47,7 +47,7 @@ static void DrawHexPosRecursive(GameObject3D* gameObject, ShaderProgram* hexPosP
 	MeshRenderer* meshRenderer = dynamic_cast<MeshRenderer*>(gameObject);
 	if (meshRenderer != nullptr && meshRenderer->GetMesh() != nullptr)
 	{
-		hexPosProgram->BindUniform("ProjectionViewModel", Camera::main->GetPVMatrix() * meshRenderer->GetMatrix());
+		hexPosProgram->BindUniform("ProjectionViewModel", AppInfo::ActiveCamera()->GetPVMatrix() * meshRenderer->GetMatrix());
 		hexPosProgram->BindUniform("HexPos", hexPos);
 		meshRenderer->GetMesh()->Draw();
 	}

@@ -139,13 +139,14 @@ void PostProcess::Defaults::DrawBloom(
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+bool PostProcess::Defaults::displayUI = false;
 float PostProcess::Defaults::exposure = 3.0f;
 void PostProcess::Defaults::RefreshHDRToLDR(
 	vector<ShaderProgram*>& programs,
 	vector<uint*>& framebuffers,
 	vector<uint*>& textures) noexcept
 {
-	if (textures[3] == nullptr) return; // Return if just rendering to the backbuffer
+	if (textures[4] == nullptr) return; // Return if just rendering to the backbuffer
 
 	const ShaderProgram& hdrToLDRProgram = *programs[0];
 
@@ -154,7 +155,8 @@ void PostProcess::Defaults::RefreshHDRToLDR(
 	const uint& hdrTexture = *textures[0];
 	const uint& bloomTexture = *textures[1];
 	const uint& gizmosTexture = *textures[2];
-	uint& ldrTexture = *textures[3];
+	const uint& uiTexture = *textures[3];
+	uint& ldrTexture = *textures[4];
 
 	if (hdrToLDRFBO == 0)
 	{
@@ -182,7 +184,8 @@ void PostProcess::Defaults::DrawHDRToLDR(
 	const uint& hdrTexture = *textures[0];
 	const uint& bloomTexture = *textures[1];
 	const uint& gizmosTexture = *textures[2];
-	uint& ldrTexture = *textures[3];
+	const uint& uiTexture = *textures[3];
+	uint& ldrTexture = *textures[4];
 
 	Mesh screenQuad;
 	screenQuad.InitialiseQuad();
@@ -190,7 +193,7 @@ void PostProcess::Defaults::DrawHDRToLDR(
 	glViewport(0, 0, AppInfo::screenWidth, AppInfo::screenHeight);
 
 	// If not intentionally targetting the back buffer initialise a new one
-	if (textures[3] != nullptr && hdrToLDRFBO == 0)
+	if (textures[4] != nullptr && hdrToLDRFBO == 0)
 	{
 		glGenFramebuffers(1, &hdrToLDRFBO);
 		glGenTextures(1, &ldrTexture);
@@ -212,9 +215,13 @@ void PostProcess::Defaults::DrawHDRToLDR(
 	glBindTexture(GL_TEXTURE_2D, gizmosTexture);
 	hdrToLDRProgram.BindUniform("GizmosTexture", 2);
 	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, uiTexture);
+	hdrToLDRProgram.BindUniform("UITexture", 3);
+	glActiveTexture(GL_TEXTURE4);
 	glBindTexture(GL_TEXTURE_2D, ldrTexture);
-	hdrToLDRProgram.BindUniform("CurrentColourBuffer", 3);
+	hdrToLDRProgram.BindUniform("CurrentColourBuffer", 4);
 	hdrToLDRProgram.BindUniform("Exposure", exposure);
+	hdrToLDRProgram.BindUniform("DisplayUI", (int)displayUI);
 
 	screenQuad.Draw();
 
