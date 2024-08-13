@@ -6,6 +6,8 @@
 
 #include "MeshRenderer.h"
 
+class Habitat;
+
 enum class HexDir : unsigned char { NorthWest, North, NorthEast, SouthEast, South, SouthWest };
 enum class HexType { Available, Grass, Water, Flower };
 
@@ -16,11 +18,15 @@ public:
 
 	using MeshRenderer::MeshRenderer;
 
+	Habitat* habitat = nullptr;
 	HexTile* adjacent[6] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, };
 
 	HexType type = HexType::Available;
 
 	virtual void Initialise() override;
+	virtual void Draw() override;
+	virtual void DrawDepth(mat4 pvMatrix) override;
+	virtual void DrawDebug() override;
 	void DrawHexPos() noexcept;
 	
 	glm::ivec2 GetHexPos() const noexcept;

@@ -42,6 +42,18 @@ void HexTile::Initialise()
 	MeshRenderer::Initialise();
 	SetMesh("ProceduralHexagon");
 }
+void HexTile::Draw()
+{
+	if (habitat != nullptr) MeshRenderer::Draw();
+}
+void HexTile::DrawDepth(mat4 pvMatrix)
+{
+	if (habitat != nullptr) MeshRenderer::DrawDepth(pvMatrix);
+}
+void HexTile::DrawDebug()
+{
+	if (habitat != nullptr) MeshRenderer::DrawDebug();
+}
 static void DrawHexPosRecursive(GameObject3D* gameObject, ShaderProgram* hexPosProgram, glm::ivec2 hexPos)
 {
 	MeshRenderer* meshRenderer = dynamic_cast<MeshRenderer*>(gameObject);

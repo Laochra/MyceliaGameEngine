@@ -192,6 +192,7 @@
     <ClCompile Include="GameObject3DGUI.cpp" />
     <ClCompile Include="GameObjectGUI.cpp" />
     <ClCompile Include="GUI.cpp" />
+    <ClCompile Include="HabitatGUI.cpp" />
     <ClCompile Include="Heirarchy.cpp" />
     <ClCompile Include="HexTileGUI.cpp" />
     <ClCompile Include="InputEditor.cpp" />
@@ -234,6 +235,7 @@
     <ClInclude Include="GameObject3DGUI.h" />
     <ClInclude Include="GUI.h" />
     <ClInclude Include="FileDialogue.h" />
+    <ClInclude Include="HabitatGUI.h" />
     <ClInclude Include="Heirarchy.h" />
     <ClInclude Include="HexTileGUI.h" />
     <ClInclude Include="ImGuiIncludes.h" />

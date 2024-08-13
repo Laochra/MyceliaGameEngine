@@ -11,6 +11,8 @@
 typedef unsigned int uint;
 typedef unsigned long long ulong;
 
+class Habitat;
+
 struct HexPosHash
 {
 	ulong operator()(const glm::ivec2& k) const
@@ -33,6 +35,7 @@ public:
 
 	HexTile* centre = nullptr;
 	HexMap lookupTable;
+	vector<Habitat*> habitats;
 
 	virtual void Initialise() noexcept override;
 

@@ -105,12 +105,6 @@
       <Filter>Utility</Filter>
     </ClCompile>
     <ClCompile Include="AppInfo.cpp" />
-    <ClCompile Include="HexTile.cpp">
-      <Filter>Data Structures</Filter>
-    </ClCompile>
-    <ClCompile Include="LinkedHexGrid.cpp">
-      <Filter>Data Structures</Filter>
-    </ClCompile>
     <ClCompile Include="RadialMenu.cpp">
       <Filter>Rendering\GUI</Filter>
     </ClCompile>
@@ -119,6 +113,15 @@
     </ClCompile>
     <ClCompile Include="ExampleGame.cpp" />
     <ClCompile Include="HexGame.cpp" />
+    <ClCompile Include="HexTile.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkedHexGrid.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Habitat.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -267,12 +270,6 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="AppInfo.h" />
-    <ClInclude Include="HexTile.h">
-      <Filter>Data Structures</Filter>
-    </ClInclude>
-    <ClInclude Include="LinkedHexGrid.h">
-      <Filter>Data Structures</Filter>
-    </ClInclude>
     <ClInclude Include="RadialMenu.h">
       <Filter>Rendering\GUI</Filter>
     </ClInclude>
@@ -282,6 +279,15 @@
     </ClInclude>
     <ClInclude Include="ExampleGame.h" />
     <ClInclude Include="HexGame.h" />
+    <ClInclude Include="HexTile.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkedHexGrid.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Habitat.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">
