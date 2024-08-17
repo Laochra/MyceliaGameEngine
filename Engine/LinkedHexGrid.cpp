@@ -34,6 +34,8 @@ void LinkedHexGrid::Initialise() noexcept
 	ifstream flowerPrefabFile("Assets\\Prefabs\\FlowerHex.prefab");
 	flowerPrefabFile >> HexTile::flowerPrefab;
 
+
+
 	centre = (HexTile*)GameObject::InstantiateFrom(HexTile::grassPrefab, GuidGeneration::New);
 	gameObjectManager->Add(centre);
 	centre->SetParent(this);

@@ -540,8 +540,6 @@ bool Mesh::LoadFromFile(const char* filepathInit)
 {
 	primitiveType = GL_TRIANGLES;
 
-	assert(string(filepathInit).find(".mesh") != string::npos);
-
 	std::ifstream filestream(filepathInit, std::ios::binary);
 
 	if (!filestream.good())

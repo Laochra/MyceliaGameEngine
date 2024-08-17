@@ -24,9 +24,6 @@ public:
 	HexType type = HexType::Available;
 
 	virtual void Initialise() override;
-	virtual void Draw() override;
-	virtual void DrawDepth(mat4 pvMatrix) override;
-	virtual void DrawDebug() override;
 	void DrawHexPos() noexcept;
 	
 	glm::ivec2 GetHexPos() const noexcept;

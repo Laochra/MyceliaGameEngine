@@ -144,7 +144,7 @@ namespace Heirarchy
 				ImGui::EndMenu();
 			}
 
-			ImGui::BeginDisabled(rightClickMenu.target->GetClassID() == Camera::classID);
+			ImGui::BeginDisabled(rightClickMenu.target == nullptr || rightClickMenu.target->GetClassID() == Camera::classID);
 			if (ImGui::MenuItem("Duplicate"))
 			{
 				Duplicate((GameObject3D*)rightClickMenu.target);

@@ -37,10 +37,17 @@ int Application::Run()
 	Initialise();
 	Debug::LogSubtle("Initialisation successful\n");
 
-	if (AppInfo::editorCamera == nullptr)
+	if (AppInfo::ActiveCamera() == nullptr)
 	{
-		Debug::LogWarning(LogID::WRN001, "A default was created to avoid crashing but the application will not behave as expected. ", locationinfo);
-		AppInfo::editorCamera = GameObject::Instantiate<Camera>();
+		if (AppInfo::state == AppState::Editor)
+		{
+			Debug::LogWarning(LogID::WRN001, "A default was created to avoid crashing but the application will not behave as expected. ", locationinfo);
+			AppInfo::editorCamera = GameObject::Instantiate<Camera>();
+		}
+		else
+		{
+			Debug::LogWarning(LogID::WRN001, "A game camera was not provided, the application will not behave as expected. ", locationinfo);
+		}
 	}
 
 	GameLoop();

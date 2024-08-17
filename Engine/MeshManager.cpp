@@ -36,6 +36,8 @@ MeshManager::~MeshManager()
 
 Mesh* MeshManager::GetMesh(const char* filepath)
 {
+   if (strcmp(filepath, "None") == 0) { return nullptr; }
+
    if (loadedMeshes.count(filepath) == 0) { return AddMesh(filepath); }
    else { return loadedMeshes[filepath]; }
 }
@@ -51,6 +53,7 @@ void MeshManager::ReloadMesh(const char* filepath)
 Mesh* MeshManager::AddMesh(const char* filepath)
 {
    Mesh* newMesh = new Mesh;
+
    if (newMesh->LoadFromFile(filepath))
    {
       loadedMeshes.insert(std::pair(string(filepath), newMesh));

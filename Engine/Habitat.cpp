@@ -21,6 +21,8 @@ void Habitat::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
 	//...
 }
 
+json Habitat::frogHabitatPrefab;
+
 void Habitat::FormHabitat(HexTile* hex1, HexTile* hex2, HexTile* hex3) noexcept
 {
 	// Ensure the 3 hexes are connected or early out
@@ -43,12 +45,17 @@ void Habitat::FormHabitat(HexTile* hex1, HexTile* hex2, HexTile* hex3) noexcept
 	for (HexTile* hexTile : hexTiles)
 	{
 		hexTile->UpdateFrom(HexTile::grassPrefab, GuidGeneration::Keep);
+		hexTile->SetState(Active);
 	}
 
 	// Update tiles its made up of
 	hexTiles[0] = hex1;
 	hexTiles[1] = hex2;
 	hexTiles[2] = hex3;
+	for (HexTile* hexTile : hexTiles)
+	{
+		hexTile->SetState(Inactive);
+	}
 
 	// Set the position to be the average of the three hexes it makes up
 	SetPosition((hex1->GetPosition() + hex2->GetPosition() + hex3->GetPosition()) / 3.0f);
