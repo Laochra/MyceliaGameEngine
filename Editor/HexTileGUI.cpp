@@ -22,11 +22,11 @@ void HexTileGUI::DrawHexTileGUI(HexTile* hexTile)
 		const char* hexTypeName;
 		switch (hexTile->type)
 		{
-		case HexType::Available:	hexTypeName = "Available";	break;
-		case HexType::Grass:			hexTypeName = "Grass";		break;
-		case HexType::Water:			hexTypeName = "Water";		break;
-		case HexType::Flower:		hexTypeName = "Flower";		break;
-		default:							hexTypeName = "Invalid";	break;
+		case HexType::Available:	hexTypeName = "Available";		break;
+		case HexType::Eucalyptus:	hexTypeName = "Eucalyptus";	break;
+		case HexType::Water:			hexTypeName = "Water";			break;
+		case HexType::Fern:			hexTypeName = "Fern";			break;
+		default:							hexTypeName = "Invalid";		break;
 		}
 		if (ImGui::BeginCombo("HexType", hexTypeName))
 		{
@@ -37,11 +37,11 @@ void HexTileGUI::DrawHexTileGUI(HexTile* hexTile)
 				if (grid != nullptr) grid->UpdateTile(hexTile, HexType::Available);
 				else Debug::LogError("HexTiles should be children of a LinkedHexGrid", locationinfo);
 			}
-			if (ImGui::Selectable("Grass", hexTile->type == HexType::Grass))
+			if (ImGui::Selectable("Eucalyptus", hexTile->type == HexType::Eucalyptus))
 			{
 				LinkedHexGrid* grid = dynamic_cast<LinkedHexGrid*>(hexTile->GetParent());
 
-				if (grid != nullptr) grid->UpdateTile(hexTile, HexType::Grass);
+				if (grid != nullptr) grid->UpdateTile(hexTile, HexType::Eucalyptus);
 				else Debug::LogError("HexTiles should be children of a LinkedHexGrid", locationinfo);
 			}
 			if (ImGui::Selectable("Water", hexTile->type == HexType::Water))
@@ -51,11 +51,11 @@ void HexTileGUI::DrawHexTileGUI(HexTile* hexTile)
 				if (grid != nullptr) grid->UpdateTile(hexTile, HexType::Water);
 				else Debug::LogError("HexTiles should be children of a LinkedHexGrid", locationinfo);
 			}
-			if (ImGui::Selectable("Flower", hexTile->type == HexType::Flower))
+			if (ImGui::Selectable("Fern", hexTile->type == HexType::Fern))
 			{
 				LinkedHexGrid* grid = dynamic_cast<LinkedHexGrid*>(hexTile->GetParent());
 
-				if (grid != nullptr) grid->UpdateTile(hexTile, HexType::Flower);
+				if (grid != nullptr) grid->UpdateTile(hexTile, HexType::Fern);
 				else Debug::LogError("HexTiles should be children of a LinkedHexGrid", locationinfo);
 			}
 			ImGui::EndCombo();

@@ -33,9 +33,9 @@ const std::vector<glm::ivec2> HexTile::DirVec =
 	glm::ivec2(-1,	 1)
 };
 json HexTile::availablePrefab;
-json HexTile::grassPrefab;
+json HexTile::eucalyptusPrefab;
 json HexTile::waterPrefab;
-json HexTile::flowerPrefab;
+json HexTile::fernPrefab;
 
 void HexTile::Initialise()
 {
@@ -52,14 +52,16 @@ static void DrawHexPosRecursive(GameObject3D* gameObject, ShaderProgram* hexPosP
 		meshRenderer->GetMesh()->Draw();
 	}
 
-	const vector<GameObject3D*>* children = gameObject->GetChildren();
-	for (vector<GameObject3D*>::const_iterator it = children->begin(); it < children->end(); it++)
-	{
-		DrawHexPosRecursive(*it, hexPosProgram, hexPos);
-	}
+	//const vector<GameObject3D*>* children = gameObject->GetChildren();
+	//for (vector<GameObject3D*>::const_iterator it = children->begin(); it < children->end(); it++)
+	//{
+	//	DrawHexPosRecursive(*it, hexPosProgram, hexPos);
+	//}
 }
 void HexTile::DrawHexPos() noexcept
 {
+	if (habitat != nullptr) return;
+
 	ShaderProgram* hexPosProgram = shaderManager->GetProgram("Assets\\Shaders\\DrawHexPos.gpu");
 	hexPosProgram->Bind();
 

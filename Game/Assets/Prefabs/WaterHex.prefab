@@ -1,9 +1,9 @@
 {
   "Active": true,
   "Children": [],
-  "GUID": 9405298503304483056,
+  "GUID": 14981772011017100942,
   "HexType": 2,
-  "Material": "Assets\\Materials\\Blue.mat",
+  "Material": "Assets\\Materials\\Water.mat",
   "Mesh": "ProceduralHexagon",
   "Name": "WaterHex",
   "Pivot": [
@@ -17,9 +17,9 @@
     0.0
   ],
   "Rotation": [
-    1.0,
+    0.4999999701976776,
     0.0,
-    0.0,
+    0.866025447845459,
     0.0
   ],
   "Scale": [

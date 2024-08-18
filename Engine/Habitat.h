@@ -16,4 +16,5 @@ public:
 	void FormHabitat(HexTile* hex1, HexTile* hex2, HexTile* hex3) noexcept;
 
 	static json frogHabitatPrefab;
+	static bool frogHabitatHasBeenPlaced;
 };

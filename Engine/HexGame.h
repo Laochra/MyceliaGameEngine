@@ -10,7 +10,7 @@
 
 typedef unsigned int uint;
 
-inline HexType currentTileType = HexType::Grass;
+inline HexType currentTileType = HexType::Eucalyptus;
 
 class HexGame : public Game
 {

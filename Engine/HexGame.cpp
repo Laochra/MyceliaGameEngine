@@ -106,6 +106,8 @@ void HexGame::Initialise(uint* renderTargetInit)
 	const string defaultPath = "Engine\\DefaultAssets\\";
 	const string fullScreenQuadShader = StringBuilder(defaultPath, "FullScreenQuad.vert").value;
 
+	PostProcess::Defaults::Initialise();
+
 	const string boxBlurShader = StringBuilder(defaultPath, "BoxBlur.frag").value;
 	postProcessStack.Add(
 		PostProcess(

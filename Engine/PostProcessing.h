@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Shader.h"
+#include "Mesh.h"
 
 typedef unsigned int uint;
 
@@ -35,6 +36,9 @@ public:
 	class Defaults
 	{
 	public:
+		static Mesh* screenQuad;
+		static void Initialise();
+
 		static const int downResFactor = 4;
 		static const int bloomPasses = 4;
 		// Programs: 0(Ping FBO), 1(Pong FBO)

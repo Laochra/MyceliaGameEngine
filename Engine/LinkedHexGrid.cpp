@@ -1,5 +1,9 @@
 #include "LinkedHexGrid.h"
 
+#include "Habitat.h"
+
+#include "RandomGen.h"
+
 #include "Debug.h"
 
 void LinkedHexGrid::SerialiseTo(json& jsonObj) const
@@ -27,20 +31,21 @@ void LinkedHexGrid::Initialise() noexcept
 
 	ifstream availablePrefabFile("Assets\\Prefabs\\AvailableHex.prefab");
 	availablePrefabFile >> HexTile::availablePrefab;
-	ifstream grassPrefabFile("Assets\\Prefabs\\GrassHex.prefab");
-	grassPrefabFile >> HexTile::grassPrefab;
+	ifstream grassPrefabFile("Assets\\Prefabs\\EucalyptusHex.prefab");
+	grassPrefabFile >> HexTile::eucalyptusPrefab;
 	ifstream waterPrefabFile("Assets\\Prefabs\\WaterHex.prefab");
 	waterPrefabFile >> HexTile::waterPrefab;
-	ifstream flowerPrefabFile("Assets\\Prefabs\\FlowerHex.prefab");
-	flowerPrefabFile >> HexTile::flowerPrefab;
+	ifstream flowerPrefabFile("Assets\\Prefabs\\FernHex.prefab");
+	flowerPrefabFile >> HexTile::fernPrefab;
 
+	ifstream frogHabitatPrefabFile("Assets\\Prefabs\\FrogHabitat.prefab");
+	frogHabitatPrefabFile >> Habitat::frogHabitatPrefab;
 
-
-	centre = (HexTile*)GameObject::InstantiateFrom(HexTile::grassPrefab, GuidGeneration::New);
+	centre = (HexTile*)GameObject::InstantiateFrom(HexTile::eucalyptusPrefab, GuidGeneration::New);
 	gameObjectManager->Add(centre);
 	centre->SetParent(this);
 	lookupTable.insert(HexPair(centre->GetHexPos(), centre));
-	centre->type = HexType::Grass;
+	centre->type = HexType::Eucalyptus;
 }
 
 void LinkedHexGrid::UpdateTile(glm::ivec2 position, HexType hexType) noexcept
@@ -71,12 +76,37 @@ void LinkedHexGrid::UpdateTile(HexTile* hexTile, HexType hexType) noexcept
 	switch (hexType)
 	{
 	case HexType::Available: hexTile->UpdateFrom(HexTile::availablePrefab, GuidGeneration::Keep); break;
-	case HexType::Grass:		 hexTile->UpdateFrom(HexTile::grassPrefab, GuidGeneration::Keep); break;
+	case HexType::Eucalyptus:		 hexTile->UpdateFrom(HexTile::eucalyptusPrefab, GuidGeneration::Keep); break;
 	case HexType::Water:		 hexTile->UpdateFrom(HexTile::waterPrefab, GuidGeneration::Keep); break;
-	case HexType::Flower:	 hexTile->UpdateFrom(HexTile::flowerPrefab, GuidGeneration::Keep); break;
+	case HexType::Fern:	 hexTile->UpdateFrom(HexTile::fernPrefab, GuidGeneration::Keep); break;
 	default: break;
 	}
 	hexTile->SetPosition(position);
+
+	hexTile->Rotate(glm::radians(Random::Int32(0, 5) * 60.0f), vec3(0, 1, 0));
+
+	for (int i = 0; i < 6; i++)
+	{
+		HexTile* neighbour1 = hexTile->adjacent[i];
+		HexTile* neighbour2 = hexTile->adjacent[i < 5 ? i + 1 : 0];
+
+		if (neighbour1->type == HexType::Available || neighbour1->habitat != nullptr) continue;
+		if (neighbour2->type == HexType::Available || neighbour2->habitat != nullptr) continue;
+
+		if (hexTile->type != neighbour1->type &&
+			hexTile->type != neighbour2->type &&
+			neighbour1->type != neighbour2->type &&
+			!Habitat::frogHabitatHasBeenPlaced)
+		{
+			Habitat* habitat = (Habitat*)GameObject::InstantiateFrom(Habitat::frogHabitatPrefab, GuidGeneration::New);
+			gameObjectManager->Add(habitat);
+			habitat->SetParent(this);
+			habitats.push_back(habitat);
+			habitat->FormHabitat(hexTile, neighbour1, neighbour2);
+			Habitat::frogHabitatHasBeenPlaced = true;
+			break;
+		}
+	}
 }
 
 void LinkedHexGrid::AddTile(glm::ivec2 originPosition, HexDir direction) noexcept

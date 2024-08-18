@@ -1,8 +1,9 @@
 #include "PostProcessing.h"
 #include "AppInfo.h"
 
-#include "Mesh.h"
 #include "Camera.h"
+
+#include "MeshManager.h"
 
 vector<PostProcess> PostProcessStack::postProcesses;
 
@@ -61,6 +62,12 @@ void PostProcessStack::RefreshForScreenSize() noexcept
 }
 
 // Default Post Processes
+Mesh* PostProcess::Defaults::screenQuad;
+void PostProcess::Defaults::Initialise()
+{
+	screenQuad = meshManager->GetMesh("ProceduralQuad");
+}
+
 void PostProcess::Defaults::RefreshBloom(
 	vector<ShaderProgram*>& programs,
 	vector<uint*>& framebuffers,
@@ -107,9 +114,6 @@ void PostProcess::Defaults::DrawBloom(
 	const uint& inputTexture = *textures[0];
 	uint* pingPongTextures[2] = { textures[1], textures[2] };
 
-	Mesh screenQuad;
-	screenQuad.InitialiseQuad();
-
 	glViewport(0, 0, AppInfo::screenWidth / downResFactor, AppInfo::screenHeight / downResFactor);
 
 	if (*pingPongFBOs[0] == 0)
@@ -133,7 +137,7 @@ void PostProcess::Defaults::DrawBloom(
 		glClearColor(0, 0, 0, 0);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		screenQuad.Draw();
+		screenQuad->Draw();
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -187,9 +191,6 @@ void PostProcess::Defaults::DrawHDRToLDR(
 	const uint& uiTexture = *textures[3];
 	uint& ldrTexture = *textures[4];
 
-	Mesh screenQuad;
-	screenQuad.InitialiseQuad();
-
 	glViewport(0, 0, AppInfo::screenWidth, AppInfo::screenHeight);
 
 	// If not intentionally targetting the back buffer initialise a new one
@@ -223,7 +224,7 @@ void PostProcess::Defaults::DrawHDRToLDR(
 	hdrToLDRProgram.BindUniform("Exposure", exposure);
 	hdrToLDRProgram.BindUniform("DisplayUI", (int)displayUI);
 
-	screenQuad.Draw();
+	screenQuad->Draw();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -269,9 +270,6 @@ void PostProcess::Defaults::DrawFXAA(
 	const uint& inputTexture = *textures[0];
 	uint& outputTexture = *textures[1];
 
-	Mesh screenQuad;
-	screenQuad.InitialiseQuad();
-
 	// If not intentionally targetting the back buffer initialise a new one
 	if (textures[1] != nullptr && fxaaFBO == 0)
 	{
@@ -287,7 +285,7 @@ void PostProcess::Defaults::DrawFXAA(
 
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	screenQuad.Draw();
+	screenQuad->Draw();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

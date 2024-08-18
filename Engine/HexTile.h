@@ -9,7 +9,7 @@
 class Habitat;
 
 enum class HexDir : unsigned char { NorthWest, North, NorthEast, SouthEast, South, SouthWest };
-enum class HexType { Available, Grass, Water, Flower };
+enum class HexType { Available, Eucalyptus, Water, Fern };
 
 class HexTile : public MeshRenderer
 {
@@ -36,7 +36,7 @@ public:
 	static HexDir OppositeDir(HexDir dir);
 
 	static json availablePrefab;
-	static json grassPrefab;
+	static json eucalyptusPrefab;
 	static json waterPrefab;
-	static json flowerPrefab;
+	static json fernPrefab;
 };
