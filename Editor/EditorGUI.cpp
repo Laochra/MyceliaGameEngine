@@ -9,6 +9,7 @@
 #include "ArtImporter.h"
 #include "EditorStyler.h"
 #include "PostProcessingGUI.h"
+#include "TileEditor.h"
 
 #include "MeshRendererGUI.h"
 #include "EditorCameraGUI.h"
@@ -86,6 +87,7 @@ namespace EditorGUI
 			EditorWindow("Camera", EditorCameraGUI::DrawEditorCameraGUI),
 			EditorWindow("Editor Styler", EditorStyler::Draw),
 			EditorWindow("Post Processing", PostProcessingGUI::Draw),
+			EditorWindow("Tile Editor", TileEditor::Draw),
 		};
 		map<string, uint> windowIndices;
 
@@ -258,6 +260,10 @@ namespace EditorGUI
 					if (ImGui::MenuItem(" Art Importer", (const char*)0, false, !GetWindow("Art Importer").open))
 					{
 						GetWindow("Art Importer").open = true;
+					}
+					if (ImGui::MenuItem(" Tile Editor", (const char*)0, false, !GetWindow("Tile Editor").open))
+					{
+						GetWindow("Tile Editor").open = true;
 					}
 					ImGui::EndMenu();
 				}

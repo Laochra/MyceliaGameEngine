@@ -111,6 +111,9 @@
     <ClCompile Include="HabitatGUI.cpp">
       <Filter>GUI\EditorWindows\GameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="TileEditor.cpp">
+      <Filter>GUI\EditorWindows\Tools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="JSON Configs">
@@ -277,6 +280,9 @@
     </ClInclude>
     <ClInclude Include="HabitatGUI.h">
       <Filter>GUI\EditorWindows\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="TileEditor.h">
+      <Filter>GUI\EditorWindows\Tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
