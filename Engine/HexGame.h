@@ -81,4 +81,8 @@ public:
 	// an output texture for the application to render.
 	// When in an editor context this will still run every frame.
 	void Draw();
+
+private:
+	void LoadTileData() noexcept;
+	void SaveTileData() noexcept;
 };

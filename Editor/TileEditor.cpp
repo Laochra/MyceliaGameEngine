@@ -1,57 +1,63 @@
 #include "TileEditor.h"
 
-uint TileEditor::selectionIndices[2] = { 0U, 0U };
-
-vector<vector<TileData>> TileEditor::variants = {
-	vector<TileData>(),
-	vector<TileData>(),
-	vector<TileData>(),
-	vector<TileData>()
-};
-
+vector<TileData>* TileEditor::selectedType = &HexTile::trees;
+uint TileEditor::selectedVariant;
 
 void TileEditor::Draw(const char* const name, bool& open) noexcept
 {
 	ImGui::Begin(name, &open);
 
 	ImGui::BeginTabBar("Types");
+	if (ImGui::BeginTabItem("Defaults"))
+	{
+		selectedType = nullptr;
+
+		GUI::Spacing(3);
+		DrawPrefabInput("Default", HexTile::defaultTilePath);
+		ImGui::TextWrapped("Left behind when moving a habitat");
+		GUI::Spacing(3);
+		DrawPrefabInput("Empty  ", HexTile::emptyTilePath);
+		ImGui::TextWrapped("Empty tile that can be placed on");
+
+		ImGui::EndTabItem();
+	}
 	if (ImGui::BeginTabItem("Tree"))
 	{
-		DrawType(Tree);
+		DrawType(HexTile::trees);
 		ImGui::EndTabItem();
-	};
+	}
 	if (ImGui::BeginTabItem("Flower"))
 	{
-		DrawType(Flower);
+		DrawType(HexTile::flowers);
 		ImGui::EndTabItem();
-	};
+	}
 	if (ImGui::BeginTabItem("Water"))
 	{
-		DrawType(Water);
+		DrawType(HexTile::waters);
 		ImGui::EndTabItem();
-	};
+	}
 	if (ImGui::BeginTabItem("Land"))
 	{
-		DrawType(Land);
+		DrawType(HexTile::lands);
 		ImGui::EndTabItem();
-	};
+	}
 	ImGui::EndTabBar();
 
-	if (selectionIndices[1] < variants[selectionIndices[0]].size())
+	if (selectedType != nullptr && selectedVariant < selectedType->size())
 	{
 		GUI::Spacing(3);
 		ImGui::Separator();
 		GUI::Spacing(3);
 
-		ImGui::InputText("Name", &SelectedTileData().name);
+		ImGui::InputText("Name", &(*selectedType)[selectedVariant].name);
 		ImGui::SameLine();
 		GUI::HSpacing(3);
 		ImGui::SameLine();
 		if (ImGui::Button("Delete"))
 		{
-			variants[selectionIndices[0]].erase(variants[selectionIndices[0]].begin() + selectionIndices[1]);
-			selectionIndices[1] = 0U;
-			if (variants[selectionIndices[0]].size() == 0)
+			selectedType->erase(selectedType->begin() + selectedVariant);
+			selectedVariant = 0U;
+			if (selectedType->size() == 0)
 			{
 				ImGui::End();
 				return;
@@ -61,34 +67,36 @@ void TileEditor::Draw(const char* const name, bool& open) noexcept
 		GUI::Spacing(3);
 
 		ImGui::Text("Tile Prefabs by Density");
-		DrawPrefabInput("Low  ", SelectedTileData().prefabFilepaths[0]);
-		DrawPrefabInput("Mid  ", SelectedTileData().prefabFilepaths[1]);
-		DrawPrefabInput("High ", SelectedTileData().prefabFilepaths[2]);
+		DrawPrefabInput("Low  ", (*selectedType)[selectedVariant].prefabFilepaths[0]);
+		DrawPrefabInput("Mid  ", (*selectedType)[selectedVariant].prefabFilepaths[1]);
+		DrawPrefabInput("High ", (*selectedType)[selectedVariant].prefabFilepaths[2]);
 	}
 
 	ImGui::End();
 }
 
-void TileEditor::DrawType(TileType type) noexcept
-{
-	vector<TileData>& variantsOfType = variants[type];
-	
+void TileEditor::DrawType(vector<TileData>& type) noexcept
+{	
+	if (&type != selectedType)
+	{
+		selectedType = &type;
+		selectedVariant = 0U;
+	}
+
 	if (ImGui::Button("Add"))
 	{
-		variantsOfType.push_back(TileData("New Variant"));
+		type.push_back(TileData("New Variant"));
 	}
 
-	for (uint i = 0; i < (uint)variantsOfType.size(); i++)
+	for (uint i = 0; i < (uint)type.size(); i++)
 	{
-		bool isSelected = type == selectionIndices[0] && i == selectionIndices[1];
+		bool isSelected = i == selectedVariant;
 
-		if (ImGui::Selectable((" " + variantsOfType[i].name + "##" + std::to_string(i)).c_str(), isSelected))
+		if (ImGui::Selectable((" " + type[i].name + "##" + std::to_string(i)).c_str(), isSelected))
 		{
-			selectionIndices[0] = type;
-			selectionIndices[1] = i;
+			selectedVariant = i;
 		}
 	}
-
 }
 
 void TileEditor::DrawPrefabInput(const char* const name, string& prefabFilepath)
@@ -102,9 +110,4 @@ void TileEditor::DrawPrefabInput(const char* const name, string& prefabFilepath)
 	{
 
 	}
-}
-
-TileData& TileEditor::SelectedTileData() noexcept
-{
-	return variants[selectionIndices[0]][selectionIndices[1]];
 }

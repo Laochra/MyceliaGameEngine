@@ -141,6 +141,10 @@ void HexGame::Initialise(uint* renderTargetInit)
 		)
 	);
 
+
+	LoadTileData();
+
+
 	hexGrid = GameObject::Instantiate<LinkedHexGrid>();
 
 	hexGrid->AddTile(vec3(0, 0, 0), HexDir::NorthWest);
@@ -158,6 +162,7 @@ void HexGame::Initialise(uint* renderTargetInit)
 }
 void HexGame::OnClose()
 {
+	SaveTileData();
 	del(radialMenu);
 }
 
@@ -255,4 +260,43 @@ void HexGame::Draw()
 	if (AppInfo::screenSizeJustChanged) { postProcessStack.RefreshForScreenSize(); }
 
 	postProcessStack.Draw();
+}
+
+void HexGame::LoadTileData() noexcept
+{
+	const char* const tileDataPath = "Assets\\Tiles\\TileData.json";
+	ifstream input(tileDataPath);
+	json tileData;
+
+	if (!input.good())
+	{
+		Debug::Log("TileData.json was not found and has been created.");
+		HexTile::SaveTileDataTo(tileData);
+		ofstream output(tileDataPath);
+		output << std::setw(2) << tileData;
+		return;
+	}
+
+	try { input >> tileData; }
+	catch (parse_error)
+	{
+		Debug::LogWarning("TileData.json was found to be corrupt, it has been recreated.");
+		HexTile::SaveTileDataTo(tileData);
+		ofstream output(tileDataPath);
+		output << std::setw(2) << tileData;
+		return;
+	}
+
+	HexTile::LoadTileDataFrom(tileData);
+}
+
+void HexGame::SaveTileData() noexcept
+{
+	const char* const tileDataPath = "Assets\\Tiles\\TileData.json";
+
+	json tileData;
+	HexTile::SaveTileDataTo(tileData);
+
+	ofstream output(tileDataPath);
+	output << std::setw(2) << tileData;
 }

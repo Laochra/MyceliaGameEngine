@@ -95,8 +95,10 @@ bool Editor::OnClose()
 	
 	if (AppInfo::state == AppState::Playing)
 	{
-		game->OnClose();
+		game->OnStop();
 	}
+
+	game->OnClose();
 	
 	del(AppInfo::editorCamera);
 	

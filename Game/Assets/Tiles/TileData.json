@@ -1,0 +1,35 @@
+{
+  "Defaults": {
+    "DefaultTile": "None",
+    "EmptyTile": "None"
+  },
+  "Flowers": [],
+  "Lands": [],
+  "Trees": [
+    {
+      "Name": "Eucalyptus",
+      "Prefabs": [
+        "None",
+        "None",
+        "None"
+      ]
+    },
+    {
+      "Name": "Acacia Blackwood",
+      "Prefabs": [
+        "None",
+        "None",
+        "None"
+      ]
+    },
+    {
+      "Name": "Fern",
+      "Prefabs": [
+        "None",
+        "None",
+        "None"
+      ]
+    }
+  ],
+  "Waters": []
+}

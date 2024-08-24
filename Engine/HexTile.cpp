@@ -32,6 +32,83 @@ const std::vector<glm::ivec2> HexTile::DirVec =
 	glm::ivec2( 0,	 2),
 	glm::ivec2(-1,	 1)
 };
+
+static void LoadVariantsOfType(vector<TileData>& type, vector<json> variantsJSON) noexcept
+{
+	for (const json& variantJSON : variantsJSON)
+	{
+		TileData variant(((string)variantJSON["Name"]).c_str());
+
+		vector<string> prefabFilepaths = variantJSON["Prefabs"];
+		variant.prefabFilepaths[0] = prefabFilepaths[0];
+		variant.prefabFilepaths[1] = prefabFilepaths[1];
+		variant.prefabFilepaths[2] = prefabFilepaths[2];
+
+		type.push_back(variant);
+	}
+}
+void HexTile::LoadTileDataFrom(json& tilesFile) noexcept
+{
+	if (!tilesFile.contains("Defaults"))
+	{
+		tilesFile["Defaults"]["DefaultTile"] = "None";
+		tilesFile["Defaults"]["EmptyTile"] = "None";
+	}
+	HexTile::defaultTilePath = tilesFile["Defaults"]["DefaultTile"];
+	HexTile::emptyTilePath = tilesFile["Defaults"]["EmptyTile"];
+
+	if (!tilesFile.contains("Trees")) tilesFile["Trees"] = vector<json>();
+	LoadVariantsOfType(HexTile::trees, tilesFile["Trees"]);
+
+	if (!tilesFile.contains("Flowers")) tilesFile["Flowers"] = vector<json>();
+	LoadVariantsOfType(HexTile::flowers, tilesFile["Flowers"]);
+
+	if (!tilesFile.contains("Waters")) tilesFile["Waters"] = vector<json>();
+	LoadVariantsOfType(HexTile::waters, tilesFile["Waters"]);
+
+	if (!tilesFile.contains("Lands")) tilesFile["Lands"] = vector<json>();
+	LoadVariantsOfType(HexTile::lands, tilesFile["Lands"]);
+}
+static void SaveVariantsOfType(json& tilesFile, const char* key, const vector<TileData>& type) noexcept
+{
+	vector<json> variantsJSON;
+	for (const TileData& variant : type)
+	{
+		json variantJSON;
+
+		variantJSON["Name"] = variant.name;
+
+		vector<string> prefabFilepaths =
+		{
+			variant.prefabFilepaths[0],
+			variant.prefabFilepaths[1],
+			variant.prefabFilepaths[2]
+		};
+		variantJSON["Prefabs"] = prefabFilepaths;
+
+		variantsJSON.push_back(variantJSON);
+	}
+
+	tilesFile[key] = variantsJSON;
+}
+void HexTile::SaveTileDataTo(json& tilesFile) noexcept
+{
+	tilesFile["Defaults"]["DefaultTile"] = HexTile::defaultTilePath;
+	tilesFile["Defaults"]["EmptyTile"] = HexTile::emptyTilePath;
+
+	SaveVariantsOfType(tilesFile, "Trees", HexTile::trees);
+	SaveVariantsOfType(tilesFile, "Flowers", HexTile::flowers);
+	SaveVariantsOfType(tilesFile, "Waters", HexTile::waters);
+	SaveVariantsOfType(tilesFile, "Lands", HexTile::lands);
+}
+
+string HexTile::emptyTilePath = "None";
+string HexTile::defaultTilePath = "None";
+vector<TileData> HexTile::trees;
+vector<TileData> HexTile::flowers;
+vector<TileData> HexTile::waters;
+vector<TileData> HexTile::lands;
+
 json HexTile::availablePrefab;
 json HexTile::eucalyptusPrefab;
 json HexTile::waterPrefab;
