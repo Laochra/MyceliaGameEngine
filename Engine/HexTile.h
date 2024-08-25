@@ -53,9 +53,12 @@ public:
 	static vector<TileData> waters;
 	static vector<TileData> lands;
 
-	// Temporary while getting tile data from file working
-	static json availablePrefab;
-	static json eucalyptusPrefab;
-	static json waterPrefab;
-	static json fernPrefab;
+	static json GetEmptyTilePrefab() noexcept;
+	static json GetDefaultTilePrefab() noexcept;
+	static json GetTilePrefab(string name, uint density) noexcept;
+
+private:
+	static void AddDefaultPrefab(string name, string path) noexcept;
+	static void AddTilePrefab(string name, uint density) noexcept;
+	static map<string, json> prefabs;
 };

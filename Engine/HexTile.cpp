@@ -102,17 +102,90 @@ void HexTile::SaveTileDataTo(json& tilesFile) noexcept
 	SaveVariantsOfType(tilesFile, "Lands", HexTile::lands);
 }
 
+json HexTile::GetEmptyTilePrefab() noexcept
+{
+	if (!prefabs.contains("Empty"))
+	{
+		AddDefaultPrefab("Empty", HexTile::emptyTilePath);
+	}
+	return prefabs["Empty"];
+}
+json HexTile::GetDefaultTilePrefab() noexcept
+{
+	if (!prefabs.contains("Default"))
+	{
+		AddDefaultPrefab("Default", HexTile::defaultTilePath);
+	}
+	return prefabs["Default"];
+}
+json HexTile::GetTilePrefab(string name, uint density) noexcept
+{
+	string key = StringBuilder(name, density).value;
+	if (!prefabs.contains(key))
+	{
+		AddTilePrefab(name, density);
+	}
+
+	return prefabs[key];
+}
+void HexTile::AddDefaultPrefab(string name, string path) noexcept
+{
+	json prefab;
+
+	ifstream prefabFile(path);
+	if (!prefabFile.good())
+	{
+		Debug::LogError(LogID::ERR101, " File not found! ", path);
+		assert(false && "Critical game asset wasn't found. Check log file for details.");
+	}
+	try { prefabFile >> prefab; }
+	catch (parse_error)
+	{
+		Debug::LogError(LogID::ERR101, " File was corrupt! ", path);
+		assert(false && "Critical game asset was corrupt. Check log file for details.");
+	}
+	
+	prefabs.insert(std::pair(name, prefab));
+}
+void HexTile::AddTilePrefab(string name, uint density) noexcept
+{
+	json prefab;
+	string key = StringBuilder(name, density).value;
+	
+	bool successfulLoad = true;
+	string path;
+	// Get path from the name and density, searching through each tile list
+
+	ifstream prefabFile(path);
+	if (!prefabFile.good())
+	{
+		Debug::LogWarning(LogID::WRN101, " It will instead use the default tile file. ", path);
+		successfulLoad = false;
+	}
+	else
+	{
+		try { prefabFile >> prefab; }
+		catch (parse_error)
+		{
+			Debug::LogWarning(LogID::WRN102, " It will instead use the default tile file. ", path);
+			successfulLoad = false;
+		}
+	}
+
+	if (!successfulLoad)
+	{
+		prefab = prefabs["Default"];
+	}
+
+	prefabs.insert(std::pair(key, prefab));
+}
+
 string HexTile::emptyTilePath = "None";
 string HexTile::defaultTilePath = "None";
 vector<TileData> HexTile::trees;
 vector<TileData> HexTile::flowers;
 vector<TileData> HexTile::waters;
 vector<TileData> HexTile::lands;
-
-json HexTile::availablePrefab;
-json HexTile::eucalyptusPrefab;
-json HexTile::waterPrefab;
-json HexTile::fernPrefab;
 
 void HexTile::Initialise()
 {
