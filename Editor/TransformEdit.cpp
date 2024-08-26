@@ -224,7 +224,7 @@ namespace TransformEdit
 
 	void DrawIDs() noexcept
 	{
-		if (AppInfo::state != AppState::Editor) return;
+		if (!AppInfo::CompareState(AppState::Editor)) return;
 
 		glLineWidth(10.0f);
 
@@ -352,7 +352,7 @@ namespace TransformEdit
 	}
 	void Draw() noexcept
 	{
-		if (AppInfo::state != AppState::Editor) return;
+		if (!AppInfo::CompareState(AppState::Editor)) return;
 
 		glLineWidth(5.0f);
 

@@ -9,7 +9,7 @@
 class Habitat;
 
 enum class HexDir : unsigned char { NorthWest, North, NorthEast, SouthEast, South, SouthWest };
-enum class HexType { Available, Eucalyptus, Water, Fern };
+enum class HexType { Empty, Tree, Flower, Water, Land };
 struct TileData
 {
 	string name = "New Variant";
@@ -29,7 +29,8 @@ public:
 	Habitat* habitat = nullptr;
 	HexTile* adjacent[6] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, };
 
-	HexType type = HexType::Available;
+	HexType type = HexType::Empty;
+	string variant = "Empty";
 
 	virtual void Initialise() override;
 	void DrawHexPos() noexcept;

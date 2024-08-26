@@ -8,6 +8,7 @@ class Editor : public Application
 {
 public:
 	using Application::Application;
+	virtual void OnStateChange(AppState newState) override;
 
 protected:
 	virtual void Initialise() override;
@@ -15,5 +16,4 @@ protected:
 	virtual void Update() override;
 	virtual void Draw() override;
 	virtual bool OnClose() override;
-		
 };

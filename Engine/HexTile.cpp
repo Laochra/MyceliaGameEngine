@@ -8,18 +8,21 @@ void HexTile::SerialiseTo(json& jsonObj) const
 	MeshRenderer::SerialiseTo(jsonObj);
 
 	jsonObj["HexType"] = (int)type;
+	jsonObj["HexVariant"] = variant;
 }
 void HexTile::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptions)
 {
 	MeshRenderer::DeserialiseFrom(jsonObj, guidOptions);
 
 	type = (HexType)(int)jsonObj["HexType"];
+	variant = jsonObj["HexVariant"];
 }
 void HexTile::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
 {
 	MeshRenderer::UpdateFrom(jsonObj, guidOptions);
 
 	type = (HexType)(int)jsonObj["HexType"];
+	variant = jsonObj["HexVariant"];
 }
 
 
@@ -135,13 +138,13 @@ void HexTile::AddDefaultPrefab(string name, string path) noexcept
 	ifstream prefabFile(path);
 	if (!prefabFile.good())
 	{
-		Debug::LogError(LogID::ERR101, " File not found! ", path);
+		Debug::LogError(LogID::ERR101, " File not found! ", path, locationinfo);
 		assert(false && "Critical game asset wasn't found. Check log file for details.");
 	}
 	try { prefabFile >> prefab; }
 	catch (parse_error)
 	{
-		Debug::LogError(LogID::ERR101, " File was corrupt! ", path);
+		Debug::LogError(LogID::ERR101, " File was corrupt! ", path, locationinfo);
 		assert(false && "Critical game asset was corrupt. Check log file for details.");
 	}
 	
@@ -152,27 +155,81 @@ void HexTile::AddTilePrefab(string name, uint density) noexcept
 	json prefab;
 	string key = StringBuilder(name, density).value;
 	
-	bool successfulLoad = true;
-	string path;
-	// Get path from the name and density, searching through each tile list
+	bool successfulSoFar = true;
 
-	ifstream prefabFile(path);
-	if (!prefabFile.good())
+	string path;
+	bool foundTile = false;
+	for (TileData tree : HexTile::trees)
 	{
-		Debug::LogWarning(LogID::WRN101, " It will instead use the default tile file. ", path);
-		successfulLoad = false;
-	}
-	else
-	{
-		try { prefabFile >> prefab; }
-		catch (parse_error)
+		if (name == tree.name)
 		{
-			Debug::LogWarning(LogID::WRN102, " It will instead use the default tile file. ", path);
-			successfulLoad = false;
+			path = tree.prefabFilepaths[density];
+			foundTile = true;
+			break;
+		}
+	}
+	if (!foundTile)
+	{
+		for (TileData flower : HexTile::flowers)
+		{
+			if (name == flower.name)
+			{
+				path = flower.prefabFilepaths[density];
+				foundTile = true;
+				break;
+			}
+		}
+		if (!foundTile)
+		{
+			for (TileData water : HexTile::waters)
+			{
+				if (name == water.name)
+				{
+					path = water.prefabFilepaths[density];
+					foundTile = true;
+					break;
+				}
+			}
+			if (!foundTile)
+			{
+				for (TileData land : HexTile::lands)
+				{
+					if (name == land.name)
+					{
+						path = land.prefabFilepaths[density];
+						foundTile = true;
+						break;
+					}
+				}
+				if (!foundTile)
+				{
+					Debug::LogWarning(LogID::WRN103, "No tile variant with the name ", name, " was found. It will instead use the default tile file.", locationinfo);
+					successfulSoFar = false;
+				}
+			}
 		}
 	}
 
-	if (!successfulLoad)
+	if (successfulSoFar)
+	{
+		ifstream prefabFile(path);
+		if (!prefabFile.good())
+		{
+			Debug::LogWarning(LogID::WRN101, name, " ", density, ". It will instead use the default tile file.", locationinfo);
+			successfulSoFar = false;
+		}
+		else
+		{
+			try { prefabFile >> prefab; }
+			catch (parse_error)
+			{
+				Debug::LogWarning(LogID::WRN102, name, " ", density, ". It will instead use the default tile file.", locationinfo);
+				successfulSoFar = false;
+			}
+		}
+	}
+
+	if (!successfulSoFar)
 	{
 		prefab = prefabs["Default"];
 	}
@@ -186,6 +243,7 @@ vector<TileData> HexTile::trees;
 vector<TileData> HexTile::flowers;
 vector<TileData> HexTile::waters;
 vector<TileData> HexTile::lands;
+std::map<string, json> HexTile::prefabs;
 
 void HexTile::Initialise()
 {

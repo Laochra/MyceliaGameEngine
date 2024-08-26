@@ -28,27 +28,9 @@ void LinkedHexGrid::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
 void LinkedHexGrid::Initialise() noexcept
 {
 	GameObject3D::Initialise();
-
-	ifstream availablePrefabFile("Assets\\Prefabs\\AvailableHex.prefab");
-	availablePrefabFile >> HexTile::availablePrefab;
-	ifstream grassPrefabFile("Assets\\Prefabs\\EucalyptusHex.prefab");
-	grassPrefabFile >> HexTile::eucalyptusPrefab;
-	ifstream waterPrefabFile("Assets\\Prefabs\\WaterHex.prefab");
-	waterPrefabFile >> HexTile::waterPrefab;
-	ifstream flowerPrefabFile("Assets\\Prefabs\\FernHex.prefab");
-	flowerPrefabFile >> HexTile::fernPrefab;
-
-	ifstream frogHabitatPrefabFile("Assets\\Prefabs\\FrogHabitat.prefab");
-	frogHabitatPrefabFile >> Habitat::frogHabitatPrefab;
-
-	centre = (HexTile*)GameObject::InstantiateFrom(HexTile::eucalyptusPrefab, GuidGeneration::New);
-	gameObjectManager->Add(centre);
-	centre->SetParent(this);
-	lookupTable.insert(HexPair(centre->GetHexPos(), centre));
-	centre->type = HexType::Eucalyptus;
 }
 
-void LinkedHexGrid::UpdateTile(glm::ivec2 position, HexType hexType) noexcept
+void LinkedHexGrid::UpdateTile(glm::ivec2 position, json tilePrefab) noexcept
 {
 	HexMap::iterator hexTileIt = lookupTable.find(position);
 	if (hexTileIt == lookupTable.end())
@@ -57,11 +39,11 @@ void LinkedHexGrid::UpdateTile(glm::ivec2 position, HexType hexType) noexcept
 		return;
 	}
 
-	UpdateTile(hexTileIt->second, hexType);
+	UpdateTile(hexTileIt->second, tilePrefab);
 }
-void LinkedHexGrid::UpdateTile(HexTile* hexTile, HexType hexType) noexcept
+void LinkedHexGrid::UpdateTile(HexTile* hexTile, json tilePrefab) noexcept
 {
-	if (hexTile->type == HexType::Available)
+	if (hexTile->type == HexType::Empty)
 	{
 		for (int i = 0; i < 6; i++)
 		{
@@ -73,14 +55,7 @@ void LinkedHexGrid::UpdateTile(HexTile* hexTile, HexType hexType) noexcept
 	}
 
 	vec3 position = hexTile->GetPosition();
-	switch (hexType)
-	{
-	case HexType::Available: hexTile->UpdateFrom(HexTile::availablePrefab, GuidGeneration::Keep); break;
-	case HexType::Eucalyptus:		 hexTile->UpdateFrom(HexTile::eucalyptusPrefab, GuidGeneration::Keep); break;
-	case HexType::Water:		 hexTile->UpdateFrom(HexTile::waterPrefab, GuidGeneration::Keep); break;
-	case HexType::Fern:	 hexTile->UpdateFrom(HexTile::fernPrefab, GuidGeneration::Keep); break;
-	default: break;
-	}
+	hexTile->UpdateFrom(tilePrefab, GuidGeneration::Keep);
 	hexTile->SetPosition(position);
 
 	hexTile->Rotate(glm::radians(Random::Int32(0, 5) * 60.0f), vec3(0, 1, 0));
@@ -90,8 +65,8 @@ void LinkedHexGrid::UpdateTile(HexTile* hexTile, HexType hexType) noexcept
 		HexTile* neighbour1 = hexTile->adjacent[i];
 		HexTile* neighbour2 = hexTile->adjacent[i < 5 ? i + 1 : 0];
 
-		if (neighbour1->type == HexType::Available || neighbour1->habitat != nullptr) continue;
-		if (neighbour2->type == HexType::Available || neighbour2->habitat != nullptr) continue;
+		if (neighbour1->type == HexType::Empty || neighbour1->habitat != nullptr) continue;
+		if (neighbour2->type == HexType::Empty || neighbour2->habitat != nullptr) continue;
 
 		if (hexTile->type != neighbour1->type &&
 			hexTile->type != neighbour2->type &&
@@ -107,6 +82,21 @@ void LinkedHexGrid::UpdateTile(HexTile* hexTile, HexType hexType) noexcept
 			break;
 		}
 	}
+}
+
+void LinkedHexGrid::AddCentre() noexcept
+{
+	centre = (HexTile*)GameObject::InstantiateFrom(HexTile::GetDefaultTilePrefab(), GuidGeneration::New);
+	gameObjectManager->Add(centre);
+	centre->SetParent(this);
+	lookupTable.insert(HexPair(centre->GetHexPos(), centre));
+
+	AddTile(vec3(0, 0, 0), HexDir::NorthWest);
+	AddTile(vec3(0, 0, 0), HexDir::North);
+	AddTile(vec3(0, 0, 0), HexDir::NorthEast);
+	AddTile(vec3(0, 0, 0), HexDir::SouthEast);
+	AddTile(vec3(0, 0, 0), HexDir::South);
+	AddTile(vec3(0, 0, 0), HexDir::SouthWest);
 }
 
 void LinkedHexGrid::AddTile(glm::ivec2 originPosition, HexDir direction) noexcept
@@ -129,7 +119,7 @@ void LinkedHexGrid::AddTile(HexTile* origin, HexDir direction) noexcept
 		return;
 	}
 
-	newTile = (HexTile*)GameObject::InstantiateFrom(HexTile::availablePrefab, GuidGeneration::New);
+	newTile = (HexTile*)GameObject::InstantiateFrom(HexTile::GetEmptyTilePrefab(), GuidGeneration::New);
 	gameObjectManager->Add(newTile);
 	newTile->SetParent(this);
 	newTile->SetPosition(HexTile::HexPosToRealPos(origin->GetHexPos() + HexTile::DirVec[(uint)direction]));

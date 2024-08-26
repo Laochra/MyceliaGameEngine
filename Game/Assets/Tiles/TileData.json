@@ -1,7 +1,7 @@
 {
   "Defaults": {
-    "DefaultTile": "None",
-    "EmptyTile": "None"
+    "DefaultTile": "Assets\\Tiles\\Lands\\Basic\\Grass.prefab",
+    "EmptyTile": "Assets\\Tiles\\Empty\\EmptyTile.prefab"
   },
   "Flowers": [],
   "Lands": [],

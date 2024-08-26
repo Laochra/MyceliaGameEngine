@@ -195,7 +195,7 @@ void MeshRenderer::Draw()
 	if (!emissionColourBound) sp.BindUniform("EmissionColour", vec3(1.0f, 1.0f, 1.0f));
 	if (!emissionIntensityBound) sp.BindUniform("EmissionIntensity", 0.0f);
 
-	if (AppInfo::state == AppState::Editor) sp.BindUniform("Selected", (int)selected);
+	if (AppInfo::CompareState(AppState::Editor)) sp.BindUniform("Selected", (int)selected);
 	else sp.BindUniform("Selected", (int)false);
 
 	mesh->Draw();

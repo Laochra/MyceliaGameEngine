@@ -3,6 +3,7 @@
   "Children": [],
   "GUID": 11888109926272918744,
   "HexType": 0,
+  "HexVariant": "None",
   "Material": "Assets\\Tiles\\Empty\\EmptyTile.mat",
   "Mesh": "ProceduralHexagon",
   "Name": "EmptyTile",

@@ -39,9 +39,10 @@ public:
 
 	virtual void Initialise() noexcept override;
 
-	void UpdateTile(glm::ivec2 position, HexType hexType) noexcept;
-	void UpdateTile(HexTile* hexTile, HexType hexType) noexcept;
+	void UpdateTile(glm::ivec2 position, json tilePrefab) noexcept;
+	void UpdateTile(HexTile* hexTile, json tilePrefab) noexcept;
 
+	void AddCentre() noexcept;
 	void AddTile(glm::ivec2 originPosition, HexDir direction) noexcept;
 	void AddTile(HexTile* origin, HexDir direction) noexcept;
 };

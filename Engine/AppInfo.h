@@ -4,6 +4,7 @@ class Input;
 class Debug;
 struct GLFWwindow;
 class Camera;
+class Application;
 
 enum class AppState
 {
@@ -15,8 +16,6 @@ enum class AppState
 class AppInfo
 {
 public:
-	static AppState		state;
-
 	static Input*			input;
 
 	static Debug*			debug;
@@ -30,4 +29,13 @@ public:
 	static Camera*			gameCamera;
 	static Camera*			editorCamera;
 	static Camera*			ActiveCamera();
+
+	static Application* application;
+
+	static AppState GetState() noexcept;
+	static bool CompareState(AppState stateToCheckFor) noexcept;
+	static void SetState(AppState newState) noexcept;
+
+private:
+	static AppState		state;
 };

@@ -11,7 +11,16 @@
 
 void static RadialInteractionHandler(uint selection)
 {
-	currentTileType = (HexType)(selection + 1);
+	switch (currentRadialPage)
+	{
+	default:														break;
+	case 1U: currentTileType = &HexTile::trees;		break;
+	case 2U: currentTileType = &HexTile::flowers;	break;
+	case 3U: currentTileType = &HexTile::waters;		break;
+	case 4U: currentTileType = &HexTile::lands;		break;
+	}
+
+	currentTileVariant = selection;
 }
 
 void static RefreshHexPositions(uint& hexPosFBO, uint& hexPosTexture, uint& hexPosDepth)
@@ -46,7 +55,7 @@ void static DrawHexPositions(LinkedHexGrid* hexGrid, uint& hexPosFBO, uint& hexP
 		RefreshHexPositions(hexPosFBO, hexPosTexture, hexPosDepth);
 	}
 
-	if (AppInfo::state == AppState::Playing)
+	if (AppInfo::CompareState(AppState::Playing))
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, hexPosFBO);
 
@@ -147,13 +156,6 @@ void HexGame::Initialise(uint* renderTargetInit)
 
 	hexGrid = GameObject::Instantiate<LinkedHexGrid>();
 
-	hexGrid->AddTile(vec3(0, 0, 0), HexDir::NorthWest);
-	hexGrid->AddTile(vec3(0, 0, 0), HexDir::North);
-	hexGrid->AddTile(vec3(0, 0, 0), HexDir::NorthEast);
-	hexGrid->AddTile(vec3(0, 0, 0), HexDir::SouthEast);
-	hexGrid->AddTile(vec3(0, 0, 0), HexDir::South);
-	hexGrid->AddTile(vec3(0, 0, 0), HexDir::SouthWest);
-
 	radialMenu = new RadialMenu();
 	radialMenu->interactionHandler = { (RadialMenu::InteractFunc)RadialInteractionHandler };
 
@@ -166,8 +168,19 @@ void HexGame::OnClose()
 	del(radialMenu);
 }
 
-void HexGame::OnStart() { }
-void HexGame::OnStop() { }
+void HexGame::OnStart()
+{
+	hexGrid->AddCentre();
+}
+void HexGame::OnStop()
+{
+	for (std::pair<glm::ivec2, HexTile*> hexPair : hexGrid->lookupTable)
+	{
+		GameObject::Destroy(hexPair.second);
+	}
+	hexGrid->lookupTable.clear();
+	hexGrid->centre = nullptr;
+}
 
 void HexGame::OnPause() { }
 void HexGame::OnUnpause() { }
@@ -189,7 +202,7 @@ void HexGame::Update()
 			glm::ivec4 hexPos = hexPosPixels[hexPosIndex];
 			if (hexPos.a != 0)
 			{
-				hexGrid->UpdateTile((glm::ivec2)hexPos, currentTileType);
+				hexGrid->UpdateTile((glm::ivec2)hexPos, HexTile::GetTilePrefab((*currentTileType)[currentTileVariant].name, 0));
 			}
 		}
 

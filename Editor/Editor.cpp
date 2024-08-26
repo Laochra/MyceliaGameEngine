@@ -16,6 +16,7 @@ void Editor::Initialise()
 	EditorGUI::Initialise();
 	glfwSetDropCallback(AppInfo::window, EditorGUI::FileDropCallback);
 
+
 	AppInfo::editorCamera = GameObject3D::Instantiate<EditorCamera>(vec3(-0.25f, 1.0f, 1.5f));
 	((EditorCamera*)AppInfo::editorCamera)->xRotation = -80;
 	((EditorCamera*)AppInfo::editorCamera)->yRotation = -20;
@@ -37,7 +38,7 @@ void Editor::FixedUpdate()
 {
 	Updater::CallFixedUpdate();
 
-	if (AppInfo::state == AppState::Playing)
+	if (AppInfo::CompareState(AppState::Playing))
 	{
 		game->FixedUpdate();
 	}
@@ -47,13 +48,13 @@ void Editor::Update()
 	EditorGUI::Draw();
 	Updater::CallUpdate();
 
-	if (AppInfo::state == AppState::Editor)
+	if (AppInfo::CompareState(AppState::Editor))
 	{
 		TransformEdit::Update();
 		vec3 cameraPos(AppInfo::ActiveCamera()->GetPosition());
 		AppInfo::debug->lines.AddGrid(vec3((int)cameraPos.x, 0, (int)cameraPos.z), 50);
 	}
-	if (AppInfo::state == AppState::Playing)
+	if (AppInfo::CompareState(AppState::Playing))
 	{
 		game->Update();
 	}
@@ -71,7 +72,7 @@ void Editor::Draw()
 	glFrontFace(GL_CCW);
 
 	// Generate GUID Texture
-	if (AppInfo::state == AppState::Editor)
+	if (AppInfo::CompareState(AppState::Editor))
 	{
 		GameObjectManager::DrawGUIDs(
 			EditorGUI::guidFBO,
@@ -82,7 +83,7 @@ void Editor::Draw()
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	
-	game->displayUI = EditorGUI::displayUI || AppInfo::state != AppState::Editor;
+	game->displayUI = EditorGUI::displayUI || !AppInfo::CompareState(AppState::Editor);
 
 	game->Draw();
 	
@@ -93,7 +94,7 @@ bool Editor::OnClose()
 {
 	if (!EditorGUI::CleanUp()) return false;
 	
-	if (AppInfo::state == AppState::Playing)
+	if (AppInfo::CompareState(AppState::Playing))
 	{
 		game->OnStop();
 	}
@@ -107,4 +108,34 @@ bool Editor::OnClose()
 	ImGui::DestroyContext();
 
 	return true;
+}
+
+void Editor::OnStateChange(AppState newState)
+{
+	switch (AppInfo::GetState())
+	{
+	case AppState::Editor:
+		switch (newState)
+		{
+		case AppState::Playing:	game->OnStart();		break;
+		default:													break;
+		}
+		break;
+	case AppState::Playing:
+		switch (newState)
+		{
+		case AppState::Editor:	game->OnStop();		break;
+		case AppState::Paused:	game->OnPause();		break;
+		default:													break;
+		}
+		break;
+	case AppState::Paused:
+		switch (newState)
+		{
+		case AppState::Editor:	game->OnStop();		break;
+		case AppState::Playing: game->OnUnpause();	break;
+		default:													break;
+		}
+		break;
+	}
 }

@@ -1,4 +1,5 @@
 #pragma once
+#include "AppInfo.h"
 
 #include "GLIncludes.h"
 
@@ -11,6 +12,7 @@ public:
 	Game* game = nullptr;
 
 	int Run();
+	virtual void OnStateChange(AppState newState);
 
 	Application(Game* const gameInit) noexcept { game = gameInit; }
 

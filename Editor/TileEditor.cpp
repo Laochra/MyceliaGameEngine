@@ -106,8 +106,14 @@ void TileEditor::DrawPrefabInput(const char* const name, string& prefabFilepath)
 	ImGui::EndDisabled();
 
 	ImGui::SameLine();
-	if (ImGui::Button("Load"))
+	if (ImGui::Button(StringBuilder("Load##", name).CStr()))
 	{
+		using namespace FileDialogue;
 
+		string path = GetLoadPath(PathDetails("Tile Prefab", "Assets\\", { "*.prefab" }), LimitToAssetFolder::True);
+		if (path.size() > 0)
+		{
+			prefabFilepath = path;
+		}
 	}
 }

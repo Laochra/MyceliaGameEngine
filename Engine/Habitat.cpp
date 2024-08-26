@@ -42,12 +42,12 @@ void Habitat::FormHabitat(HexTile* hex1, HexTile* hex2, HexTile* hex3) noexcept
 	}
 	if (pairsFound != 3U) return;
 
-	// If the habitat is being moved, set existing tiles to be basic land tiles
+	// If the habitat is being moved, set existing tiles to be the default tile
 	if (hexTiles[0] != nullptr)
 	{
 		for (HexTile* hexTile : hexTiles)
 		{
-			hexTile->UpdateFrom(HexTile::eucalyptusPrefab, GuidGeneration::Keep);
+			hexTile->UpdateFrom(HexTile::GetDefaultTilePrefab(), GuidGeneration::Keep);
 			hexTile->SetState(Active);
 			hexTile->habitat = nullptr;
 		}

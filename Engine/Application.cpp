@@ -39,7 +39,7 @@ int Application::Run()
 
 	if (AppInfo::ActiveCamera() == nullptr)
 	{
-		if (AppInfo::state == AppState::Editor)
+		if (AppInfo::CompareState(AppState::Editor))
 		{
 			Debug::LogWarning(LogID::WRN001, "A default was created to avoid crashing but the application will not behave as expected. ", locationinfo);
 			AppInfo::editorCamera = GameObject::Instantiate<Camera>();
@@ -58,6 +58,8 @@ int Application::Run()
 
 	return 0;
 }
+
+void Application::OnStateChange(AppState newState) { }
 
 
 
@@ -129,6 +131,8 @@ int Application::Setup()
 	textureManager = new TextureManager();
 	meshManager = new MeshManager();
 	gameObjectManager = new GameObjectManager();
+
+	AppInfo::application = this;
 
 	return 0;
 }

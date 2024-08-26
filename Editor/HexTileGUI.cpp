@@ -19,48 +19,6 @@ void HexTileGUI::DrawHexTileGUI(HexTile* hexTile)
 
 	if (ImGui::CollapsingHeader(id, ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		const char* hexTypeName;
-		switch (hexTile->type)
-		{
-		case HexType::Available:	hexTypeName = "Available";		break;
-		case HexType::Eucalyptus:	hexTypeName = "Eucalyptus";	break;
-		case HexType::Water:			hexTypeName = "Water";			break;
-		case HexType::Fern:			hexTypeName = "Fern";			break;
-		default:							hexTypeName = "Invalid";		break;
-		}
-		if (ImGui::BeginCombo("HexType", hexTypeName))
-		{
-			if (ImGui::Selectable("Available", hexTile->type == HexType::Available))
-			{
-				LinkedHexGrid* grid = dynamic_cast<LinkedHexGrid*>(hexTile->GetParent());
-
-				if (grid != nullptr) grid->UpdateTile(hexTile, HexType::Available);
-				else Debug::LogError("HexTiles should be children of a LinkedHexGrid", locationinfo);
-			}
-			if (ImGui::Selectable("Eucalyptus", hexTile->type == HexType::Eucalyptus))
-			{
-				LinkedHexGrid* grid = dynamic_cast<LinkedHexGrid*>(hexTile->GetParent());
-
-				if (grid != nullptr) grid->UpdateTile(hexTile, HexType::Eucalyptus);
-				else Debug::LogError("HexTiles should be children of a LinkedHexGrid", locationinfo);
-			}
-			if (ImGui::Selectable("Water", hexTile->type == HexType::Water))
-			{
-				LinkedHexGrid* grid = dynamic_cast<LinkedHexGrid*>(hexTile->GetParent());
-
-				if (grid != nullptr) grid->UpdateTile(hexTile, HexType::Water);
-				else Debug::LogError("HexTiles should be children of a LinkedHexGrid", locationinfo);
-			}
-			if (ImGui::Selectable("Fern", hexTile->type == HexType::Fern))
-			{
-				LinkedHexGrid* grid = dynamic_cast<LinkedHexGrid*>(hexTile->GetParent());
-
-				if (grid != nullptr) grid->UpdateTile(hexTile, HexType::Fern);
-				else Debug::LogError("HexTiles should be children of a LinkedHexGrid", locationinfo);
-			}
-			ImGui::EndCombo();
-		}
-
 		int adjacentHexes = 0;
 		for (int i = 0; i < 6; i++)
 		{

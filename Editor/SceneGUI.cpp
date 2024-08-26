@@ -105,22 +105,22 @@ namespace SceneGUI
 
 			GUI::Spacing(3);
 
-			ImGui::BeginDisabled(AppInfo::state == AppState::Playing);
+			ImGui::BeginDisabled(AppInfo::CompareState(AppState::Playing));
 			if (ImGui::Button("Play"))
 			{
-				AppInfo::state = AppState::Playing;
+				AppInfo::SetState(AppState::Playing);
 			}
 			ImGui::EndDisabled();
-			ImGui::BeginDisabled(AppInfo::state == AppState::Editor);
+			ImGui::BeginDisabled(AppInfo::CompareState(AppState::Editor));
 			if (ImGui::Button("Stop"))
 			{
-				AppInfo::state = AppState::Editor;
+				AppInfo::SetState(AppState::Editor);
 			}
 			ImGui::EndDisabled();
-			ImGui::BeginDisabled(AppInfo::state != AppState::Playing);
+			ImGui::BeginDisabled(!AppInfo::CompareState(AppState::Playing));
 			if (ImGui::Button("Pause"))
 			{
-				AppInfo::state = AppState::Paused;
+				AppInfo::SetState(AppState::Paused);
 			}
 			ImGui::EndDisabled();
 
@@ -176,7 +176,7 @@ namespace SceneGUI
 		normalisedMousePos = vec2(cursorPos.x / AppInfo::screenWidth, cursorPos.y / AppInfo::screenHeight);
 		normalisedMousePos = (normalisedMousePos * 2.0f) - 1.0f;
 
-		if (AppInfo::state == AppState::Editor)
+		if (AppInfo::CompareState(AppState::Editor))
 		{
 			if (ImGui::IsItemHovered())
 			{
@@ -249,7 +249,7 @@ namespace SceneGUI
 				AppInfo::input->enabled = false;
 			}
 		}
-		else if (AppInfo::state == AppState::Playing)
+		else if (AppInfo::CompareState(AppState::Playing))
 		{
 			if (ImGui::IsItemHovered())
 			{
@@ -325,7 +325,6 @@ namespace SceneGUI
 		}
 
 		inspector->SetTarget(nullptr);
-		Scene::Clear();
 		return true;
 	}
 	
@@ -344,6 +343,8 @@ namespace SceneGUI
 		if (scenePath.size() == 0) return false;
 
 		if (!EnsureClearIsIntentional()) return false;
+
+		Scene::Clear();
 
 		bool openSuccess = Scene::Open(scenePath.c_str());
 		return openSuccess;

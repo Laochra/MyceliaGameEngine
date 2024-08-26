@@ -10,7 +10,9 @@
 
 typedef unsigned int uint;
 
-inline HexType currentTileType = HexType::Eucalyptus;
+inline uint currentRadialPage = 0U;
+inline vector<TileData>* currentTileType = &HexTile::trees;
+inline uint currentTileVariant = 0U;
 
 class HexGame : public Game
 {

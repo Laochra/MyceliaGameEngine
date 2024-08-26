@@ -50,7 +50,7 @@ void EditorCamera::Update()
 	vec3 right(-sin(thetaR), 0, cos(thetaR));
 	vec3 up(0, 1, 0);
 
-	if (AppInfo::state == AppState::Editor && freeCamera)
+	if (AppInfo::CompareState(AppState::Editor) && freeCamera)
 	{
 		// Keyboard Movement
 		vec3 xzMovement = ((float)xInput * right) + ((float)zInput * forward);
