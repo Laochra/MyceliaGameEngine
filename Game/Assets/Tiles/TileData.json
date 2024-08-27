@@ -1,10 +1,60 @@
 {
   "Defaults": {
-    "DefaultTile": "Assets\\Tiles\\Lands\\Basic\\Grass.prefab",
-    "EmptyTile": "Assets\\Tiles\\Empty\\EmptyTile.prefab"
+    "DefaultTile": "Assets\\Tiles\\Lands\\Grass\\Grass.prefab",
+    "EmptyTile": "Assets\\Tiles\\Empty\\Empty.prefab"
   },
-  "Flowers": [],
-  "Lands": [],
+  "Flowers": [
+    {
+      "Name": "New Variant",
+      "Prefabs": [
+        "None",
+        "None",
+        "None"
+      ]
+    },
+    {
+      "Name": "New Variant",
+      "Prefabs": [
+        "None",
+        "None",
+        "None"
+      ]
+    },
+    {
+      "Name": "New Variant",
+      "Prefabs": [
+        "None",
+        "None",
+        "None"
+      ]
+    }
+  ],
+  "Lands": [
+    {
+      "Name": "New Variant",
+      "Prefabs": [
+        "None",
+        "None",
+        "None"
+      ]
+    },
+    {
+      "Name": "New Variant",
+      "Prefabs": [
+        "None",
+        "None",
+        "None"
+      ]
+    },
+    {
+      "Name": "New Variant",
+      "Prefabs": [
+        "None",
+        "None",
+        "None"
+      ]
+    }
+  ],
   "Trees": [
     {
       "Name": "Eucalyptus",
@@ -31,5 +81,30 @@
       ]
     }
   ],
-  "Waters": []
+  "Waters": [
+    {
+      "Name": "New Variant",
+      "Prefabs": [
+        "None",
+        "None",
+        "None"
+      ]
+    },
+    {
+      "Name": "New Variant",
+      "Prefabs": [
+        "None",
+        "None",
+        "None"
+      ]
+    },
+    {
+      "Name": "New Variant",
+      "Prefabs": [
+        "None",
+        "None",
+        "None"
+      ]
+    }
+  ]
 }

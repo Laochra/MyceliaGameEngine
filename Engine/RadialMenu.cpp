@@ -6,15 +6,15 @@
 #include "Camera.h"
 
 
-RadialMenu::RadialMenu() noexcept
+RadialMenu::RadialMenu(const char* activeSprite, const char* inactiveSprite, const char* disabledSprite) noexcept
 {
 	spriteMesh.InitialiseSpriteQuad();
 	program.LoadAndLinkFromJSON("Assets\\Shaders\\RadialMenu.gpu");
 
 	int x1, y1, channels1;
-	unsigned char* sprite1 = stbi_load("Assets\\Textures\\RadialMenuSprite.png", &x1, &y1, &channels1, STBI_default);
+	unsigned char* sprite1 = stbi_load(activeSprite, &x1, &y1, &channels1, STBI_default);
 	int x2, y2, channels2;
-	unsigned char* sprite2 = stbi_load("Assets\\Textures\\RadialMenuSpriteHovered.png", &x2, &y2, &channels2, STBI_default);
+	unsigned char* sprite2 = stbi_load(inactiveSprite, &x2, &y2, &channels2, STBI_default);
 
 	int glChannels;
 	switch (channels1)

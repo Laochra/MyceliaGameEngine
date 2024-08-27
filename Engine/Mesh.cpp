@@ -8,7 +8,7 @@
 
 Mesh::~Mesh()
 {
-	if (filepath != nullptr && strcmp(filepath, "None") != 0 && strcmp(filepath, "ProceduralQuad") != 0 && strcmp(filepath, "ProceduralHexagon") != 0 && strcmp(filepath, "ProceduralCone") != 0 != 0 && strcmp(filepath, "ProceduralCube") != 0 && strcmp(filepath, "SpriteQuad"))
+	if (filepath != nullptr && strcmp(filepath, "None") != 0 && strcmp(filepath, "Quad") != 0 && strcmp(filepath, "Hexagon") != 0 && strcmp(filepath, "Cone") != 0 != 0 && strcmp(filepath, "Cube") != 0 && strcmp(filepath, "SpriteQuad"))
 	{
 		delete filepath;
 	}
@@ -206,7 +206,7 @@ void Mesh::InitialiseQuad()
 	primitiveType = GL_TRIANGLES;
 
 	filepath = new char[15];
-	const char* newFilepath = "ProceduralQuad";
+	const char* newFilepath = "Quad";
 	for (int i = 0; i < 15; i++) { filepath[i] = newFilepath[i]; }
 
 	Vertex vertices[4]{};
@@ -239,7 +239,7 @@ void Mesh::InitialiseHexagon()
 	primitiveType = GL_TRIANGLES;
 
 	filepath = new char[18];
-	const char* newFilepath = "ProceduralHexagon";
+	const char* newFilepath = "Hexagon";
 	for (int i = 0; i < 18; i++) { filepath[i] = newFilepath[i]; }
 
 	Vertex vertices[7]{};
@@ -288,7 +288,7 @@ void Mesh::InitialiseCube()
 	primitiveType = GL_TRIANGLES;
 
 	filepath = new char[15];
-	const char* newFilepath = "ProceduralCube";
+	const char* newFilepath = "Cube";
 	for (int i = 0; i < 15; i++) { filepath[i] = newFilepath[i]; }
 
 	Vertex vertices[24]{};
@@ -395,7 +395,7 @@ void Mesh::InitialiseCone()
 {
 	primitiveType = GL_TRIANGLES;
 	filepath = new char[15];
-	const char* newFilepath = "ProceduralCone";
+	const char* newFilepath = "Cone";
 	for (int i = 0; i < 15; i++) { filepath[i] = newFilepath[i]; }
 
 	const int baseSides = 32;

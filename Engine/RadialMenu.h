@@ -20,7 +20,7 @@ public:
 	uint radialSlices = 3;
 	bool enabled = false;
 
-	RadialMenu() noexcept;
+	RadialMenu(const char* activeSprite, const char* inactiveSprite, const char* disabledSprite) noexcept;
 	~RadialMenu() noexcept;
 
 	void Update(vec2 input, Keybind interactKey) noexcept;

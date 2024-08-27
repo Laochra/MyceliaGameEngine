@@ -156,6 +156,7 @@ void HexTile::AddTilePrefab(string name, uint density) noexcept
 	string key = StringBuilder(name, density).value;
 	
 	bool successfulSoFar = true;
+	HexType typeFound;
 
 	string path;
 	bool foundTile = false;
@@ -165,6 +166,7 @@ void HexTile::AddTilePrefab(string name, uint density) noexcept
 		{
 			path = tree.prefabFilepaths[density];
 			foundTile = true;
+			typeFound = HexType::Tree;
 			break;
 		}
 	}
@@ -176,6 +178,7 @@ void HexTile::AddTilePrefab(string name, uint density) noexcept
 			{
 				path = flower.prefabFilepaths[density];
 				foundTile = true;
+				typeFound = HexType::Flower;
 				break;
 			}
 		}
@@ -187,6 +190,7 @@ void HexTile::AddTilePrefab(string name, uint density) noexcept
 				{
 					path = water.prefabFilepaths[density];
 					foundTile = true;
+					typeFound = HexType::Water;
 					break;
 				}
 			}
@@ -198,6 +202,7 @@ void HexTile::AddTilePrefab(string name, uint density) noexcept
 					{
 						path = land.prefabFilepaths[density];
 						foundTile = true;
+						typeFound = HexType::Land;
 						break;
 					}
 				}
@@ -229,7 +234,17 @@ void HexTile::AddTilePrefab(string name, uint density) noexcept
 		}
 	}
 
-	if (!successfulSoFar)
+	if (successfulSoFar)
+	{
+		if (prefab["HexType"] != typeFound || prefab["HexVariant"] != name)
+		{
+			prefab["HexType"] = typeFound;
+			prefab["HexVariant"] = name;
+			ofstream updatedFile(path);
+			updatedFile << prefab;
+		}
+	}
+	else
 	{
 		prefab = prefabs["Default"];
 	}
@@ -248,23 +263,7 @@ std::map<string, json> HexTile::prefabs;
 void HexTile::Initialise()
 {
 	MeshRenderer::Initialise();
-	SetMesh("ProceduralHexagon");
-}
-static void DrawHexPosRecursive(GameObject3D* gameObject, ShaderProgram* hexPosProgram, glm::ivec2 hexPos)
-{
-	MeshRenderer* meshRenderer = dynamic_cast<MeshRenderer*>(gameObject);
-	if (meshRenderer != nullptr && meshRenderer->GetMesh() != nullptr)
-	{
-		hexPosProgram->BindUniform("ProjectionViewModel", AppInfo::ActiveCamera()->GetPVMatrix() * meshRenderer->GetMatrix());
-		hexPosProgram->BindUniform("HexPos", hexPos);
-		meshRenderer->GetMesh()->Draw();
-	}
-
-	//const vector<GameObject3D*>* children = gameObject->GetChildren();
-	//for (vector<GameObject3D*>::const_iterator it = children->begin(); it < children->end(); it++)
-	//{
-	//	DrawHexPosRecursive(*it, hexPosProgram, hexPos);
-	//}
+	SetMesh("Hexagon");
 }
 void HexTile::DrawHexPos() noexcept
 {
@@ -273,7 +272,12 @@ void HexTile::DrawHexPos() noexcept
 	ShaderProgram* hexPosProgram = shaderManager->GetProgram("Assets\\Shaders\\DrawHexPos.gpu");
 	hexPosProgram->Bind();
 
-	DrawHexPosRecursive(this, hexPosProgram, GetHexPos());
+	if (GetMesh() != nullptr)
+	{
+		hexPosProgram->BindUniform("ProjectionViewModel", AppInfo::ActiveCamera()->GetPVMatrix() * GetMatrix());
+		hexPosProgram->BindUniform("HexPos", GetHexPos());
+		GetMesh()->Draw();
+	}
 }
 
 glm::ivec2 HexTile::GetHexPos() const noexcept

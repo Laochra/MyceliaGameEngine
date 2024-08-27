@@ -9,6 +9,8 @@
 
 #include "StringBuilder.h"
 
+#include "RandomGen.h"
+
 void static RadialInteractionHandler(uint selection)
 {
 	switch (currentRadialPage)
@@ -156,21 +158,26 @@ void HexGame::Initialise(uint* renderTargetInit)
 
 	hexGrid = GameObject::Instantiate<LinkedHexGrid>();
 
-	radialMenu = new RadialMenu();
-	radialMenu->interactionHandler = { (RadialMenu::InteractFunc)RadialInteractionHandler };
-
 	AppInfo::gameCamera->SetPosition(vec3(0, 4, 2));
 	AppInfo::gameCamera->LookAt(vec3(0, 0, 0));
 }
 void HexGame::OnClose()
 {
 	SaveTileData();
-	del(radialMenu);
 }
 
 void HexGame::OnStart()
 {
 	hexGrid->AddCentre();
+
+	treeRadial = new RadialMenu("Assets\\Textures\\RadialMenuSprite.png", "Assets\\Textures\\RadialMenuSpriteHovered.png", "Assets\\Textures\\RadialMenuSpriteHovered.png");
+	treeRadial->interactionHandler = { (RadialMenu::InteractFunc)RadialInteractionHandler };
+	flowerRadial = new RadialMenu("Assets\\Textures\\RadialMenuSprite.png", "Assets\\Textures\\RadialMenuSpriteHovered.png", "Assets\\Textures\\RadialMenuSpriteHovered.png");
+	flowerRadial->interactionHandler = { (RadialMenu::InteractFunc)RadialInteractionHandler };
+	waterRadial = new RadialMenu("Assets\\Textures\\RadialMenuSprite.png", "Assets\\Textures\\RadialMenuSpriteHovered.png", "Assets\\Textures\\RadialMenuSpriteHovered.png");
+	waterRadial->interactionHandler = { (RadialMenu::InteractFunc)RadialInteractionHandler };
+	landRadial = new RadialMenu("Assets\\Textures\\RadialMenuSprite.png", "Assets\\Textures\\RadialMenuSpriteHovered.png", "Assets\\Textures\\RadialMenuSpriteHovered.png");
+	landRadial->interactionHandler = { (RadialMenu::InteractFunc)RadialInteractionHandler };
 }
 void HexGame::OnStop()
 {
@@ -180,6 +187,11 @@ void HexGame::OnStop()
 	}
 	hexGrid->lookupTable.clear();
 	hexGrid->centre = nullptr;
+
+	del(treeRadial);
+	del(flowerRadial);
+	del(waterRadial);
+	del(landRadial);
 }
 
 void HexGame::OnPause() { }
@@ -193,24 +205,67 @@ void HexGame::Update()
 		AppInfo::input->screenCursorPos.x < AppInfo::screenWidth &&
 		AppInfo::input->screenCursorPos.y < AppInfo::screenHeight)
 	{
-		if (!radialMenu->enabled && AppInfo::input->GetKeyPressed(KeyCode::MouseLeft))
+		RadialMenu* currentRadialMenu;
+		switch (currentRadialPage)
 		{
-			const int pixelCount = AppInfo::screenWidth * AppInfo::screenHeight;
-			glm::ivec4* hexPosPixels = new glm::ivec4[pixelCount];
-			glGetTextureImage(handles.hexPosTexture, 0, GL_RGBA_INTEGER, GL_INT, pixelCount * sizeof(glm::ivec4), hexPosPixels);
-			uint hexPosIndex = (int)AppInfo::input->screenCursorPos.x + (int)AppInfo::input->screenCursorPos.y * AppInfo::screenWidth;
-			glm::ivec4 hexPos = hexPosPixels[hexPosIndex];
-			if (hexPos.a != 0)
+		default: currentRadialMenu = treeRadial;		break;
+		case 1U: currentRadialMenu = flowerRadial;	break;
+		case 2U: currentRadialMenu = waterRadial;		break;
+		case 3U: currentRadialMenu = landRadial;		break;
+		}
+		if (currentRadialMenu->enabled)
+		{
+			if (AppInfo::input->GetKeyPressed(KeyCode::Q))
 			{
-				hexGrid->UpdateTile((glm::ivec2)hexPos, HexTile::GetTilePrefab((*currentTileType)[currentTileVariant].name, 0));
+				currentRadialMenu->enabled = false;
+				currentRadialPage = std::max(0U, currentRadialPage - 1U);
+				switch (currentRadialPage)
+				{
+				default: currentRadialMenu = treeRadial;		break;
+				case 1U: currentRadialMenu = flowerRadial;	break;
+				case 2U: currentRadialMenu = waterRadial;		break;
+				case 3U: currentRadialMenu = landRadial;		break;
+				}
+				currentRadialMenu->enabled = true;
+			}
+			if (AppInfo::input->GetKeyPressed(KeyCode::E))
+			{
+				currentRadialMenu->enabled = false;
+				currentRadialPage = std::min(3U, currentRadialPage + 1U);
+				switch (currentRadialPage)
+				{
+				default: currentRadialMenu = treeRadial;		break;
+				case 1U: currentRadialMenu = flowerRadial;	break;
+				case 2U: currentRadialMenu = waterRadial;		break;
+				case 3U: currentRadialMenu = landRadial;		break;
+				}
+				currentRadialMenu->enabled = true;
+			}
+		}
+		else
+		{
+			if (AppInfo::input->GetKeyPressed(KeyCode::MouseLeft))
+			{
+				const int pixelCount = AppInfo::screenWidth * AppInfo::screenHeight;
+				glm::ivec4* hexPosPixels = new glm::ivec4[pixelCount];
+				glGetTextureImage(handles.hexPosTexture, 0, GL_RGBA_INTEGER, GL_INT, pixelCount * sizeof(glm::ivec4), hexPosPixels);
+				uint hexPosIndex = (int)AppInfo::input->screenCursorPos.x + (int)AppInfo::input->screenCursorPos.y * AppInfo::screenWidth;
+				glm::ivec4 hexPos = hexPosPixels[hexPosIndex];
+				if (hexPos.a != 0)
+				{
+					hexGrid->UpdateTile((glm::ivec2)hexPos, HexTile::GetTilePrefab((*currentTileType)[currentTileVariant].name, 0));
+				}
+			}
+
+			if (AppInfo::input->GetKeyPressed(KeyCode::Space))
+			{
+				currentRadialMenu->enabled = true;
 			}
 		}
 
-		if (AppInfo::input->GetKeyPressed(KeyCode::Space)) radialMenu->enabled = true;
-
 		vec2 cursorNormalised = AppInfo::input->screenCursorPos / vec2(AppInfo::screenWidth, AppInfo::screenHeight) * 2.0f - 1.0f;
 		float aspect = 1.0f / (AppInfo::screenHeight == 0 ? 0.0f : (AppInfo::screenWidth / (float)AppInfo::screenHeight));
-		radialMenu->Update(vec2(cursorNormalised.x / aspect, cursorNormalised.y), Keybind(KeyCode::MouseLeft));
+		currentRadialMenu->Update(vec2(cursorNormalised.x / aspect, cursorNormalised.y), Keybind(KeyCode::MouseLeft));
 	}
 
 	KeyAxis xMovement(KeyCode::A, KeyCode::D);
@@ -258,8 +313,17 @@ void HexGame::Draw()
 	// UI Drawing
 	if (displayUI)
 	{
+		RadialMenu* currentRadialMenu;
+		switch (currentRadialPage)
+		{
+		default: currentRadialMenu = treeRadial;	break;
+		case 1U: currentRadialMenu = flowerRadial;	break;
+		case 2U: currentRadialMenu = waterRadial;	break;
+		case 3U: currentRadialMenu = landRadial;	break;
+		}
+
 		DrawUI(
-			radialMenu,
+			currentRadialMenu,
 			handles.uiFBO,
 			handles.uiTexture,
 			handles.uiDepth);

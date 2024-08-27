@@ -7,69 +7,87 @@ void TileEditor::Draw(const char* const name, bool& open) noexcept
 {
 	ImGui::Begin(name, &open);
 
-	ImGui::BeginTabBar("Types");
-	if (ImGui::BeginTabItem("Defaults"))
+	if (ImGui::CollapsingHeader("Radial Sprites"))
 	{
-		selectedType = nullptr;
+		if (ImGui::CollapsingHeader("Tree"))
+		{
+			//DrawSpriteInput("Regular", );
+			//DrawSpriteInput("Hovered", );
+			//DrawSpriteInput("Locked", );
+		}
+	}
 
+	if (ImGui::CollapsingHeader("Defaults"))
+	{
 		GUI::Spacing(3);
+
 		DrawPrefabInput("Default", HexTile::defaultTilePath);
 		ImGui::TextWrapped("Left behind when moving a habitat");
 		GUI::Spacing(3);
 		DrawPrefabInput("Empty  ", HexTile::emptyTilePath);
 		ImGui::TextWrapped("Empty tile that can be placed on");
 
-		ImGui::EndTabItem();
+		GUI::Spacing(3);
 	}
-	if (ImGui::BeginTabItem("Tree"))
-	{
-		DrawType(HexTile::trees);
-		ImGui::EndTabItem();
-	}
-	if (ImGui::BeginTabItem("Flower"))
-	{
-		DrawType(HexTile::flowers);
-		ImGui::EndTabItem();
-	}
-	if (ImGui::BeginTabItem("Water"))
-	{
-		DrawType(HexTile::waters);
-		ImGui::EndTabItem();
-	}
-	if (ImGui::BeginTabItem("Land"))
-	{
-		DrawType(HexTile::lands);
-		ImGui::EndTabItem();
-	}
-	ImGui::EndTabBar();
 
-	if (selectedType != nullptr && selectedVariant < selectedType->size())
+	GUI::Spacing(3);
+
+	if (ImGui::CollapsingHeader("Tile Variants"))
 	{
 		GUI::Spacing(3);
-		ImGui::Separator();
-		GUI::Spacing(3);
 
-		ImGui::InputText("Name", &(*selectedType)[selectedVariant].name);
-		ImGui::SameLine();
-		GUI::HSpacing(3);
-		ImGui::SameLine();
-		if (ImGui::Button("Delete"))
+		ImGui::BeginTabBar("Types");
+		if (ImGui::BeginTabItem("Tree"))
 		{
-			selectedType->erase(selectedType->begin() + selectedVariant);
-			selectedVariant = 0U;
-			if (selectedType->size() == 0)
-			{
-				ImGui::End();
-				return;
-			}
+			DrawType(HexTile::trees);
+			ImGui::EndTabItem();
 		}
+		if (ImGui::BeginTabItem("Flower"))
+		{
+			DrawType(HexTile::flowers);
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("Water"))
+		{
+			DrawType(HexTile::waters);
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("Land"))
+		{
+			DrawType(HexTile::lands);
+			ImGui::EndTabItem();
+		}
+		ImGui::EndTabBar();
 
 		GUI::Spacing(3);
 
-		ImGui::Text("Tile Prefabs by Density");
-		DrawPrefabInput("Low  ", (*selectedType)[selectedVariant].prefabFilepaths[0]);
-		DrawPrefabInput("Mid  ", (*selectedType)[selectedVariant].prefabFilepaths[1]);
-		DrawPrefabInput("High ", (*selectedType)[selectedVariant].prefabFilepaths[2]);
+		if (selectedType != nullptr && selectedVariant < selectedType->size())
+		{
+			GUI::Spacing(3);
+			ImGui::SeparatorText("Selected Variant");
+
+			ImGui::InputText("Name", &(*selectedType)[selectedVariant].name);
+			ImGui::SameLine();
+			GUI::HSpacing(3);
+			ImGui::SameLine();
+			if (ImGui::Button("Delete"))
+			{
+				selectedType->erase(selectedType->begin() + selectedVariant);
+				selectedVariant = 0U;
+				if (selectedType->size() == 0)
+				{
+					ImGui::End();
+					return;
+				}
+			}
+
+			GUI::Spacing(3);
+
+			ImGui::Text("Tile Prefabs by Density");
+			DrawPrefabInput("Low  ", (*selectedType)[selectedVariant].prefabFilepaths[0]);
+			DrawPrefabInput("Mid  ", (*selectedType)[selectedVariant].prefabFilepaths[1]);
+			DrawPrefabInput("High ", (*selectedType)[selectedVariant].prefabFilepaths[2]);
+		}
 	}
 
 	ImGui::End();
@@ -114,6 +132,25 @@ void TileEditor::DrawPrefabInput(const char* const name, string& prefabFilepath)
 		if (path.size() > 0)
 		{
 			prefabFilepath = path;
+		}
+	}
+}
+
+void TileEditor::DrawSpriteInput(const char* const name, string& spriteFilepath)
+{
+	ImGui::BeginDisabled();
+	ImGui::InputText(name, &spriteFilepath, ImGuiInputTextFlags_ReadOnly);
+	ImGui::EndDisabled();
+
+	ImGui::SameLine();
+	if (ImGui::Button(StringBuilder("Load##", name).CStr()))
+	{
+		using namespace FileDialogue;
+
+		string path = GetLoadPath(PathDetails("Radial Sprite", "Assets\\", { "*.png", "*.tga", "*.jpg" }), LimitToAssetFolder::True);
+		if (path.size() > 0)
+		{
+			spriteFilepath = path;
 		}
 	}
 }

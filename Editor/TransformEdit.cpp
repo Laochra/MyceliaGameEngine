@@ -233,7 +233,7 @@ namespace TransformEdit
 		GameObject3D* target = dynamic_cast<GameObject3D*>(inspector->GetTarget());
 		if (target == nullptr) return;
 
-		if (coneMesh == nullptr) coneMesh = meshManager->GetMesh("ProceduralCone");
+		if (coneMesh == nullptr) coneMesh = meshManager->GetMesh("Cone");
 		if (ringMesh == nullptr)
 		{
 			ringMesh = new Mesh;
@@ -359,8 +359,8 @@ namespace TransformEdit
 		GameObject3D* target = dynamic_cast<GameObject3D*>(inspector->GetTarget());
 		if (target == nullptr) return;
 
-		if (coneMesh == nullptr) coneMesh = meshManager->GetMesh("ProceduralCone");
-		if (cubeMesh == nullptr) cubeMesh = meshManager->GetMesh("ProceduralCube");
+		if (coneMesh == nullptr) coneMesh = meshManager->GetMesh("Cone");
+		if (cubeMesh == nullptr) cubeMesh = meshManager->GetMesh("Cube");
 		if (ringMesh == nullptr)
 		{
 			ringMesh = new Mesh;

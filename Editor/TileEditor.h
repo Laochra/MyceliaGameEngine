@@ -24,4 +24,5 @@ public:
 private:
 	static void DrawType(vector<TileData>& type) noexcept;
 	static void DrawPrefabInput(const char* const name, string& prefabFilepath);
+	static void DrawSpriteInput(const char* const name, string& spriteFilepath);
 };

@@ -7,6 +7,7 @@
 #include "MeshRenderer.h"
 #include "LightObject.h"
 #include "ParticleEmitter.h"
+#include "HexTile.h"
 
 #include "Inspector.h"
 
@@ -168,6 +169,31 @@ namespace Heirarchy
 					file << std::setw(2) << prefab;
 				}
 				
+				rightClickMenu.Close();
+			}
+			if (ImGui::MenuItem("Save As HexTile"))
+			{
+				using namespace FileDialogue;
+				string defaultPath = StringBuilder(
+					"Assets\\Tiles\\",
+					rightClickMenu.target->GetName()
+				).value;
+
+				string filepath = GetSavePath(PathDetails("Save As HexTile", defaultPath.c_str(), { "*.prefab" }), LimitToAssetFolder::False);
+
+				if (filepath.size() != 0)
+				{
+					json prefab = rightClickMenu.target;
+					prefab["TypeID"] = HexTile::classID;
+					prefab["HexType"] = HexType::Tree;
+					prefab["HexVariant"] = rightClickMenu.target->GetName();
+					if (!prefab.contains("Mesh")) prefab["Mesh"] = "None";
+					if (!prefab.contains("Material")) prefab["Material"] = "Default";
+
+					ofstream file(filepath);
+					file << std::setw(2) << prefab;
+				}
+
 				rightClickMenu.Close();
 			}
 			if (ImGui::MenuItem("Delete"))

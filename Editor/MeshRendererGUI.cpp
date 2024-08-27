@@ -32,14 +32,18 @@ void MeshRendererGUI::DrawMeshRendererGUI(MeshRenderer* meshRenderer)
 				meshRenderer->SetMesh("None");
 			}
 
-			for (int i = 0; i < meshManager->defaultMeshes.size(); i++)
+			if (ImGui::BeginMenu("Primitives"))
 			{
-				bool isCurrent = meshManager->defaultMeshes[i] == meshFilepath;
-				if (ImGui::Selectable(meshManager->defaultMeshes[i].c_str(), isCurrent))
+				for (int i = 0; i < meshManager->defaultMeshes.size(); i++)
 				{
-					meshRenderer->SetMesh(meshManager->defaultMeshes[i].c_str());
+					bool isCurrent = meshManager->defaultMeshes[i] == meshFilepath;
+					if (ImGui::Selectable(meshManager->defaultMeshes[i].c_str(), isCurrent))
+					{
+						meshRenderer->SetMesh(meshManager->defaultMeshes[i].c_str());
+					}
+					if (isCurrent) ImGui::SetItemDefaultFocus();
 				}
-				if (isCurrent) ImGui::SetItemDefaultFocus();
+				ImGui::EndMenu();
 			}
 
 			if (ImGui::Selectable("Load From File"))

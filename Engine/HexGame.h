@@ -18,7 +18,10 @@ class HexGame : public Game
 {
 public:
 	LinkedHexGrid* hexGrid;
-	RadialMenu* radialMenu;
+	RadialMenu* treeRadial;
+	RadialMenu* flowerRadial;
+	RadialMenu* waterRadial;
+	RadialMenu* landRadial;
 
 	struct RenderHandles
 	{

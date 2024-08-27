@@ -60,6 +60,8 @@ void LinkedHexGrid::UpdateTile(HexTile* hexTile, json tilePrefab) noexcept
 
 	hexTile->Rotate(glm::radians(Random::Int32(0, 5) * 60.0f), vec3(0, 1, 0));
 
+	hexTile->SetName(StringBuilder(hexTile->variant).CStr());
+
 	for (int i = 0; i < 6; i++)
 	{
 		HexTile* neighbour1 = hexTile->adjacent[i];
@@ -90,6 +92,8 @@ void LinkedHexGrid::AddCentre() noexcept
 	gameObjectManager->Add(centre);
 	centre->SetParent(this);
 	lookupTable.insert(HexPair(centre->GetHexPos(), centre));
+
+	centre->SetName(StringBuilder(centre->variant).CStr());
 
 	AddTile(vec3(0, 0, 0), HexDir::NorthWest);
 	AddTile(vec3(0, 0, 0), HexDir::North);

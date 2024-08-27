@@ -65,7 +65,7 @@ void PostProcessStack::RefreshForScreenSize() noexcept
 Mesh* PostProcess::Defaults::screenQuad;
 void PostProcess::Defaults::Initialise()
 {
-	screenQuad = meshManager->GetMesh("ProceduralQuad");
+	screenQuad = meshManager->GetMesh("Quad");
 }
 
 void PostProcess::Defaults::RefreshBloom(

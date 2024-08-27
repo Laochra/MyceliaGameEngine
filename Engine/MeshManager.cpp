@@ -8,25 +8,26 @@ MeshManager* meshManager = nullptr;
 
 MeshManager::MeshManager()
 {
-   Mesh* proceduralQuad = new Mesh();
-   proceduralQuad->InitialiseQuad();
-   loadedMeshes.insert(std::pair(string("ProceduralQuad"), proceduralQuad));
+   Mesh* quad = new Mesh();
+   quad->InitialiseQuad();
+   loadedMeshes.insert(std::pair(string("Quad"), quad));
 
-   Mesh* proceduralHexagon = new Mesh();
-   proceduralHexagon->InitialiseHexagon();
-   loadedMeshes.insert(std::pair(string("ProceduralHexagon"), proceduralHexagon));
+   Mesh* hexagon = new Mesh();
+   hexagon->InitialiseHexagon();
+   loadedMeshes.insert(std::pair(string("Hexagon"), hexagon));
 
-   Mesh* proceduralCube = new Mesh();
-   proceduralCube->InitialiseCube();
-   loadedMeshes.insert(std::pair(string("ProceduralCube"), proceduralCube));
+   Mesh* cube = new Mesh();
+   cube->InitialiseCube();
+   loadedMeshes.insert(std::pair(string("Cube"), cube));
 
-   Mesh* proceduralCone = new Mesh();
-   proceduralCone->InitialiseCone();
-   loadedMeshes.insert(std::pair(string("ProceduralCone"), proceduralCone));
+   Mesh* cone = new Mesh();
+   cone->InitialiseCone();
+   loadedMeshes.insert(std::pair(string("Cone"), cone));
 
-   defaultMeshes.push_back("ProceduralQuad");
-   defaultMeshes.push_back("ProceduralCube");
-   defaultMeshes.push_back("ProceduralCone");
+   defaultMeshes.push_back("Quad");
+   defaultMeshes.push_back("Hexagon");
+   defaultMeshes.push_back("Cube");
+   defaultMeshes.push_back("Cone");
 }
 
 MeshManager::~MeshManager()
