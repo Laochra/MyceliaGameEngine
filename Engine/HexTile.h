@@ -54,6 +54,11 @@ public:
 	static vector<TileData> waters;
 	static vector<TileData> lands;
 
+	static string treeRadialSprites[3];
+	static string flowerRadialSprites[3];
+	static string waterRadialSprites[3];
+	static string landRadialSprites[3];
+
 	static json GetEmptyTilePrefab() noexcept;
 	static json GetDefaultTilePrefab() noexcept;
 	static json GetTilePrefab(string name, uint density) noexcept;

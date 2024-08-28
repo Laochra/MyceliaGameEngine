@@ -5,11 +5,16 @@
 
 #include "Camera.h"
 
+#include "Debug.h"
 
 RadialMenu::RadialMenu(const char* activeSprite, const char* inactiveSprite, const char* disabledSprite) noexcept
 {
 	spriteMesh.InitialiseSpriteQuad();
 	program.LoadAndLinkFromJSON("Assets\\Shaders\\RadialMenu.gpu");
+
+	if (activeSprite == string("None")) { Debug::LogError("Sprite 1 was not provided for radial menu.", locationinfo); }
+	if (inactiveSprite == string("None")) { Debug::LogError("Sprite 2 was not provided for radial menu.", locationinfo); }
+	if (disabledSprite == string("None")) { Debug::LogError("Sprite 3 was not provided for radial menu.", locationinfo); }
 
 	int x1, y1, channels1;
 	unsigned char* sprite1 = stbi_load(activeSprite, &x1, &y1, &channels1, STBI_default);

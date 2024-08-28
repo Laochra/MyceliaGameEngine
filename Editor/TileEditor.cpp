@@ -9,13 +9,39 @@ void TileEditor::Draw(const char* const name, bool& open) noexcept
 
 	if (ImGui::CollapsingHeader("Radial Sprites"))
 	{
+		ImGui::Indent();
 		if (ImGui::CollapsingHeader("Tree"))
 		{
-			//DrawSpriteInput("Regular", );
-			//DrawSpriteInput("Hovered", );
-			//DrawSpriteInput("Locked", );
+			DrawSpriteInput("Regular", HexTile::treeRadialSprites[0]);
+			DrawSpriteInput("Hovered", HexTile::treeRadialSprites[1]);
+			DrawSpriteInput("Locked ", HexTile::treeRadialSprites[2]);
+			GUI::Spacing(3);
 		}
+		if (ImGui::CollapsingHeader("Flower"))
+		{
+			DrawSpriteInput("Regular", HexTile::flowerRadialSprites[0]);
+			DrawSpriteInput("Hovered", HexTile::flowerRadialSprites[1]);
+			DrawSpriteInput("Locked ", HexTile::flowerRadialSprites[2]);
+			GUI::Spacing(3);
+		}
+		if (ImGui::CollapsingHeader("Water"))
+		{
+			DrawSpriteInput("Regular", HexTile::waterRadialSprites[0]);
+			DrawSpriteInput("Hovered", HexTile::waterRadialSprites[1]);
+			DrawSpriteInput("Locked ", HexTile::waterRadialSprites[2]);
+			GUI::Spacing(3);
+		}
+		if (ImGui::CollapsingHeader("Land"))
+		{
+			DrawSpriteInput("Regular", HexTile::landRadialSprites[0]);
+			DrawSpriteInput("Hovered", HexTile::landRadialSprites[1]);
+			DrawSpriteInput("Locked ", HexTile::landRadialSprites[2]);
+			GUI::Spacing(3);
+		}
+		ImGui::Unindent();
 	}
+
+	GUI::Spacing(3);
 
 	if (ImGui::CollapsingHeader("Defaults"))
 	{

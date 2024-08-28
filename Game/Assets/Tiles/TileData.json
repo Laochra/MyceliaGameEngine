@@ -55,6 +55,28 @@
       ]
     }
   ],
+  "RadialSprites": {
+    "Flower": {
+      "Hovered": "None",
+      "Locked": "None",
+      "Regular": "None"
+    },
+    "Land": {
+      "Hovered": "None",
+      "Locked": "None",
+      "Regular": "None"
+    },
+    "Trees": {
+      "Hovered": "None",
+      "Locked": "None",
+      "Regular": "None"
+    },
+    "Water": {
+      "Hovered": "None",
+      "Locked": "None",
+      "Regular": "None"
+    }
+  },
   "Trees": [
     {
       "Name": "Eucalyptus",

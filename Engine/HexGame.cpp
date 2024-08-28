@@ -170,13 +170,13 @@ void HexGame::OnStart()
 {
 	hexGrid->AddCentre();
 
-	treeRadial = new RadialMenu("Assets\\Textures\\RadialMenuSprite.png", "Assets\\Textures\\RadialMenuSpriteHovered.png", "Assets\\Textures\\RadialMenuSpriteHovered.png");
+	treeRadial = new RadialMenu(HexTile::treeRadialSprites[1].c_str(), HexTile::treeRadialSprites[0].c_str(), HexTile::treeRadialSprites[2].c_str());
 	treeRadial->interactionHandler = { (RadialMenu::InteractFunc)RadialInteractionHandler };
-	flowerRadial = new RadialMenu("Assets\\Textures\\RadialMenuSprite.png", "Assets\\Textures\\RadialMenuSpriteHovered.png", "Assets\\Textures\\RadialMenuSpriteHovered.png");
+	flowerRadial = new RadialMenu(HexTile::flowerRadialSprites[1].c_str(), HexTile::flowerRadialSprites[0].c_str(), HexTile::flowerRadialSprites[2].c_str());
 	flowerRadial->interactionHandler = { (RadialMenu::InteractFunc)RadialInteractionHandler };
-	waterRadial = new RadialMenu("Assets\\Textures\\RadialMenuSprite.png", "Assets\\Textures\\RadialMenuSpriteHovered.png", "Assets\\Textures\\RadialMenuSpriteHovered.png");
+	waterRadial = new RadialMenu(HexTile::waterRadialSprites[1].c_str(), HexTile::waterRadialSprites[0].c_str(), HexTile::waterRadialSprites[2].c_str());
 	waterRadial->interactionHandler = { (RadialMenu::InteractFunc)RadialInteractionHandler };
-	landRadial = new RadialMenu("Assets\\Textures\\RadialMenuSprite.png", "Assets\\Textures\\RadialMenuSpriteHovered.png", "Assets\\Textures\\RadialMenuSpriteHovered.png");
+	landRadial = new RadialMenu(HexTile::landRadialSprites[1].c_str(), HexTile::landRadialSprites[0].c_str(), HexTile::landRadialSprites[2].c_str());
 	landRadial->interactionHandler = { (RadialMenu::InteractFunc)RadialInteractionHandler };
 }
 void HexGame::OnStop()

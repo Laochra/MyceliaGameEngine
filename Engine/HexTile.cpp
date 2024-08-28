@@ -52,6 +52,27 @@ static void LoadVariantsOfType(vector<TileData>& type, vector<json> variantsJSON
 }
 void HexTile::LoadTileDataFrom(json& tilesFile) noexcept
 {
+	if (tilesFile.contains("RadialSprites"))
+	{
+		json radialSprites = tilesFile["RadialSprites"];
+
+		treeRadialSprites[0] = radialSprites["Trees"]["Regular"];
+		treeRadialSprites[1] = radialSprites["Trees"]["Hovered"];
+		treeRadialSprites[2] = radialSprites["Trees"]["Locked"];
+
+		flowerRadialSprites[0] = radialSprites["Flower"]["Regular"];
+		flowerRadialSprites[1] = radialSprites["Flower"]["Hovered"];
+		flowerRadialSprites[2] = radialSprites["Flower"]["Locked"];
+
+		waterRadialSprites[0] = radialSprites["Water"]["Regular"];
+		waterRadialSprites[1] = radialSprites["Water"]["Hovered"];
+		waterRadialSprites[2] = radialSprites["Water"]["Locked"];
+
+		landRadialSprites[0] = radialSprites["Land"]["Regular"];
+		landRadialSprites[1] = radialSprites["Land"]["Hovered"];
+		landRadialSprites[2] = radialSprites["Land"]["Locked"];
+	}
+
 	if (!tilesFile.contains("Defaults"))
 	{
 		tilesFile["Defaults"]["DefaultTile"] = "None";
@@ -96,6 +117,26 @@ static void SaveVariantsOfType(json& tilesFile, const char* key, const vector<Ti
 }
 void HexTile::SaveTileDataTo(json& tilesFile) noexcept
 {
+	json radialSprites;
+
+	radialSprites["Trees"]["Regular"] = treeRadialSprites[0];
+	radialSprites["Trees"]["Hovered"] = treeRadialSprites[1];
+	radialSprites["Trees"]["Locked"]  = treeRadialSprites[2];
+
+	radialSprites["Flower"]["Regular"] = flowerRadialSprites[0];
+	radialSprites["Flower"]["Hovered"] = flowerRadialSprites[1];
+	radialSprites["Flower"]["Locked"]  = flowerRadialSprites[2];
+
+	radialSprites["Water"]["Regular"] = waterRadialSprites[0];
+	radialSprites["Water"]["Hovered"] = waterRadialSprites[1];
+	radialSprites["Water"]["Locked"]  = waterRadialSprites[2];
+
+	radialSprites["Land"]["Regular"] = landRadialSprites[0];
+	radialSprites["Land"]["Hovered"] = landRadialSprites[1];
+	radialSprites["Land"]["Locked"]  = landRadialSprites[2];
+
+	tilesFile["RadialSprites"] = radialSprites;
+
 	tilesFile["Defaults"]["DefaultTile"] = HexTile::defaultTilePath;
 	tilesFile["Defaults"]["EmptyTile"] = HexTile::emptyTilePath;
 
@@ -259,6 +300,11 @@ vector<TileData> HexTile::flowers;
 vector<TileData> HexTile::waters;
 vector<TileData> HexTile::lands;
 std::map<string, json> HexTile::prefabs;
+
+string HexTile::treeRadialSprites[3]   { "None", "None", "None" };
+string HexTile::flowerRadialSprites[3] { "None", "None", "None" };
+string HexTile::waterRadialSprites[3]  { "None", "None", "None" };
+string HexTile::landRadialSprites[3]   { "None", "None", "None" };
 
 void HexTile::Initialise()
 {
