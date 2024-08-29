@@ -62,28 +62,28 @@ void LinkedHexGrid::UpdateTile(HexTile* hexTile, json tilePrefab) noexcept
 
 	hexTile->SetName(StringBuilder(hexTile->variant).CStr());
 
-	for (int i = 0; i < 6; i++)
-	{
-		HexTile* neighbour1 = hexTile->adjacent[i];
-		HexTile* neighbour2 = hexTile->adjacent[i < 5 ? i + 1 : 0];
-
-		if (neighbour1->type == HexType::Empty || neighbour1->habitat != nullptr) continue;
-		if (neighbour2->type == HexType::Empty || neighbour2->habitat != nullptr) continue;
-
-		if (hexTile->type != neighbour1->type &&
-			hexTile->type != neighbour2->type &&
-			neighbour1->type != neighbour2->type &&
-			!Habitat::frogHabitatHasBeenPlaced)
-		{
-			Habitat* habitat = (Habitat*)GameObject::InstantiateFrom(Habitat::frogHabitatPrefab, GuidGeneration::New);
-			gameObjectManager->Add(habitat);
-			habitat->SetParent(this);
-			habitats.push_back(habitat);
-			habitat->FormHabitat(hexTile, neighbour1, neighbour2);
-			Habitat::frogHabitatHasBeenPlaced = true;
-			break;
-		}
-	}
+	//for (int i = 0; i < 6; i++)
+	//{
+	//	HexTile* neighbour1 = hexTile->adjacent[i];
+	//	HexTile* neighbour2 = hexTile->adjacent[i < 5 ? i + 1 : 0];
+	//
+	//	if (neighbour1->type == HexType::Empty || neighbour1->habitat != nullptr) continue;
+	//	if (neighbour2->type == HexType::Empty || neighbour2->habitat != nullptr) continue;
+	//
+	//	if (hexTile->type != neighbour1->type &&
+	//		hexTile->type != neighbour2->type &&
+	//		neighbour1->type != neighbour2->type &&
+	//		!Habitat::frogHabitatHasBeenPlaced)
+	//	{
+	//		Habitat* habitat = (Habitat*)GameObject::InstantiateFrom(Habitat::frogHabitatPrefab, GuidGeneration::New);
+	//		gameObjectManager->Add(habitat);
+	//		habitat->SetParent(this);
+	//		habitats.push_back(habitat);
+	//		habitat->FormHabitat(hexTile, neighbour1, neighbour2);
+	//		Habitat::frogHabitatHasBeenPlaced = true;
+	//		break;
+	//	}
+	//}
 }
 
 void LinkedHexGrid::AddCentre() noexcept

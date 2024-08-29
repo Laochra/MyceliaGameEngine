@@ -23,6 +23,7 @@ public:
 
 private:
 	static void DrawType(vector<TileData>& type) noexcept;
-	static void DrawPrefabInput(const char* const name, string& prefabFilepath);
-	static void DrawSpriteInput(const char* const name, string& spriteFilepath);
+	static void DrawPrefabInput(const char* const name, string& prefabFilepath) noexcept;
+	static void DrawSpriteInput(const char* const name, string& spriteFilepath) noexcept;
+	static void DrawTileDropdown(string& tileName, const char* label) noexcept;
 };

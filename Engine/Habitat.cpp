@@ -21,8 +21,9 @@ void Habitat::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
 	//...
 }
 
-json Habitat::frogHabitatPrefab;
-bool Habitat::frogHabitatHasBeenPlaced = false;
+vector<HabitatData> Habitat::habitats;
+map<string, json> Habitat::prefabs;
+
 
 void Habitat::FormHabitat(HexTile* hex1, HexTile* hex2, HexTile* hex3) noexcept
 {
@@ -101,4 +102,71 @@ void Habitat::FormHabitat(HexTile* hex1, HexTile* hex2, HexTile* hex3) noexcept
 	{
 		Rotate(glm::radians(-60.0f), vec3(0, 1, 0));
 	}
+}
+
+json Habitat::GetPrefab(string name) noexcept
+{
+	if (!prefabs.contains(name))
+	{
+		AddPrefab(name);
+	}
+
+	return prefabs[name];
+}
+
+void Habitat::AddPrefab(string name)
+{
+	json prefab;
+	string prefabFilepath = "None";
+
+
+	for (HabitatData habitat : Habitat::habitats)
+	{
+		if (name == habitat.name)
+		{
+			prefabFilepath = habitat.prefabFilepath;
+			break;
+		}
+	}
+
+	bool successfulSoFar = true;
+
+	if (prefabFilepath != "None")
+	{
+		ifstream prefabFile(prefabFilepath);
+		if (!prefabFile.good())
+		{
+			Debug::LogWarning(LogID::WRN101, "Habitat: ", name, ". It will instead use the default tile file.", locationinfo);
+			successfulSoFar = false;
+		}
+		else
+		{
+			try { prefabFile >> prefab; }
+			catch (parse_error)
+			{
+				Debug::LogWarning(LogID::WRN102, "Habitat: ", name, ". It will instead use the default tile file.", locationinfo);
+				successfulSoFar = false;
+			}
+		}
+	}
+
+	if (successfulSoFar)
+	{
+		if (prefab["Name"] != name)
+		{
+			prefab["Name"] = name;
+			ofstream updatedFile(prefabFilepath);
+			updatedFile << prefab;
+		}
+	}
+	else
+	{
+		prefab = prefabs["Default"];
+		prefab["Name"] = name;
+		prefab.erase("HexType");
+		prefab.erase("HexVariant");
+		prefab["TypeID"] = Habitat::classID;
+	}
+
+	prefabs.insert(std::pair(name, prefab));
 }

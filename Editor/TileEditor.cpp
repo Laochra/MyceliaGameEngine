@@ -1,55 +1,13 @@
 #include "TileEditor.h"
 
+#include "Habitat.h"
+
 vector<TileData>* TileEditor::selectedType = &HexTile::trees;
 uint TileEditor::selectedVariant;
 
 void TileEditor::Draw(const char* const name, bool& open) noexcept
 {
 	ImGui::Begin(name, &open);
-
-	if (ImGui::CollapsingHeader("Radial Sprites"))
-	{
-		ImGui::Indent();
-		if (ImGui::CollapsingHeader("Tree"))
-		{
-			ImGui::PushID("Tree");
-			DrawSpriteInput("Regular", HexTile::treeRadialSprites[1]);
-			DrawSpriteInput("Hovered", HexTile::treeRadialSprites[0]);
-			DrawSpriteInput("Locked ", HexTile::treeRadialSprites[2]);
-			ImGui::PopID();
-			GUI::Spacing(3);
-		}
-		if (ImGui::CollapsingHeader("Flower"))
-		{
-			ImGui::PushID("Flower");
-			DrawSpriteInput("Regular", HexTile::flowerRadialSprites[1]);
-			DrawSpriteInput("Hovered", HexTile::flowerRadialSprites[0]);
-			DrawSpriteInput("Locked ", HexTile::flowerRadialSprites[2]);
-			ImGui::PopID();
-			GUI::Spacing(3);
-		}
-		if (ImGui::CollapsingHeader("Water"))
-		{
-			ImGui::PushID("Water");
-			DrawSpriteInput("Regular", HexTile::waterRadialSprites[1]);
-			DrawSpriteInput("Hovered", HexTile::waterRadialSprites[0]);
-			DrawSpriteInput("Locked ", HexTile::waterRadialSprites[2]);
-			ImGui::PopID();
-			GUI::Spacing(3);
-		}
-		if (ImGui::CollapsingHeader("Land"))
-		{
-			ImGui::PushID("Land");
-			DrawSpriteInput("Regular", HexTile::landRadialSprites[1]);
-			DrawSpriteInput("Hovered", HexTile::landRadialSprites[0]);
-			DrawSpriteInput("Locked ", HexTile::landRadialSprites[2]);
-			ImGui::PopID();
-			GUI::Spacing(3);
-		}
-		ImGui::Unindent();
-	}
-
-	GUI::Spacing(3);
 
 	if (ImGui::CollapsingHeader("Defaults"))
 	{
@@ -70,7 +28,7 @@ void TileEditor::Draw(const char* const name, bool& open) noexcept
 	{
 		GUI::Spacing(3);
 
-		ImGui::BeginTabBar("Types");
+		ImGui::BeginTabBar("Types##Tile Variants");
 		if (ImGui::BeginTabItem("Tree"))
 		{
 			DrawType(HexTile::trees);
@@ -122,6 +80,105 @@ void TileEditor::Draw(const char* const name, bool& open) noexcept
 			DrawPrefabInput("Mid  ", (*selectedType)[selectedVariant].prefabFilepaths[1]);
 			DrawPrefabInput("High ", (*selectedType)[selectedVariant].prefabFilepaths[2]);
 		}
+
+		GUI::Spacing(3);
+	}
+
+	GUI::Spacing(3);
+
+	if (ImGui::CollapsingHeader("Habitats"))
+	{
+		GUI::Spacing(3);
+
+		ImGui::BeginTabBar("Habitats##Habitats");
+		for (uint i = 0; i < (uint)Habitat::habitats.size(); i++)
+		{
+			HabitatData& habitat = Habitat::habitats[i];
+
+			if (ImGui::BeginTabItem(StringBuilder(habitat.name, "###", i).CStr()))
+			{
+				ImGui::InputText("Name ", &habitat.name);
+
+				ImGui::SameLine();
+				if ((ImGui::Button("Delete")))
+				{
+					Habitat::habitats.erase(Habitat::habitats.begin() + i);
+					i--;
+
+					ImGui::EndTabItem();
+					continue;
+				}
+
+				GUI::Spacing();
+
+				DrawPrefabInput("Prefab ", habitat.prefabFilepath);
+
+				GUI::Spacing();
+
+				ImGui::Text("Required Tiles");
+				DrawTileDropdown(habitat.requiredTiles[0], "##1");
+				DrawTileDropdown(habitat.requiredTiles[1], "##2");
+				DrawTileDropdown(habitat.requiredTiles[2], "##3");
+
+				ImGui::EndTabItem();
+			}
+		}
+		if (ImGui::TabItemButton("+"))
+		{
+			Habitat::habitats.push_back(HabitatData());
+		}
+		ImGui::EndTabBar();
+
+		GUI::Spacing(3);
+	}
+
+	GUI::Spacing(3);
+
+	if (ImGui::CollapsingHeader("Radial Sprites"))
+	{
+		GUI::Spacing(3);
+
+		ImGui::BeginTabBar("Types##Radial Sprites");
+		if (ImGui::BeginTabItem("Tree"))
+		{
+			ImGui::PushID("Tree");
+			DrawSpriteInput("Regular", HexTile::treeRadialSprites[1]);
+			DrawSpriteInput("Hovered", HexTile::treeRadialSprites[0]);
+			DrawSpriteInput("Locked ", HexTile::treeRadialSprites[2]);
+			ImGui::PopID();
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("Flower"))
+		{
+			ImGui::PushID("Flower");
+			DrawSpriteInput("Regular", HexTile::flowerRadialSprites[1]);
+			DrawSpriteInput("Hovered", HexTile::flowerRadialSprites[0]);
+			DrawSpriteInput("Locked ", HexTile::flowerRadialSprites[2]);
+			ImGui::PopID();
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("Water"))
+		{
+			ImGui::PushID("Water");
+			DrawSpriteInput("Regular", HexTile::waterRadialSprites[1]);
+			DrawSpriteInput("Hovered", HexTile::waterRadialSprites[0]);
+			DrawSpriteInput("Locked ", HexTile::waterRadialSprites[2]);
+			ImGui::PopID();
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("Land"))
+		{
+			ImGui::PushID("Land");
+			DrawSpriteInput("Regular", HexTile::landRadialSprites[1]);
+			DrawSpriteInput("Hovered", HexTile::landRadialSprites[0]);
+			DrawSpriteInput("Locked ", HexTile::landRadialSprites[2]);
+			ImGui::PopID();
+			ImGui::EndTabItem();
+		}
+
+		ImGui::EndTabBar();
+
+		GUI::Spacing(3);
 	}
 
 	ImGui::End();
@@ -151,7 +208,7 @@ void TileEditor::DrawType(vector<TileData>& type) noexcept
 	}
 }
 
-void TileEditor::DrawPrefabInput(const char* const name, string& prefabFilepath)
+void TileEditor::DrawPrefabInput(const char* const name, string& prefabFilepath) noexcept
 {
 	ImGui::BeginDisabled();
 	ImGui::InputText(name, &prefabFilepath, ImGuiInputTextFlags_ReadOnly);
@@ -170,7 +227,7 @@ void TileEditor::DrawPrefabInput(const char* const name, string& prefabFilepath)
 	}
 }
 
-void TileEditor::DrawSpriteInput(const char* const name, string& spriteFilepath)
+void TileEditor::DrawSpriteInput(const char* const name, string& spriteFilepath) noexcept
 {
 	ImGui::BeginDisabled();
 	ImGui::InputText(name, &spriteFilepath, ImGuiInputTextFlags_ReadOnly);
@@ -186,5 +243,58 @@ void TileEditor::DrawSpriteInput(const char* const name, string& spriteFilepath)
 		{
 			spriteFilepath = path;
 		}
+	}
+}
+
+void TileEditor::DrawTileDropdown(string& tileName, const char* label) noexcept
+{
+	if (ImGui::BeginCombo(label, tileName.c_str()))
+	{
+		if (ImGui::BeginMenu("Trees"))
+		{
+			for (TileData tile : HexTile::trees)
+			{
+				if (ImGui::Selectable(tile.name.c_str(), tile.name == tileName))
+				{
+					tileName = tile.name;
+				}
+			}
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Flowers"))
+		{
+			for (TileData tile : HexTile::flowers)
+			{
+				if (ImGui::Selectable(tile.name.c_str(), tile.name == tileName))
+				{
+					tileName = tile.name;
+				}
+			}
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Waters"))
+		{
+			for (TileData tile : HexTile::waters)
+			{
+				if (ImGui::Selectable(tile.name.c_str(), tile.name == tileName))
+				{
+					tileName = tile.name;
+				}
+			}
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Land"))
+		{
+			for (TileData tile : HexTile::lands)
+			{
+				if (ImGui::Selectable(tile.name.c_str(), tile.name == tileName))
+				{
+					tileName = tile.name;
+				}
+			}
+			ImGui::EndMenu();
+		}
+
+		ImGui::EndCombo();
 	}
 }
