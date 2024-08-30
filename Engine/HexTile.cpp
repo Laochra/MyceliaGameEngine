@@ -1,5 +1,7 @@
 #include "HexTile.h"
 
+#include "Habitat.h"
+
 #include "ShaderManager.h"
 #include "Camera.h"
 
@@ -52,27 +54,6 @@ static void LoadVariantsOfType(vector<TileData>& type, vector<json> variantsJSON
 }
 void HexTile::LoadTileDataFrom(json& tilesFile) noexcept
 {
-	if (tilesFile.contains("RadialSprites"))
-	{
-		json radialSprites = tilesFile["RadialSprites"];
-
-		treeRadialSprites[0] = radialSprites["Trees"]["Regular"];
-		treeRadialSprites[1] = radialSprites["Trees"]["Hovered"];
-		treeRadialSprites[2] = radialSprites["Trees"]["Locked"];
-
-		flowerRadialSprites[0] = radialSprites["Flower"]["Regular"];
-		flowerRadialSprites[1] = radialSprites["Flower"]["Hovered"];
-		flowerRadialSprites[2] = radialSprites["Flower"]["Locked"];
-
-		waterRadialSprites[0] = radialSprites["Water"]["Regular"];
-		waterRadialSprites[1] = radialSprites["Water"]["Hovered"];
-		waterRadialSprites[2] = radialSprites["Water"]["Locked"];
-
-		landRadialSprites[0] = radialSprites["Land"]["Regular"];
-		landRadialSprites[1] = radialSprites["Land"]["Hovered"];
-		landRadialSprites[2] = radialSprites["Land"]["Locked"];
-	}
-
 	if (!tilesFile.contains("Defaults"))
 	{
 		tilesFile["Defaults"]["DefaultTile"] = "None";
@@ -92,6 +73,50 @@ void HexTile::LoadTileDataFrom(json& tilesFile) noexcept
 
 	if (!tilesFile.contains("Lands")) tilesFile["Lands"] = vector<json>();
 	LoadVariantsOfType(HexTile::lands, tilesFile["Lands"]);
+
+	if (tilesFile.contains("Habitats"))
+	{
+		vector<json> habitatsJSON = tilesFile["Habitats"];
+
+		for (json habitatJSON : habitatsJSON)
+		{
+			HabitatData habitat;
+
+			habitat.name = habitatJSON["Name"];
+
+			habitat.prefabFilepath = habitatJSON["PrefabFilepath"];
+
+			vector<json> requiredTiles = habitatJSON["RequiredTiles"];
+			habitat.requiredTiles[0] = requiredTiles[0];
+			habitat.requiredTiles[1] = requiredTiles[1];
+			habitat.requiredTiles[2] = requiredTiles[2];
+
+			Habitat::habitats.push_back(habitat);
+		}
+
+		tilesFile["Habitats"] = habitatsJSON;
+	}
+
+	if (tilesFile.contains("RadialSprites"))
+	{
+		json radialSpritesJSON = tilesFile["RadialSprites"];
+
+		treeRadialSprites[0] = radialSpritesJSON["Trees"]["Regular"];
+		treeRadialSprites[1] = radialSpritesJSON["Trees"]["Hovered"];
+		treeRadialSprites[2] = radialSpritesJSON["Trees"]["Locked"];
+
+		flowerRadialSprites[0] = radialSpritesJSON["Flower"]["Regular"];
+		flowerRadialSprites[1] = radialSpritesJSON["Flower"]["Hovered"];
+		flowerRadialSprites[2] = radialSpritesJSON["Flower"]["Locked"];
+
+		waterRadialSprites[0] = radialSpritesJSON["Water"]["Regular"];
+		waterRadialSprites[1] = radialSpritesJSON["Water"]["Hovered"];
+		waterRadialSprites[2] = radialSpritesJSON["Water"]["Locked"];
+
+		landRadialSprites[0] = radialSpritesJSON["Land"]["Regular"];
+		landRadialSprites[1] = radialSpritesJSON["Land"]["Hovered"];
+		landRadialSprites[2] = radialSpritesJSON["Land"]["Locked"];
+	}
 }
 static void SaveVariantsOfType(json& tilesFile, const char* key, const vector<TileData>& type) noexcept
 {
@@ -117,26 +142,6 @@ static void SaveVariantsOfType(json& tilesFile, const char* key, const vector<Ti
 }
 void HexTile::SaveTileDataTo(json& tilesFile) noexcept
 {
-	json radialSprites;
-
-	radialSprites["Trees"]["Regular"] = treeRadialSprites[0];
-	radialSprites["Trees"]["Hovered"] = treeRadialSprites[1];
-	radialSprites["Trees"]["Locked"]  = treeRadialSprites[2];
-
-	radialSprites["Flower"]["Regular"] = flowerRadialSprites[0];
-	radialSprites["Flower"]["Hovered"] = flowerRadialSprites[1];
-	radialSprites["Flower"]["Locked"]  = flowerRadialSprites[2];
-
-	radialSprites["Water"]["Regular"] = waterRadialSprites[0];
-	radialSprites["Water"]["Hovered"] = waterRadialSprites[1];
-	radialSprites["Water"]["Locked"]  = waterRadialSprites[2];
-
-	radialSprites["Land"]["Regular"] = landRadialSprites[0];
-	radialSprites["Land"]["Hovered"] = landRadialSprites[1];
-	radialSprites["Land"]["Locked"]  = landRadialSprites[2];
-
-	tilesFile["RadialSprites"] = radialSprites;
-
 	tilesFile["Defaults"]["DefaultTile"] = HexTile::defaultTilePath;
 	tilesFile["Defaults"]["EmptyTile"] = HexTile::emptyTilePath;
 
@@ -144,6 +149,47 @@ void HexTile::SaveTileDataTo(json& tilesFile) noexcept
 	SaveVariantsOfType(tilesFile, "Flowers", HexTile::flowers);
 	SaveVariantsOfType(tilesFile, "Waters", HexTile::waters);
 	SaveVariantsOfType(tilesFile, "Lands", HexTile::lands);
+
+	vector<json> habitatsJSON;
+
+	for (HabitatData habitat : Habitat::habitats)
+	{
+		json habitatJSON;
+
+		habitatJSON["Name"] = habitat.name;
+
+		habitatJSON["PrefabFilepath"] = habitat.prefabFilepath;
+
+		vector<json> requiredTiles;
+		requiredTiles.push_back(habitat.requiredTiles[0]);
+		requiredTiles.push_back(habitat.requiredTiles[1]);
+		requiredTiles.push_back(habitat.requiredTiles[2]);
+		habitatJSON["RequiredTiles"] = requiredTiles;
+
+		habitatsJSON.push_back(habitatJSON);
+	}
+
+	tilesFile["Habitats"] = habitatsJSON;
+
+	json radialSpritesJSON;
+
+	radialSpritesJSON["Trees"]["Regular"] = treeRadialSprites[0];
+	radialSpritesJSON["Trees"]["Hovered"] = treeRadialSprites[1];
+	radialSpritesJSON["Trees"]["Locked"] = treeRadialSprites[2];
+
+	radialSpritesJSON["Flower"]["Regular"] = flowerRadialSprites[0];
+	radialSpritesJSON["Flower"]["Hovered"] = flowerRadialSprites[1];
+	radialSpritesJSON["Flower"]["Locked"] = flowerRadialSprites[2];
+
+	radialSpritesJSON["Water"]["Regular"] = waterRadialSprites[0];
+	radialSpritesJSON["Water"]["Hovered"] = waterRadialSprites[1];
+	radialSpritesJSON["Water"]["Locked"] = waterRadialSprites[2];
+
+	radialSpritesJSON["Land"]["Regular"] = landRadialSprites[0];
+	radialSpritesJSON["Land"]["Hovered"] = landRadialSprites[1];
+	radialSpritesJSON["Land"]["Locked"] = landRadialSprites[2];
+
+	tilesFile["RadialSprites"] = radialSpritesJSON;
 }
 
 json HexTile::GetEmptyTilePrefab() noexcept

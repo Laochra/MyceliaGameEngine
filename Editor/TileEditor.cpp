@@ -9,6 +9,19 @@ void TileEditor::Draw(const char* const name, bool& open) noexcept
 {
 	ImGui::Begin(name, &open);
 
+	GUI::Spacing(3);
+	if (ImGui::Button("Save Changes"))
+	{
+		const char* const tileDataPath = "Assets\\Tiles\\TileData.json";
+
+		json tileData;
+		HexTile::SaveTileDataTo(tileData);
+
+		ofstream output(tileDataPath);
+		output << std::setw(2) << tileData;
+	}
+	GUI::Spacing(3);
+
 	if (ImGui::CollapsingHeader("Defaults"))
 	{
 		GUI::Spacing(3);
