@@ -21,12 +21,14 @@ public:
 
 	HexTile* hexTiles[3] = { nullptr, nullptr, nullptr };
 
-	void FormHabitat(HexTile* hex1, HexTile* hex2, HexTile* hex3) noexcept;
+	// Returns the formed habitat if successful, or nullptr if not
+	static Habitat* AttemptToFormHabitat(HexTile* newHexTile) noexcept;
 
 	static vector<HabitatData> habitats;
 	static json GetPrefab(string name) noexcept;
 
 private:
+	void FormHabitat(HabitatData habitat, HexTile* hex1, HexTile* hex2, HexTile* hex3) noexcept;
 	static void AddPrefab(string name);
 	static map<string, json> prefabs;
 };

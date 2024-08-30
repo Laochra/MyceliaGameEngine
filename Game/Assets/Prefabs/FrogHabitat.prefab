@@ -1464,7 +1464,7 @@
   ],
   "GUID": 9050138431399079742,
   "Material": "Engine\\DefaultAssets\\Default.mat",
-  "Mesh": "ProceduralCube",
+  "Mesh": "None",
   "Name": "FrogHabitat",
   "Pivot": [
     50.0,
@@ -1477,9 +1477,9 @@
     0.0
   ],
   "Rotation": [
-    0.9659258723258972,
+    1.0,
     0.0,
-    0.2588191032409668,
+    0.0,
     0.0
   ],
   "Scale": [

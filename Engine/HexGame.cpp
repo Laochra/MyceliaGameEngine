@@ -9,7 +9,7 @@
 
 #include "StringBuilder.h"
 
-#include "RandomGen.h"
+#include "Habitat.h"
 
 void static RadialInteractionHandler(uint selection)
 {
@@ -187,6 +187,12 @@ void HexGame::OnStop()
 	}
 	hexGrid->lookupTable.clear();
 	hexGrid->centre = nullptr;
+
+	for (Habitat* habitat : hexGrid->habitats)
+	{
+		GameObject::Destroy(habitat);
+	}
+	hexGrid->habitats.clear();
 
 	del(treeRadial);
 	del(flowerRadial);

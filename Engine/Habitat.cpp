@@ -25,24 +25,60 @@ vector<HabitatData> Habitat::habitats;
 map<string, json> Habitat::prefabs;
 
 
-void Habitat::FormHabitat(HexTile* hex1, HexTile* hex2, HexTile* hex3) noexcept
+Habitat* Habitat::AttemptToFormHabitat(HexTile* newHexTile) noexcept
 {
-	// Ensure the 3 hexes are connected or early out
-	uint pairsFound = 0U;
-	for (HexTile* neighbour : hex1->adjacent)
-	{
-		if (neighbour == hex2) { pairsFound++; break; }
-	}
-	for (HexTile* neighbour : hex2->adjacent)
-	{
-		if (neighbour == hex3) { pairsFound++; break; }
-	}
-	for (HexTile* neighbour : hex3->adjacent)
-	{
-		if (neighbour == hex1) { pairsFound++; break; }
-	}
-	if (pairsFound != 3U) return;
+	Habitat* newHabitat = nullptr;
 
+	for (int i = 0; i < 6; i++)
+	{
+		HexTile* neighbour1 = newHexTile->adjacent[i];
+		HexTile* neighbour2 = newHexTile->adjacent[i < 5 ? i + 1 : 0];
+	
+		if (neighbour1->type == HexType::Empty || neighbour1->habitat != nullptr) continue;
+		if (neighbour2->type == HexType::Empty || neighbour2->habitat != nullptr) continue;
+		
+		map<string, int> variantCounts;
+		variantCounts[newHexTile->variant] += 1;
+		variantCounts[neighbour1->variant] += 1;
+		variantCounts[neighbour2->variant] += 1;
+		
+		bool habitatDataFound = false;
+		for (HabitatData& habitatData : Habitat::habitats)
+		{
+			if (habitatData.hasBeenPlaced) continue;
+
+			map<string, int> variantsToCheckFor;
+			variantsToCheckFor[habitatData.requiredTiles[0]] += 1;
+			variantsToCheckFor[habitatData.requiredTiles[1]] += 1;
+			variantsToCheckFor[habitatData.requiredTiles[2]] += 1;
+
+			bool matchFound = true;
+			for (std::pair<string, int> variantCount : variantCounts)
+			{
+				if (variantCount.second != variantsToCheckFor.count(variantCount.first))
+				{
+					matchFound = false;
+					break;
+				}
+			}
+
+			if (matchFound)
+			{
+				newHabitat = GameObject::Instantiate<Habitat>();
+				newHabitat->FormHabitat(habitatData, newHexTile, neighbour1, neighbour2);
+				habitatData.hasBeenPlaced = true;
+				habitatDataFound == true;
+				break;
+			}
+		}
+		if (habitatDataFound) break;
+	}
+
+	return newHabitat;
+}
+
+void Habitat::FormHabitat(HabitatData habitatData, HexTile* hex1, HexTile* hex2, HexTile* hex3) noexcept
+{
 	// If the habitat is being moved, set existing tiles to be the default tile
 	if (hexTiles[0] != nullptr)
 	{
@@ -97,10 +133,14 @@ void Habitat::FormHabitat(HexTile* hex1, HexTile* hex2, HexTile* hex3) noexcept
 		}
 	}
 
-	// If furthest depth tile is to the left, rotate the habitat
+	// If furthest depth tile is to the left, rotate the habitat clockwise, otherwise rotate anti-clockwise
 	if (hexTiles[indicesByDepth[2]]->GetPosition().x < hexTiles[indicesByDepth[1]]->GetPosition().x)
 	{
-		Rotate(glm::radians(-60.0f), vec3(0, 1, 0));
+		Rotate(glm::radians(30.0f), vec3(0, 1, 0));
+	}
+	else
+	{
+		Rotate(glm::radians(-30.0f), vec3(0, 1, 0));
 	}
 }
 

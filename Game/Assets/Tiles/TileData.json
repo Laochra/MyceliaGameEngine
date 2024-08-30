@@ -29,7 +29,17 @@
       ]
     }
   ],
-  "Habitats": [],
+  "Habitats": [
+    {
+      "Name": "Frog Habitat",
+      "PrefabFilepath": "Assets\\Prefabs\\FrogHabitat.prefab",
+      "RequiredTiles": [
+        "Eucalyptus",
+        "Acacia Blackwood",
+        "Fern"
+      ]
+    }
+  ],
   "Lands": [
     {
       "Name": "New Variant",
@@ -68,9 +78,9 @@
       "Regular": "None"
     },
     "Trees": {
-      "Hovered": "None",
+      "Hovered": "Assets\\Textures\\RadialMenuSprite.png",
       "Locked": "None",
-      "Regular": "None"
+      "Regular": "Assets\\Textures\\RadialMenuSpriteHovered.png"
     },
     "Water": {
       "Hovered": "None",
@@ -82,7 +92,7 @@
     {
       "Name": "Eucalyptus",
       "Prefabs": [
-        "None",
+        "Assets\\Prefabs\\EucalyptusHex.prefab",
         "None",
         "None"
       ]
@@ -90,7 +100,7 @@
     {
       "Name": "Acacia Blackwood",
       "Prefabs": [
-        "None",
+        "Assets\\Prefabs\\WaterHex.prefab",
         "None",
         "None"
       ]
@@ -98,7 +108,7 @@
     {
       "Name": "Fern",
       "Prefabs": [
-        "None",
+        "Assets\\Prefabs\\FernHex.prefab",
         "None",
         "None"
       ]
