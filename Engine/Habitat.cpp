@@ -65,6 +65,7 @@ Habitat* Habitat::AttemptToFormHabitat(HexTile* newHexTile) noexcept
 			if (matchFound)
 			{
 				newHabitat = GameObject::Instantiate<Habitat>();
+				newHabitat->UpdateFrom(Habitat::GetPrefab(habitatData.name));
 				newHabitat->FormHabitat(habitatData, newHexTile, neighbour1, neighbour2);
 				habitatData.hasBeenPlaced = true;
 				habitatDataFound == true;
@@ -136,11 +137,11 @@ void Habitat::FormHabitat(HabitatData habitatData, HexTile* hex1, HexTile* hex2,
 	// If furthest depth tile is to the left, rotate the habitat clockwise, otherwise rotate anti-clockwise
 	if (hexTiles[indicesByDepth[2]]->GetPosition().x < hexTiles[indicesByDepth[1]]->GetPosition().x)
 	{
-		Rotate(glm::radians(30.0f), vec3(0, 1, 0));
+		Rotate(glm::radians(-30.0f), vec3(0, 1, 0));
 	}
 	else
 	{
-		Rotate(glm::radians(-30.0f), vec3(0, 1, 0));
+		Rotate(glm::radians(30.0f), vec3(0, 1, 0));
 	}
 }
 
@@ -196,7 +197,7 @@ void Habitat::AddPrefab(string name)
 		{
 			prefab["Name"] = name;
 			ofstream updatedFile(prefabFilepath);
-			updatedFile << prefab;
+			updatedFile << std::setw(2) << prefab;
 		}
 	}
 	else

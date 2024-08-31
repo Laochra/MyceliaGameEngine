@@ -155,11 +155,13 @@ namespace Heirarchy
 			}
 			if (ImGui::BeginMenu("Save As"))
 			{
+				if (ImGui::IsWindowHovered()) isHovered = true;
+
 				if (ImGui::MenuItem(StringBuilder("Prefab (", rightClickMenu.target->GetClassName(), ")").CStr()))
 				{
 					using namespace FileDialogue;
 					string defaultPath = StringBuilder(
-						"Assets\\Prefabs\\",
+						"Assets\\",
 						rightClickMenu.target->GetName()
 					).value;
 

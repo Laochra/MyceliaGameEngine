@@ -16,10 +16,10 @@ void static RadialInteractionHandler(uint selection)
 	switch (currentRadialPage)
 	{
 	default:														break;
-	case 1U: currentTileType = &HexTile::trees;		break;
-	case 2U: currentTileType = &HexTile::flowers;	break;
-	case 3U: currentTileType = &HexTile::waters;		break;
-	case 4U: currentTileType = &HexTile::lands;		break;
+	case 0U: currentTileType = &HexTile::trees;		break;
+	case 1U: currentTileType = &HexTile::flowers;	break;
+	case 2U: currentTileType = &HexTile::waters;		break;
+	case 3U: currentTileType = &HexTile::lands;		break;
 	}
 
 	currentTileVariant = selection;
@@ -193,6 +193,11 @@ void HexGame::OnStop()
 		GameObject::Destroy(habitat);
 	}
 	hexGrid->habitats.clear();
+
+	for (HabitatData& habitatData : Habitat::habitats)
+	{
+		habitatData.hasBeenPlaced = false;
+	}
 
 	del(treeRadial);
 	del(flowerRadial);

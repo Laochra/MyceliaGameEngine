@@ -5,7 +5,7 @@
   },
   "Flowers": [
     {
-      "Name": "New Variant",
+      "Name": "Everlasting Daisy",
       "Prefabs": [
         "None",
         "None",
@@ -13,7 +13,7 @@
       ]
     },
     {
-      "Name": "New Variant",
+      "Name": "Happy Wanderer",
       "Prefabs": [
         "None",
         "None",
@@ -21,7 +21,7 @@
       ]
     },
     {
-      "Name": "New Variant",
+      "Name": "Prickly Tea Tree",
       "Prefabs": [
         "None",
         "None",
@@ -31,18 +31,18 @@
   ],
   "Habitats": [
     {
-      "Name": "Frog Habitat",
-      "PrefabFilepath": "Assets\\Prefabs\\FrogHabitat.prefab",
+      "Name": "Frog",
+      "PrefabFilepath": "Assets\\Habitats\\Frog\\FrogHabitat.prefab",
       "RequiredTiles": [
         "Eucalyptus",
-        "Acacia Blackwood",
-        "Fern"
+        "Fern",
+        "Water"
       ]
     }
   ],
   "Lands": [
     {
-      "Name": "New Variant",
+      "Name": "Grass",
       "Prefabs": [
         "None",
         "None",
@@ -50,7 +50,7 @@
       ]
     },
     {
-      "Name": "New Variant",
+      "Name": "Red Gravel",
       "Prefabs": [
         "None",
         "None",
@@ -58,7 +58,7 @@
       ]
     },
     {
-      "Name": "New Variant",
+      "Name": "Mushrooms",
       "Prefabs": [
         "None",
         "None",
@@ -68,24 +68,24 @@
   ],
   "RadialSprites": {
     "Flower": {
-      "Hovered": "None",
-      "Locked": "None",
-      "Regular": "None"
+      "Hovered": "Assets\\UI\\RadialMenu\\Flower\\RW_Flower_Unlocked.png",
+      "Locked": "Assets\\UI\\RadialMenu\\Flower\\RW_Flower_Locked.png",
+      "Regular": "Assets\\UI\\RadialMenu\\Flower\\RW_Flower_Hovered.png"
     },
     "Land": {
-      "Hovered": "None",
-      "Locked": "None",
-      "Regular": "None"
+      "Hovered": "Assets\\UI\\RadialMenu\\Land\\RW_Land_Unlocked.png",
+      "Locked": "Assets\\UI\\RadialMenu\\Land\\RW_Land_Locked.png",
+      "Regular": "Assets\\UI\\RadialMenu\\Land\\RW_Land_Hovered.png"
     },
     "Trees": {
-      "Hovered": "Assets\\Textures\\RadialMenuSprite.png",
-      "Locked": "None",
-      "Regular": "Assets\\Textures\\RadialMenuSpriteHovered.png"
+      "Hovered": "Assets\\UI\\RadialMenu\\Tree\\RW_Tree_Unlocked.png",
+      "Locked": "Assets\\UI\\RadialMenu\\Tree\\RW_Tree_Locked.png",
+      "Regular": "Assets\\UI\\RadialMenu\\Tree\\RW_Tree_Hovered.png"
     },
     "Water": {
-      "Hovered": "None",
-      "Locked": "None",
-      "Regular": "None"
+      "Hovered": "Assets\\UI\\RadialMenu\\Water\\RW_Water_Unlocked.png",
+      "Locked": "Assets\\UI\\RadialMenu\\Water\\RW_Water_Locked.png",
+      "Regular": "Assets\\UI\\RadialMenu\\Water\\RW_Water_Hovered.png"
     }
   },
   "Trees": [
@@ -100,7 +100,7 @@
     {
       "Name": "Acacia Blackwood",
       "Prefabs": [
-        "Assets\\Prefabs\\WaterHex.prefab",
+        "None",
         "None",
         "None"
       ]
@@ -116,7 +116,15 @@
   ],
   "Waters": [
     {
-      "Name": "New Variant",
+      "Name": "Water",
+      "Prefabs": [
+        "Assets\\Prefabs\\WaterHex.prefab",
+        "None",
+        "None"
+      ]
+    },
+    {
+      "Name": "Water with Reeds",
       "Prefabs": [
         "None",
         "None",
@@ -124,15 +132,7 @@
       ]
     },
     {
-      "Name": "New Variant",
-      "Prefabs": [
-        "None",
-        "None",
-        "None"
-      ]
-    },
-    {
-      "Name": "New Variant",
+      "Name": "Lily Pad",
       "Prefabs": [
         "None",
         "None",

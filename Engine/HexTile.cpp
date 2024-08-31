@@ -305,7 +305,12 @@ void HexTile::AddTilePrefab(string name, uint density) noexcept
 	if (successfulSoFar)
 	{
 		ifstream prefabFile(path);
-		if (!prefabFile.good())
+		if (path == "None")
+		{
+			Debug::LogWarning(name, " ", density, " doesn't have a prefab specified. It will instead use the default tile file.", locationinfo);
+			successfulSoFar = false;
+		}
+		else if (!prefabFile.good())
 		{
 			Debug::LogWarning(LogID::WRN101, name, " ", density, ". It will instead use the default tile file.", locationinfo);
 			successfulSoFar = false;
