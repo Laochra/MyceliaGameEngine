@@ -173,10 +173,10 @@
     <ClCompile Include="GameObject3D.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="GuidGenerator.cpp" />
-    <ClCompile Include="KeyAxis.cpp" />
+    <ClCompile Include="InputAxis.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Input.cpp" />
-    <ClCompile Include="Keybind.cpp" />
+    <ClCompile Include="InputBind.cpp" />
     <ClCompile Include="LightingManager.cpp" />
     <ClCompile Include="LightObject.cpp" />
     <ClCompile Include="LineDrawer.cpp" />

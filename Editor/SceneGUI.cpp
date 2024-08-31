@@ -148,7 +148,7 @@ namespace SceneGUI
 			return;
 		}
 
-		if (AppInfo::input->GetKeyPressed(KeyCode::Esc))
+		if (AppInfo::input->GetInputPressed(InputCode::Esc))
 		{
 			TransformEdit::CancelTransform();
 		}
@@ -179,22 +179,22 @@ namespace SceneGUI
 				}
 				else
 				{
-					if (AppInfo::input->GetKeyPressed(KeyCode::Q))
+					if (AppInfo::input->GetInputPressed(InputCode::Q))
 					{
 						TransformEdit::CancelTransform();
 						TransformEdit::mode = TransformEdit::Mode::Select;
 					}
-					if (AppInfo::input->GetKeyPressed(KeyCode::W))
+					if (AppInfo::input->GetInputPressed(InputCode::W))
 					{
 						TransformEdit::CancelTransform();
 						TransformEdit::mode = TransformEdit::Mode::Translate;
 					}
-					if (AppInfo::input->GetKeyPressed(KeyCode::E))
+					if (AppInfo::input->GetInputPressed(InputCode::E))
 					{
 						TransformEdit::CancelTransform();
 						TransformEdit::mode = TransformEdit::Mode::Rotate;
 					}
-					if (AppInfo::input->GetKeyPressed(KeyCode::T))
+					if (AppInfo::input->GetInputPressed(InputCode::T))
 					{
 						TransformEdit::CancelTransform();
 						TransformEdit::space = (TransformEdit::Space)!(bool)TransformEdit::space;
@@ -209,7 +209,7 @@ namespace SceneGUI
 				normalisedMousePos = vec2(cursorPos.x / screenWidth, cursorPos.y / screenHeight);
 				normalisedMousePos = (normalisedMousePos * 2.0f) - 1.0f;
 				
-				if (AppInfo::input->GetKeyPressed(KeyCode::MouseLeft))
+				if (AppInfo::input->GetInputPressed(InputCode::MouseLeft))
 				{
 					const int pixelCount = screenWidth * screenHeight;
 					ulong* guidPixels = new ulong[pixelCount];

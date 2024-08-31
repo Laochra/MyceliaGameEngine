@@ -33,76 +33,79 @@
 #ifndef mappedenum
 	#define mappedenum(name, type, ...)\
 		enum name : type { __VA_ARGS__ };\
-		inline std::map<name, string> name##GenerateMap(string strings)\
+		inline std::map<name, std::string> name##GenerateMap(std::string strings)\
 		{ \
 			std::map<name, string> result;\
 			name current##name = (name)0;\
-			string currentString;\
+			std::string currentString;\
 			for (type i = 0; i < strings.size(); i++)\
 			{\
 				if (strings[i] == ' ') { continue; }\
 				if (strings[i] == ',')\
 				{\
-					result.insert(std::pair<name, string>(current##name, currentString));\
+					result.insert(std::pair<name, std::string>(current##name, currentString));\
 					current##name = (name)(current##name + 1);\
 					currentString.clear();\
 					continue;\
 				}\
 				currentString.push_back(strings[i]);\
 			}\
-			if (currentString.size() > 0) result.insert(std::pair<name, string>(current##name, currentString));\
+			if (currentString.size() > 0) result.insert(std::pair<name, std::string>(current##name, currentString));\
 			return result;\
 		} \
-		inline std::map<name, string> name##Map = name##GenerateMap(#__VA_ARGS__);
-	
-	#define mappedenum(name, type, ...)\
-		enum name : type { __VA_ARGS__ };\
-		inline std::map<name, string> name##GenerateMap(string strings)\
+		inline std::map<name, std::string> name##Map = name##GenerateMap(#__VA_ARGS__);
+
+	#define mappedenumclass(name, type, ...)\
+		enum class name : type { __VA_ARGS__ };\
+		inline std::map<name, std::string> name##GenerateMap(std::string strings)\
 		{ \
-			std::map<name, string> result;\
+			std::map<name, std::string> result;\
 			name current##name = (name)0;\
-			string currentString;\
+			std::string currentString;\
+			bool hitEqualsCharacter = false;\
 			for (type i = 0; i < strings.size(); i++)\
 			{\
 				if (strings[i] == ' ') { continue; }\
+				if (strings[i] == '=') { hitEqualsCharacter = true; continue; }\
 				if (strings[i] == ',')\
 				{\
-					result.insert(std::pair<name, string>(current##name, currentString));\
-					current##name = (name)(current##name + 1);\
+					result.insert(std::pair<name, std::string>((name)current##name, currentString));\
+					current##name = (name)((type)current##name + 1);\
 					currentString.clear();\
+					hitEqualsCharacter = false;\
 					continue;\
 				}\
-				currentString.push_back(strings[i]);\
+				if (!hitEqualsCharacter) currentString.push_back(strings[i]);\
 			}\
-			if (currentString.size() > 0) result.insert(std::pair<name, string>(current##name, currentString));\
+			if (currentString.size() > 0) result.insert(std::pair<name, std::string>((name)current##name, currentString));\
 			return result;\
 		} \
-		inline std::map<name, string> name##Map = name##GenerateMap(#__VA_ARGS__);
+		inline std::map<name, std::string> name##Map = name##GenerateMap(#__VA_ARGS__);
 
 	#define mappedenumi(name, type, currentAccessibility, ...)\
 		enum name : type { __VA_ARGS__ };\
 		protected:\
-		std::map<name, string> name##GenerateMap(string strings)\
+		std::map<name, std::string> name##GenerateMap(std::string strings)\
 		{ \
-			std::map<name, string> result;\
+			std::map<name, std::string> result;\
 			name current##name = (name)0;\
-			string currentString;\
+			std::string currentString;\
 			for (type i = 0; i < strings.size(); i++)\
 			{\
 				if (strings[i] == ' ') { continue; }\
 				if (strings[i] == ',')\
 				{\
-					result.insert(std::pair<name, string>(current##name, currentString));\
+					result.insert(std::pair<name, std::string>(current##name, currentString));\
 					current##name = (name)(current##name + 1);\
 					currentString.clear();\
 					continue;\
 				}\
 				currentString.push_back(strings[i]);\
 			}\
-			if (currentString.size() > 0) result.insert(std::pair<name, string>(current##name, currentString));\
+			if (currentString.size() > 0) result.insert(std::pair<name, std::string>(current##name, currentString));\
 			return result;\
 		} \
-		std::map<name, string> name##Map = name##GenerateMap(#__VA_ARGS__);\
+		std::map<name, std::string> name##Map = name##GenerateMap(#__VA_ARGS__);\
 		currentAccessibility##:
 #endif
 

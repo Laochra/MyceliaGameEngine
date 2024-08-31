@@ -7,6 +7,6 @@
 
 namespace InputEditor
 {
-	extern void ConfigureKeybind(const char* label, Keybind* keybind);
-	extern void ConfigureKeyAxis(const char* negativeLabel, const char* positiveLabel, KeyAxis* keyAxis);
+	extern void ConfigureInputBind(const char* label, InputBind* inputBind);
+	extern void ConfigureInputAxis(const char* negativeLabel, const char* positiveLabel, InputAxis* inputAxis);
 }

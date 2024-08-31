@@ -30,12 +30,12 @@ void EditorCamera::Initialise()
 	{
 		fov = glm::radians(80.0f);
 
-		xInput.BindPair(A, D);
-		yInput.BindPair(LControl, Space);
-		zInput.BindPair(S, W);
+		xInput.BindPair(InputCode::A, InputCode::D);
+		yInput.BindPair(InputCode::LControl, InputCode::Space);
+		zInput.BindPair(InputCode::S, InputCode::W);
 
-		freeCamera.Bind(MouseRight);
-		quickMode.Bind(LShift);
+		freeCamera.Bind(InputCode::MouseRight);
+		quickMode.Bind(InputCode::LShift);
 
 		EditorCameraConfig::Save(this);
 	}

@@ -5,10 +5,10 @@
     <ClCompile Include="Input.cpp">
       <Filter>Input</Filter>
     </ClCompile>
-    <ClCompile Include="KeyAxis.cpp">
+    <ClCompile Include="InputAxis.cpp">
       <Filter>Input</Filter>
     </ClCompile>
-    <ClCompile Include="Keybind.cpp">
+    <ClCompile Include="InputBind.cpp">
       <Filter>Input</Filter>
     </ClCompile>
     <ClCompile Include="..\External\glad\glad.c">

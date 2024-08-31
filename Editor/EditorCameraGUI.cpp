@@ -57,17 +57,17 @@ void EditorCameraGUI::DrawEditorCameraGUI(EditorCamera* camera)
 			{
 				ImGui::SeparatorText("Movement");
 
-				InputEditor::ConfigureKeyAxis("Back", "Forward", &(camera)->zInput);
+				InputEditor::ConfigureInputAxis("Back", "Forward", &(camera)->zInput);
 				ImGui::Spacing(); ImGui::Spacing();
-				InputEditor::ConfigureKeyAxis("Left", "Right", &(camera)->xInput);
+				InputEditor::ConfigureInputAxis("Left", "Right", &(camera)->xInput);
 				ImGui::Spacing(); ImGui::Spacing();
-				InputEditor::ConfigureKeyAxis("Down", "Up", &(camera)->yInput);
+				InputEditor::ConfigureInputAxis("Down", "Up", &(camera)->yInput);
 
 				ImGui::SeparatorText("Other");
 
-				InputEditor::ConfigureKeybind("Quick Fly", &(camera)->quickMode);
+				InputEditor::ConfigureInputBind("Quick Fly", &(camera)->quickMode);
 				ImGui::Spacing(); ImGui::Spacing();
-				InputEditor::ConfigureKeybind("Free Camera", &(camera)->freeCamera);
+				InputEditor::ConfigureInputBind("Free Camera", &(camera)->freeCamera);
 
 				ImGui::EndTabItem();
 			}
