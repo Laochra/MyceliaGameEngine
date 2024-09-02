@@ -15,7 +15,7 @@ void static RadialInteractionHandler(uint selection)
 {
 	switch (currentRadialPage)
 	{
-	default:														break;
+	default:	Debug::LogWarning("Radial page index is invalid: ", currentRadialPage);	break;
 	case 0U: currentTileType = &HexTile::trees;		break;
 	case 1U: currentTileType = &HexTile::flowers;	break;
 	case 2U: currentTileType = &HexTile::waters;		break;
@@ -178,6 +178,10 @@ void HexGame::OnStart()
 	waterRadial->interactionHandler = { (RadialMenu::InteractFunc)RadialInteractionHandler };
 	landRadial = new RadialMenu(HexTile::landRadialSprites[1].c_str(), HexTile::landRadialSprites[0].c_str(), HexTile::landRadialSprites[2].c_str());
 	landRadial->interactionHandler = { (RadialMenu::InteractFunc)RadialInteractionHandler };
+
+	currentRadialPage = 0U;
+	currentTileType = &HexTile::trees;
+	currentTileVariant = 0U;
 }
 void HexGame::OnStop()
 {
@@ -202,7 +206,7 @@ void HexGame::OnStop()
 	del(treeRadial);
 	del(flowerRadial);
 	del(waterRadial);
-	del(landRadial);
+	del(landRadial)
 }
 
 void HexGame::OnPause() { }
@@ -226,10 +230,10 @@ void HexGame::Update()
 		}
 		if (currentRadialMenu->enabled)
 		{
-			if (AppInfo::input->GetKeyPressed(KeyCode::Q))
+			if (currentRadialPage != 0 && AppInfo::input->GetKeyPressed(KeyCode::Q))
 			{
 				currentRadialMenu->enabled = false;
-				currentRadialPage = std::max(0U, currentRadialPage - 1U);
+				currentRadialPage = currentRadialPage - 1U;
 				switch (currentRadialPage)
 				{
 				default: currentRadialMenu = treeRadial;		break;
@@ -239,10 +243,10 @@ void HexGame::Update()
 				}
 				currentRadialMenu->enabled = true;
 			}
-			if (AppInfo::input->GetKeyPressed(KeyCode::E))
+			if (currentRadialPage < 3U && AppInfo::input->GetKeyPressed(KeyCode::E))
 			{
 				currentRadialMenu->enabled = false;
-				currentRadialPage = std::min(3U, currentRadialPage + 1U);
+				currentRadialPage = currentRadialPage + 1U;
 				switch (currentRadialPage)
 				{
 				default: currentRadialMenu = treeRadial;		break;

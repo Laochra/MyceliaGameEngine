@@ -98,17 +98,17 @@
       ]
     },
     {
-      "Name": "Acacia Blackwood",
+      "Name": "Fern",
       "Prefabs": [
-        "None",
+        "Assets\\Prefabs\\FernHex.prefab",
         "None",
         "None"
       ]
     },
     {
-      "Name": "Fern",
+      "Name": "Acacia Blackwood",
       "Prefabs": [
-        "Assets\\Prefabs\\FernHex.prefab",
+        "None",
         "None",
         "None"
       ]

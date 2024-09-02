@@ -64,7 +64,7 @@ void RadialMenu::Update(vec2 input, Keybind interactKey) noexcept
 		vector<vec2> directions;
 		for (uint i = 0; i < radialSlices; i++)
 		{
-			float deg = glm::radians(increment * i);
+			float deg = glm::radians(-increment * i);
 			vec2 dir(std::sin(deg), std::cos(deg));
 
 			directions.push_back(dir);
