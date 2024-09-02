@@ -6,7 +6,6 @@
 
 #include "Debug.h"
 
-#include <array>
 #include <map>
 
 const std::map<InputCode, const char*> inputCodeToName = {
@@ -171,6 +170,15 @@ const std::map<InputCode, const char*> inputCodeToName = {
 		{ InputCode::GamepadDPRight, "Gamepad D-Pad Right"},
 		{ InputCode::GamepadDPDown, "Gamepad D-Pad Down"},
 		{ InputCode::GamepadDPLeft, "Gamepad D-Pad Left"},
+
+		{ InputCode::GamepadLT, "Gamepad Left Trigger"},
+		{ InputCode::GamepadRT, "Gamepad Right Trigger"},
+		{ InputCode::GamepadLSX, "Gamepad Left Stick X Axis"},
+		{ InputCode::GamepadLSY, "Gamepad Left Stick Y Axis"},
+		{ InputCode::GamepadRSX, "Gamepad Right Stick X Axis"},
+		{ InputCode::GamepadRSY, "Gamepad Right Stick Y Axis"},
+
+		{ InputCode::GamepadUndefined, "Gamepad Undefined Input"},
 	};
 const std::map<const char*, InputCode> inputNameToCode = {
 	// Mouse
@@ -334,23 +342,31 @@ const std::map<const char*, InputCode> inputNameToCode = {
 	{ "Gamepad D-Pad Right", InputCode::GamepadDPRight },
 	{ "Gamepad D-Pad Down", InputCode::GamepadDPDown },
 	{ "Gamepad D-Pad Left", InputCode::GamepadDPLeft },
+
+	{ "Gamepad Left Trigger", InputCode::GamepadLT },
+	{ "Gamepad Right Trigger", InputCode::GamepadRT },
+	{ "Gamepad Left Stick X Axis", InputCode::GamepadLSX },
+	{ "Gamepad Left Stick Y Axis", InputCode::GamepadLSY },
+	{ "Gamepad Right Stick X Axis", InputCode::GamepadRSX },
+	{ "Gamepad Right Stick Y Axis", InputCode::GamepadRSY },
+
+	{ "Gamepad Undefined Input", InputCode::GamepadUndefined },
 };
 
-Input::Input()
+Input::Input() noexcept
 {
-	downInputs = new std::set<InputCode>();
-	pressedInputs = new std::set<InputCode>();
-	releasedInputs = new std::set<InputCode>();
-
 	for (uint i = GLFW_JOYSTICK_1; i <= GLFW_JOYSTICK_LAST; i++)
 	{
-		bool present = false;
+		GamepadInfo gamepad(i);
 		if (glfwJoystickIsGamepad(i) == GLFW_TRUE)
 		{
-			present = true;
+			const char* name = glfwGetJoystickName(i);
+			Debug::LogWarning(name);
+			gamepad.Connect(GetTypeFromDeviceName(name));
 			Debug::Log("Gamepad ", i, " is present on startup.");
+
 		}
-		presentGamepads.push_back(present);
+		gamepads.push_back(gamepad);
 	}
 
 	GLFWwindow* window = glfwGetCurrentContext();
@@ -360,88 +376,110 @@ Input::Input()
 	glfwSetScrollCallback(window, ScrollCallback);
 	glfwSetJoystickCallback(GamepadConnectionCallback);
 }
-Input::~Input()
-{
-	del(downInputs);
-	del(pressedInputs);
-	del(releasedInputs);
-}
 
 bool Input::GetInputDown(InputCode inputCode) const noexcept
 {
-	return downInputs->count(inputCode) > 0;
+	return downInputs.count(inputCode) > 0;
 }
 bool Input::GetInputPressed(InputCode inputCode) const noexcept
 {
-	return pressedInputs->count(inputCode) > 0;
+	return pressedInputs.count(inputCode) > 0;
 }
 bool Input::GetInputReleased(InputCode inputCode) const noexcept
 {
-	return releasedInputs->count(inputCode) > 0;
+	return releasedInputs.count(inputCode) > 0;
+}
+
+float Input::GetAxis(InputCode axisInputCode) const noexcept
+{
+	if (!IsAxis(axisInputCode)) return 0.0f;
+
+	return axis.find(axisInputCode)->second;
+}
+
+int Input::GetAxis(InputCode negativeInputCode, InputCode positiveInputCode) const noexcept
+{
+	return downInputs.count(positiveInputCode) - downInputs.count(positiveInputCode);
 }
 
 void Input::Update()
 {
-	pressedInputs->clear();
-	releasedInputs->clear();
+	pressedInputs.clear();
+	releasedInputs.clear();
 
 	AppInfo::input->cursorMovement = vec2(0, 0);
 	AppInfo::input->scrollInput = vec2(0, 0);
 
-	std::array<bool, 14> globalInputs = std::array<bool, 14>();
-	globalInputs.fill(false);
+	std::map<InputCode, bool> globalButtons;
+	for (uint i = (uint)InputCode::GamepadFirstButton; i <= (uint)InputCode::GamepadLastButton; i++)
+	{
+		globalButtons.insert(std::pair(InputCode(i), false));
+	}
 
 	// Get Gamepad Inputs
-	for (uint g = 0; g < (uint)presentGamepads.size(); g++)
+	for (uint g = 0; g < (uint)gamepads.size(); g++)
 	{
-		if (presentGamepads[g])
+		if (gamepads[g].IsEnabled())
 		{
 			int buttonCount = 0;
 			const unsigned char* buttons = glfwGetJoystickButtons(g, &buttonCount);
 			for (uint b = 0; b < (uint)buttonCount; b++)
 			{
-				InputCode globalInputCode = InputCode((int)InputCode::GamepadFirst + b);
-				InputCode localInputCode = InputCode((int)globalInputCode + ((g + 1) * 100));
+				InputCode globalInputCode = gamepads[g].GetGlobalInputCode(b);
+				InputCode localInputCode = gamepads[g].GetLocalInputCode(b);
+
+				if (globalInputCode == InputCode::GamepadUndefined) continue;
 
 				switch (buttons[b])
 				{
 				case GLFW_PRESS:
-					globalInputs[b] = true;
+					globalButtons[globalInputCode] = true;
 					if (!GetInputDown(localInputCode))
 					{
-						downInputs->insert(localInputCode);
-						pressedInputs->insert(localInputCode);
+						downInputs.insert(localInputCode);
+						pressedInputs.insert(localInputCode);
 						Debug::Log("Input \"", Input::GetNameFromCode(globalInputCode), "\" was pressed on gamepad ", g);
 					}
 					break;
 				case GLFW_RELEASE:
 					if (GetInputDown(localInputCode))
 					{
-						downInputs->erase(localInputCode);
-						releasedInputs->insert(localInputCode);
+						downInputs.erase(localInputCode);
+						releasedInputs.insert(localInputCode);
 						Debug::Log("Input \"", Input::GetNameFromCode(globalInputCode), "\" was released on gamepad ", g);
 					}
 					break;
 				default: break;
 				}
 			}
+
+			int axisCount = 0;
+			const float* axes = glfwGetJoystickAxes(g, &axisCount);
+
+			for (uint a = 0; a < (uint)axisCount; a++)
+			{
+				InputCode globalInputCode = gamepads[g].GetGlobalInputCode(buttonCount + a);
+				InputCode localInputCode = gamepads[g].GetLocalInputCode(buttonCount + a);
+
+				Debug::Log("Axis ", Input::GetNameFromCode(globalInputCode), " is ", axes[a]);
+			}
 		}
 	}
 	// Consolidate Input Info for if Multiple Gamepads Aren't Needed
-	for (uint b = 0; b < (uint)globalInputs.size(); b++)
+	for (std::pair<InputCode, bool> globalButton: globalButtons)
 	{
-		bool wasDown = GetInputDown(InputCode((int)InputCode::GamepadFirst + b));
-		bool isDownNow = globalInputs[b];
+		bool wasDown = GetInputDown(globalButton.first);
+		bool isDownNow = globalButton.second;
 
 		if (!wasDown && isDownNow)
 		{
-			downInputs->insert(InputCode((int)InputCode::GamepadFirst + b));
-			pressedInputs->insert(InputCode((int)InputCode::GamepadFirst + b));
+			downInputs.insert(globalButton.first);
+			pressedInputs.insert(globalButton.first);
 		}
 		else if (wasDown && !isDownNow)
 		{
-			downInputs->erase(InputCode((int)InputCode::GamepadFirst + b));
-			releasedInputs->insert(InputCode((int)InputCode::GamepadFirst + b));
+			downInputs.erase(globalButton.first);
+			releasedInputs.insert(globalButton.first);
 		}
 	}
 }
@@ -461,13 +499,13 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 {
 	if (action == GLFW_PRESS)
 	{
-		AppInfo::input->pressedInputs->insert((InputCode)key);
-		AppInfo::input->downInputs->insert((InputCode)key);
+		AppInfo::input->pressedInputs.insert((InputCode)key);
+		AppInfo::input->downInputs.insert((InputCode)key);
 	}
 	else if (action == GLFW_RELEASE)
 	{
-		AppInfo::input->releasedInputs->insert((InputCode)key);
-		AppInfo::input->downInputs->erase((InputCode)key);
+		AppInfo::input->releasedInputs.insert((InputCode)key);
+		AppInfo::input->downInputs.erase((InputCode)key);
 	}
 }
 
@@ -477,13 +515,13 @@ void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 
 	if (action == GLFW_PRESS)
 	{
-		AppInfo::input->pressedInputs->insert((InputCode)button);
-		AppInfo::input->downInputs->insert((InputCode)button);
+		AppInfo::input->pressedInputs.insert((InputCode)button);
+		AppInfo::input->downInputs.insert((InputCode)button);
 	}
 	else
 	{
-		AppInfo::input->releasedInputs->insert((InputCode)button);
-		AppInfo::input->downInputs->erase((InputCode)button);
+		AppInfo::input->releasedInputs.insert((InputCode)button);
+		AppInfo::input->downInputs.erase((InputCode)button);
 	}
 }
 
@@ -510,15 +548,16 @@ void GamepadConnectionCallback(int id, int type)
 	case GLFW_CONNECTED:
 		if (glfwJoystickIsGamepad(id))
 		{
+			const char* name = glfwGetJoystickName(id);
+			AppInfo::input->gamepads[id].Connect(GetTypeFromDeviceName(name));
 			Debug::Log("Gamepad ", id, " Connected");
-			AppInfo::input->presentGamepads[id] = true;
 		}
 		break;
 	case GLFW_DISCONNECTED:
-		if (AppInfo::input->presentGamepads[id] == true)
+		if (AppInfo::input->gamepads[id].IsEnabled())
 		{
 			Debug::Log("Gamepad ", id, " Disconnected");
-			AppInfo::input->presentGamepads[id] = false;
+			AppInfo::input->gamepads[id].Disconnect();
 		}
 		break;
 	default:

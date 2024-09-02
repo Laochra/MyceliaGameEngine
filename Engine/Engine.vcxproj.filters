@@ -105,6 +105,9 @@
       <Filter>Utility</Filter>
     </ClCompile>
     <ClCompile Include="AppInfo.cpp" />
+    <ClCompile Include="GamepadInfo.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -253,6 +256,15 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="AppInfo.h" />
+    <ClInclude Include="GamepadInfo.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="InputCode.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="GamepadType.h">
+      <Filter>Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">

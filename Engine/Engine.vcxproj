@@ -172,6 +172,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObject3D.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
+    <ClCompile Include="GamepadInfo.cpp" />
     <ClCompile Include="GuidGenerator.cpp" />
     <ClCompile Include="InputAxis.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -218,11 +219,14 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObject3D.h" />
     <ClInclude Include="GameObjectManager.h" />
+    <ClInclude Include="GamepadInfo.h" />
+    <ClInclude Include="GamepadType.h" />
     <ClInclude Include="GeneralMacros.h" />
     <ClInclude Include="GuidGenerator.h" />
     <ClInclude Include="Heirarchical.h" />
     <ClInclude Include="HeirarchicalDefinitions.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="InputCode.h" />
     <ClInclude Include="JsonIncludes.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LightingManager.h" />
