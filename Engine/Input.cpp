@@ -375,6 +375,11 @@ Input::Input() noexcept
 	glfwSetMouseButtonCallback(window, MouseButtonCallback);
 	glfwSetScrollCallback(window, ScrollCallback);
 	glfwSetJoystickCallback(GamepadConnectionCallback);
+
+	for (InputCode axisCode : axisInputCodes)
+	{
+		axisInputs.insert(std::pair(axisCode, 0.0f));
+	}
 }
 
 bool Input::GetInputDown(InputCode inputCode) const noexcept
@@ -394,9 +399,8 @@ float Input::GetAxis(InputCode axisInputCode) const noexcept
 {
 	if (!IsAxis(axisInputCode)) return 0.0f;
 
-	return axis.find(axisInputCode)->second;
+	return axisInputs.find(axisInputCode)->second;
 }
-
 int Input::GetAxis(InputCode negativeInputCode, InputCode positiveInputCode) const noexcept
 {
 	return downInputs.count(positiveInputCode) - downInputs.count(positiveInputCode);
@@ -462,6 +466,12 @@ void Input::Update()
 				InputCode localInputCode = gamepads[g].GetLocalInputCode(buttonCount + a);
 
 				Debug::Log("Axis ", Input::GetNameFromCode(globalInputCode), " is ", axes[a]);
+
+				axisInputs[localInputCode] = axes[a];
+				if (abs(axes[a]) > abs(axisInputs[globalInputCode]))
+				{
+					axisInputs[globalInputCode] = axes[a];
+				}
 			}
 		}
 	}

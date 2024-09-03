@@ -3,8 +3,11 @@
 #include "InputCode.h"
 
 #include <vector>
+#include <string>
 
-enum class GamepadType
+typedef unsigned char ubyte;
+
+enum class GamepadType : ubyte
 {
 	Undefined,
 	Xbox,
@@ -15,8 +18,8 @@ inline constexpr GamepadType GetTypeFromDeviceName(const char* const name) noexc
 {
 	GamepadType type;
 
-	if (name == string("Xbox Controller")) type = GamepadType::Xbox;
-	else if (name == string("DualSense Wireless Controller")) type = GamepadType::Playstation;
+	if (name == std::string("Xbox Controller")) type = GamepadType::Xbox;
+	else if (name == std::string("DualSense Wireless Controller")) type = GamepadType::Playstation;
 	else type = GamepadType::Undefined;
 
 	return type;
@@ -39,12 +42,12 @@ inline const std::vector<InputCode> gamepadLayoutXbox =
 	InputCode::GamepadDPDown,
 	InputCode::GamepadDPLeft,
 
-	InputCode::GamepadLT,
-	InputCode::GamepadRT,
 	InputCode::GamepadLSX,
 	InputCode::GamepadLSY,
 	InputCode::GamepadRSX,
 	InputCode::GamepadRSY,
+	InputCode::GamepadLT,
+	InputCode::GamepadRT,
 };
 inline const std::vector<InputCode> gamepadLayoutPlaystation =
 {
@@ -56,32 +59,32 @@ inline const std::vector<InputCode> gamepadLayoutPlaystation =
 	InputCode::GamepadRB,
 	InputCode::GamepadUndefined,
 	InputCode::GamepadUndefined,
-	InputCode::GamepadLM,
+	InputCode::GamepadUndefined,
 	InputCode::GamepadRM,
 	InputCode::GamepadLS,
 	InputCode::GamepadRS,
 	InputCode::GamepadUndefined,
-	InputCode::GamepadUndefined,
+	InputCode::GamepadLM,
 	InputCode::GamepadUndefined,
 	InputCode::GamepadDPUp,
 	InputCode::GamepadDPRight,
 	InputCode::GamepadDPDown,
 	InputCode::GamepadDPLeft,
 
-	InputCode::GamepadLT,
-	InputCode::GamepadRT,
 	InputCode::GamepadLSX,
 	InputCode::GamepadLSY,
 	InputCode::GamepadRSX,
+	InputCode::GamepadLT,
+	InputCode::GamepadRT,
 	InputCode::GamepadRSY,
 };
 
-inline constexpr const std::vector<InputCode>* GetGamepadLayout(GamepadType gamepadType) noexcept
+inline constexpr std::vector<InputCode> GetGamepadLayout(GamepadType gamepadType) noexcept
 {
 	switch (gamepadType)
 	{
-	case GamepadType::Xbox: return &gamepadLayoutXbox;
-	case GamepadType::Playstation: return &gamepadLayoutPlaystation;
-	default: return &gamepadLayoutXbox;
+	case GamepadType::Xbox:					return gamepadLayoutXbox;
+	case GamepadType::Playstation:		return gamepadLayoutPlaystation;
+	default:										return gamepadLayoutXbox;
 	}
 }

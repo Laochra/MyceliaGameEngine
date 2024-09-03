@@ -7,6 +7,7 @@
 #include <string>
 
 typedef unsigned int uint;
+typedef unsigned char ubyte;
 
 class GamepadInfo
 {
@@ -26,7 +27,6 @@ public:
 
 private:
 	bool enabled;
-	uint gamepadID;
+	ubyte gamepadID;
 	GamepadType gamepadType;
-	const std::vector<InputCode>* layout;
 };

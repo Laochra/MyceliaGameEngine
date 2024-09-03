@@ -4,8 +4,7 @@
 
 GamepadInfo::GamepadInfo(uint gamepadIDInit) noexcept :
 	enabled(true),
-	gamepadType(GamepadType::Undefined),
-	layout(nullptr) { }
+	gamepadType(GamepadType::Undefined) { }
 
 bool GamepadInfo::IsEnabled() const noexcept
 {
@@ -16,13 +15,11 @@ void GamepadInfo::Connect(GamepadType gamepadTypeInit) noexcept
 {
 	enabled = true;
 	gamepadType = gamepadTypeInit;
-	layout = GetGamepadLayout(gamepadTypeInit);
 }
 void GamepadInfo::Disconnect() noexcept
 {
 	enabled = false;
 	gamepadType = GamepadType::Undefined;
-	layout = nullptr;
 }
 
 uint GamepadInfo::GetGamepadID() const noexcept
@@ -37,10 +34,10 @@ GamepadType GamepadInfo::GetGamepadType() const noexcept
 
 InputCode GamepadInfo::GetGlobalInputCode(uint index) const noexcept
 {
-	return (*layout)[index];
+	return GetGamepadLayout(gamepadType)[index];
 }
 
 InputCode GamepadInfo::GetLocalInputCode(uint index) const noexcept
 {
-	return InputCode(uint((*layout)[index]) + ((gamepadID + 1) * 100));
+	return InputCode(uint(GetGamepadLayout(gamepadType)[index]) + ((gamepadID + 1) * 100));
 }

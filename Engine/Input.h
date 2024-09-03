@@ -19,7 +19,7 @@ public:
 	std::set<InputCode> pressedInputs;
 	std::set<InputCode> releasedInputs;
 
-	std::map<InputCode, float> axis;
+	std::map<InputCode, float> axisInputs;
 	float axisDeadzone = 0.003f;
 
 	vec2 cursorPos = vec2(0, 0);
