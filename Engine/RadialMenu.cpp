@@ -46,7 +46,7 @@ RadialMenu::~RadialMenu() noexcept
 	glDeleteTextures(1, &spriteArray);
 }
 
-void RadialMenu::Update(vec2 input, Keybind interactKey) noexcept
+void RadialMenu::Update(vec2 input, InputBind interactKey) noexcept
 {
 	if (!enabled) return;
 	lastInput = input;

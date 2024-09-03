@@ -215,22 +215,23 @@ void HexGame::OnUnpause() { }
 void HexGame::FixedUpdate() { }
 void HexGame::Update()
 {
+	RadialMenu* currentRadialMenu;
+	switch (currentRadialPage)
+	{
+	default: currentRadialMenu = treeRadial;		break;
+	case 1U: currentRadialMenu = flowerRadial;	break;
+	case 2U: currentRadialMenu = waterRadial;		break;
+	case 3U: currentRadialMenu = landRadial;		break;
+	}
+
 	if (AppInfo::input->screenCursorPos.x >= 0 &&
 		AppInfo::input->screenCursorPos.y >= 0 &&
 		AppInfo::input->screenCursorPos.x < AppInfo::screenWidth &&
 		AppInfo::input->screenCursorPos.y < AppInfo::screenHeight)
 	{
-		RadialMenu* currentRadialMenu;
-		switch (currentRadialPage)
-		{
-		default: currentRadialMenu = treeRadial;		break;
-		case 1U: currentRadialMenu = flowerRadial;	break;
-		case 2U: currentRadialMenu = waterRadial;		break;
-		case 3U: currentRadialMenu = landRadial;		break;
-		}
 		if (currentRadialMenu->enabled)
 		{
-			if (currentRadialPage != 0 && AppInfo::input->GetKeyPressed(KeyCode::Q))
+			if (currentRadialPage != 0 && (AppInfo::input->GetInputPressed(InputCode::Q) || AppInfo::input->GetInputPressed(InputCode::GamepadLB)))
 			{
 				currentRadialMenu->enabled = false;
 				currentRadialPage = currentRadialPage - 1U;
@@ -243,7 +244,7 @@ void HexGame::Update()
 				}
 				currentRadialMenu->enabled = true;
 			}
-			if (currentRadialPage < 3U && AppInfo::input->GetKeyPressed(KeyCode::E))
+			if (currentRadialPage < 3U && (AppInfo::input->GetInputPressed(InputCode::E) || AppInfo::input->GetInputPressed(InputCode::GamepadRB)))
 			{
 				currentRadialMenu->enabled = false;
 				currentRadialPage = currentRadialPage + 1U;
@@ -256,15 +257,20 @@ void HexGame::Update()
 				}
 				currentRadialMenu->enabled = true;
 			}
+			if (AppInfo::input->GetInputPressed(InputCode::Esc) || AppInfo::input->GetInputPressed(InputCode::R) || AppInfo::input->GetInputPressed(InputCode::GamepadB) || AppInfo::input->GetInputPressed(InputCode::GamepadY))
+			{
+				currentRadialMenu->enabled = false;
+			}
 		}
 		else
 		{
-			if (AppInfo::input->GetKeyPressed(KeyCode::MouseLeft))
+			if (AppInfo::input->GetInputPressed(InputCode::Space) || AppInfo::input->GetInputPressed(InputCode::GamepadA))
 			{
 				const int pixelCount = AppInfo::screenWidth * AppInfo::screenHeight;
 				glm::ivec4* hexPosPixels = new glm::ivec4[pixelCount];
 				glGetTextureImage(handles.hexPosTexture, 0, GL_RGBA_INTEGER, GL_INT, pixelCount * sizeof(glm::ivec4), hexPosPixels);
-				uint hexPosIndex = (int)AppInfo::input->screenCursorPos.x + (int)AppInfo::input->screenCursorPos.y * AppInfo::screenWidth;
+				//uint hexPosIndex = (int)AppInfo::input->screenCursorPos.x + (int)AppInfo::input->screenCursorPos.y * AppInfo::screenWidth;
+				uint hexPosIndex = (int)AppInfo::screenWidth/2 + (int)AppInfo::screenHeight/2 * AppInfo::screenWidth;
 				glm::ivec4 hexPos = hexPosPixels[hexPosIndex];
 				if (hexPos.a != 0)
 				{
@@ -272,22 +278,44 @@ void HexGame::Update()
 				}
 			}
 
-			if (AppInfo::input->GetKeyPressed(KeyCode::Space))
+			if (AppInfo::input->GetInputPressed(InputCode::R) || AppInfo::input->GetInputPressed(InputCode::GamepadY))
 			{
 				currentRadialMenu->enabled = true;
 			}
 		}
 
-		vec2 cursorNormalised = AppInfo::input->screenCursorPos / vec2(AppInfo::screenWidth, AppInfo::screenHeight) * 2.0f - 1.0f;
+		//vec2 cursorNormalised = AppInfo::input->screenCursorPos / vec2(AppInfo::screenWidth, AppInfo::screenHeight) * 2.0f - 1.0f;
+		vec2 radialDirection = vec2(AppInfo::input->GetAxis(InputCode::GamepadLSX), -AppInfo::input->GetAxis(InputCode::GamepadLSY));
+		
 		float aspect = 1.0f / (AppInfo::screenHeight == 0 ? 0.0f : (AppInfo::screenWidth / (float)AppInfo::screenHeight));
-		currentRadialMenu->Update(vec2(cursorNormalised.x / aspect, cursorNormalised.y), Keybind(KeyCode::MouseLeft));
+		currentRadialMenu->Update(vec2(radialDirection.x / aspect, radialDirection.y), InputBind(InputCode::GamepadA));
 	}
 
-	KeyAxis xMovement(KeyCode::A, KeyCode::D);
-	KeyAxis zMovement(KeyCode::W, KeyCode::S);
-	vec2 moveDir = xMovement == 0.0f && zMovement == 0.0f ?
-		vec2(0.0f) :
-		glm::normalize(vec2((float)xMovement, (float)zMovement));
+	//InputAxis xMovement(InputCode::A, InputCode::D);
+	//InputAxis zMovement(InputCode::W, InputCode::S);
+
+	float xMovement = 0.0f;
+	float zMovement = 0.0f;
+
+	if (!currentRadialMenu->enabled)
+	{
+		xMovement = AppInfo::input->GetAxis(InputCode::GamepadLSX);
+		zMovement = AppInfo::input->GetAxis(InputCode::GamepadLSY);
+	}
+
+	vec2 moveDir;
+	if (glm::length(vec2(xMovement, zMovement)) > 1)
+	{
+		moveDir = glm::normalize(vec2(xMovement, zMovement));
+	}
+	else if (xMovement == 0.0f && zMovement == 0.0f)
+	{
+		moveDir = vec2(0.0f);
+	}
+	else
+	{
+		moveDir = vec2(xMovement, zMovement);
+	}
 
 	vec3 moveStep = vec3(moveDir.x, 0, moveDir.y) * 3.0f * Time::delta;
 	AppInfo::gameCamera->Translate(moveStep);

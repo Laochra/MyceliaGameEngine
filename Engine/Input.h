@@ -20,7 +20,7 @@ public:
 	std::set<InputCode> releasedInputs;
 
 	std::map<InputCode, float> axisInputs;
-	float axisDeadzone = 0.003f;
+	float axisDeadzone = 0.15f;
 
 	vec2 cursorPos = vec2(0, 0);
 	// This acts differently based on the application, if the game view exists inside a sub-window this will need to be set relative to that

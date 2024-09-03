@@ -361,7 +361,6 @@ Input::Input() noexcept
 		if (glfwJoystickIsGamepad(i) == GLFW_TRUE)
 		{
 			const char* name = glfwGetJoystickName(i);
-			Debug::LogWarning(name);
 			gamepad.Connect(GetTypeFromDeviceName(name));
 			Debug::Log("Gamepad ", i, " is present on startup.");
 
@@ -399,6 +398,10 @@ float Input::GetAxis(InputCode axisInputCode) const noexcept
 {
 	if (!IsAxis(axisInputCode)) return 0.0f;
 
+	float axisValue = axisInputs.find(axisInputCode)->second;
+
+	if (abs(axisValue) < axisDeadzone) return 0.0f;
+
 	return axisInputs.find(axisInputCode)->second;
 }
 int Input::GetAxis(InputCode negativeInputCode, InputCode positiveInputCode) const noexcept
@@ -410,6 +413,10 @@ void Input::Update()
 {
 	pressedInputs.clear();
 	releasedInputs.clear();
+	for (std::pair<const InputCode, float>& axisInput : axisInputs)
+	{
+		axisInput.second = 0.0f;
+	}
 
 	AppInfo::input->cursorMovement = vec2(0, 0);
 	AppInfo::input->scrollInput = vec2(0, 0);
@@ -442,7 +449,6 @@ void Input::Update()
 					{
 						downInputs.insert(localInputCode);
 						pressedInputs.insert(localInputCode);
-						Debug::Log("Input \"", Input::GetNameFromCode(globalInputCode), "\" was pressed on gamepad ", g);
 					}
 					break;
 				case GLFW_RELEASE:
@@ -450,7 +456,6 @@ void Input::Update()
 					{
 						downInputs.erase(localInputCode);
 						releasedInputs.insert(localInputCode);
-						Debug::Log("Input \"", Input::GetNameFromCode(globalInputCode), "\" was released on gamepad ", g);
 					}
 					break;
 				default: break;
@@ -464,8 +469,6 @@ void Input::Update()
 			{
 				InputCode globalInputCode = gamepads[g].GetGlobalInputCode(buttonCount + a);
 				InputCode localInputCode = gamepads[g].GetLocalInputCode(buttonCount + a);
-
-				Debug::Log("Axis ", Input::GetNameFromCode(globalInputCode), " is ", axes[a]);
 
 				axisInputs[localInputCode] = axes[a];
 				if (abs(axes[a]) > abs(axisInputs[globalInputCode]))

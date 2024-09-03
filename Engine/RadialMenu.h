@@ -23,7 +23,7 @@ public:
 	RadialMenu(const char* activeSprite, const char* inactiveSprite, const char* disabledSprite) noexcept;
 	~RadialMenu() noexcept;
 
-	void Update(vec2 input, Keybind interactKey) noexcept;
+	void Update(vec2 input, InputBind interactKey) noexcept;
 	void Draw() noexcept;
 
 private:
