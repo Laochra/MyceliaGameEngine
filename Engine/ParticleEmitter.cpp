@@ -172,8 +172,8 @@ void ParticleEmitter::Draw()
 
 	// Bind Program and View Projection Matrix
 	shaderProgram->Bind();
-	shaderProgram->BindUniform("Projection", Camera::main->GetProjectionMatrix((float)screenWidth, (float)screenHeight));
-	shaderProgram->BindUniform("ModelView", Camera::main->GetViewMatrix() * GetMatrix());
+	shaderProgram->BindUniform("Projection", AppInfo::ActiveCamera()->GetProjectionMatrix());
+	shaderProgram->BindUniform("ModelView", AppInfo::ActiveCamera()->GetViewMatrix() * GetMatrix());
 	textureManager->GetTexture(particleSystem->properties.spriteFilepath, Texture::NonLinear)->Bind(0);
 	shaderProgram->BindUniform("Sprite", 0);
 	shaderProgram->BindUniform("AlphaCutoff", particleSystem->properties.alphaClippingThreshold);

@@ -1,6 +1,8 @@
 #include "MaterialGUI.h"
 
 #include "MaterialManager.h"
+#include "ShaderManager.h"
+#include "TextureManager.h"
 
 #include <sstream>
 using std::ostringstream;
@@ -9,52 +11,23 @@ using std::ostringstream;
 
 #include "JsonIncludes.h"
 
+#include "FileDialogue.h"
+
 namespace MaterialGUI
 {
-	const string materialsPath = "Assets\\Materials";
-	const string shadersPath = "Assets\\Shaders";
-	const string texturesPath = "Assets\\Textures";
-
-	vector<path> materials;
-	vector<path> shaderPrograms;
-	vector<path> textures;
-
 	Fields current = Fields();
 	bool dirty = false;
 
 	void MaterialGUI::Initialise()
 	{
-		materials.clear();
-		shaderPrograms.clear();
-		textures.clear();
 
-		path filePath;
-		string extension;
-		for (const directory_entry& entry : directory_iterator(materialsPath))
-		{
-			filePath = entry.path();
-			extension = filePath.extension().string();
-
-			if (extension == ".mat") materials.push_back(filePath);
-		}
-		for (const directory_entry& entry : directory_iterator(shadersPath))
-		{
-			filePath = entry.path();
-			extension = filePath.extension().string();
-
-			if (extension == ".gpu") shaderPrograms.push_back(filePath);
-		}
-		for (const directory_entry& entry : directory_iterator(texturesPath))
-		{
-			filePath = entry.path();
-			extension = filePath.extension().string();
-
-			if (extension == ".png" || extension == ".tga" || extension == ".jpg") textures.push_back(filePath); // TODO: Refactor this to allow for more image formats
-		}
 	}
 
 	void MaterialGUI::Save()
 	{
+		string savePath = FileDialogue::GetSavePath(FileDialogue::PathDetails("Save Material", "Assets\\", {"*.mat"}), FileDialogue::LimitToAssetFolder::True);
+		if (savePath.empty()) return;
+
 		dirty = false;
 		json material;
 
@@ -112,10 +85,7 @@ namespace MaterialGUI
 		}
 		material["Uniforms"] = uniforms;
 
-		ostringstream stream;
-		stream << materialsPath << '\\' << current.materialName + ".mat";
-
-		current.filePath = stream.str();
+		current.filePath = savePath;
 
 		ofstream output(current.filePath.c_str());
 		output << std::setw(2) << material << "\n";
@@ -132,6 +102,8 @@ namespace MaterialGUI
 	{
 		dirty = false;
 		current = Fields();
+
+		if (filePathStr == "Default") filePathStr = "Engine\\DefaultAssets\\Default.mat";
 
 		current.filePath = filePathStr;
 
@@ -386,14 +358,23 @@ namespace MaterialGUI
 				dirty = false;
 			}
 
-			for (int i = 0; i < materials.size(); i++)
+			for (int i = 0; i < materialManager->defaultMaterials.size(); i++)
 			{
-				bool isCurrent = materials[i].string() == current.filePath;
-				if (ImGui::Selectable(materials[i].filename().string().c_str(), isCurrent))
+				bool isCurrent = materialManager->defaultMaterials[i] == current.filePath;
+				if (ImGui::Selectable(materialManager->defaultMaterials[i].c_str(), isCurrent))
 				{
-					NewLoad(materials[i]);
+					NewLoad(materialManager->defaultMaterials[i]);
 				}
 				if (isCurrent) ImGui::SetItemDefaultFocus();
+			}
+
+			if (ImGui::Selectable("Load From File"))
+			{
+				string loadPath = FileDialogue::GetLoadPath(FileDialogue::PathDetails("Load Material", "Assets\\", { "*.mat" }), FileDialogue::LimitToAssetFolder::True);
+				if (!loadPath.empty())
+				{
+					Load(loadPath);
+				}
 			}
 
 			ImGui::EndCombo();
@@ -407,33 +388,21 @@ namespace MaterialGUI
 		bool newFile = current.filePath == "New File";
 
 		ImGui::BeginDisabled(!dirty || unnamed);
-		{
 			if (ImGui::Button("Save"))
 			{
 				string oldFilePath = current.filePath;
 				Save();
 
 				if (current.filePath == oldFilePath) materialManager->ReloadMaterial(current.filePath.c_str());
-				else std::remove(oldFilePath.c_str());
 			}
-			ImGui::SameLine();
-			if (ImGui::Button("Save New"))
-			{
-				string oldFilePath = current.filePath;
-				Save();
-
-				if (current.filePath == oldFilePath) materialManager->ReloadMaterial(current.filePath.c_str());
-			}
-		} ImGui::EndDisabled();
+		ImGui::EndDisabled();
 
 		ImGui::BeginDisabled(!dirty || newFile);
-		{
 			ImGui::SameLine();
 			if (ImGui::Button("Revert")) { Reload(); }
-		} ImGui::EndDisabled();
+		ImGui::EndDisabled();
 
 		ImGui::BeginDisabled(newFile);
-		{
 			ImGui::SameLine();
 			if (ImGui::Button("Delete"))
 			{
@@ -441,7 +410,8 @@ namespace MaterialGUI
 				dirty = false;
 				current = Fields();
 			}
-		} ImGui::EndDisabled();
+		ImGui::EndDisabled();
+
 		if (dirty)
 		{
 			ImGui::SameLine();
@@ -456,23 +426,23 @@ namespace MaterialGUI
 
 			if (ImGui::BeginCombo("##Shader Program", current.shaderFilePath.c_str()))
 			{
-				if (ImGui::Selectable("PBRLit", current.shaderFilePath == "PBRLit"))
+				for (int i = 0; i < shaderManager->defaultPrograms.size(); i++)
 				{
-					LoadShaderProgram("PBRLit");
-				}
-				if (ImGui::Selectable("Unlit", current.shaderFilePath == "Unlit"))
-				{
-					LoadShaderProgram("Unlit");
-				}
-
-				for (int i = 0; i < shaderPrograms.size(); i++)
-				{
-					bool isCurrent = shaderPrograms[i].string() == current.shaderFilePath;
-					if (ImGui::Selectable(shaderPrograms[i].filename().string().c_str(), isCurrent))
+					bool isCurrent = shaderManager->defaultPrograms[i] == current.shaderFilePath;
+					if (ImGui::Selectable(shaderManager->defaultPrograms[i].c_str(), isCurrent))
 					{
-						LoadShaderProgram(shaderPrograms[i].string());
+						LoadShaderProgram(shaderManager->defaultPrograms[i]);
 					}
 					if (isCurrent) ImGui::SetItemDefaultFocus();
+				}
+
+				if (ImGui::Selectable("Load From File"))
+				{
+					string loadPath = FileDialogue::GetLoadPath(FileDialogue::PathDetails("Load Shader Program", "Assets\\", { "*.gpu" }), FileDialogue::LimitToAssetFolder::True);
+					if (!loadPath.empty())
+					{
+						LoadShaderProgram(loadPath);
+					}
 				}
 
 				ImGui::EndCombo();
@@ -542,16 +512,27 @@ namespace MaterialGUI
 					valueStr = "None";
 				}
 
-				for (int i = 0; i < textures.size(); i++)
+				for (int i = 0; i < textureManager->defaultTextures.size(); i++)
 				{
-					bool isCurrent = textures[i].string() == valueStr;
-					if (ImGui::Selectable(textures[i].filename().string().c_str(), isCurrent))
+					bool isCurrent = textureManager->defaultTextures[i] == valueStr;
+					if (ImGui::Selectable(textureManager->defaultTextures[i].c_str(), isCurrent))
 					{
 						value.clear();
 						changeMade = true;
-						valueStr = textures[i].string();
+						valueStr = textureManager->defaultTextures[i];
 					}
 					if (isCurrent) ImGui::SetItemDefaultFocus();
+				}
+
+				if (ImGui::Selectable("Load From File"))
+				{
+					string loadPath = FileDialogue::GetLoadPath(FileDialogue::PathDetails("Load Texture", "Assets\\", {"*.png","*.jpg","*.bmp","*.tga"}), FileDialogue::LimitToAssetFolder::True);
+					if (!loadPath.empty())
+					{
+						changeMade = true;
+						value.clear();
+						valueStr = loadPath;
+					}
 				}
 
 				ImGui::EndCombo();

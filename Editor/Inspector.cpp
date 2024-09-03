@@ -3,6 +3,7 @@
 Inspector* inspector = new Inspector();
 
 #include "GameObject3DGUI.h"
+#include "CameraGUI.h"
 #include "MeshRendererGUI.h"
 #include "LightObjectGUI.h"
 #include "ParticleEmitterGUI.h"
@@ -24,6 +25,7 @@ void Inspector::SetTarget(GameObject* target)
 	{
 	case GameObject::classID: targetGUI = new GameObjectGUI(target); break;
 	case GameObject3D::classID: targetGUI = new GameObject3DGUI(target); break;
+	case Camera::classID: targetGUI = new CameraGUI(target); break;
 	case MeshRenderer::classID: targetGUI = new MeshRendererGUI(target); break;
 	case LightObject::classID: targetGUI = new LightObjectGUI(target); break;
 	case ParticleEmitter::classID: targetGUI = new ParticleEmitterGUI(target); break;

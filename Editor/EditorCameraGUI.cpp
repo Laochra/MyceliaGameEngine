@@ -6,7 +6,7 @@ void EditorCameraGUI::DrawEditorCameraGUI(const char* const name, bool& open)
 {
 	ImGui::Begin(name, &open);
 
-	DrawEditorCameraGUI(EditorCamera::main());
+	DrawEditorCameraGUI((EditorCamera*)AppInfo::editorCamera);
 
 	ImGui::End();
 }
@@ -23,8 +23,14 @@ void EditorCameraGUI::DrawEditorCameraGUI(EditorCamera* camera)
 			if (ImGui::BeginTabItem("Display"))
 			{
 				ImGui::SeparatorText("Clipping Planes");
-				ImGui::DragFloat("Near", &camera->nearClip, 0.01f);
-				ImGui::DragFloat("Far", &camera->farClip, 100.0f);
+				if (ImGui::DragFloat("Near", &camera->nearClip, 0.01f, FLT_MIN, FLT_MAX, "%.3f", ImGuiSliderFlags_AlwaysClamp))
+				{
+					if (camera->nearClip >= camera->farClip) camera->farClip = camera->nearClip + FLT_MIN;
+				}
+				if (ImGui::DragFloat("Far", &camera->farClip, 100.0f, FLT_MIN, FLT_MAX, "%.3f", ImGuiSliderFlags_AlwaysClamp))
+				{
+					if (camera->farClip <= camera->nearClip) camera->nearClip = camera->farClip - 0.01f;
+				}
 
 				ImGui::SeparatorText("FOV");
 				float fovDegrees = glm::degrees(camera->fov);

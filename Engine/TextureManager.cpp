@@ -33,6 +33,10 @@ TextureManager::TextureManager()
    defaultRMAO->Create(1, 1, Texture::RGB, rmao);
    defaultRMAO->fileName = "DefaultRMAO";
    loadedTextures.insert(std::pair(string("DefaultRMAO"), defaultRMAO));
+
+   defaultTextures.push_back("DefaultColour");
+   defaultTextures.push_back("DefaultNormal");
+   defaultTextures.push_back("DefaultRMAO");
 }
 
 TextureManager::~TextureManager()

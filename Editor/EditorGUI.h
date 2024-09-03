@@ -7,12 +7,7 @@ typedef unsigned int uint;
 namespace EditorGUI
 {
 	// Scene Buffers
-	extern uint sceneViewFrameBufferHDR;
-	extern uint sceneViewColourBufferHDR[2];
-	extern uint sceneViewColourBufferGizmos;
-	extern uint sceneViewDepthStencilBuffer;
-	extern uint sceneViewFrameBufferOutput;
-	extern uint sceneViewColourBufferOutput;
+	extern uint sceneViewTexture;
 
 	extern uint guidFBO;
 	extern uint guidDepth;

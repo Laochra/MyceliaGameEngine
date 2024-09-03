@@ -42,14 +42,14 @@ void MeshRenderer::Draw()
 	if (material->shaderProgram == nullptr) return;
 	if (mesh == nullptr) return;
 
-	mat4 ProjectionViewMatrix = Camera::main->GetPVMatrix();
+	mat4 ProjectionViewMatrix = AppInfo::ActiveCamera()->GetPVMatrix();
 
 	// Bind Shader
 	ShaderProgram& sp = *material->shaderProgram;
 	sp.Bind();
 
 	// Bind Camera Posiiton
-	sp.BindUniform("CameraPosition", Camera::main->GetGlobalPosition());
+	sp.BindUniform("CameraPosition", AppInfo::ActiveCamera()->GetGlobalPosition());
 
 	// Bind Light
 	//material->shaderProgram->BindUniform("AmbientColour", LightingManager::ambientLight.colour);
@@ -220,7 +220,7 @@ void MeshRenderer::DrawGUID()
 	ShaderProgram* guidProgram = shaderManager->GetProgram("DrawGUID");
 	guidProgram->Bind();
 
-	guidProgram->BindUniform("ProjectionViewModel", Camera::main->GetPVMatrix() * GetMatrix());
+	guidProgram->BindUniform("ProjectionViewModel", AppInfo::ActiveCamera()->GetPVMatrix() * GetMatrix());
 
 	unsigned long long guid = GetGUID();
 	guidProgram->BindUniform("GUID", *(glm::uvec2*)&guid);

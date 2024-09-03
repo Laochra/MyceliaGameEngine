@@ -1,4 +1,9 @@
 #include "Application.h"
+#include "AppInfo.h"
+
+#include "Debug.h"
+
+#include "Camera.h"
 
 #include "TimeManager.h"
 #include "Input.h"
@@ -9,11 +14,7 @@
 #include "TextureManager.h"
 #include "MeshManager.h"
 
-#include "Debug.h"
-
 #include "GeneralMacros.h"
-
-#include "AppInfo.h"
 
 bool applicationFocused = true;
 
@@ -36,10 +37,10 @@ int Application::Run()
 	Initialise();
 	Debug::LogSubtle("Initialisation successful\n");
 
-	if (Camera::main == nullptr)
+	if (AppInfo::editorCamera == nullptr)
 	{
 		Debug::LogWarning(LogID::WRN001, "A default was created to avoid crashing but the application will not behave as expected. ", locationinfo);
-		Camera::main = GameObject::Instantiate<Camera>();
+		AppInfo::editorCamera = GameObject::Instantiate<Camera>();
 	}
 
 	GameLoop();
@@ -78,17 +79,17 @@ int Application::Setup()
 #if _DEBUG
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 #endif
-	window = glfwCreateWindow(1600, 900, "Window", nullptr, nullptr);
-	if (window == nullptr)
+	AppInfo::window = glfwCreateWindow(1600, 900, "Window", nullptr, nullptr);
+	if (AppInfo::window == nullptr)
 	{
 		Debug::LogError(LogID::ERR902, "GLFW failed to create a window", locationinfo);
 		glfwTerminate();
 		return -1;
 	}
 
-	glfwSetWindowFocusCallback(window, WindowFocusCallback);
+	glfwSetWindowFocusCallback(AppInfo::window, WindowFocusCallback);
 
-	glfwMakeContextCurrent(window);
+	glfwMakeContextCurrent(AppInfo::window);
 
 	glfwSwapInterval(0); // Disables VSync
 
@@ -120,6 +121,7 @@ int Application::Setup()
 	materialManager = new MaterialManager();
 	textureManager = new TextureManager();
 	meshManager = new MeshManager();
+	gameObjectManager = new GameObjectManager();
 
 	return 0;
 }
@@ -131,7 +133,7 @@ void Application::GameLoop()
 
 	while (!applicationIsReadyToClose)
 	{
-		while (isRunning && !glfwWindowShouldClose(window))
+		while (isRunning && !glfwWindowShouldClose(AppInfo::window))
 		{
 			AppInfo::input->Update();
 			glfwPollEvents();
@@ -148,7 +150,7 @@ void Application::GameLoop()
 
 			Draw();
 
-			glfwSwapBuffers(window);
+			glfwSwapBuffers(AppInfo::window);
 		}
 
 		applicationIsReadyToClose = OnClose();
@@ -156,18 +158,22 @@ void Application::GameLoop()
 		if (!applicationIsReadyToClose)
 		{
 			isRunning = true;
-			glfwSetWindowShouldClose(window, false);
+			glfwSetWindowShouldClose(AppInfo::window, false);
 		}
 	}
 }
 
 void Application::Close()
 {
+	del(game);
+
 	del(AppInfo::input);
 
 	del(shaderManager);
 	del(materialManager);
 	del(textureManager);
+	del(meshManager);
+	del(gameObjectManager);
 
 	glfwTerminate();
 }

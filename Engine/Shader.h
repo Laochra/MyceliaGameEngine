@@ -27,6 +27,7 @@ enum ShaderInputType : unsigned int
 	UndefinedTypeGL = 0,
 
 	TextureGL = GL_SAMPLER_2D,
+	TextureArrayGL = GL_SAMPLER_2D_ARRAY,
 	CubemapGL = GL_SAMPLER_CUBE,
 
 	FloatGL = GL_FLOAT,
@@ -112,10 +113,9 @@ class ShaderProgram
 {
 public:
 
-	ShaderProgram() : program(0), lastError(nullptr)
-	{
-		m_shaders[0] = m_shaders[1] = m_shaders[2] = m_shaders[3] = m_shaders[4] = 0;
-	}
+	ShaderProgram();
+	ShaderProgram(const char* jsonFilename);
+	ShaderProgram(const char* vertex, const char* fragment);
 	~ShaderProgram();
 
 	bool LoadAndLinkFromJSON(const char* filename);

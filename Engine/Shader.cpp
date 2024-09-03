@@ -15,6 +15,7 @@ using std::ifstream;
 const std::map<ShaderInputType, const char*> shaderInputTypeToString = {
    {UndefinedTypeGL, "Undefined"},
 	{TextureGL, "Texture"},
+	{TextureArrayGL, "Texture[]"},
    {CubemapGL, "Cubemap"},
 
 	{FloatGL, "Float"},
@@ -61,6 +62,7 @@ const std::map<ShaderInputType, const char*> shaderInputTypeToString = {
 const std::map<string, ShaderInputType> cStringToShaderInputType = {
 	{"Undefined", UndefinedTypeGL},
 	{"Texture", TextureGL},
+	{"Texture[]", TextureArrayGL},
 	{"Cubemap", CubemapGL},
 
  	{"Float", FloatGL},
@@ -205,6 +207,26 @@ bool Shader::CreateShader(ShaderStage stageInit, const char* string)
 	}
 
 	return true;
+}
+
+ShaderProgram::ShaderProgram() : program(0), lastError(nullptr)
+{
+	m_shaders[0] = m_shaders[1] = m_shaders[2] = m_shaders[3] = m_shaders[4] = 0;
+}
+ShaderProgram::ShaderProgram(const char* jsonFilename) : lastError(nullptr)
+{
+	m_shaders[0] = m_shaders[1] = m_shaders[2] = m_shaders[3] = m_shaders[4] = 0;
+
+	LoadAndLinkFromJSON(jsonFilename);
+}
+
+ShaderProgram::ShaderProgram(const char* vertex, const char* fragment)
+{
+	m_shaders[1] = m_shaders[2] = m_shaders[3] = 0;
+
+	LoadShader(VertexStage, vertex);
+	LoadShader(FragmentStage, fragment);
+	Link();
 }
 
 ShaderProgram::~ShaderProgram()
@@ -463,10 +485,7 @@ bool ShaderProgram::BindUniform(const char* name, int value)
 {
 	assert(program > 0 && "Invalid shader program");
 	int i = glGetUniformLocation(program, name);
-	if (i < 0) {
-		printf("Shader uniform [%s] not found! Is it being used?\n", name);
-		return false;
-	}
+	if (i < 0) return false;
 	glUniform1i(i, value);
 	return true;
 }
@@ -475,10 +494,7 @@ bool ShaderProgram::BindUniform(const char* name, const glm::uvec2& value)
 {
 	assert(program > 0 && "Invalid shader program");
 	int i = glGetUniformLocation(program, name);
-	if (i < 0) {
-		printf("Shader uniform [%s] not found! Is it being used?\n", name);
-		return false;
-	}
+	if (i < 0) return false;
 	glUniform2ui(i, value.x, value.y);
 	return true;
 }
@@ -487,10 +503,7 @@ bool ShaderProgram::BindUniform(const char* name, float value)
 {
 	assert(program > 0 && "Invalid shader program");
 	int i = glGetUniformLocation(program, name);
-	if (i < 0) {
-		printf("Shader uniform [%s] not found! Is it being used?\n", name);
-		return false;
-	}
+	if (i < 0) return false;
 	glUniform1f(i, value);
 	return true;
 }
@@ -499,10 +512,7 @@ bool ShaderProgram::BindUniform(const char* name, const vec2& value)
 {
 	assert(program > 0 && "Invalid shader program");
 	int i = glGetUniformLocation(program, name);
-	if (i < 0) {
-		printf("Shader uniform [%s] not found! Is it being used?\n", name);
-		return false;
-	}
+	if (i < 0) return false;
 	glUniform2f(i, value.x, value.y);
 	return true;
 }
@@ -511,10 +521,7 @@ bool ShaderProgram::BindUniform(const char* name, const vec3& value)
 {
 	assert(program > 0 && "Invalid shader program");
 	int i = glGetUniformLocation(program, name);
-	if (i < 0) {
-		printf("Shader uniform [%s] not found! Is it being used?\n", name);
-		return false;
-	}
+	if (i < 0) return false;
 	glUniform3f(i, value.x, value.y, value.z);
 	return true;
 }
@@ -523,10 +530,7 @@ bool ShaderProgram::BindUniform(const char* name, const vec4& value)
 {
 	assert(program > 0 && "Invalid shader program");
 	int i = glGetUniformLocation(program, name);
-	if (i < 0) {
-		printf("Shader uniform [%s] not found! Is it being used?\n", name);
-		return false;
-	}
+	if (i < 0) return false;
 	glUniform4f(i, value.x, value.y, value.z, value.w);
 	return true;
 }
@@ -535,10 +539,7 @@ bool ShaderProgram::BindUniform(const char* name, const mat2& value)
 {
 	assert(program > 0 && "Invalid shader program");
 	int i = glGetUniformLocation(program, name);
-	if (i < 0) {
-		printf("Shader uniform [%s] not found! Is it being used?\n", name);
-		return false;
-	}
+	if (i < 0) return false;
 	glUniformMatrix2fv(i, 1, GL_FALSE, &value[0][0]);
 	return true;
 }
@@ -547,10 +548,7 @@ bool ShaderProgram::BindUniform(const char* name, const mat3& value)
 {
 	assert(program > 0 && "Invalid shader program");
 	int i = glGetUniformLocation(program, name);
-	if (i < 0) {
-		printf("Shader uniform [%s] not found! Is it being used?\n", name);
-		return false;
-	}
+	if (i < 0) return false;
 	glUniformMatrix3fv(i, 1, GL_FALSE, &value[0][0]);
 	return true;
 }
@@ -559,10 +557,7 @@ bool ShaderProgram::BindUniform(const char* name, const mat4& value)
 {
 	assert(program > 0 && "Invalid shader program");
 	int i = glGetUniformLocation(program, name);
-	if (i < 0) {
-		printf("Shader uniform [%s] not found! Is it being used?\n", name);
-		return false;
-	}
+	if (i < 0) return false;
 	glUniformMatrix4fv(i, 1, GL_FALSE, &value[0][0]);
 	return true;
 }
@@ -571,10 +566,7 @@ bool ShaderProgram::BindUniform(const char* name, int count, int* value)
 {
 	assert(program > 0 && "Invalid shader program");
 	int i = glGetUniformLocation(program, name);
-	if (i < 0) {
-		printf("Shader uniform [%s] not found! Is it being used?\n", name);
-		return false;
-	}
+	if (i < 0) return false;
 	glUniform1iv(i, count, value);
 	return true;
 }
@@ -583,10 +575,7 @@ bool ShaderProgram::BindUniform(const char* name, int count, float* value)
 {
 	assert(program > 0 && "Invalid shader program");
 	int i = glGetUniformLocation(program, name);
-	if (i < 0) {
-		printf("Shader uniform [%s] not found! Is it being used?\n", name);
-		return false;
-	}
+	if (i < 0) return false;
 	glUniform1fv(i, count, value);
 	return true;
 }
@@ -595,10 +584,7 @@ bool ShaderProgram::BindUniform(const char* name, int count, const vec2* value)
 {
 	assert(program > 0 && "Invalid shader program");
 	int i = glGetUniformLocation(program, name);
-	if (i < 0) {
-		printf("Shader uniform [%s] not found! Is it being used?\n", name);
-		return false;
-	}
+	if (i < 0) return false;
 	glUniform2fv(i, count, (float*)value);
 	return true;
 }
@@ -607,10 +593,7 @@ bool ShaderProgram::BindUniform(const char* name, int count, const vec3* value)
 {
 	assert(program > 0 && "Invalid shader program");
 	int i = glGetUniformLocation(program, name);
-	if (i < 0) {
-		printf("Shader uniform [%s] not found! Is it being used?\n", name);
-		return false;
-	}
+	if (i < 0) return false;
 	glUniform3fv(i, count, (float*)value);
 	return true;
 }
@@ -619,10 +602,7 @@ bool ShaderProgram::BindUniform(const char* name, int count, const vec4* value)
 {
 	assert(program > 0 && "Invalid shader program");
 	int i = glGetUniformLocation(program, name);
-	if (i < 0) {
-		printf("Shader uniform [%s] not found! Is it being used?\n", name);
-		return false;
-	}
+	if (i < 0) return false;
 	glUniform4fv(i, count, (float*)value);
 	return true;
 }
@@ -631,10 +611,7 @@ bool ShaderProgram::BindUniform(const char* name, int count, const mat2* value)
 {
 	assert(program > 0 && "Invalid shader program");
 	int i = glGetUniformLocation(program, name);
-	if (i < 0) {
-		printf("Shader uniform [%s] not found! Is it being used?\n", name);
-		return false;
-	}
+	if (i < 0) return false;
 	glUniformMatrix2fv(i, count, GL_FALSE, (float*)value);
 	return true;
 }
@@ -643,10 +620,7 @@ bool ShaderProgram::BindUniform(const char* name, int count, const mat3* value)
 {
 	assert(program > 0 && "Invalid shader program");
 	int i = glGetUniformLocation(program, name);
-	if (i < 0) {
-		printf("Shader uniform [%s] not found! Is it being used?\n", name);
-		return false;
-	}
+	if (i < 0) return false;
 	glUniformMatrix3fv(i, count, GL_FALSE, (float*)value);
 	return true;
 }
@@ -655,10 +629,7 @@ bool ShaderProgram::BindUniform(const char* name, int count, const mat4* value)
 {
 	assert(program > 0 && "Invalid shader program");
 	int i = glGetUniformLocation(program, name);
-	if (i < 0) {
-		printf("Shader uniform [%s] not found! Is it being used?\n", name);
-		return false;
-	}
+	if (i < 0) return false;
 	glUniformMatrix4fv(i, count, GL_FALSE, (float*)value);
 	return true;
 }

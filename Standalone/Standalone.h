@@ -2,7 +2,7 @@
 
 #include "Application.h"
 
-class Editor : public Application
+class Standalone : public Application
 {
 public:
 	using Application::Application;
@@ -14,3 +14,5 @@ protected:
 	virtual void Draw() override;
 	virtual bool OnClose() override;
 };
+
+extern void ScreenResizeCallback(GLFWwindow* window, int width, int height);

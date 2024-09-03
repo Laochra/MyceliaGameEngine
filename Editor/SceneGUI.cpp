@@ -130,18 +130,18 @@ namespace SceneGUI
 
 		float titleBarHeight = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2;
 		glm::ivec2 newScreenSize((int)ImGui::GetWindowWidth(), (int)(ImGui::GetWindowHeight() - (titleBarHeight + menuBarSize.y)));
-		if (screenWidth != newScreenSize.x || screenHeight != newScreenSize.y)
+		if (AppInfo::screenWidth != newScreenSize.x || AppInfo::screenHeight != newScreenSize.y)
 		{
-			screenWidth = newScreenSize.x;
-			screenHeight = newScreenSize.y;
-			screenSizeJustChanged = true;
+			AppInfo::screenWidth = newScreenSize.x;
+			AppInfo::screenHeight = newScreenSize.y;
+			AppInfo::screenSizeJustChanged = true;
 		}
 		else
 		{
-			screenSizeJustChanged = false;
+			AppInfo::screenSizeJustChanged = false;
 		}
 
-		if (screenWidth <= 0 || screenHeight <= 0)
+		if (AppInfo::screenWidth <= 0 || AppInfo::screenHeight <= 0)
 		{
 			ImGui::End();
 			ImGui::GetStyle().WindowPadding = oldPadding;
@@ -153,15 +153,15 @@ namespace SceneGUI
 			TransformEdit::CancelTransform();
 		}
 
-		if (EditorCamera::main()->freeCamera.released())
+		if (((EditorCamera*)AppInfo::editorCamera)->freeCamera.released())
 		{
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 			ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse; // Re-enables Imgui's Mouse Input
 			AppInfo::input->enabled = false;
 		}
 
-		uintptr_t image = (uintptr_t)EditorGUI::sceneViewColourBufferOutput; // Casting to a uintptr_t is required to stop a warning with converting 32bit uint to 64bit void*. ImGui::Image works regardless.
-		ImGui::Image((void*)image, ImVec2((float)screenWidth, (float)screenHeight), ImVec2(0, 1), ImVec2(1, 0));
+		uintptr_t image = (uintptr_t)EditorGUI::sceneViewTexture; // Casting to a uintptr_t is required to stop a warning with converting 32bit uint to 64bit void*. ImGui::Image works regardless.
+		ImGui::Image((ImTextureID)image, ImVec2((float)AppInfo::screenWidth, (float)AppInfo::screenHeight), ImVec2(0, 1), ImVec2(1, 0));
 		
 		if (AppInfo::state == AppState::Editor)
 		{
@@ -169,7 +169,7 @@ namespace SceneGUI
 			{
 				AppInfo::input->enabled = true;
 
-				if (EditorCamera::main()->freeCamera.pressed())
+				if (((EditorCamera*)AppInfo::editorCamera)->freeCamera.pressed())
 				{
 					TransformEdit::CancelTransform();
 
@@ -205,26 +205,26 @@ namespace SceneGUI
 				int mainWindowX, mainWindowY;
 				glfwGetWindowPos(window, &mainWindowX, &mainWindowY);
 				vec2 cursorPos = AppInfo::input->cursorPos - vec2(imguiWindowPos.x, imguiWindowPos.y + menuBarSize.y + 23) + vec2(mainWindowX, mainWindowY);
-				cursorPos.y = screenHeight - cursorPos.y;
-				normalisedMousePos = vec2(cursorPos.x / screenWidth, cursorPos.y / screenHeight);
+				cursorPos.y = AppInfo::screenHeight - cursorPos.y;
+				normalisedMousePos = vec2(cursorPos.x / AppInfo::screenWidth, cursorPos.y / AppInfo::screenHeight);
 				normalisedMousePos = (normalisedMousePos * 2.0f) - 1.0f;
 				
 				if (AppInfo::input->GetInputPressed(InputCode::MouseLeft))
 				{
-					const int pixelCount = screenWidth * screenHeight;
+					const int pixelCount = AppInfo::screenWidth * AppInfo::screenHeight;
 					ulong* guidPixels = new ulong[pixelCount];
 					glGetTextureImage(EditorGUI::guidTexture, 0, GL_RG_INTEGER, GL_UNSIGNED_INT, pixelCount * sizeof(ulong), guidPixels);
 
-					if (cursorPos.x > 0 && cursorPos.x < screenWidth && cursorPos.y > 0 && cursorPos.y < screenHeight)
+					if (cursorPos.x > 0 && cursorPos.x < AppInfo::screenWidth && cursorPos.y > 0 && cursorPos.y < AppInfo::screenHeight)
 					{
-						uint guidIndex = (int)cursorPos.x + (int)cursorPos.y * screenWidth;
+						uint guidIndex = (int)cursorPos.x + (int)cursorPos.y * AppInfo::screenWidth;
 						ulong guid = guidPixels[guidIndex];
 						switch (guid)
 						{
 						case (ulong)TransformEdit::Handle::X:
 						case (ulong)TransformEdit::Handle::Y:
 						case (ulong)TransformEdit::Handle::Z:
-							vec2 normalisedMousePos = vec2(cursorPos.x / screenWidth, cursorPos.y / screenHeight);
+							vec2 normalisedMousePos = vec2(cursorPos.x / AppInfo::screenWidth, cursorPos.y / AppInfo::screenHeight);
 							normalisedMousePos *= 2.0f;
 							normalisedMousePos -= 1.0f;
 							TransformEdit::BeginTransform((TransformEdit::Handle)guid, normalisedMousePos);
@@ -237,7 +237,7 @@ namespace SceneGUI
 				}
 
 			}
-			else if (AppInfo::input->enabled && !EditorCamera::main()->freeCamera.down())
+			else if (AppInfo::input->enabled && !((EditorCamera*)AppInfo::editorCamera)->freeCamera.down())
 			{
 				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 				ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse; // Re-enables Imgui's Mouse Input
@@ -325,7 +325,7 @@ namespace SceneGUI
 	bool NewScene() noexcept
 	{
 		if (!EnsureClearIsIntentional()) return false;
-		Scene::Clear();
+		Scene::NewScene();
 		Scene::currentPath.clear();
 		Scene::dirty = false;
 		return true;

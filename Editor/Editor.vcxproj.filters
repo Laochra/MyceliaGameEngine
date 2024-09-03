@@ -99,6 +99,9 @@
     <ClCompile Include="TransformEdit.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
+    <ClCompile Include="CameraGUI.cpp">
+      <Filter>GUI\EditorWindows\GameObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="JSON Configs">
@@ -253,6 +256,9 @@
     </ClInclude>
     <ClInclude Include="TransformEdit.h">
       <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraGUI.h">
+      <Filter>GUI\EditorWindows\GameObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

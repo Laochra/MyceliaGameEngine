@@ -108,6 +108,10 @@
     <ClCompile Include="GamepadInfo.cpp">
       <Filter>Input</Filter>
     </ClCompile>
+    <ClCompile Include="PostProcessing.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="ExampleGame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -265,6 +269,11 @@
     <ClInclude Include="GamepadType.h">
       <Filter>Input</Filter>
     </ClInclude>
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="PostProcessing.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="ExampleGame.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">

@@ -3,6 +3,7 @@
 #include "GameObjectManager.h"
 //#include "GameObject2D.h"
 #include "GameObject3D.h"
+#include "Camera.h"
 #include "MeshRenderer.h"
 #include "LightObject.h"
 #include "ParticleEmitter.h"
@@ -142,6 +143,8 @@ namespace Heirarchy
 				}
 				ImGui::EndMenu();
 			}
+
+			ImGui::BeginDisabled(rightClickMenu.target->GetClassID() == Camera::classID);
 			if (ImGui::MenuItem("Duplicate"))
 			{
 				Duplicate((GameObject3D*)rightClickMenu.target);
@@ -172,6 +175,7 @@ namespace Heirarchy
 				GameObject::Destroy(rightClickMenu.target);
 				rightClickMenu.Close();
 			}
+			ImGui::EndDisabled();
 
 			if (ImGui::IsWindowHovered()) isHovered = true;
 
