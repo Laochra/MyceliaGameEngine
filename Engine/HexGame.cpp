@@ -231,10 +231,13 @@ void HexGame::Update()
 	{
 		if (currentRadialMenu->enabled)
 		{
-			if (currentRadialPage != 0 && (AppInfo::input->GetInputPressed(InputCode::Q) || AppInfo::input->GetInputPressed(InputCode::GamepadLB)))
+			if ((AppInfo::input->GetInputPressed(InputCode::Q) || AppInfo::input->GetInputPressed(InputCode::GamepadLB)))
 			{
 				currentRadialMenu->enabled = false;
-				currentRadialPage = currentRadialPage - 1U;
+
+				if (currentRadialPage == 0) currentRadialPage = 3U;
+				else currentRadialPage = currentRadialPage - 1U;
+
 				switch (currentRadialPage)
 				{
 				default: currentRadialMenu = treeRadial;		break;
@@ -244,10 +247,13 @@ void HexGame::Update()
 				}
 				currentRadialMenu->enabled = true;
 			}
-			if (currentRadialPage < 3U && (AppInfo::input->GetInputPressed(InputCode::E) || AppInfo::input->GetInputPressed(InputCode::GamepadRB)))
+			if ((AppInfo::input->GetInputPressed(InputCode::E) || AppInfo::input->GetInputPressed(InputCode::GamepadRB)))
 			{
 				currentRadialMenu->enabled = false;
-				currentRadialPage = currentRadialPage + 1U;
+
+				if (currentRadialPage == 3U) currentRadialPage = 0U;
+				else currentRadialPage = currentRadialPage + 1U;
+
 				switch (currentRadialPage)
 				{
 				default: currentRadialMenu = treeRadial;		break;
@@ -257,7 +263,7 @@ void HexGame::Update()
 				}
 				currentRadialMenu->enabled = true;
 			}
-			if (AppInfo::input->GetInputPressed(InputCode::Esc) || AppInfo::input->GetInputPressed(InputCode::R) || AppInfo::input->GetInputPressed(InputCode::GamepadB) || AppInfo::input->GetInputPressed(InputCode::GamepadY))
+			if (AppInfo::input->GetInputPressed(InputCode::Esc) || AppInfo::input->GetInputPressed(InputCode::R) || AppInfo::input->GetInputPressed(InputCode::GamepadB) || AppInfo::input->GetInputPressed(InputCode::GamepadX))
 			{
 				currentRadialMenu->enabled = false;
 			}
@@ -278,7 +284,7 @@ void HexGame::Update()
 				}
 			}
 
-			if (AppInfo::input->GetInputPressed(InputCode::R) || AppInfo::input->GetInputPressed(InputCode::GamepadY))
+			if (AppInfo::input->GetInputPressed(InputCode::R) || AppInfo::input->GetInputPressed(InputCode::GamepadX) || AppInfo::input->GetInputPressed(InputCode::GamepadLB) || AppInfo::input->GetInputPressed(InputCode::GamepadRB))
 			{
 				currentRadialMenu->enabled = true;
 			}
