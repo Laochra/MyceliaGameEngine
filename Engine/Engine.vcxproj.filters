@@ -5,10 +5,10 @@
     <ClCompile Include="Input.cpp">
       <Filter>Input</Filter>
     </ClCompile>
-    <ClCompile Include="KeyAxis.cpp">
+    <ClCompile Include="InputAxis.cpp">
       <Filter>Input</Filter>
     </ClCompile>
-    <ClCompile Include="Keybind.cpp">
+    <ClCompile Include="InputBind.cpp">
       <Filter>Input</Filter>
     </ClCompile>
     <ClCompile Include="..\External\glad\glad.c">
@@ -107,6 +107,9 @@
     <ClCompile Include="AppInfo.cpp" />
     <ClCompile Include="RadialMenu.cpp">
       <Filter>Rendering\GUI</Filter>
+	</ClCompile>
+    <ClCompile Include="GamepadInfo.cpp">
+      <Filter>Input</Filter>
     </ClCompile>
     <ClCompile Include="PostProcessing.cpp">
       <Filter>Rendering</Filter>
@@ -272,6 +275,15 @@
     <ClInclude Include="AppInfo.h" />
     <ClInclude Include="RadialMenu.h">
       <Filter>Rendering\GUI</Filter>
+	</ClInclude>
+    <ClInclude Include="GamepadInfo.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="InputCode.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="GamepadType.h">
+      <Filter>Input</Filter>
     </ClInclude>
     <ClInclude Include="Game.h" />
     <ClInclude Include="PostProcessing.h">

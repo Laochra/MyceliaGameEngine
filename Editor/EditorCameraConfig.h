@@ -55,65 +55,65 @@ namespace EditorCameraConfig
 
 			if (controls.contains("Backward"))
 			{
-				std::vector<KeyCode> backwardKeyCodes = controls["Backward"];
+				std::vector<InputCode> backwardInputCodes = controls["Backward"];
 				camera->zInput.ClearNegativeBinds();
-				camera->zInput.BindNegative(backwardKeyCodes);
+				camera->zInput.BindNegative(backwardInputCodes);
 			}
 			else config["Controls"]["Backward"] = camera->zInput.GetNegativeBinds();
 
 			if (controls.contains("Forward"))
 			{
-				std::vector<KeyCode> forwardKeyCodes = controls["Forward"];
+				std::vector<InputCode> forwardInputCodes = controls["Forward"];
 				camera->zInput.ClearPositiveBinds();
-				camera->zInput.BindPositive(forwardKeyCodes);
+				camera->zInput.BindPositive(forwardInputCodes);
 			}
 			else config["Controls"]["Forward"] = camera->zInput.GetPositiveBinds();
 
 			if (controls.contains("Left"))
 			{
-				std::vector<KeyCode> leftKeyCodes = controls["Left"];
+				std::vector<InputCode> leftInputCodes = controls["Left"];
 				camera->xInput.ClearNegativeBinds();
-				camera->xInput.BindNegative(leftKeyCodes);
+				camera->xInput.BindNegative(leftInputCodes);
 			}
 			else config["Controls"]["Left"] = camera->xInput.GetNegativeBinds();
 
 			if (controls.contains("Right"))
 			{
-				std::vector<KeyCode> rightKeyCodes = controls["Right"];
+				std::vector<InputCode> rightInputCodes = controls["Right"];
 				camera->xInput.ClearPositiveBinds();
-				camera->xInput.BindPositive(rightKeyCodes);
+				camera->xInput.BindPositive(rightInputCodes);
 			}
 			else config["Controls"]["Right"] = camera->xInput.GetPositiveBinds();
 
 			if (controls.contains("Down"))
 			{
-				std::vector<KeyCode> downKeyCodes = controls["Down"];
+				std::vector<InputCode> downInputCodes = controls["Down"];
 				camera->yInput.ClearNegativeBinds();
-				camera->yInput.BindNegative(downKeyCodes);
+				camera->yInput.BindNegative(downInputCodes);
 			}
 			else config["Controls"]["Down"] = camera->xInput.GetNegativeBinds();
 
 			if (controls.contains("Up"))
 			{
-				std::vector<KeyCode> upKeyCodes = controls["Up"];
+				std::vector<InputCode> upInputCodes = controls["Up"];
 				camera->yInput.ClearPositiveBinds();
-				camera->yInput.BindPositive(upKeyCodes);
+				camera->yInput.BindPositive(upInputCodes);
 			}
 			else config["Controls"]["Up"] = camera->xInput.GetPositiveBinds();
 
 			if (controls.contains("Quick Mode"))
 			{
-				std::vector<KeyCode> quickModeKeyCodes = controls["Quick Mode"];
+				std::vector<InputCode> quickModeInputCodes = controls["Quick Mode"];
 				camera->quickMode.ClearBinds();
-				camera->quickMode.Bind(quickModeKeyCodes);
+				camera->quickMode.Bind(quickModeInputCodes);
 			}
 			else config["Controls"]["Quick Mode"] = camera->quickMode.GetBinds();
 
 			if (controls.contains("Free Camera"))
 			{
-				std::vector<KeyCode> freeCameraKeyCodes = controls["Free Camera"];
+				std::vector<InputCode> freeCameraInputCodes = controls["Free Camera"];
 				camera->freeCamera.ClearBinds();
-				camera->freeCamera.Bind(freeCameraKeyCodes);
+				camera->freeCamera.Bind(freeCameraInputCodes);
 			}
 			else config["Controls"]["Free Camera"] = camera->freeCamera.GetBinds();
 		}

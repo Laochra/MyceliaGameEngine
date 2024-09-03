@@ -13,13 +13,13 @@ glm::mat4 OrbitalCamera::GetViewMatrix()
 
 void OrbitalCamera::Update()
 {
-    vec3 forward = glm::normalize(vec3(GetGlobalPosition().x, 0, GetGlobalPosition().z) - vec3(centre.x, 0, centre.z));
-    vec3 up = vec3(0, 1, 0);
-    vec3 right = glm::cross(forward, up);
-
-	KeyAxis xInput(A, D);
-	KeyAxis yInput(LShift, Space);
-	KeyAxis zInput(S, W);
+	vec3 forward = glm::normalize(vec3(GetGlobalPosition().x, 0, GetGlobalPosition().z) - vec3(centre.x, 0, centre.z));
+	vec3 up = vec3(0, 1, 0);
+	vec3 right = glm::cross(forward, up);
+	
+	InputAxis xInput(InputCode::A, InputCode::D);
+	InputAxis yInput(InputCode::LShift, InputCode::Space);
+	InputAxis zInput(InputCode::S, InputCode::W);
 
 	// Keyboard Movement
 	if (xInput != 0.0f)
@@ -38,7 +38,7 @@ void OrbitalCamera::Update()
 		centre += -(float)zInput * forward * 2.0f * Time::delta;
 	}
 
-	Keybind cursorToggle(MouseRight);
+	InputBind cursorToggle(InputCode::MouseRight);
 
 	// Mouse Orbitting
 	if (cursorToggle)

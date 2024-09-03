@@ -18,12 +18,12 @@ public:
 	float flySpeed = 2.0f;
 	float quickFlySpeed = 6.0f;
 
-	KeyAxis xInput;
-	KeyAxis yInput;
-	KeyAxis zInput;
+	InputAxis xInput;
+	InputAxis yInput;
+	InputAxis zInput;
 
-	Keybind freeCamera;
-	Keybind quickMode;
+	InputBind freeCamera;
+	InputBind quickMode;
 
 	glm::mat4 GetViewMatrix() override;
 

@@ -173,14 +173,15 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObject3D.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
+    <ClCompile Include="GamepadInfo.cpp" />
     <ClCompile Include="GuidGenerator.cpp" />
     <ClCompile Include="Habitat.cpp" />
     <ClCompile Include="HexGame.cpp" />
     <ClCompile Include="HexTile.cpp" />
-    <ClCompile Include="KeyAxis.cpp" />
+    <ClCompile Include="InputAxis.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Input.cpp" />
-    <ClCompile Include="Keybind.cpp" />
+    <ClCompile Include="InputBind.cpp" />
     <ClCompile Include="LightingManager.cpp" />
     <ClCompile Include="LightObject.cpp" />
     <ClCompile Include="LineDrawer.cpp" />
@@ -227,6 +228,8 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObject3D.h" />
     <ClInclude Include="GameObjectManager.h" />
+    <ClInclude Include="GamepadInfo.h" />
+    <ClInclude Include="GamepadType.h" />
     <ClInclude Include="GeneralMacros.h" />
     <ClInclude Include="GuidGenerator.h" />
     <ClInclude Include="Habitat.h" />
@@ -235,6 +238,7 @@
     <ClInclude Include="HexGame.h" />
     <ClInclude Include="HexTile.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="InputCode.h" />
     <ClInclude Include="JsonIncludes.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LightingManager.h" />
