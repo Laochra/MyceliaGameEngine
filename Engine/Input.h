@@ -56,57 +56,70 @@ void GamepadConnectionCallback(int gamepadID, int type);
 class InputBind
 {
 public:
-	InputBind() noexcept;
+	InputBind() noexcept = default;
 	InputBind(InputCode inputCode) noexcept;
-	~InputBind() noexcept;
-	InputBind(const InputBind& other) = delete;
-	InputBind& operator=(const InputBind& other) = delete;
+	InputBind(std::vector<InputCode> inputCodes) noexcept;
+	InputBind(const InputBind& other) noexcept;
+	InputBind& operator=(const InputBind& other) noexcept;
 
 	bool down() const noexcept;
 	bool pressed() const noexcept;
 	bool released() const noexcept;
-	operator bool() const { return down(); }
+	operator bool() const noexcept;
 
 	void Bind(InputCode inputCode) noexcept;
 	void Bind(std::vector<InputCode> inputCodes) noexcept;
 	void Unbind(InputCode inputCode) noexcept;
 	void ClearBinds() noexcept;
 
-	std::vector<InputCode> GetBinds() { return *binds; }
+	const std::vector<InputCode>& GetBinds() const noexcept;
 
 private:
-	std::vector<InputCode>* binds;
+	std::vector<InputCode> binds;
 };
 
 class InputAxis
 {
 public:
-	InputAxis() noexcept;
+	InputAxis() noexcept = default;
 	InputAxis(InputCode negative, InputCode positive) noexcept;
-	~InputAxis() noexcept;
-	InputAxis(const InputAxis& other) = delete;
-	InputAxis& operator=(const InputAxis& other) = delete;
+	InputAxis(InputCode axis) noexcept;
+	InputAxis(InputCode negative, InputCode positive, InputCode axis) noexcept;
+	InputAxis(std::vector<InputCode> negatives, std::vector<InputCode> positives) noexcept;
+	InputAxis(std::vector<InputCode> axes) noexcept;
+	InputAxis(std::vector<InputCode> negatives, std::vector<InputCode> positives, std::vector<InputCode> axes) noexcept;
+	InputAxis(const InputAxis& other) noexcept;
+	InputAxis& operator=(const InputAxis& other) noexcept;
 
 	float value() const noexcept;
-	operator float() const { return value(); }
+	operator float() const noexcept;
 
 	void BindPositive(InputCode inputCode) noexcept;
 	void BindPositive(std::vector<InputCode> inputCodes) noexcept;
 	void BindNegative(InputCode inputCode) noexcept;
 	void BindNegative(std::vector<InputCode> inputCodes) noexcept;
-	void BindPair(InputCode negative, InputCode positive) noexcept;
+	void BindAxis(InputCode inputCode) noexcept;
+	void BindAxis(std::vector<InputCode> inputCodes) noexcept;
+	void Bind(InputCode negative, InputCode positive) noexcept;
+	void Bind(InputCode negative, InputCode positive, InputCode axis) noexcept;
+	void Bind(std::vector<InputCode> negatives, std::vector<InputCode> positives) noexcept;
+	void Bind(std::vector<InputCode> negatives, std::vector<InputCode> positives, std::vector<InputCode> axes) noexcept;
 
 	void UnbindPositive(InputCode inputCode) noexcept;
 	void UnbindNegative(InputCode inputCode) noexcept;
+	void UnbindAxis(InputCode inputCode) noexcept;
 
 	void ClearPositiveBinds() noexcept;
 	void ClearNegativeBinds() noexcept;
+	void ClearAxisBinds() noexcept;
 	void ClearAllBinds() noexcept;
 
-	std::vector<InputCode> GetPositiveBinds() { return *positiveBinds; }
-	std::vector<InputCode> GetNegativeBinds() { return *negativeBinds; }
+	const std::vector<InputCode>& GetPositiveBinds() const noexcept;
+	const std::vector<InputCode>& GetNegativeBinds() const noexcept;
+	const std::vector<InputCode>& GetAxisBinds() const noexcept;
 
 private:
-	std::vector<InputCode>* positiveBinds;
-	std::vector<InputCode>* negativeBinds;
+	std::vector<InputCode> positiveBinds;
+	std::vector<InputCode> negativeBinds;
+	std::vector<InputCode> axisBinds;
 };

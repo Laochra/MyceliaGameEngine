@@ -3,26 +3,33 @@
 #include "GeneralMacros.h"
 #include "AppInfo.h"
 
-InputBind::InputBind() noexcept
+InputBind::InputBind(InputCode inputCode) noexcept
 {
-	binds = new std::vector<InputCode>();
+	Bind(inputCode);
 }
-InputBind::InputBind(InputCode keyCode) noexcept
+InputBind::InputBind(std::vector<InputCode> inputCodes) noexcept
 {
-	binds = new std::vector<InputCode>();
+	for (InputCode inputCode : inputCodes)
+	{
+		Bind(inputCode);
+	}
+}
 
-	Bind(keyCode);
-}
-InputBind::~InputBind() noexcept
+InputBind::InputBind(const InputBind& other) noexcept
 {
-	del(binds);
+	binds = other.binds;
+}
+InputBind& InputBind::operator=(const InputBind& other) noexcept
+{
+	binds = other.binds;
+	return *this;
 }
 
 bool InputBind::down() const noexcept
 {
-	for (int i = 0; i < binds->size(); i++)
+	for (InputCode bind : binds)
 	{
-		if (AppInfo::input->GetInputDown((*binds)[i]))
+		if (AppInfo::input->GetInputDown(bind))
 		{
 			return true;
 		}
@@ -32,9 +39,9 @@ bool InputBind::down() const noexcept
 }
 bool InputBind::pressed() const noexcept
 {
-	for (int i = 0; i < binds->size(); i++)
+	for (InputCode bind : binds)
 	{
-		if (AppInfo::input->GetInputPressed((*binds)[i]))
+		if (AppInfo::input->GetInputPressed(bind))
 		{
 			return true;
 		}
@@ -44,9 +51,9 @@ bool InputBind::pressed() const noexcept
 }
 bool InputBind::released() const noexcept
 {
-	for (int i = 0; i < binds->size(); i++)
+	for (InputCode bind : binds)
 	{
-		if (AppInfo::input->GetInputReleased((*binds)[i]))
+		if (AppInfo::input->GetInputReleased(bind))
 		{
 			return true;
 		}
@@ -55,30 +62,40 @@ bool InputBind::released() const noexcept
 	return false;
 }
 
+InputBind::operator bool() const noexcept
+{
+	return down();
+}
+
 
 void InputBind::Bind(InputCode inputCode) noexcept
 {
-	binds->push_back(inputCode);
+	binds.push_back(inputCode);
 }
 void InputBind::Bind(std::vector<InputCode> inputCodes) noexcept
 {
-	for (int i = 0; i < inputCodes.size(); i++)
+	for (InputCode inputCode : inputCodes)
 	{
-		Bind(inputCodes[i]);
+		Bind(inputCode);
 	}
 }
 void InputBind::Unbind(InputCode inputCode) noexcept
 {
-	for (int i = 0; i < binds->size(); i++)
+	for (std::vector<InputCode>::iterator it = binds.begin(); it < binds.end(); it++)
 	{
-		if ((*binds)[i] == inputCode)
+		if (*it == inputCode)
 		{
-			binds->erase(binds->begin() + i);
+			binds.erase(it);
 			break;
 		}
 	}
 }
 void InputBind::ClearBinds() noexcept
 {
-	binds->clear();
+	binds.clear();
+}
+
+const std::vector<InputCode>& InputBind::GetBinds() const noexcept
+{
+	return binds;
 }

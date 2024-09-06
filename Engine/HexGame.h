@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Game.h"
+#include "Input.h"
 
 #include "PostProcessing.h"
 
@@ -17,6 +18,24 @@ inline uint currentTileVariant = 0U;
 class HexGame : public Game
 {
 public:
+	struct Inputs
+	{
+		InputBind place = InputBind({ InputCode::Space, InputCode::GamepadA });
+		InputBind openRadial = InputBind({ InputCode::R, InputCode::Q, InputCode::E, InputCode::GamepadX, InputCode::GamepadLB, InputCode::GamepadRB });
+		InputAxis moveX = InputAxis(InputCode::A, InputCode::D, InputCode::GamepadLSX);
+		InputAxis moveZ = InputAxis(InputCode::W, InputCode::S, InputCode::GamepadLSY);
+
+		InputBind radialSelect = InputBind({ InputCode::Space, InputCode::GamepadA });
+		InputBind radialClose = InputBind({ InputCode::Esc, InputCode::R, InputCode::GamepadB, InputCode::GamepadX });
+		InputBind radialPageLeft = InputBind({ InputCode::Q, InputCode::GamepadLB });
+		InputBind radialPageRight = InputBind({ InputCode::E, InputCode::GamepadRB });
+		InputAxis radialX = InputAxis(InputCode::A, InputCode::D, InputCode::GamepadLSX);
+		InputAxis radialY = InputAxis(InputCode::W, InputCode::S, InputCode::GamepadLSY);
+	};
+	HexGame::Inputs gameInputs;
+
+	float moveSpeed = 3.0f;
+
 	LinkedHexGrid* hexGrid;
 	RadialMenu* treeRadial;
 	RadialMenu* flowerRadial;
