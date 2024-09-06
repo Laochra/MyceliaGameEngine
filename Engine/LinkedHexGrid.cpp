@@ -41,6 +41,28 @@ void LinkedHexGrid::UpdateTile(glm::ivec2 position, json tilePrefab) noexcept
 
 	UpdateTile(hexTileIt->second, tilePrefab);
 }
+static void ModifyTileCount(HexType type, string variant, uint density, int modification)
+{
+	vector<TileData>* tileDataList;
+	switch (type)
+	{
+	case HexType::Tree:		tileDataList = &HexTile::trees;		break;
+	case HexType::Flower:	tileDataList = &HexTile::flowers;	break;
+	case HexType::Water:		tileDataList = &HexTile::waters;		break;
+	case HexType::Land:		tileDataList = &HexTile::lands;		break;
+	default:						tileDataList = nullptr;					break; // This should never happen
+	}
+	if (tileDataList != nullptr)
+	{
+		for (TileData& tileData : *tileDataList)
+		{
+			if (tileData.name == variant)
+			{
+				tileData.countPlaced[0] += modification;
+			}
+		}
+	}
+}
 void LinkedHexGrid::UpdateTile(HexTile* hexTile, json tilePrefab) noexcept
 {
 	if (hexTile->type == HexType::Empty)
@@ -53,6 +75,10 @@ void LinkedHexGrid::UpdateTile(HexTile* hexTile, json tilePrefab) noexcept
 			}
 		}
 	}
+	else
+	{
+		ModifyTileCount(hexTile->type, hexTile->variant, 0, -1);
+	}
 
 	vec3 position = hexTile->GetPosition();
 	hexTile->UpdateFrom(tilePrefab, GuidGeneration::Keep);
@@ -61,6 +87,8 @@ void LinkedHexGrid::UpdateTile(HexTile* hexTile, json tilePrefab) noexcept
 	hexTile->Rotate(glm::radians(Random::Int32(0, 5) * 60.0f), vec3(0, 1, 0));
 
 	hexTile->SetName(StringBuilder(hexTile->variant).CStr());
+
+	ModifyTileCount(hexTile->type, hexTile->variant, 0, +1);
 
 	Habitat* habitat = Habitat::AttemptToFormHabitat(hexTile);
 	if (habitat != nullptr)

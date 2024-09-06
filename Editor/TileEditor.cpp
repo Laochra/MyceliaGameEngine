@@ -85,13 +85,23 @@ void TileEditor::Draw(const char* const name, bool& open) noexcept
 					return;
 				}
 			}
+			ImGui::SameLine();
+			ImGui::Text(StringBuilder((*selectedType)[selectedVariant].GetTotalPlaced()).CStr());
 
 			GUI::Spacing(3);
 
 			ImGui::Text("Tile Prefabs by Density");
 			DrawPrefabInput("Low  ", (*selectedType)[selectedVariant].prefabFilepaths[0]);
+			ImGui::SameLine();
+			ImGui::Text(StringBuilder((*selectedType)[selectedVariant].countPlaced[0]).CStr());
+
 			DrawPrefabInput("Mid  ", (*selectedType)[selectedVariant].prefabFilepaths[1]);
+			ImGui::SameLine();
+			ImGui::Text(StringBuilder((*selectedType)[selectedVariant].countPlaced[1]).CStr());
+
 			DrawPrefabInput("High ", (*selectedType)[selectedVariant].prefabFilepaths[2]);
+			ImGui::SameLine();
+			ImGui::Text(StringBuilder((*selectedType)[selectedVariant].countPlaced[2]).CStr());
 		}
 
 		GUI::Spacing(3);

@@ -8,15 +8,21 @@
 
 class Habitat;
 
-enum class HexDir : unsigned char { NorthWest, North, NorthEast, SouthEast, South, SouthWest };
+typedef unsigned int uint;
+typedef unsigned char ubyte;
+
+enum class HexDir : ubyte { NorthWest, North, NorthEast, SouthEast, South, SouthWest };
 enum class HexType { Empty, Tree, Flower, Water, Land };
 struct TileData
 {
 	string name = "New Variant";
 	string prefabFilepaths[3] = { "None", "None", "None" };
+	uint countPlaced[3] = { 0U, 0U, 0U };
 
 	TileData() noexcept = default;
 	TileData(const char* const nameInit) noexcept : name(nameInit) {}
+
+	uint GetTotalPlaced() const noexcept { return countPlaced[0] + countPlaced[1] + countPlaced[2]; }
 };
 
 class HexTile : public MeshRenderer

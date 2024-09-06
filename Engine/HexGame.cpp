@@ -192,6 +192,31 @@ void HexGame::OnStop()
 	hexGrid->lookupTable.clear();
 	hexGrid->centre = nullptr;
 
+	for (TileData& tileData : HexTile::trees)
+	{
+		tileData.countPlaced[0] = 0U;
+		tileData.countPlaced[1] = 0U;
+		tileData.countPlaced[2] = 0U;
+	}
+	for (TileData& tileData : HexTile::flowers)
+	{
+		tileData.countPlaced[0] = 0U;
+		tileData.countPlaced[1] = 0U;
+		tileData.countPlaced[2] = 0U;
+	}
+	for (TileData& tileData : HexTile::waters)
+	{
+		tileData.countPlaced[0] = 0U;
+		tileData.countPlaced[1] = 0U;
+		tileData.countPlaced[2] = 0U;
+	}
+	for (TileData& tileData : HexTile::lands)
+	{
+		tileData.countPlaced[0] = 0U;
+		tileData.countPlaced[1] = 0U;
+		tileData.countPlaced[2] = 0U;
+	}
+
 	for (Habitat* habitat : hexGrid->habitats)
 	{
 		GameObject::Destroy(habitat);
