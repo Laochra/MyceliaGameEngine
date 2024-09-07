@@ -177,6 +177,7 @@
     <ClCompile Include="GuidGenerator.cpp" />
     <ClCompile Include="Habitat.cpp" />
     <ClCompile Include="HexGame.cpp" />
+    <ClCompile Include="HexProgression.cpp" />
     <ClCompile Include="HexTile.cpp" />
     <ClCompile Include="InputAxis.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -236,6 +237,7 @@
     <ClInclude Include="Heirarchical.h" />
     <ClInclude Include="HeirarchicalDefinitions.h" />
     <ClInclude Include="HexGame.h" />
+    <ClInclude Include="HexProgression.h" />
     <ClInclude Include="HexTile.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InputCode.h" />

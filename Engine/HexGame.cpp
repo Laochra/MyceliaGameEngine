@@ -10,6 +10,7 @@
 #include "StringBuilder.h"
 
 #include "Habitat.h"
+#include "HexProgression.h"
 
 void static RadialInteractionHandler(uint selection)
 {
@@ -426,6 +427,12 @@ void HexGame::LoadTileData() noexcept
 	}
 
 	HexTile::LoadTileDataFrom(tileData);
+
+	if (tileData.contains("Progression"))
+	{
+		json progressionData = tileData["Progression"];
+		HexProgression::LoadFrom(progressionData);
+	}
 }
 
 void HexGame::SaveTileData() noexcept
@@ -434,6 +441,9 @@ void HexGame::SaveTileData() noexcept
 
 	json tileData;
 	HexTile::SaveTileDataTo(tileData);
+	json progressionData;
+	HexProgression::SaveTo(progressionData);
+	tileData["Progression"] = progressionData;
 
 	ofstream output(tileDataPath);
 	output << std::setw(2) << tileData;

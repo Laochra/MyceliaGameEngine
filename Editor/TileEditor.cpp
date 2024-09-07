@@ -1,6 +1,7 @@
 #include "TileEditor.h"
 
 #include "Habitat.h"
+#include "HexProgression.h"
 
 vector<TileData>* TileEditor::selectedType = &HexTile::trees;
 uint TileEditor::selectedVariant;
@@ -16,6 +17,9 @@ void TileEditor::Draw(const char* const name, bool& open) noexcept
 
 		json tileData;
 		HexTile::SaveTileDataTo(tileData);
+		json progressionData;
+		HexProgression::SaveTo(progressionData);
+		tileData["Progression"] = progressionData;
 
 		ofstream output(tileDataPath);
 		output << std::setw(2) << tileData;
@@ -200,6 +204,23 @@ void TileEditor::Draw(const char* const name, bool& open) noexcept
 		}
 
 		ImGui::EndTabBar();
+
+		GUI::Spacing(3);
+	}
+
+	GUI::Spacing(3);
+
+	if (ImGui::CollapsingHeader("Progression"))
+	{
+		GUI::Spacing(3);
+		
+		ImGui::PushItemWidth(ImGui::CalcItemWidth() / 5.0f);
+		ImGui::DragInt("Starting Radius", (int*)&HexProgression::startingRadius, 0.25f, 0, 100, "%d", ImGuiSliderFlags_AlwaysClamp);
+		ImGui::SameLine();
+		GUI::HSpacing(3);
+		ImGui::SameLine();
+		ImGui::TextColored(ImGui::GetStyle().Colors[ImGuiCol_TextDisabled], StringBuilder("Current: ", HexProgression::currentRadius).CStr());
+		ImGui::PopItemWidth();
 
 		GUI::Spacing(3);
 	}

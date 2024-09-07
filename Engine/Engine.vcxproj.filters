@@ -107,7 +107,7 @@
     <ClCompile Include="AppInfo.cpp" />
     <ClCompile Include="RadialMenu.cpp">
       <Filter>Rendering\GUI</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="GamepadInfo.cpp">
       <Filter>Input</Filter>
     </ClCompile>
@@ -115,7 +115,6 @@
       <Filter>Rendering</Filter>
     </ClCompile>
     <ClCompile Include="ExampleGame.cpp" />
-    <ClCompile Include="HexGame.cpp" />
     <ClCompile Include="HexTile.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
@@ -124,6 +123,12 @@
     </ClCompile>
     <ClCompile Include="Habitat.cpp">
       <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="HexGame.cpp">
+      <Filter>HexGame</Filter>
+    </ClCompile>
+    <ClCompile Include="HexProgression.cpp">
+      <Filter>HexGame</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -275,7 +280,7 @@
     <ClInclude Include="AppInfo.h" />
     <ClInclude Include="RadialMenu.h">
       <Filter>Rendering\GUI</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="GamepadInfo.h">
       <Filter>Input</Filter>
     </ClInclude>
@@ -290,7 +295,6 @@
       <Filter>Rendering</Filter>
     </ClInclude>
     <ClInclude Include="ExampleGame.h" />
-    <ClInclude Include="HexGame.h" />
     <ClInclude Include="HexTile.h">
       <Filter>GameObjects</Filter>
     </ClInclude>
@@ -299,6 +303,12 @@
     </ClInclude>
     <ClInclude Include="Habitat.h">
       <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="HexGame.h">
+      <Filter>HexGame</Filter>
+    </ClInclude>
+    <ClInclude Include="HexProgression.h">
+      <Filter>HexGame</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -334,6 +344,9 @@
     </Filter>
     <Filter Include="Rendering\GUI">
       <UniqueIdentifier>{42e96c5e-fe21-4732-86ba-406660351c66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HexGame">
+      <UniqueIdentifier>{8581cc9c-edca-48cd-b8ab-ae329795567f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

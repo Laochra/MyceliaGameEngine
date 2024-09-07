@@ -66,6 +66,11 @@
       ]
     }
   ],
+  "Progression": {
+    "LifeMilestones": [],
+    "StartingRadius": 3,
+    "StartingVariants": []
+  },
   "RadialSprites": {
     "Flower": {
       "Hovered": "Assets\\UI\\RadialMenu\\Flower\\RW_Flower_Unlocked.png",
