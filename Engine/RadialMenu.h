@@ -7,6 +7,7 @@
 
 #include "Input.h"
 
+typedef unsigned short ushort;
 
 class RadialMenu
 {
@@ -17,10 +18,11 @@ public:
 	float deadzoneMagnitudeSqr = 0.15f * 0.15f;
 	vec2 lastInput;
 	InteractFunc interactionHandler;
-	uint radialSlices = 3;
+	ushort radialSlices = 3;
+	vector<bool> sliceEnabledFlags = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
 	bool enabled = false;
 
-	RadialMenu(const char* activeSprite, const char* inactiveSprite, const char* disabledSprite) noexcept;
+	RadialMenu(const char* regularSprite, const char* hoveredSprite, const char* disabledSprite) noexcept;
 	~RadialMenu() noexcept;
 
 	void Update(vec2 input, InputBind interactKey) noexcept;

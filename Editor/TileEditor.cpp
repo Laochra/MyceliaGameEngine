@@ -215,12 +215,130 @@ void TileEditor::Draw(const char* const name, bool& open) noexcept
 		GUI::Spacing(3);
 		
 		ImGui::PushItemWidth(ImGui::CalcItemWidth() / 5.0f);
-		ImGui::DragInt("Starting Radius", (int*)&HexProgression::startingRadius, 0.25f, 0, 100, "%d", ImGuiSliderFlags_AlwaysClamp);
+		if (ImGui::DragInt("Starting Radius", (int*)&HexProgression::startingRadius, 0.25f, 0, 100, "%d", ImGuiSliderFlags_AlwaysClamp))
+		{
+			HexProgression::currentRadius = HexProgression::startingRadius;
+		}
 		ImGui::SameLine();
 		GUI::HSpacing(3);
 		ImGui::SameLine();
 		ImGui::TextColored(ImGui::GetStyle().Colors[ImGuiCol_TextDisabled], StringBuilder("Current: ", HexProgression::currentRadius).CStr());
 		ImGui::PopItemWidth();
+
+		GUI::Spacing();
+		
+		ImGui::Text("Starting Variants");
+		std::vector<std::string>& startingVariants = HexProgression::startingVariants;
+		ImGui::SameLine();
+		GUI::HSpacing(3);
+		ImGui::SameLine();
+		if (ImGui::Button("Add"))
+		{
+			startingVariants.push_back("Undefined");
+		}
+
+		for (std::vector<std::string>::iterator it = startingVariants.begin(); it < startingVariants.end(); it++)
+		{
+			DrawTileDropdown(*it, StringBuilder("##", uint(it - startingVariants.begin())).CStr());
+			ImGui::SameLine();
+			GUI::HSpacing(3);
+			ImGui::SameLine();
+			if (ImGui::Button("Remove"))
+			{
+				it = startingVariants.erase(it);
+				if (it == startingVariants.end()) break;
+			}
+		}
+
+		GUI::Spacing(3);
+
+		ImGui::SeparatorText("Milestones");
+
+		ImGui::BeginTabBar("Milestones##Milestones");
+		for (uint i = 0; i < (uint)HexProgression::lifeMilestones.size(); i++)
+		{
+			HexProgression::Milestone& lifeMilestone = HexProgression::lifeMilestones[i];
+
+			if (ImGui::BeginTabItem(StringBuilder("  ", i+1, "  ").CStr()))
+			{
+				const char* typeName;
+				switch (lifeMilestone.type)
+				{
+				default:
+				case HexProgression::Milestone::VariantUnlock: typeName = "Variant Unlock"; break;
+				case HexProgression::Milestone::AddedEffects: typeName = "Added Effects"; break;
+				}
+				if (ImGui::BeginCombo("Type", typeName))
+				{
+					if (ImGui::Selectable("Variant Unlock", lifeMilestone.type == HexProgression::Milestone::VariantUnlock))
+					{
+						lifeMilestone.type = HexProgression::Milestone::VariantUnlock;
+					}
+					if (ImGui::Selectable("Added Effects", lifeMilestone.type == HexProgression::Milestone::AddedEffects))
+					{
+						lifeMilestone.type = HexProgression::Milestone::AddedEffects;
+					}
+					ImGui::EndCombo();
+				}
+
+				ImGui::SameLine();
+				GUI::HSpacing(3);
+				ImGui::SameLine();
+				if ((ImGui::Button("Delete")))
+				{
+					HexProgression::lifeMilestones.erase(HexProgression::lifeMilestones.begin() + i);
+					i--;
+
+					ImGui::EndTabItem();
+					continue;
+				}
+
+				GUI::Spacing();
+
+				ImGui::PushItemWidth(ImGui::CalcItemWidth() / 5.0f);
+				ImGui::DragInt("Life Requirement", (int*)&lifeMilestone.lifeRequirement, 0.25f, 0, INT_MAX);
+				ImGui::SameLine();
+				GUI::HSpacing(3);
+				ImGui::SameLine();
+				ImGui::DragInt("Radius Increase", (int*)&lifeMilestone.radiusIncrease, 0.25f, 0, 16U);
+				ImGui::PopItemWidth();
+
+				GUI::Spacing();
+
+				if (lifeMilestone.type == HexProgression::Milestone::VariantUnlock)
+				{
+					ImGui::Text("Unlocked Variants");
+					std::vector<std::string>& unlockedVariants = lifeMilestone.names;
+					ImGui::SameLine();
+					GUI::HSpacing(3);
+					ImGui::SameLine();
+					if (ImGui::Button("Add"))
+					{
+						unlockedVariants.push_back("Undefined");
+					}
+
+					for (std::vector<std::string>::iterator it = unlockedVariants.begin(); it < unlockedVariants.end(); it++)
+					{
+						DrawTileDropdown(*it, StringBuilder("##", uint(it - unlockedVariants.begin())).CStr());
+						ImGui::SameLine();
+						GUI::HSpacing(3);
+						ImGui::SameLine();
+						if (ImGui::Button("Remove"))
+						{
+							it = unlockedVariants.erase(it);
+							if (it == unlockedVariants.end()) break;
+						}
+					}
+				}
+
+				ImGui::EndTabItem();
+			}
+		}
+		if (ImGui::TabItemButton("+"))
+		{
+			HexProgression::lifeMilestones.push_back(HexProgression::Milestone());
+		}
+		ImGui::EndTabBar();
 
 		GUI::Spacing(3);
 	}

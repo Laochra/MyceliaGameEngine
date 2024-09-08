@@ -183,6 +183,8 @@ void HexGame::OnStart()
 	currentRadialPage = 0U;
 	currentTileType = &HexTile::trees;
 	currentTileVariant = 0U;
+
+	HexProgression::Initialise();
 }
 void HexGame::OnStop()
 {
@@ -229,6 +231,8 @@ void HexGame::OnStop()
 		habitatData.hasBeenPlaced = false;
 	}
 
+	HexProgression::ResetProgression();
+
 	del(treeRadial);
 	del(flowerRadial);
 	del(waterRadial);
@@ -242,12 +246,13 @@ void HexGame::FixedUpdate() { }
 void HexGame::Update()
 {
 	RadialMenu* currentRadialMenu;
+	vector<TileData>* currentRadialTileType;
 	switch (currentRadialPage)
 	{
-	default: currentRadialMenu = treeRadial;		break;
-	case 1U: currentRadialMenu = flowerRadial;	break;
-	case 2U: currentRadialMenu = waterRadial;		break;
-	case 3U: currentRadialMenu = landRadial;		break;
+	default: currentRadialMenu = treeRadial;		currentRadialTileType = &HexTile::trees;		break;
+	case 1U: currentRadialMenu = flowerRadial;	currentRadialTileType = &HexTile::flowers;	break;
+	case 2U: currentRadialMenu = waterRadial;		currentRadialTileType = &HexTile::waters;		break;
+	case 3U: currentRadialMenu = landRadial;		currentRadialTileType = &HexTile::lands;		break;
 	}
 
 	if (currentRadialMenu->enabled)
@@ -261,10 +266,10 @@ void HexGame::Update()
 
 			switch (currentRadialPage)
 			{
-			default: currentRadialMenu = treeRadial;		break;
-			case 1U: currentRadialMenu = flowerRadial;	break;
-			case 2U: currentRadialMenu = waterRadial;		break;
-			case 3U: currentRadialMenu = landRadial;		break;
+			default: currentRadialMenu = treeRadial;		currentRadialTileType = &HexTile::trees;		break;
+			case 1U: currentRadialMenu = flowerRadial;	currentRadialTileType = &HexTile::flowers;	break;
+			case 2U: currentRadialMenu = waterRadial;		currentRadialTileType = &HexTile::waters;		break;
+			case 3U: currentRadialMenu = landRadial;		currentRadialTileType = &HexTile::lands;		break;
 			}
 			currentRadialMenu->enabled = true;
 		}
@@ -277,16 +282,21 @@ void HexGame::Update()
 
 			switch (currentRadialPage)
 			{
-			default: currentRadialMenu = treeRadial;		break;
-			case 1U: currentRadialMenu = flowerRadial;	break;
-			case 2U: currentRadialMenu = waterRadial;		break;
-			case 3U: currentRadialMenu = landRadial;		break;
+			default: currentRadialMenu = treeRadial;		currentRadialTileType = &HexTile::trees;		break;
+			case 1U: currentRadialMenu = flowerRadial;	currentRadialTileType = &HexTile::flowers;	break;
+			case 2U: currentRadialMenu = waterRadial;		currentRadialTileType = &HexTile::waters;		break;
+			case 3U: currentRadialMenu = landRadial;		currentRadialTileType = &HexTile::lands;		break;
 			}
 			currentRadialMenu->enabled = true;
 		}
 		if (gameInputs.radialClose.pressed())
 		{
 			currentRadialMenu->enabled = false;
+		}
+
+		for (ushort i = 0; i < (ushort)currentTileType->size(); i++)
+		{
+			currentRadialMenu->sliceEnabledFlags[i] = (*currentRadialTileType)[i].unlocked;
 		}
 	}
 	else

@@ -65,6 +65,13 @@ static void ModifyTileCount(HexType type, string variant, uint density, int modi
 }
 void LinkedHexGrid::UpdateTile(HexTile* hexTile, json tilePrefab) noexcept
 {
+	if (hexTile->type == (HexType)(int)tilePrefab["HexType"] &&
+		 hexTile->variant == (string)tilePrefab["HexVariant"])
+	{
+		hexTile->Rotate(glm::radians(-60.0f), vec3(0, 1, 0));
+		return;
+	}
+
 	if (hexTile->type == HexType::Empty)
 	{
 		for (int i = 0; i < 6; i++)

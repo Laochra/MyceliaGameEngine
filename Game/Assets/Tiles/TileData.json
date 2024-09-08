@@ -67,7 +67,20 @@
     }
   ],
   "Progression": {
-    "LifeMilestones": [],
+    "LifeMilestones": [
+      {
+        "LifeRequirement": 100,
+        "Names": [],
+        "RadiusIncrease": 1,
+        "Type": 0
+      },
+      {
+        "LifeRequirement": 200,
+        "Names": [],
+        "RadiusIncrease": 1,
+        "Type": 1
+      }
+    ],
     "StartingRadius": 3,
     "StartingVariants": []
   },

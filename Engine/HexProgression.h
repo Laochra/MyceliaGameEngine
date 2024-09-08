@@ -27,6 +27,18 @@ public:
 	static uint startingRadius;
 	static uint currentRadius;
 
+	static void Initialise() noexcept;
+
+	// If a milestone is hit a pointer to it will be returned, otherwise returns nullptr
+	static Milestone* IncreaseLife(uint lifeToAdd) noexcept;
+	static void ResetProgression() noexcept;
+
 	static void SaveTo(json& jsonObj);
 	static void LoadFrom(const json& jsonObj);
+
+private:
+	static uint currentMilestone;
+	static uint currentLife;
+
+	static void CompleteMilestone(Milestone& milestone);
 };

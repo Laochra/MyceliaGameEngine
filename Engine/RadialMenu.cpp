@@ -7,19 +7,21 @@
 
 #include "Debug.h"
 
-RadialMenu::RadialMenu(const char* activeSprite, const char* inactiveSprite, const char* disabledSprite) noexcept
+RadialMenu::RadialMenu(const char* regularSprite, const char* hoveredSprite, const char* disabledSprite) noexcept
 {
 	spriteMesh.InitialiseSpriteQuad();
 	program.LoadAndLinkFromJSON("Assets\\Shaders\\RadialMenu.gpu");
 
-	if (activeSprite == string("None")) { Debug::LogError("Sprite 1 was not provided for radial menu.", locationinfo); }
-	if (inactiveSprite == string("None")) { Debug::LogError("Sprite 2 was not provided for radial menu.", locationinfo); }
+	if (regularSprite == string("None")) { Debug::LogError("Sprite 1 was not provided for radial menu.", locationinfo); }
+	if (hoveredSprite == string("None")) { Debug::LogError("Sprite 2 was not provided for radial menu.", locationinfo); }
 	if (disabledSprite == string("None")) { Debug::LogError("Sprite 3 was not provided for radial menu.", locationinfo); }
 
 	int x1, y1, channels1;
-	unsigned char* sprite1 = stbi_load(activeSprite, &x1, &y1, &channels1, STBI_default);
+	unsigned char* sprite1 = stbi_load(regularSprite, &x1, &y1, &channels1, STBI_default);
 	int x2, y2, channels2;
-	unsigned char* sprite2 = stbi_load(inactiveSprite, &x2, &y2, &channels2, STBI_default);
+	unsigned char* sprite2 = stbi_load(hoveredSprite, &x2, &y2, &channels2, STBI_default);
+	int x3, y3, channels3;
+	unsigned char* sprite3 = stbi_load(disabledSprite, &x3, &y3, &channels3, STBI_default);
 
 	int glChannels;
 	switch (channels1)
@@ -32,7 +34,7 @@ RadialMenu::RadialMenu(const char* activeSprite, const char* inactiveSprite, con
 	}
 	glGenTextures(1, &spriteArray);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, spriteArray);
-	glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, glChannels, x1, x2, 2, 0, glChannels, GL_UNSIGNED_BYTE, NULL);
+	glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, glChannels, x1, x2, 3, 0, glChannels, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -40,6 +42,7 @@ RadialMenu::RadialMenu(const char* activeSprite, const char* inactiveSprite, con
 
 	glTextureSubImage3D(spriteArray, 0, 0, 0, 0, x1, y1, 1, glChannels, GL_UNSIGNED_BYTE, sprite1);
 	glTextureSubImage3D(spriteArray, 0, 0, 0, 1, x2, y2, 1, glChannels, GL_UNSIGNED_BYTE, sprite2);
+	glTextureSubImage3D(spriteArray, 0, 0, 0, 2, x3, y3, 1, glChannels, GL_UNSIGNED_BYTE, sprite3);
 }
 RadialMenu::~RadialMenu() noexcept
 {
@@ -62,16 +65,16 @@ void RadialMenu::Update(vec2 input, InputBind interactKey) noexcept
 
 		float increment = 360.0f / radialSlices;
 		vector<vec2> directions;
-		for (uint i = 0; i < radialSlices; i++)
+		for (ushort i = 0; i < radialSlices; i++)
 		{
-			float deg = glm::radians(-increment * i);
-			vec2 dir(std::sin(deg), std::cos(deg));
+			float rad = glm::radians(-increment * i);
+			vec2 dir(std::sin(rad), std::cos(rad));
 
 			directions.push_back(dir);
 		}
 
-		uint correctIndex = 0;
-		for (uint i = 1; i != (uint)directions.size(); i++)
+		ushort correctIndex = 0;
+		for (ushort i = 1; i != (ushort)directions.size(); i++)
 		{
 			if (glm::dot(inputDirection, directions[i]) > glm::dot(inputDirection, directions[correctIndex]))
 			{
@@ -79,7 +82,10 @@ void RadialMenu::Update(vec2 input, InputBind interactKey) noexcept
 			}
 		}
 
-		interactionHandler(correctIndex);
+		if (sliceEnabledFlags[correctIndex])
+		{
+			interactionHandler(correctIndex);
+		}
 	}
 }
 
@@ -101,45 +107,42 @@ void RadialMenu::Draw() noexcept
 	
 	program.BindUniform("Scale", scale);
 
+	program.BindUniform("SliceCount", (int)radialSlices);
+	
+	ushort enabledFlags = 0;
+
 	float increment = 360.0f / radialSlices;
-	float acceptedHalfAngle = 1.0f - std::cos(glm::radians(increment / 2));
-	program.BindUniform("AcceptedHalfAngle", acceptedHalfAngle);
+	vector<vec2> directions;
+	for (ushort i = 0; i < radialSlices; i++)
+	{
+		float rad = glm::radians(-increment * i);
+		vec2 dir(std::sin(rad), std::cos(rad));
+
+		directions.push_back(dir);
+
+		enabledFlags |= ((int)sliceEnabledFlags[i] << i);
+		program.BindUniform(StringBuilder("SliceDirections[", i, "]").CStr(), dir);
+	}
+	program.BindUniform("SliceEnabledFlags", (int)enabledFlags);
 
 	if (inputMagSqr < deadzoneMagnitudeSqr)
 	{
-		program.BindUniform("HoveredSliceDirection", vec2(0.0f));
+		program.BindUniform("HoveredSlice", -1);
 		spriteMesh.Draw();
 		return;
 	}
 
-	vector<vec2> sortedDirections;
-	for (uint i = 0; i < radialSlices; i++)
+	int hoveredSlice = 0;
+	float hoveredAngle = glm::dot(inputDirection, directions[0]);
+	for (ushort i = 1; i < radialSlices; i++)
 	{
-		float deg = glm::radians(increment * i);
-		vec2 dir(std::sin(deg), std::cos(deg));
-		if (sortedDirections.size() == 0)
+		float newAngle = glm::dot(inputDirection, directions[i]);
+		if (newAngle > hoveredAngle)
 		{
-			sortedDirections.push_back(dir);
-			continue;
-		}
-
-		for (vector<vec2>::iterator it = sortedDirections.begin(); it != sortedDirections.end(); it++)
-		{
-			if (glm::dot(inputDirection, dir) > glm::dot(inputDirection, *it))
-			{
-				it = sortedDirections.insert(it, dir);
-				break;
-			}
-			else
-			{
-				if (it + 1 == sortedDirections.end())
-				{
-					it = sortedDirections.insert(sortedDirections.end(), dir);
-				}
-			}
+			hoveredSlice = i;
+			hoveredAngle = newAngle;
 		}
 	}
-
-	program.BindUniform("HoveredSliceDirection", sortedDirections[0]);
+	program.BindUniform("HoveredSlice", hoveredSlice);
 	spriteMesh.Draw();
 }
