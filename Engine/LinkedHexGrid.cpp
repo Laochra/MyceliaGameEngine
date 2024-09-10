@@ -1,6 +1,7 @@
 #include "LinkedHexGrid.h"
 
 #include "Habitat.h"
+#include "HexProgression.h"
 
 #include "RandomGen.h"
 
@@ -81,6 +82,11 @@ void LinkedHexGrid::UpdateTile(HexTile* hexTile, json tilePrefab) noexcept
 				AddTile(hexTile, (HexDir)i);
 			}
 		}
+		const HexProgression::Milestone* milestone = HexProgression::IncreaseLife(HexProgression::tileLifeBonus);
+		if (milestone != nullptr)
+		{
+			EnsurePerimeterIsPlacable();
+		}
 	}
 	else
 	{
@@ -102,6 +108,11 @@ void LinkedHexGrid::UpdateTile(HexTile* hexTile, json tilePrefab) noexcept
 	{
 		habitat->SetParent(this);
 		habitats.push_back(habitat);
+		const HexProgression::Milestone* milestone = HexProgression::IncreaseLife(HexProgression::habitatLifeBonus);
+		if (milestone != nullptr)
+		{
+			EnsurePerimeterIsPlacable();
+		}
 	}
 }
 
@@ -158,4 +169,24 @@ void LinkedHexGrid::AddTile(HexTile* origin, HexDir direction) noexcept
 	}
 
 	lookupTable.insert(HexPair(newTile->GetHexPos(), newTile));
+
+	vec2 xzPos((float)newTile->GetPosition().x, newTile->GetPosition().z);
+	if (glm::length(xzPos) > (float)HexProgression::currentRadius)
+	{
+		newTile->SetMesh(nullptr);
+	}
+}
+
+void LinkedHexGrid::EnsurePerimeterIsPlacable() noexcept
+{
+	for (HexMap::iterator it = lookupTable.begin(); it != lookupTable.end(); it++)
+	{
+		HexTile& hexTile = *it->second;
+		if (hexTile.type == HexType::Empty && hexTile.GetMesh() == nullptr)
+		{
+			vec3 position = hexTile.GetPosition();
+			hexTile.UpdateFrom(HexTile::GetEmptyTilePrefab(), GuidGeneration::New);
+			hexTile.SetPosition(position);
+		}
+	}
 }

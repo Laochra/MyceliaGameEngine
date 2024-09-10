@@ -9,6 +9,9 @@ std::vector<std::string> HexProgression::startingVariants;
 uint HexProgression::startingRadius = 3U;
 uint HexProgression::currentRadius = startingRadius;
 
+uint HexProgression::tileLifeBonus = 1U;
+uint HexProgression::habitatLifeBonus = 3U;
+
 uint HexProgression::currentMilestone;
 uint HexProgression::currentLife = 0U;
 
@@ -17,14 +20,26 @@ void HexProgression::Initialise() noexcept
 	ResetProgression();
 }
 
-HexProgression::Milestone* HexProgression::IncreaseLife(uint lifeToAdd) noexcept
+uint HexProgression::GetLife() noexcept
+{
+	return currentLife;
+}
+
+const HexProgression::Milestone* HexProgression::IncreaseLife(uint lifeToAdd) noexcept
 {
 	currentLife += lifeToAdd;
-	if (currentMilestone < lifeMilestones.size() && currentLife >= lifeMilestones[currentMilestone].lifeRequirement)
+
+	if (currentMilestone < lifeMilestones.size())
 	{
-		currentMilestone++;
-		return &lifeMilestones[currentMilestone];
+		const Milestone* milestoneToCheck = &lifeMilestones[currentMilestone];
+		if (currentLife >= milestoneToCheck->lifeRequirement)
+		{
+			currentMilestone++;
+			CompleteMilestone(*milestoneToCheck);
+			return milestoneToCheck;
+		}
 	}
+
 	return nullptr;
 }
 
@@ -98,8 +113,10 @@ void HexProgression::SaveTo(json& jsonObj)
 	jsonObj["LifeMilestones"] = lifeMilestonesJSON;
 
 	jsonObj["StartingVariants"] = startingVariants;
-
 	jsonObj["StartingRadius"] = startingRadius;
+
+	jsonObj["TileLifeBonus"] = tileLifeBonus;
+	jsonObj["HabitatLifeBonus"] = habitatLifeBonus;
 }
 
 void HexProgression::LoadFrom(const json& jsonObj)
@@ -124,21 +141,29 @@ void HexProgression::LoadFrom(const json& jsonObj)
 	{
 		startingVariants = jsonObj["StartingVariants"];
 	}
-
 	if (jsonObj.contains("StartingRadius"))
 	{
 		startingRadius = jsonObj["StartingRadius"];
 		currentRadius = startingRadius;
 	}
+
+	if (jsonObj.contains("TileLifeBonus"))
+	{
+		tileLifeBonus = jsonObj["TileLifeBonus"];
+	}
+	if (jsonObj.contains("HabitatLifeBonus"))
+	{
+		habitatLifeBonus = jsonObj["HabitatLifeBonus"];
+	}
 }
 
-void HexProgression::CompleteMilestone(Milestone& milestone)
+void HexProgression::CompleteMilestone(const Milestone& milestone)
 {
 	currentRadius += milestone.radiusIncrease;
 
 	if (milestone.type == Milestone::VariantUnlock)
 	{
-		std::vector<std::string> unlockedVariants;
+		const std::vector<std::string>& unlockedVariants = milestone.names;
 
 		for (TileData& tileData : HexTile::trees)
 		{

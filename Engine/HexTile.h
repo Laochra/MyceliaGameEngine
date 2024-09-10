@@ -41,6 +41,7 @@ public:
 
 	virtual void Initialise() override;
 	void DrawHexPos() noexcept;
+	void DrawFogMasks() noexcept;
 	
 	glm::ivec2 GetHexPos() const noexcept;
 

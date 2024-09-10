@@ -214,6 +214,10 @@ void TileEditor::Draw(const char* const name, bool& open) noexcept
 	{
 		GUI::Spacing(3);
 		
+		ImGui::Text(StringBuilder("Current Life: ", HexProgression::GetLife()).CStr());
+
+		GUI::Spacing(3);
+
 		ImGui::PushItemWidth(ImGui::CalcItemWidth() / 5.0f);
 		if (ImGui::DragInt("Starting Radius", (int*)&HexProgression::startingRadius, 0.25f, 0, 100, "%d", ImGuiSliderFlags_AlwaysClamp))
 		{
@@ -249,6 +253,17 @@ void TileEditor::Draw(const char* const name, bool& open) noexcept
 				if (it == startingVariants.end()) break;
 			}
 		}
+
+		GUI::Spacing(3);
+
+		ImGui::SeparatorText("Life Bonuses");
+		ImGui::PushItemWidth(ImGui::CalcItemWidth() / 5.0f);
+		ImGui::DragInt("per Tile", (int*)&HexProgression::tileLifeBonus, 0.25f, 0, INT_MAX);
+		ImGui::SameLine();
+		GUI::HSpacing(3);
+		ImGui::SameLine();
+		ImGui::DragInt("per Habitat", (int*)&HexProgression::habitatLifeBonus, 0.25f, 0, INT_MAX);
+		ImGui::PopItemWidth();
 
 		GUI::Spacing(3);
 

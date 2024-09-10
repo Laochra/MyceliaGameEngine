@@ -45,4 +45,7 @@ public:
 	void AddCentre() noexcept;
 	void AddTile(glm::ivec2 originPosition, HexDir direction) noexcept;
 	void AddTile(HexTile* origin, HexDir direction) noexcept;
+
+private:
+	void EnsurePerimeterIsPlacable() noexcept;
 };

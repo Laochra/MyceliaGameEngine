@@ -37,6 +37,7 @@ MeshManager::~MeshManager()
 
 Mesh* MeshManager::GetMesh(const char* filepath)
 {
+   if (filepath == nullptr) return nullptr;
    if (strcmp(filepath, "None") == 0) { return nullptr; }
 
    if (loadedMeshes.count(filepath) == 0) { return AddMesh(filepath); }

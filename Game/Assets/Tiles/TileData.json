@@ -38,6 +38,15 @@
         "Fern",
         "Water"
       ]
+    },
+    {
+      "Name": "Tasmanian Tiger",
+      "PrefabFilepath": "None",
+      "RequiredTiles": [
+        "Eucalyptus",
+        "Acacia Blackwood",
+        "Water"
+      ]
     }
   ],
   "Lands": [
@@ -67,22 +76,34 @@
     }
   ],
   "Progression": {
+    "HabitatLifeBonus": 3,
     "LifeMilestones": [
       {
-        "LifeRequirement": 100,
-        "Names": [],
+        "LifeRequirement": 12,
+        "Names": [
+          "Everlasting Daisy",
+          "Happy Wanderer",
+          "Water with Reeds",
+          "Red Gravel"
+        ],
         "RadiusIncrease": 1,
         "Type": 0
       },
       {
-        "LifeRequirement": 200,
+        "LifeRequirement": 40,
         "Names": [],
         "RadiusIncrease": 1,
         "Type": 1
       }
     ],
     "StartingRadius": 3,
-    "StartingVariants": []
+    "StartingVariants": [
+      "Eucalyptus",
+      "Fern",
+      "Water",
+      "Grass"
+    ],
+    "TileLifeBonus": 1
   },
   "RadialSprites": {
     "Flower": {

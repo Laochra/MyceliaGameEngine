@@ -377,6 +377,26 @@ void HexTile::DrawHexPos() noexcept
 	}
 }
 
+static void DrawFogMasksRecursive(GameObject3D* gameObject, ShaderProgram* fogMaskProgram)
+{
+	MeshRenderer* meshRenderer = dynamic_cast<MeshRenderer*>(gameObject);
+	if (meshRenderer != nullptr && meshRenderer->GetMesh() != nullptr)
+	{
+		fogMaskProgram->BindUniform("ProjectionViewModel", AppInfo::ActiveCamera()->GetPVMatrix() * meshRenderer->GetMatrix());
+		meshRenderer->GetMesh()->Draw();
+	}
+
+	const vector<GameObject3D*>* children = gameObject->GetChildren();
+	for (vector<GameObject3D*>::const_iterator it = children->begin(); it < children->end(); it++)
+	{
+		DrawFogMasksRecursive(*it, fogMaskProgram);
+	}
+}
+void HexTile::DrawFogMasks() noexcept
+{
+
+}
+
 glm::ivec2 HexTile::GetHexPos() const noexcept
 {
 	return HexTile::RealPosToHexPos(GetPosition());

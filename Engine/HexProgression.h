@@ -27,10 +27,14 @@ public:
 	static uint startingRadius;
 	static uint currentRadius;
 
+	static uint tileLifeBonus;
+	static uint habitatLifeBonus;
+
 	static void Initialise() noexcept;
 
+	static uint GetLife() noexcept;
 	// If a milestone is hit a pointer to it will be returned, otherwise returns nullptr
-	static Milestone* IncreaseLife(uint lifeToAdd) noexcept;
+	static const Milestone* IncreaseLife(uint lifeToAdd) noexcept;
 	static void ResetProgression() noexcept;
 
 	static void SaveTo(json& jsonObj);
@@ -40,5 +44,5 @@ private:
 	static uint currentMilestone;
 	static uint currentLife;
 
-	static void CompleteMilestone(Milestone& milestone);
+	static void CompleteMilestone(const Milestone& milestone);
 };
