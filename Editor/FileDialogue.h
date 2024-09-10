@@ -79,5 +79,8 @@ namespace FileDialogue
 	// Returns vector of size 0 on failure
 	std::vector<std::string> GetLoadPaths(const PathDetails details, const LimitToAssetFolder limitToAssetsFolder) noexcept;
 
+	// Returns string of size 0 on failure, doesn't use extensions
+	std::string GetFolderPath(const PathDetails details, const LimitToAssetFolder limitToAssetsFolder);
+
 	int DisplayMessageBox(const MessageBox messageBox) noexcept;
 }
