@@ -1,6 +1,8 @@
 #include "FileDialogue.h"
 
 #include "tinyfiledialogs.h"
+#include <filesystem>
+
 #include "Debug.h"
 
 std::string FileDialogue::GetSavePath(const PathDetails details, const LimitToAssetFolder limitToAssetsFolder) noexcept
@@ -82,6 +84,24 @@ std::vector<std::string> FileDialogue::GetLoadPaths(PathDetails details, LimitTo
 	}
 
 	return filepaths;
+}
+
+std::string FileDialogue::GetFolderPath(const PathDetails details, const LimitToAssetFolder limitToAssetsFolder)
+{
+	const char* const bytes = tinyfd_selectFolderDialog(details.title, StringBuilder(std::filesystem::current_path().string(), "\\", details.defaultPath).CStr());
+	if (bytes == nullptr) return std::string(); // Not an error. This happens if user cancels when selecting files.
+
+	std::string filepath = bytes;
+
+	const uint startOffset = (bool)limitToAssetsFolder ? (uint)filepath.find("Assets\\") : 0;
+	if (startOffset == std::string::npos)
+	{
+		Debug::LogWarning(LogID::WRN106, filepath, " won't be included in builds. ", locationinfo);
+		return std::string();
+	}
+	filepath.erase(filepath.begin(), filepath.begin() + startOffset);
+
+	return filepath + '\\';
 }
 
 int FileDialogue::DisplayMessageBox(const MessageBox messageBox) noexcept

@@ -22,6 +22,10 @@ namespace ArtImporter
 {
 	vector<string> fileQueue;
 	uint current;
+
+	bool compressHeirarchy = false;
+	bool applyTransforms = false;
+
 	MeshHeirarchy tempMeshes;
 	MeshHeirarchy* selectedTempMesh;
 
@@ -30,7 +34,7 @@ namespace ArtImporter
 
 	static void SetCurrent(uint newIndex)
 	{
-		if (newIndex == 0 || newIndex < fileQueue.size()) { current = newIndex; }
+		if (newIndex < fileQueue.size()) { current = newIndex; }
 		else { current = (uint)fileQueue.size() - 1; }
 		
 		if (fileQueue.size() > 0) { Preload(fileQueue[current].c_str()); }
@@ -50,7 +54,7 @@ namespace ArtImporter
 		flags |= ImGuiTreeNodeFlags_Selected * isSelected;
 		flags |= ImGuiTreeNodeFlags_Leaf * isLeaf;
 
-		if (ImGui::TreeNodeEx(tempMesh->name.c_str(), flags))
+		if (ImGui::TreeNodeEx(StringBuilder(tempMesh->name, "##Mesh").CStr(), flags))
 		{
 			if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenOverlapped))
 			{
@@ -106,6 +110,15 @@ namespace ArtImporter
 			ImGui::EndDisabled();
 		}
 
+		if (ImGui::Checkbox("Compress Heirarchy", &compressHeirarchy))
+		{
+			if (fileQueue.size() > 0) Preload(fileQueue[current].c_str());
+		}
+		if (ImGui::Checkbox("Respect Transform Data", &applyTransforms))
+		{
+			if (fileQueue.size() > 0) Preload(fileQueue[current].c_str());
+		}
+
 		if (ImGui::Button("Add Files"))
 		{
 			using namespace FileDialogue;
@@ -134,22 +147,42 @@ namespace ArtImporter
 		{
 			if (current >= fileQueue.size()) SetCurrent((uint)fileQueue.size() - 1);
 
+			
+
 			if (ImGui::Button("Cook"))
 			{
-				CookCurrent();
+				using namespace FileDialogue;
+				PathDetails savePathDetails(
+					"Cook Prefab",
+					"Assets\\NewPrefab.prefab",
+					{ "*.prefab" }
+				);
+				string savePath = GetSavePath(savePathDetails, LimitToAssetFolder::True);
+				if (savePath.size() != 0)
+				{
+					Cook(current, savePath);
+				}
 				selectedTempMesh = nullptr;
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Cook All"))
 			{
-				for (int i = 0; i < fileQueue.size(); i++)
+				using namespace FileDialogue;
+				PathDetails savePathDetails(
+					"Choose Target Location",
+					"Assets\\"
+				);
+				string savePath = GetFolderPath(savePathDetails, LimitToAssetFolder::True);
+				
+				if (savePath.size() != 0)
 				{
-					CookAll();
+					CookAll(savePath);
+
+					fileQueue.clear();
+					tempMeshes.Clear();
+					SetCurrent(0);
+					selectedTempMesh = nullptr;
 				}
-				fileQueue.clear();
-				tempMeshes.Clear();
-				SetCurrent(0);
-				selectedTempMesh = nullptr;
 			}
 
 			ImGui::SeparatorText("Preview");
@@ -159,7 +192,10 @@ namespace ArtImporter
 			{
 				ImGui::SeparatorText("Mesh Settings");
 
-				ImGui::InputText("Name", &selectedTempMesh->name);
+				if (ImGui::InputText("Name", &selectedTempMesh->name))
+				{
+					if (selectedTempMesh->name.size() == 0) selectedTempMesh->name = "Empty";
+				}
 				
 				if (ImGui::BeginCombo("Material", selectedTempMesh->materialPath.c_str()))
 				{
@@ -228,7 +264,14 @@ namespace ArtImporter
 	{
 		bool hasMesh = node->mNumMeshes != 0;
 
-		current.localMatrix = initialMatrix * glm::transpose(*(mat4*)&node->mTransformation);
+		if (applyTransforms)
+		{
+			current.localMatrix = initialMatrix * glm::transpose(*(mat4*)&node->mTransformation);
+		}
+		else
+		{
+			current.localMatrix = glm::identity<mat4>();
+		}
 
 		if (hasMesh)
 		{
@@ -236,8 +279,8 @@ namespace ArtImporter
 		}
 		else
 		{
-			current.name = "GameObject3D";
-			if (node->mNumChildren == 1)
+			current.name = "Empty";
+			if (compressHeirarchy && node->mNumChildren == 1)
 			{
 				ProcessNode(node->mChildren[0], current, current.localMatrix);
 				return;
@@ -272,16 +315,16 @@ namespace ArtImporter
 		ProcessNode(currentFile->mRootNode, tempMeshes);
 	}
 
-	static json CookHeirarchy(MeshHeirarchy* mesh)
+	static json CookHeirarchy(MeshHeirarchy* mesh, string saveLocation)
 	{
 		string newPath;
 
-		bool hasMesh = strcmp(mesh->name.c_str(), "GameObject3D") != 0;
+		bool hasMesh = mesh->name != "Empty";
 
 		// Move Mesh
 		if (hasMesh)
 		{
-			newPath = "Assets\\Meshes\\" + string(mesh->name) + ".mesh";
+			newPath = saveLocation + string(mesh->name) + ".mesh";
 			std::rename(mesh->filepath.c_str(), newPath.c_str());
 		}
 
@@ -310,35 +353,43 @@ namespace ArtImporter
 		vector<json> children;
 		for (int i = 0; i < mesh->children.size(); i++)
 		{
-			children.push_back(CookHeirarchy(mesh->children[i]));
+			children.push_back(CookHeirarchy(mesh->children[i], saveLocation));
 		}
 		meshRenderer["Children"] = children;
 
 		return meshRenderer;
 	}
 
-	void ArtImporter::CookCurrent() noexcept
+	void ArtImporter::Cook(uint index, string savePath, bool pathIsFolder) noexcept
 	{
-		json gameobject = CookHeirarchy(&tempMeshes);
-
-		string filename = aiScene::GetShortFilename(fileQueue[current].c_str());
-		uint extensionIndex = (uint)filename.find('.');
-		if (extensionIndex != string::npos)
+		if (!pathIsFolder)
 		{
-			filename.erase(filename.begin() + extensionIndex, filename.end());
+			savePath = savePath;
+			for (string::iterator pathEnd = savePath.end() - 1; pathEnd != savePath.begin(); pathEnd--)
+			{
+				if (*pathEnd == '\\')
+				{
+					savePath.erase(pathEnd + 1, savePath.end());
+					break;
+				}
+			}
 		}
-		ofstream output("Assets\\Prefabs\\" + filename + ".prefab");
+
+		json gameobject = CookHeirarchy(&tempMeshes, savePath);
+
+		ofstream output(StringBuilder(savePath, "Prefab", index, ".prefab").CStr());
 		output << std::setw(2) << gameobject;
 
-		fileQueue.erase(fileQueue.begin() + current);
+		fileQueue.erase(fileQueue.begin() + index);
 		if (current > 0 && current >= fileQueue.size()) SetCurrent(current - 1);
 	}
 
-	void ArtImporter::CookAll() noexcept
+	void ArtImporter::CookAll(string savePath) noexcept
 	{
-		for (int i = 0; i < fileQueue.size(); i++)
+		while (fileQueue.size() > 0)
 		{
-			CookCurrent();
+			Preload(fileQueue[fileQueue.size() - 1].c_str());
+			Cook(fileQueue.size() - 1, savePath, true);
 		}
 	}
 }
