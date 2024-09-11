@@ -362,26 +362,36 @@ namespace ArtImporter
 
 	void ArtImporter::Cook(uint index, string savePath, bool pathIsFolder) noexcept
 	{
+		string meshSaveLocation = savePath;
+		string prefabSavePath;
 		if (!pathIsFolder)
 		{
-			savePath = savePath;
-			for (string::iterator pathEnd = savePath.end() - 1; pathEnd != savePath.begin(); pathEnd--)
+			prefabSavePath = savePath;
+			for (string::iterator pathEnd = meshSaveLocation.end() - 1; pathEnd != meshSaveLocation.begin(); pathEnd--)
 			{
 				if (*pathEnd == '\\')
 				{
-					savePath.erase(pathEnd + 1, savePath.end());
+					meshSaveLocation.erase(pathEnd + 1, meshSaveLocation.end());
 					break;
 				}
 			}
 		}
+		else
+		{
+			prefabSavePath = StringBuilder(savePath, "Prefab", index, ".prefab").CStr();
+		}
 
-		json gameobject = CookHeirarchy(&tempMeshes, savePath);
+		json gameobject = CookHeirarchy(&tempMeshes, meshSaveLocation);
 
-		ofstream output(StringBuilder(savePath, "Prefab", index, ".prefab").CStr());
+		ofstream output(prefabSavePath);
 		output << std::setw(2) << gameobject;
 
 		fileQueue.erase(fileQueue.begin() + index);
-		if (current > 0 && current >= fileQueue.size()) SetCurrent(current - 1);
+		tempMeshes.Clear();
+		if (current > 0 && current >= fileQueue.size())
+		{
+			SetCurrent(current - 1);
+		}
 	}
 
 	void ArtImporter::CookAll(string savePath) noexcept
