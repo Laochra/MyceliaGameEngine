@@ -9,6 +9,9 @@
 
 #include "StringBuilder.h"
 
+#include "AudioManager.h"
+#include "Input.h"
+
 void ExampleGame::Initialise(uint* renderTargetInit)
 {
 	const string defaultPath = "Engine\\DefaultAssets\\";

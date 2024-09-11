@@ -13,6 +13,7 @@
 #include "MaterialManager.h"
 #include "TextureManager.h"
 #include "MeshManager.h"
+#include "AudioManager.h"
 
 #include "GeneralMacros.h"
 
@@ -116,6 +117,7 @@ int Application::Setup()
 #endif
 
 	AppInfo::input = new Input();
+	AudioManager::Initialise();
 
 	shaderManager = new ShaderManager();
 	materialManager = new MaterialManager();
@@ -174,6 +176,7 @@ void Application::Close()
 	del(textureManager);
 	del(meshManager);
 	del(gameObjectManager);
+	AudioManager::CleanUp();
 
 	glfwTerminate();
 }

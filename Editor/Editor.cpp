@@ -6,6 +6,7 @@
 #include "TransformEdit.h"
 
 #include "LightingManager.h"
+#include "AudioManager.h"
 
 #include "GeneralMacros.h"
 

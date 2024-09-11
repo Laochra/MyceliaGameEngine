@@ -142,7 +142,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);EDITOR</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)External/imgui; $(SolutionDir)External/tinyfiledialogs</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External/imgui; $(SolutionDir)External/tinyfiledialogs;  $(SolutionDir)External/assimp/include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <UseFullPaths>true</UseFullPaths>
