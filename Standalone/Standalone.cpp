@@ -5,6 +5,7 @@
 
 #include "Camera.h"
 #include "LightingManager.h"
+#include "AudioManager.h"
 
 #include "Mesh.h"
 

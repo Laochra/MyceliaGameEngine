@@ -122,13 +122,14 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WITH_WINMM;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)External;$(SolutionDir)External/GLFW;$(SolutionDir)External/glad;$(SolutionDir)External/glm;$(SolutionDir)External/nlohmannjson;$(SolutionDir)External/stb;$(SolutionDir)External/aie</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External;$(SolutionDir)External/GLFW;$(SolutionDir)External/glad;$(SolutionDir)External/glm;$(SolutionDir)External/nlohmannjson;$(SolutionDir)External/stb;$(SolutionDir)External/soloud/include;$(SolutionDir)External/aie</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/d1trimfile:"$(SolutionDir)\" %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -144,13 +145,14 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WITH_WINMM;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)External; $(SolutionDir)External/GLFW; $(SolutionDir)External/glad; $(SolutionDir)External/glm; $(SolutionDir)External/nlohmannjson; $(SolutionDir)External/stb; $(SolutionDir)External/assimp/include; $(SolutionDir)External/aie</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External;$(SolutionDir)External/GLFW;$(SolutionDir)External/glad;$(SolutionDir)External/glm;$(SolutionDir)External/nlohmannjson;$(SolutionDir)External/stb;$(SolutionDir)External/soloud/include;/stb; $(SolutionDir)External/assimp/include; $(SolutionDir)External/aie</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/d1trimfile:"$(SolutionDir)\" %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -164,8 +166,33 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\External\glad\glad.c" />
+    <ClCompile Include="..\External\soloud\src\audiosource\wav\dr_impl.cpp" />
+    <ClCompile Include="..\External\soloud\src\audiosource\wav\soloud_wav.cpp" />
+    <ClCompile Include="..\External\soloud\src\audiosource\wav\soloud_wavstream.cpp" />
+    <ClCompile Include="..\External\soloud\src\audiosource\wav\stb_vorbis.c" />
+    <ClCompile Include="..\External\soloud\src\backend\winmm\soloud_winmm.cpp" />
+    <ClCompile Include="..\External\soloud\src\core\soloud.cpp" />
+    <ClCompile Include="..\External\soloud\src\core\soloud_audiosource.cpp" />
+    <ClCompile Include="..\External\soloud\src\core\soloud_bus.cpp" />
+    <ClCompile Include="..\External\soloud\src\core\soloud_core_3d.cpp" />
+    <ClCompile Include="..\External\soloud\src\core\soloud_core_basicops.cpp" />
+    <ClCompile Include="..\External\soloud\src\core\soloud_core_faderops.cpp" />
+    <ClCompile Include="..\External\soloud\src\core\soloud_core_filterops.cpp" />
+    <ClCompile Include="..\External\soloud\src\core\soloud_core_getters.cpp" />
+    <ClCompile Include="..\External\soloud\src\core\soloud_core_setters.cpp" />
+    <ClCompile Include="..\External\soloud\src\core\soloud_core_voicegroup.cpp" />
+    <ClCompile Include="..\External\soloud\src\core\soloud_core_voiceops.cpp" />
+    <ClCompile Include="..\External\soloud\src\core\soloud_fader.cpp" />
+    <ClCompile Include="..\External\soloud\src\core\soloud_fft.cpp" />
+    <ClCompile Include="..\External\soloud\src\core\soloud_fft_lut.cpp" />
+    <ClCompile Include="..\External\soloud\src\core\soloud_file.cpp" />
+    <ClCompile Include="..\External\soloud\src\core\soloud_filter.cpp" />
+    <ClCompile Include="..\External\soloud\src\core\soloud_misc.cpp" />
+    <ClCompile Include="..\External\soloud\src\core\soloud_queue.cpp" />
+    <ClCompile Include="..\External\soloud\src\core\soloud_thread.cpp" />
     <ClCompile Include="AppInfo.cpp" />
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="Colour.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="EditHistory.cpp" />
@@ -214,10 +241,54 @@
     <ClInclude Include="..\External\glad\khrplatform.h" />
     <ClInclude Include="..\External\nlohmannjson\json.hpp" />
     <ClInclude Include="..\External\nlohmannjson\json_fwd.hpp" />
+    <ClInclude Include="..\External\soloud\include\soloud.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_audiosource.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_ay.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_bassboostfilter.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_biquadresonantfilter.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_bus.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_c.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_dcremovalfilter.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_duckfilter.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_echofilter.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_eqfilter.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_error.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_fader.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_fft.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_fftfilter.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_file.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_file_hack_off.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_file_hack_on.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_filter.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_flangerfilter.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_freeverbfilter.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_internal.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_lofifilter.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_misc.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_monotone.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_noise.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_openmpt.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_queue.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_robotizefilter.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_sfxr.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_speech.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_tedsid.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_thread.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_vic.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_vizsn.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_wav.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_waveshaperfilter.h" />
+    <ClInclude Include="..\External\soloud\include\soloud_wavstream.h" />
+    <ClInclude Include="..\External\soloud\include\zx7decompress.h" />
+    <ClInclude Include="..\External\soloud\src\audiosource\wav\dr_flac.h" />
+    <ClInclude Include="..\External\soloud\src\audiosource\wav\dr_mp3.h" />
+    <ClInclude Include="..\External\soloud\src\audiosource\wav\dr_wav.h" />
+    <ClInclude Include="..\External\soloud\src\audiosource\wav\stb_vorbis.h" />
     <ClInclude Include="..\External\stb\stb_image.h" />
     <ClInclude Include="..\External\stb\stb_image_write.h" />
     <ClInclude Include="AppInfo.h" />
     <ClInclude Include="Application.h" />
+    <ClInclude Include="AudioManager.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Colour.h" />
     <ClInclude Include="ComputeShader.h" />

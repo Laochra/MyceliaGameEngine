@@ -8,6 +8,7 @@
 #include "stb_image.h"
 
 #include "LightingManager.h"
+#include "AudioManager.h"
 
 #include "GeneralMacros.h"
 
