@@ -70,6 +70,7 @@ public:
 	static json GetEmptyTilePrefab() noexcept;
 	static json GetDefaultTilePrefab() noexcept;
 	static json GetTilePrefab(string name, uint density) noexcept;
+	static void ClearPrefabs() noexcept;
 
 private:
 	static void AddDefaultPrefab(string name, string path) noexcept;

@@ -3,6 +3,7 @@
 
 #include "LightingManager.h"
 #include "GameObjectManager.h"
+#include "AudioManager.h"
 
 #include "Shader.h"
 #include "Camera.h"
@@ -11,6 +12,8 @@
 
 #include "Habitat.h"
 #include "HexProgression.h"
+#include "HexAudio.h"
+
 
 void static RadialInteractionHandler(uint selection)
 {
@@ -171,13 +174,13 @@ void HexGame::OnStart()
 {
 	hexGrid->AddCentre();
 
-	treeRadial = new RadialMenu(HexTile::treeRadialSprites[1].c_str(), HexTile::treeRadialSprites[0].c_str(), HexTile::treeRadialSprites[2].c_str());
+	treeRadial = new RadialMenu(HexTile::treeRadialSprites[0].c_str(), HexTile::treeRadialSprites[1].c_str(), HexTile::treeRadialSprites[2].c_str());
 	treeRadial->interactionHandler = { (RadialMenu::InteractFunc)RadialInteractionHandler };
-	flowerRadial = new RadialMenu(HexTile::flowerRadialSprites[1].c_str(), HexTile::flowerRadialSprites[0].c_str(), HexTile::flowerRadialSprites[2].c_str());
+	flowerRadial = new RadialMenu(HexTile::flowerRadialSprites[0].c_str(), HexTile::flowerRadialSprites[1].c_str(), HexTile::flowerRadialSprites[2].c_str());
 	flowerRadial->interactionHandler = { (RadialMenu::InteractFunc)RadialInteractionHandler };
-	waterRadial = new RadialMenu(HexTile::waterRadialSprites[1].c_str(), HexTile::waterRadialSprites[0].c_str(), HexTile::waterRadialSprites[2].c_str());
+	waterRadial = new RadialMenu(HexTile::waterRadialSprites[0].c_str(), HexTile::waterRadialSprites[1].c_str(), HexTile::waterRadialSprites[2].c_str());
 	waterRadial->interactionHandler = { (RadialMenu::InteractFunc)RadialInteractionHandler };
-	landRadial = new RadialMenu(HexTile::landRadialSprites[1].c_str(), HexTile::landRadialSprites[0].c_str(), HexTile::landRadialSprites[2].c_str());
+	landRadial = new RadialMenu(HexTile::landRadialSprites[0].c_str(), HexTile::landRadialSprites[1].c_str(), HexTile::landRadialSprites[2].c_str());
 	landRadial->interactionHandler = { (RadialMenu::InteractFunc)RadialInteractionHandler };
 
 	currentRadialPage = 0U;
@@ -236,7 +239,11 @@ void HexGame::OnStop()
 	del(treeRadial);
 	del(flowerRadial);
 	del(waterRadial);
-	del(landRadial)
+	del(landRadial);
+
+	HexTile::ClearPrefabs();
+	Habitat::ClearPrefabs();
+	AudioManager::ClearLoadedAssets();
 }
 
 void HexGame::OnPause() { }
@@ -259,6 +266,7 @@ void HexGame::Update()
 	{
 		if (gameInputs.radialPageLeft.pressed())
 		{
+			HexAudio::PlayMiscSFX(HexAudio::SoundEffect::RadialCyclePage);
 			currentRadialMenu->enabled = false;
 
 			if (currentRadialPage == 0) currentRadialPage = 3U;
@@ -275,6 +283,7 @@ void HexGame::Update()
 		}
 		if (gameInputs.radialPageRight.pressed())
 		{
+			HexAudio::PlayMiscSFX(HexAudio::SoundEffect::RadialCyclePage);
 			currentRadialMenu->enabled = false;
 
 			if (currentRadialPage == 3U) currentRadialPage = 0U;
@@ -291,6 +300,7 @@ void HexGame::Update()
 		}
 		if (gameInputs.radialClose.pressed())
 		{
+			HexAudio::PlayMiscSFX(HexAudio::SoundEffect::RadialClose);
 			currentRadialMenu->enabled = false;
 		}
 
@@ -318,6 +328,7 @@ void HexGame::Update()
 
 		if (gameInputs.openRadial.pressed())
 		{
+			HexAudio::PlayMiscSFX(HexAudio::SoundEffect::RadialOpen);
 			currentRadialMenu->enabled = true;
 		}
 	}
@@ -443,6 +454,12 @@ void HexGame::LoadTileData() noexcept
 		json progressionData = tileData["Progression"];
 		HexProgression::LoadFrom(progressionData);
 	}
+
+	if (tileData.contains("Audio"))
+	{
+		json audioData = tileData["Audio"];
+		HexAudio::LoadFrom(audioData);
+	}
 }
 
 void HexGame::SaveTileData() noexcept
@@ -451,9 +468,15 @@ void HexGame::SaveTileData() noexcept
 
 	json tileData;
 	HexTile::SaveTileDataTo(tileData);
+
 	json progressionData;
 	HexProgression::SaveTo(progressionData);
 	tileData["Progression"] = progressionData;
+
+	json audioData;
+	HexAudio::SaveTo(audioData);
+	tileData["Audio"] = audioData;
+
 
 	ofstream output(tileDataPath);
 	output << std::setw(2) << tileData;

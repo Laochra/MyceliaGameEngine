@@ -218,6 +218,10 @@ json HexTile::GetTilePrefab(string name, uint density) noexcept
 
 	return prefabs[key];
 }
+void HexTile::ClearPrefabs() noexcept
+{
+	prefabs.clear();
+}
 void HexTile::AddDefaultPrefab(string name, string path) noexcept
 {
 	json prefab;

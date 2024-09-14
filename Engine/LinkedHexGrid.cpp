@@ -2,6 +2,7 @@
 
 #include "Habitat.h"
 #include "HexProgression.h"
+#include "HexAudio.h"
 
 #include "RandomGen.h"
 
@@ -106,12 +107,26 @@ void LinkedHexGrid::UpdateTile(HexTile* hexTile, json tilePrefab) noexcept
 	Habitat* habitat = Habitat::AttemptToFormHabitat(hexTile);
 	if (habitat != nullptr)
 	{
+		HexAudio::PlayMiscSFX(HexAudio::SoundEffect::FormHabitat);
+
 		habitat->SetParent(this);
 		habitats.push_back(habitat);
 		const HexProgression::Milestone* milestone = HexProgression::IncreaseLife(HexProgression::habitatLifeBonus);
 		if (milestone != nullptr)
 		{
+			// TODO: Play MilestoneReached SFX
 			EnsurePerimeterIsPlacable();
+		}
+	}
+	else
+	{
+		switch (hexTile->type)
+		{
+		case HexType::Tree: HexAudio::PlayMiscSFX(HexAudio::SoundEffect::PlaceTree); break;
+		case HexType::Flower: HexAudio::PlayMiscSFX(HexAudio::SoundEffect::PlaceFlower); break;
+		case HexType::Water: HexAudio::PlayMiscSFX(HexAudio::SoundEffect::PlaceWater); break;
+		case HexType::Land: HexAudio::PlayMiscSFX(HexAudio::SoundEffect::PlaceLand); break;
+		default: break;
 		}
 	}
 }

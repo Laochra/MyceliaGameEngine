@@ -208,7 +208,7 @@
     <ClCompile Include="PostProcessingGUI.cpp" />
     <ClCompile Include="SceneGUI.cpp" />
     <ClCompile Include="ShaderProgramGUI.cpp" />
-    <ClCompile Include="TileEditor.cpp" />
+    <ClCompile Include="HexEditor.cpp" />
     <ClCompile Include="TransformEdit.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -254,7 +254,7 @@
     <ClInclude Include="SceneGUI.h" />
     <ClInclude Include="ShaderProgramGUI.h" />
     <ClInclude Include="Table.h" />
-    <ClInclude Include="TileEditor.h" />
+    <ClInclude Include="HexEditor.h" />
     <ClInclude Include="TransformEdit.h" />
   </ItemGroup>
   <ItemGroup>

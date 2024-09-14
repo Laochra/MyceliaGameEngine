@@ -129,7 +129,7 @@
     </ClCompile>
     <ClCompile Include="HexProgression.cpp">
       <Filter>HexGame</Filter>
-	 </ClCompile>
+    </ClCompile>
     <ClCompile Include="AudioManager.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
@@ -204,6 +204,9 @@
     </ClCompile>
     <ClCompile Include="..\External\soloud\src\backend\winmm\soloud_winmm.cpp">
       <Filter>3rd Party\soloud</Filter>
+    </ClCompile>
+    <ClCompile Include="HexAudio.cpp">
+      <Filter>HexGame</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -369,7 +372,7 @@
     </ClInclude>
     <ClInclude Include="HexProgression.h">
       <Filter>HexGame</Filter>
-	 </ClInclude>
+    </ClInclude>
     <ClInclude Include="FilesIncludes.h">
       <Filter>Utility\IncludeGroups</Filter>
     </ClInclude>
@@ -517,6 +520,9 @@
     <ClInclude Include="..\External\soloud\include\zx7decompress.h">
       <Filter>3rd Party\soloud</Filter>
     </ClInclude>
+    <ClInclude Include="HexAudio.h">
+      <Filter>HexGame</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">
@@ -554,7 +560,7 @@
     </Filter>
     <Filter Include="HexGame">
       <UniqueIdentifier>{8581cc9c-edca-48cd-b8ab-ae329795567f}</UniqueIdentifier>
-	 </Filter>
+    </Filter>
     <Filter Include="Utility\IncludeGroups">
       <UniqueIdentifier>{89ebe478-b85c-42b9-a990-2aff9c315188}</UniqueIdentifier>
     </Filter>

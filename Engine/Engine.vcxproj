@@ -203,6 +203,7 @@
     <ClCompile Include="GamepadInfo.cpp" />
     <ClCompile Include="GuidGenerator.cpp" />
     <ClCompile Include="Habitat.cpp" />
+    <ClCompile Include="HexAudio.cpp" />
     <ClCompile Include="HexGame.cpp" />
     <ClCompile Include="HexProgression.cpp" />
     <ClCompile Include="HexTile.cpp" />
@@ -307,6 +308,7 @@
     <ClInclude Include="Habitat.h" />
     <ClInclude Include="Heirarchical.h" />
     <ClInclude Include="HeirarchicalDefinitions.h" />
+    <ClInclude Include="HexAudio.h" />
     <ClInclude Include="HexGame.h" />
     <ClInclude Include="HexProgression.h" />
     <ClInclude Include="HexTile.h" />

@@ -1,4 +1,32 @@
 {
+  "Audio": {
+    "Ambience": [],
+    "AmbienceVolume": 1.0,
+    "Music": "None",
+    "MusicVolume": 1.0,
+    "SoundEffects": {
+      "FormHabitat": "Assets\\Habitats\\FormHabitat.wav",
+      "PlaceFlower": "Assets\\Tiles\\Flowers\\PlaceFlower.wav",
+      "PlaceLand": "Assets\\Tiles\\Lands\\PlaceLand.wav",
+      "PlaceTree": "Assets\\Tiles\\Trees\\PlaceTree.wav",
+      "PlaceWater": "Assets\\Tiles\\Waters\\PlaceWater.wav",
+      "RadialClose": "None",
+      "RadialCycle Page": "Assets\\UI\\RadialMenu\\RadialMenu_CyclePage.wav",
+      "RadialCycleDensity": "None",
+      "RadialOpen": "Assets\\UI\\RadialMenu\\RadialMenu_Open.wav",
+      "ScrapbookClose": "Assets\\UI\\Scrapbook\\Scrapbook_Close.wav",
+      "ScrapbookNewHabitatPage": "Assets\\UI\\Scrapbook\\Scrapbook_NewHabitat.wav",
+      "ScrapbookNotification": "Assets\\UI\\Scrapbook\\Scrapbook_Notification.wav",
+      "ScrapbookOpen": "Assets\\UI\\Scrapbook\\Scrapbook_Open.wav",
+      "ScrapbookTurnPage": "None"
+    },
+    "SoundEffectsVolume": 1.0,
+    "SpiritSounds": {
+      "Frog": "None",
+      "Tasmanian Tiger": "None"
+    },
+    "SpiritSoundsVolume": 1.0
+  },
   "Defaults": {
     "DefaultTile": "Assets\\Tiles\\Lands\\Grass\\Grass.prefab",
     "EmptyTile": "Assets\\Tiles\\Empty\\Empty.prefab"
@@ -107,24 +135,24 @@
   },
   "RadialSprites": {
     "Flower": {
-      "Hovered": "Assets\\UI\\RadialMenu\\Flower\\RW_Flower_Unlocked.png",
+      "Hovered": "Assets\\UI\\RadialMenu\\Flower\\RW_Flower_Hovered.png",
       "Locked": "Assets\\UI\\RadialMenu\\Flower\\RW_Flower_Locked.png",
-      "Regular": "Assets\\UI\\RadialMenu\\Flower\\RW_Flower_Hovered.png"
+      "Regular": "Assets\\UI\\RadialMenu\\Flower\\RW_Flower_Unlocked.png"
     },
     "Land": {
-      "Hovered": "Assets\\UI\\RadialMenu\\Land\\RW_Land_Unlocked.png",
+      "Hovered": "Assets\\UI\\RadialMenu\\Land\\RW_Land_Hovered.png",
       "Locked": "Assets\\UI\\RadialMenu\\Land\\RW_Land_Locked.png",
-      "Regular": "Assets\\UI\\RadialMenu\\Land\\RW_Land_Hovered.png"
+      "Regular": "Assets\\UI\\RadialMenu\\Land\\RW_Land_Unlocked.png"
     },
     "Trees": {
-      "Hovered": "Assets\\UI\\RadialMenu\\Tree\\RW_Tree_Unlocked.png",
+      "Hovered": "Assets\\UI\\RadialMenu\\Tree\\RW_Tree_Hovered.png",
       "Locked": "Assets\\UI\\RadialMenu\\Tree\\RW_Tree_Locked.png",
-      "Regular": "Assets\\UI\\RadialMenu\\Tree\\RW_Tree_Hovered.png"
+      "Regular": "Assets\\UI\\RadialMenu\\Tree\\RW_Tree_Unlocked.png"
     },
     "Water": {
-      "Hovered": "Assets\\UI\\RadialMenu\\Water\\RW_Water_Unlocked.png",
+      "Hovered": "Assets\\UI\\RadialMenu\\Water\\RW_Water_Hovered.png",
       "Locked": "Assets\\UI\\RadialMenu\\Water\\RW_Water_Locked.png",
-      "Regular": "Assets\\UI\\RadialMenu\\Water\\RW_Water_Hovered.png"
+      "Regular": "Assets\\UI\\RadialMenu\\Water\\RW_Water_Unlocked.png"
     }
   },
   "Trees": [

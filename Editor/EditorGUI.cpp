@@ -9,7 +9,7 @@
 #include "ArtImporter.h"
 #include "EditorStyler.h"
 #include "PostProcessingGUI.h"
-#include "TileEditor.h"
+#include "HexEditor.h"
 
 #include "MeshRendererGUI.h"
 #include "EditorCameraGUI.h"
@@ -87,7 +87,7 @@ namespace EditorGUI
 			EditorWindow("Camera", EditorCameraGUI::DrawEditorCameraGUI),
 			EditorWindow("Editor Styler", EditorStyler::Draw),
 			EditorWindow("Post Processing", PostProcessingGUI::Draw),
-			EditorWindow("Tile Editor", TileEditor::Draw),
+			EditorWindow("Hex Editor", HexEditor::Draw),
 		};
 		map<string, uint> windowIndices;
 
@@ -261,9 +261,9 @@ namespace EditorGUI
 					{
 						GetWindow("Art Importer").open = true;
 					}
-					if (ImGui::MenuItem(" Tile Editor", (const char*)0, false, !GetWindow("Tile Editor").open))
+					if (ImGui::MenuItem(" Hex Editor", (const char*)0, false, !GetWindow("Hex Editor").open))
 					{
-						GetWindow("Tile Editor").open = true;
+						GetWindow("Hex Editor").open = true;
 					}
 					ImGui::EndMenu();
 				}

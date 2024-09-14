@@ -26,6 +26,7 @@ public:
 
 	static vector<HabitatData> habitats;
 	static json GetPrefab(string name) noexcept;
+	static void ClearPrefabs() noexcept;
 
 private:
 	void FormHabitat(HabitatData habitat, HexTile* hex1, HexTile* hex2, HexTile* hex3) noexcept;

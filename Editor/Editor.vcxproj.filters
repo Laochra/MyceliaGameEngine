@@ -111,7 +111,7 @@
     <ClCompile Include="HabitatGUI.cpp">
       <Filter>GUI\EditorWindows\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="TileEditor.cpp">
+    <ClCompile Include="HexEditor.cpp">
       <Filter>GUI\EditorWindows\Tools</Filter>
     </ClCompile>
   </ItemGroup>
@@ -281,7 +281,7 @@
     <ClInclude Include="HabitatGUI.h">
       <Filter>GUI\EditorWindows\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="TileEditor.h">
+    <ClInclude Include="HexEditor.h">
       <Filter>GUI\EditorWindows\Tools</Filter>
     </ClInclude>
   </ItemGroup>

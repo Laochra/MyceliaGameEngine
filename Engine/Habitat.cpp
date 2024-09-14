@@ -154,7 +154,10 @@ json Habitat::GetPrefab(string name) noexcept
 
 	return prefabs[name];
 }
-
+void Habitat::ClearPrefabs() noexcept
+{
+	prefabs.clear();
+}
 void Habitat::AddPrefab(string name)
 {
 	json prefab;
