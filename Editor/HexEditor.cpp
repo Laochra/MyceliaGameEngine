@@ -40,6 +40,9 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 		json progressionData;
 		HexProgression::SaveTo(progressionData);
 		tileData["Progression"] = progressionData;
+		json audioData;
+		HexProgression::SaveTo(audioData);
+		tileData["Audio"] = audioData;
 
 		ofstream output(tileDataPath);
 		output << std::setw(2) << tileData;

@@ -21,10 +21,7 @@
       "ScrapbookTurnPage": "None"
     },
     "SoundEffectsVolume": 1.0,
-    "SpiritSounds": {
-      "Frog": "None",
-      "Tasmanian Tiger": "None"
-    },
+    "SpiritSounds": null,
     "SpiritSoundsVolume": 1.0
   },
   "Defaults": {
