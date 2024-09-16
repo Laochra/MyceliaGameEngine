@@ -14,7 +14,15 @@ void MeshRenderer::SerialiseTo(json& jsonObj) const
 {
 	GameObject3D::SerialiseTo(jsonObj);
 
-	jsonObj["Mesh"] = mesh->GetFilePath();
+	if (mesh != nullptr)
+	{
+		const char* meshFilepath = mesh->GetFilePath();
+		jsonObj["Mesh"] = meshFilepath == nullptr ? "None" : mesh->GetFilePath();
+	}
+	else
+	{
+		jsonObj["Mesh"] = "None";
+	}
 	jsonObj["Material"] = material->GetFilePath();
 }
 void MeshRenderer::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptions)
