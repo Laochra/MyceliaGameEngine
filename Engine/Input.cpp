@@ -434,7 +434,13 @@ void Input::Update()
 		{
 			int buttonCount = 0;
 			const unsigned char* buttons = glfwGetJoystickButtons(g, &buttonCount);
-			for (uint b = 0; b < (uint)buttonCount; b++)
+			if (buttonCount > (int)globalButtons.size())
+			{
+				Debug::LogWarning("Gamepad has more buttons than expected, some are being ignored");
+				buttonCount = (int)globalButtons.size();
+			}
+
+			for (uint b = 0; b < buttonCount; b++)
 			{
 				InputCode globalInputCode = gamepads[g].GetGlobalInputCode(b);
 				InputCode localInputCode = gamepads[g].GetLocalInputCode(b);
@@ -464,6 +470,11 @@ void Input::Update()
 
 			int axisCount = 0;
 			const float* axes = glfwGetJoystickAxes(g, &axisCount);
+			if (axisCount > 6)
+			{
+				Debug::LogWarning("Gamepad has more axes than expected, some are being ignored");
+				axisCount = 6;
+			}
 
 			for (uint a = 0; a < (uint)axisCount; a++)
 			{
