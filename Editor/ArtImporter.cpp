@@ -226,6 +226,7 @@ namespace ArtImporter
 
 	static void ProcessMesh(const aiMesh* mesh, MeshHeirarchy& current) noexcept
 	{
+		current.name = mesh->mName.C_Str();
 		current.filepath = "Engine\\Temp\\" + string(mesh->mName.C_Str()) + ".mesh";
 		std::ofstream output(current.filepath, std::ios::binary);
 
@@ -278,7 +279,7 @@ namespace ArtImporter
 		}
 		else
 		{
-			current.name = node->mName.C_Str();
+			current.name = "Empty";
 
 			if (compressHeirarchy && node->mNumChildren == 1)
 			{
