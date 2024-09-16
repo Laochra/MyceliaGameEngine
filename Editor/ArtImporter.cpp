@@ -23,7 +23,7 @@ namespace ArtImporter
 	vector<string> fileQueue;
 	uint current;
 
-	bool compressHeirarchy = false;
+	bool compressHeirarchy = true;
 	bool applyTransforms = false;
 
 	MeshHeirarchy tempMeshes;
@@ -328,26 +328,26 @@ namespace ArtImporter
 			std::rename(mesh->filepath.c_str(), newPath.c_str());
 		}
 
-		// Construct MeshRenderer for Prefab
-		json meshRenderer;
+		// Construct GameObject for Prefab
+		json gameObject;
 
-		meshRenderer["Name"] = mesh->name;
-		meshRenderer["GUID"] = GuidGenerator::NewGuid();
-		meshRenderer["Active"] = true;
-		meshRenderer["TypeID"] = hasMesh ? MeshRenderer::classID : GameObject3D::classID;
+		gameObject["Name"] = mesh->name;
+		gameObject["GUID"] = GuidGenerator::NewGuid();
+		gameObject["Active"] = true;
+		gameObject["TypeID"] = hasMesh ? MeshRenderer::classID : GameObject3D::classID;
 		const mat4& t = mesh->localMatrix;
 		const vec3 position(t[3]);
-		meshRenderer["Position"] = vector{ position.x, position.y, position.z };
+		gameObject["Position"] = vector{ position.x, position.y, position.z };
 		const vec3 scale(glm::length((vec3)t[0]), glm::length((vec3)t[1]), glm::length((vec3)t[2]));
-		meshRenderer["Scale"] = vector{ scale.x, scale.y, scale.z };
+		gameObject["Scale"] = vector{ scale.x, scale.y, scale.z };
 		const mat3 rotMat((vec3)t[0] / scale[0], (vec3)t[1] / scale[1], (vec3)t[2] / scale[2]);
 		const quat rotation = glm::quat_cast(rotMat);
-		meshRenderer["Rotation"] = vector{ rotation.w, rotation.x, rotation.y, rotation.z };
-		meshRenderer["Pivot"] = vector{ 0.0f, 0.0f, 0.0f };
+		gameObject["Rotation"] = vector{ rotation.w, rotation.x, rotation.y, rotation.z };
+		gameObject["Pivot"] = vector{ 0.0f, 0.0f, 0.0f };
 		if (hasMesh)
 		{
-			meshRenderer["Mesh"] = newPath;
-			meshRenderer["Material"] = mesh->materialPath;
+			gameObject["Mesh"] = newPath;
+			gameObject["Material"] = mesh->materialPath;
 		}
 
 		vector<json> children;
@@ -355,9 +355,9 @@ namespace ArtImporter
 		{
 			children.push_back(CookHeirarchy(mesh->children[i], saveLocation));
 		}
-		meshRenderer["Children"] = children;
+		gameObject["Children"] = children;
 
-		return meshRenderer;
+		return gameObject;
 	}
 
 	void ArtImporter::Cook(uint index, string savePath, bool pathIsFolder) noexcept
