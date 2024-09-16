@@ -235,6 +235,7 @@
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="TimeManager.cpp" />
+    <ClCompile Include="UISprite.cpp" />
     <ClCompile Include="Updater.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -337,6 +338,7 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderManager.h" />
+    <ClInclude Include="UISprite.h" />
     <ClInclude Include="StackTimer.h" />
     <ClInclude Include="StringBuilder.h" />
     <ClInclude Include="StringIncludes.h" />

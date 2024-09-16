@@ -208,6 +208,9 @@
     <ClCompile Include="HexAudio.cpp">
       <Filter>HexGame</Filter>
     </ClCompile>
+    <ClCompile Include="UISprite.cpp">
+      <Filter>Rendering\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -522,6 +525,9 @@
     </ClInclude>
     <ClInclude Include="HexAudio.h">
       <Filter>HexGame</Filter>
+    </ClInclude>
+    <ClInclude Include="UISprite.h">
+      <Filter>Rendering\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

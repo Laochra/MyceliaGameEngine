@@ -99,7 +99,7 @@ static void RefreshUI(uint& uiFBO, uint& uiTexture, uint& uiDepth)
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, uiDepth);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, uiTexture, 0);
 }
-static void DrawUI(RadialMenu* radialMenu, uint& uiFBO, uint& uiTexture, uint& uiDepth)
+static void DrawUI(RadialMenu* radialMenu, vector<UISprite*> sprites, uint& uiFBO, uint& uiTexture, uint& uiDepth)
 {
 	if (uiFBO == 0 || AppInfo::screenSizeJustChanged)
 	{
@@ -111,7 +111,13 @@ static void DrawUI(RadialMenu* radialMenu, uint& uiFBO, uint& uiTexture, uint& u
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	for (uint i = 0; i < (uint)sprites.size(); i++)
+	{
+		sprites[i]->Draw();
+	}
+
 	radialMenu->Draw();
+
 }
 
 void HexGame::Initialise(uint* renderTargetInit)
@@ -187,6 +193,8 @@ void HexGame::OnStart()
 	currentTileType = &HexTile::trees;
 	currentTileVariant = 0U;
 
+	crosshair = new UISprite("Assets\\UI\\Crosshair\\Crosshair.png", vec2(), 0.035f);
+
 	HexProgression::Initialise();
 
 	HexAudio::BeginMusic();
@@ -243,6 +251,8 @@ void HexGame::OnStop()
 	del(flowerRadial);
 	del(waterRadial);
 	del(landRadial);
+
+	del(crosshair);
 
 	HexTile::ClearPrefabs();
 	Habitat::ClearPrefabs();
@@ -350,6 +360,7 @@ void HexGame::Update()
 		xMovement = gameInputs.moveX;
 		zMovement = gameInputs.moveZ;
 	}
+	crosshair->enabled = !currentRadialMenu->enabled;
 
 	vec2 moveDir;
 	if (glm::length(vec2(xMovement, zMovement)) > 1)
@@ -411,6 +422,7 @@ void HexGame::Draw()
 
 		DrawUI(
 			currentRadialMenu,
+			{crosshair},
 			handles.uiFBO,
 			handles.uiTexture,
 			handles.uiDepth);

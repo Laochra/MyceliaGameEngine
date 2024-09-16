@@ -6,6 +6,7 @@
 #include "PostProcessing.h"
 
 #include "RadialMenu.h"
+#include "UISprite.h"
 
 #include "LinkedHexGrid.h"
 
@@ -41,6 +42,8 @@ public:
 	RadialMenu* flowerRadial;
 	RadialMenu* waterRadial;
 	RadialMenu* landRadial;
+
+	UISprite* crosshair;
 
 	struct RenderHandles
 	{
