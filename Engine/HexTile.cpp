@@ -337,7 +337,7 @@ void HexTile::AddTilePrefab(string name, uint density) noexcept
 			prefab["HexType"] = typeFound;
 			prefab["HexVariant"] = name;
 			ofstream updatedFile(path);
-			updatedFile << prefab;
+			updatedFile << std::setw(2) << prefab;
 		}
 	}
 	else
