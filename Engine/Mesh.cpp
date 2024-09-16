@@ -544,7 +544,7 @@ bool Mesh::LoadFromFile(const char* filepathInit)
 
 	if (!filestream.good())
 	{
-		Debug::LogWarning(LogID::WRN101, filepath, " ", locationinfo);
+		Debug::LogWarning(LogID::WRN101, filepathInit, " ", locationinfo);
 		return false;
 	}
 

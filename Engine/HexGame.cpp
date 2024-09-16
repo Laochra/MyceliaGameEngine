@@ -188,6 +188,9 @@ void HexGame::OnStart()
 	currentTileVariant = 0U;
 
 	HexProgression::Initialise();
+
+	HexAudio::BeginMusic();
+	HexAudio::BeginAmbience();
 }
 void HexGame::OnStop()
 {
@@ -243,6 +246,7 @@ void HexGame::OnStop()
 
 	HexTile::ClearPrefabs();
 	Habitat::ClearPrefabs();
+	AudioManager::EndAll();
 	AudioManager::ClearLoadedAssets();
 }
 

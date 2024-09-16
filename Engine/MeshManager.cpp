@@ -46,9 +46,14 @@ Mesh* MeshManager::GetMesh(const char* filepath)
 
 void MeshManager::ReloadMesh(const char* filepath)
 {
-   if (loadedMeshes.count(string(filepath)) != 0)
+   string strFilepath = filepath;
+   if (loadedMeshes.count(strFilepath) != 0 && strFilepath != "None")
    {
-      loadedMeshes[string(filepath)]->LoadFromFile(filepath);
+      // If not a default mesh, reload it
+      if (std::find(defaultMeshes.begin(), defaultMeshes.end(), strFilepath) == defaultMeshes.end())
+      {
+         loadedMeshes[strFilepath]->LoadFromFile(filepath);
+      }
    }
 }
 

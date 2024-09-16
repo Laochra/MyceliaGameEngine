@@ -226,7 +226,6 @@ namespace ArtImporter
 
 	static void ProcessMesh(const aiMesh* mesh, MeshHeirarchy& current) noexcept
 	{
-		current.name = mesh->mName.C_Str();
 		current.filepath = "Engine\\Temp\\" + string(mesh->mName.C_Str()) + ".mesh";
 		std::ofstream output(current.filepath, std::ios::binary);
 
@@ -279,7 +278,8 @@ namespace ArtImporter
 		}
 		else
 		{
-			current.name = "Empty";
+			current.name = node->mName.C_Str();
+
 			if (compressHeirarchy && node->mNumChildren == 1)
 			{
 				ProcessNode(node->mChildren[0], current, current.localMatrix);
@@ -315,27 +315,28 @@ namespace ArtImporter
 		ProcessNode(currentFile->mRootNode, tempMeshes);
 	}
 
-	static json CookHeirarchy(MeshHeirarchy* mesh, string saveLocation)
+	static json CookHeirarchy(MeshHeirarchy* meshNode, string saveLocation)
 	{
 		string newPath;
 
-		bool hasMesh = mesh->name != "Empty";
+		bool hasMesh = meshNode->filepath != "None";
 
 		// Move Mesh
 		if (hasMesh)
 		{
-			newPath = saveLocation + string(mesh->name) + ".mesh";
-			std::rename(mesh->filepath.c_str(), newPath.c_str());
+			newPath = saveLocation + string(meshNode->name) + ".mesh";
+			std::remove(newPath.c_str());
+			std::rename(meshNode->filepath.c_str(), newPath.c_str());
 		}
 
 		// Construct GameObject for Prefab
 		json gameObject;
 
-		gameObject["Name"] = mesh->name;
+		gameObject["Name"] = meshNode->name;
 		gameObject["GUID"] = GuidGenerator::NewGuid();
 		gameObject["Active"] = true;
 		gameObject["TypeID"] = hasMesh ? MeshRenderer::classID : GameObject3D::classID;
-		const mat4& t = mesh->localMatrix;
+		const mat4& t = meshNode->localMatrix;
 		const vec3 position(t[3]);
 		gameObject["Position"] = vector{ position.x, position.y, position.z };
 		const vec3 scale(glm::length((vec3)t[0]), glm::length((vec3)t[1]), glm::length((vec3)t[2]));
@@ -347,13 +348,13 @@ namespace ArtImporter
 		if (hasMesh)
 		{
 			gameObject["Mesh"] = newPath;
-			gameObject["Material"] = mesh->materialPath;
+			gameObject["Material"] = meshNode->materialPath;
 		}
 
 		vector<json> children;
-		for (int i = 0; i < mesh->children.size(); i++)
+		for (int i = 0; i < meshNode->children.size(); i++)
 		{
-			children.push_back(CookHeirarchy(mesh->children[i], saveLocation));
+			children.push_back(CookHeirarchy(meshNode->children[i], saveLocation));
 		}
 		gameObject["Children"] = children;
 
