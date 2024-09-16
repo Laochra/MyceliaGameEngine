@@ -10,7 +10,7 @@
       "PlaceLand": "Assets\\Tiles\\Lands\\PlaceLand.wav",
       "PlaceTree": "Assets\\Tiles\\Trees\\PlaceTree.wav",
       "PlaceWater": "Assets\\Tiles\\Waters\\PlaceWater.wav",
-      "RadialClose": "None",
+      "RadialClose": "Assets\\UI\\RadialMenu\\RadialMenu_Close.wav",
       "RadialCycle Page": "Assets\\UI\\RadialMenu\\RadialMenu_CyclePage.wav",
       "RadialCycleDensity": "None",
       "RadialOpen": "Assets\\UI\\RadialMenu\\RadialMenu_Open.wav",
@@ -18,7 +18,7 @@
       "ScrapbookNewHabitatPage": "Assets\\UI\\Scrapbook\\Scrapbook_NewHabitat.wav",
       "ScrapbookNotification": "Assets\\UI\\Scrapbook\\Scrapbook_Notification.wav",
       "ScrapbookOpen": "Assets\\UI\\Scrapbook\\Scrapbook_Open.wav",
-      "ScrapbookTurnPage": "None"
+      "ScrapbookTurnPage": "Assets\\UI\\Scrapbook\\Scrapbook_Open.wav"
     },
     "SoundEffectsVolume": 1.0,
     "SpiritSounds": null,
@@ -54,26 +54,7 @@
       ]
     }
   ],
-  "Habitats": [
-    {
-      "Name": "Frog",
-      "PrefabFilepath": "Assets\\Habitats\\Frog\\FrogHabitat.prefab",
-      "RequiredTiles": [
-        "Eucalyptus",
-        "Fern",
-        "Water"
-      ]
-    },
-    {
-      "Name": "Tasmanian Tiger",
-      "PrefabFilepath": "None",
-      "RequiredTiles": [
-        "Eucalyptus",
-        "Acacia Blackwood",
-        "Water"
-      ]
-    }
-  ],
+  "Habitats": [],
   "Lands": [
     {
       "Name": "Grass",
@@ -104,21 +85,10 @@
     "HabitatLifeBonus": 3,
     "LifeMilestones": [
       {
-        "LifeRequirement": 12,
-        "Names": [
-          "Everlasting Daisy",
-          "Happy Wanderer",
-          "Water with Reeds",
-          "Red Gravel"
-        ],
-        "RadiusIncrease": 1,
-        "Type": 0
-      },
-      {
-        "LifeRequirement": 40,
+        "LifeRequirement": 100,
         "Names": [],
         "RadiusIncrease": 1,
-        "Type": 1
+        "Type": 0
       }
     ],
     "StartingRadius": 3,
@@ -132,31 +102,31 @@
   },
   "RadialSprites": {
     "Flower": {
-      "Hovered": "Assets\\UI\\RadialMenu\\Flower\\RW_Flower_Hovered.png",
+      "Hovered": "Assets\\UI\\RadialMenu\\Flower\\RW_Flower_Unlocked.png",
       "Locked": "Assets\\UI\\RadialMenu\\Flower\\RW_Flower_Locked.png",
-      "Regular": "Assets\\UI\\RadialMenu\\Flower\\RW_Flower_Unlocked.png"
+      "Regular": "Assets\\UI\\RadialMenu\\Flower\\RW_Flower_Hovered.png"
     },
     "Land": {
-      "Hovered": "Assets\\UI\\RadialMenu\\Land\\RW_Land_Hovered.png",
+      "Hovered": "Assets\\UI\\RadialMenu\\Land\\RW_Land_Unlocked.png",
       "Locked": "Assets\\UI\\RadialMenu\\Land\\RW_Land_Locked.png",
-      "Regular": "Assets\\UI\\RadialMenu\\Land\\RW_Land_Unlocked.png"
+      "Regular": "Assets\\UI\\RadialMenu\\Land\\RW_Land_Hovered.png"
     },
     "Trees": {
-      "Hovered": "Assets\\UI\\RadialMenu\\Tree\\RW_Tree_Hovered.png",
+      "Hovered": "Assets\\UI\\RadialMenu\\Tree\\RW_Tree_Unlocked.png",
       "Locked": "Assets\\UI\\RadialMenu\\Tree\\RW_Tree_Locked.png",
-      "Regular": "Assets\\UI\\RadialMenu\\Tree\\RW_Tree_Unlocked.png"
+      "Regular": "Assets\\UI\\RadialMenu\\Tree\\RW_Tree_Hovered.png"
     },
     "Water": {
-      "Hovered": "Assets\\UI\\RadialMenu\\Water\\RW_Water_Hovered.png",
+      "Hovered": "Assets\\UI\\RadialMenu\\Water\\RW_Water_Unlocked.png",
       "Locked": "Assets\\UI\\RadialMenu\\Water\\RW_Water_Locked.png",
-      "Regular": "Assets\\UI\\RadialMenu\\Water\\RW_Water_Unlocked.png"
+      "Regular": "Assets\\UI\\RadialMenu\\Water\\RW_Water_Hovered.png"
     }
   },
   "Trees": [
     {
       "Name": "Eucalyptus",
       "Prefabs": [
-        "Assets\\Prefabs\\EucalyptusHex.prefab",
+        "None",
         "None",
         "None"
       ]
@@ -164,7 +134,7 @@
     {
       "Name": "Fern",
       "Prefabs": [
-        "Assets\\Prefabs\\FernHex.prefab",
+        "None",
         "None",
         "None"
       ]
@@ -182,7 +152,7 @@
     {
       "Name": "Water",
       "Prefabs": [
-        "Assets\\Prefabs\\WaterHex.prefab",
+        "None",
         "None",
         "None"
       ]
