@@ -362,7 +362,7 @@ Input::Input() noexcept
 		{
 			const char* name = glfwGetJoystickName(i);
 			gamepad.Connect(GetTypeFromDeviceName(name));
-			Debug::Log("Gamepad ", i, " is present on startup.");
+			Debug::Log("Gamepad ", i, " is present on startup (", name, ")");
 
 		}
 		gamepads.push_back(gamepad);
@@ -436,7 +436,7 @@ void Input::Update()
 			const unsigned char* buttons = glfwGetJoystickButtons(g, &buttonCount);
 			if (buttonCount > (int)globalButtons.size())
 			{
-				Debug::LogWarning("Gamepad has more buttons than expected, some are being ignored");
+				//Debug::LogWarning("Gamepad has more buttons than expected, some are being ignored");
 				buttonCount = (int)globalButtons.size();
 			}
 
@@ -472,7 +472,7 @@ void Input::Update()
 			const float* axes = glfwGetJoystickAxes(g, &axisCount);
 			if (axisCount > 6)
 			{
-				Debug::LogWarning("Gamepad has more axes than expected, some are being ignored");
+				//Debug::LogWarning("Gamepad has more axes than expected, some are being ignored");
 				axisCount = 6;
 			}
 
@@ -574,7 +574,7 @@ void GamepadConnectionCallback(int id, int type)
 		{
 			const char* name = glfwGetJoystickName(id);
 			AppInfo::input->gamepads[id].Connect(GetTypeFromDeviceName(name));
-			Debug::Log("Gamepad ", id, " Connected");
+			Debug::Log("Gamepad ", id, " Connected (", name, ")");
 		}
 		break;
 	case GLFW_DISCONNECTED:
