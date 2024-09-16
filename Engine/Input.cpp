@@ -360,7 +360,7 @@ Input::Input() noexcept
 		GamepadInfo gamepad(i);
 		if (glfwJoystickIsGamepad(i) == GLFW_TRUE)
 		{
-			const char* name = glfwGetJoystickName(i);
+			const char* name = glfwGetGamepadName(i);
 			gamepad.Connect(GetTypeFromDeviceName(name));
 			Debug::Log("Gamepad ", i, " is present on startup (", name, ")");
 
@@ -572,7 +572,7 @@ void GamepadConnectionCallback(int id, int type)
 	case GLFW_CONNECTED:
 		if (glfwJoystickIsGamepad(id))
 		{
-			const char* name = glfwGetJoystickName(id);
+			const char* name = glfwGetGamepadName(id);
 			AppInfo::input->gamepads[id].Connect(GetTypeFromDeviceName(name));
 			Debug::Log("Gamepad ", id, " Connected (", name, ")");
 		}

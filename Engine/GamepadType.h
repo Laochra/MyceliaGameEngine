@@ -18,8 +18,8 @@ inline constexpr GamepadType GetTypeFromDeviceName(const char* const name) noexc
 {
 	GamepadType type;
 
-	if (name == std::string("Xbox Controller")) type = GamepadType::Xbox;
-	else if (name == std::string("DualSense Wireless Controller")) type = GamepadType::Playstation;
+	if (name == std::string("XInput Gamepad (GLFW)")) type = GamepadType::Xbox;
+	else if (name == std::string("PS4 Controller")) type = GamepadType::Playstation;
 	else type = GamepadType::Undefined;
 
 	return type;
