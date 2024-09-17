@@ -15,7 +15,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 #endif
 {
 	AppInfo::debug = new Debug();
-	AppInfo::state = AppState::Playing;
+	AppInfo::SetState(AppState::Playing);
 	Application* application = new Standalone(new HexGame());
 
 	int exitCode = application->Run();
