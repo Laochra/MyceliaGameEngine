@@ -1,38 +1,28 @@
 {
   "Audio": {
-    "HabitatLifeBonus": 3,
-    "LifeMilestones": [
-      {
-        "LifeRequirement": 20,
-        "Names": [
-          "Eucalyptus",
-          "Happy Wanderer",
-          "WaterLog",
-          "Red Gravel"
-        ],
-        "RadiusIncrease": 1,
-        "Type": 0
-      },
-      {
-        "LifeRequirement": 40,
-        "Names": [
-          "Acacia Blackwood",
-          "Prickly Tea Tree",
-          "Lily Pad",
-          "Mushrooms"
-        ],
-        "RadiusIncrease": 1,
-        "Type": 0
-      }
-    ],
-    "StartingRadius": 3,
-    "StartingVariants": [
-      "Fern",
-      "Everlasting Daisy",
-      "Water",
-      "Grass"
-    ],
-    "TileLifeBonus": 1
+    "Ambience": [],
+    "AmbienceVolume": 1.0,
+    "Music": "None",
+    "MusicVolume": 1.0,
+    "SoundEffects": {
+      "FormHabitat": "None",
+      "PlaceFlower": "None",
+      "PlaceLand": "None",
+      "PlaceTree": "None",
+      "PlaceWater": "None",
+      "RadialClose": "None",
+      "RadialCycle Page": "None",
+      "RadialCycleDensity": "None",
+      "RadialOpen": "None",
+      "ScrapbookClose": "None",
+      "ScrapbookNewHabitatPage": "None",
+      "ScrapbookNotification": "None",
+      "ScrapbookOpen": "None",
+      "ScrapbookTurnPage": "None"
+    },
+    "SoundEffectsVolume": 1.0,
+    "SpiritSounds": null,
+    "SpiritSoundsVolume": 1.0
   },
   "Defaults": {
     "DefaultTile": "Assets\\Tiles\\Lands\\Grass\\Grass.prefab",
@@ -139,37 +129,9 @@
   ],
   "Progression": {
     "HabitatLifeBonus": 3,
-    "LifeMilestones": [
-      {
-        "LifeRequirement": 20,
-        "Names": [
-          "Eucalyptus",
-          "Happy Wanderer",
-          "WaterLog",
-          "Red Gravel"
-        ],
-        "RadiusIncrease": 1,
-        "Type": 0
-      },
-      {
-        "LifeRequirement": 40,
-        "Names": [
-          "Acacia Blackwood",
-          "Prickly Tea Tree",
-          "Lily Pad",
-          "Mushrooms"
-        ],
-        "RadiusIncrease": 1,
-        "Type": 0
-      }
-    ],
+    "LifeMilestones": [],
     "StartingRadius": 3,
-    "StartingVariants": [
-      "Fern",
-      "Everlasting Daisy",
-      "Water",
-      "Grass"
-    ],
+    "StartingVariants": [],
     "TileLifeBonus": 1
   },
   "RadialSprites": {
