@@ -14,6 +14,7 @@
 #include "HexProgression.h"
 #include "HexAudio.h"
 
+#include "HexGrid.h"
 
 void static RadialInteractionHandler(uint selection)
 {
@@ -170,6 +171,14 @@ void HexGame::Initialise(uint* renderTargetInit)
 
 	AppInfo::gameCamera->SetPosition(vec3(0, 4, 2));
 	AppInfo::gameCamera->LookAt(vec3(0, 0, 0));
+
+	HexGrid<25, 25> hexGrid;
+	//HexCoord initialCoord(12, 7);
+	//Debug::Log(initialCoord.x, ", ", initialCoord.y);
+	vec2 pos(9.9592915f, 6.98f);
+	Debug::Log(pos.x, ", ", pos.y);
+	HexCoord resultCoord = hexGrid.PosToCoord(pos);
+	Debug::Log(resultCoord.x, ", ", resultCoord.y);
 }
 void HexGame::OnClose()
 {

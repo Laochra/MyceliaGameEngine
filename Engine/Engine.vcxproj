@@ -205,6 +205,7 @@
     <ClCompile Include="Habitat.cpp" />
     <ClCompile Include="HexAudio.cpp" />
     <ClCompile Include="HexGame.cpp" />
+    <ClCompile Include="HexGrid.cpp" />
     <ClCompile Include="HexProgression.cpp" />
     <ClCompile Include="HexTile.cpp" />
     <ClCompile Include="InputAxis.cpp" />
@@ -307,6 +308,7 @@
     <ClInclude Include="GeneralMacros.h" />
     <ClInclude Include="GuidGenerator.h" />
     <ClInclude Include="Habitat.h" />
+    <ClInclude Include="HexGrid.h" />
     <ClInclude Include="Heirarchical.h" />
     <ClInclude Include="HeirarchicalDefinitions.h" />
     <ClInclude Include="HexAudio.h" />
