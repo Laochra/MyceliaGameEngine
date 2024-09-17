@@ -414,10 +414,10 @@ void HexGame::Draw()
 		RadialMenu* currentRadialMenu;
 		switch (currentRadialPage)
 		{
-		default: currentRadialMenu = treeRadial;	break;
+		default: currentRadialMenu = treeRadial;		break;
 		case 1U: currentRadialMenu = flowerRadial;	break;
-		case 2U: currentRadialMenu = waterRadial;	break;
-		case 3U: currentRadialMenu = landRadial;	break;
+		case 2U: currentRadialMenu = waterRadial;		break;
+		case 3U: currentRadialMenu = landRadial;		break;
 		}
 
 		DrawUI(

@@ -27,7 +27,7 @@ namespace ArtImporter
 	bool applyTransforms = false;
 
 	MeshHeirarchy tempMeshes;
-	MeshHeirarchy* selectedTempMesh;
+	MeshHeirarchy* selectedTempMesh = nullptr;
 
 	Assimp::Importer importer;
 	const aiScene* currentFile;
@@ -162,28 +162,27 @@ namespace ArtImporter
 				{
 					Cook(current, savePath);
 				}
-				selectedTempMesh = nullptr;
 			}
-			ImGui::SameLine();
-			if (ImGui::Button("Cook All"))
-			{
-				using namespace FileDialogue;
-				PathDetails savePathDetails(
-					"Choose Target Location",
-					"Assets\\"
-				);
-				string savePath = GetFolderPath(savePathDetails, LimitToAssetFolder::True);
-				
-				if (savePath.size() != 0)
-				{
-					CookAll(savePath);
-
-					fileQueue.clear();
-					tempMeshes.Clear();
-					SetCurrent(0);
-					selectedTempMesh = nullptr;
-				}
-			}
+			//ImGui::SameLine();
+			//if (ImGui::Button("Cook All"))
+			//{
+			//	using namespace FileDialogue;
+			//	PathDetails savePathDetails(
+			//		"Choose Target Location",
+			//		"Assets\\"
+			//	);
+			//	string savePath = GetFolderPath(savePathDetails, LimitToAssetFolder::True);
+			//	
+			//	if (savePath.size() != 0)
+			//	{
+			//		CookAll(savePath);
+			//
+			//		fileQueue.clear();
+			//		tempMeshes.Clear();
+			//		SetCurrent(0);
+			//		selectedTempMesh = nullptr;
+			//	}
+			//}
 
 			ImGui::SeparatorText("Preview");
 			DrawNode(&tempMeshes);
@@ -394,6 +393,8 @@ namespace ArtImporter
 		{
 			SetCurrent(current - 1);
 		}
+		selectedTempMesh = nullptr;
+		currentFile = nullptr;
 	}
 
 	void ArtImporter::CookAll(string savePath) noexcept
