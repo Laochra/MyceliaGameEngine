@@ -173,12 +173,44 @@ void HexGame::Initialise(uint* renderTargetInit)
 	AppInfo::gameCamera->LookAt(vec3(0, 0, 0));
 
 	HexGrid<25, 25> hexGrid;
-	//HexCoord initialCoord(12, 7);
-	//Debug::Log(initialCoord.x, ", ", initialCoord.y);
-	vec2 pos(9.9592915f, 6.98f);
-	Debug::Log(pos.x, ", ", pos.y);
-	HexCoord resultCoord = hexGrid.PosToCoord(pos);
-	Debug::Log(resultCoord.x, ", ", resultCoord.y);
+	HexOffsetCoord initialCoord = hexGrid.GetNeighbourCoord(hexGrid.GetNeighbourCoord(hexGrid.centre, HexDirection::NorthEast), HexDirection::South);
+	Debug::Log("Initial (Grid-Space): x=", initialCoord.x, ", y=", initialCoord.y);
+	HexCubeCoord cubeCoord = hexGrid.OffsetToCube(initialCoord);
+	Debug::Log("Initial (Cube-Space): q=", cubeCoord.q, ", r=", cubeCoord.r, ", s=", cubeCoord.s);
+	vec2 position = hexGrid.CoordToPos(initialCoord);
+	Debug::Log("Position:             x=", position.x, ", y=", position.y);
+	HexOffsetCoord resultCoord = hexGrid.PosToCoord(position);
+	Debug::Log("Result (Grid-Space):  x=", resultCoord.x, ", y=", resultCoord.y);
+	HexCubeCoord resultCubeCoord = hexGrid.OffsetToCube(resultCoord);
+	Debug::Log("Result (Cube-Space):  q=", resultCubeCoord.q, ", r=", resultCubeCoord.r, ", s=", resultCubeCoord.s);
+
+	for (int c = 0; c < hexGrid.columns; c++)
+	{
+		for (int r = 0; r < hexGrid.rows; r++)
+		{
+			HexCubeCoord cubeCoord = hexGrid.OffsetToCube(HexOffsetCoord(c, r));
+			vec2 position = hexGrid.CoordToPos(cubeCoord);
+
+			if (position.x == 0.0f && position.y == 0.0f)
+			{
+				AppInfo::debug->lines.AddSphere(vec3(position.x, 0, position.y), 0.25f, 64, Colour(1, 1, 1), -FLT_MAX);
+			}
+			else if (std::max(std::max(abs(cubeCoord.q), abs(cubeCoord.r)), std::max(abs(cubeCoord.r), abs(cubeCoord.s))) <= 12)
+			{
+				AppInfo::debug->lines.AddSphere(vec3(position.x, 0, position.y), 0.25f, 64, Colour(1, 0, 1), -FLT_MAX);
+			}
+			else
+			{
+				AppInfo::debug->lines.AddSphere(vec3(position.x, 0, position.y), 0.1f, 64, Colour(1, 1, 0), -FLT_MAX);
+			}
+		}
+	}
+
+	//AppInfo::debug->lines.AddSphere(vec3(0, 0, 0), 0.25f, 64, -FLT_MAX);
+	//
+	//AppInfo::debug->lines.AddSphere(vec3(position.x, 0, position.y), 0.25f, 64, Colour(1, 0, 1), -FLT_MAX);
+
+
 }
 void HexGame::OnClose()
 {
