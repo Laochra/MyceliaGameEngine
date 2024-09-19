@@ -1,10 +1,10 @@
 #include "HexEditor.h"
 
-#include "Habitat.h"
+#include "HabitatObject.h"
 #include "HexProgression.h"
 #include "HexAudio.h"
 
-vector<TileData>* HexEditor::selectedType = &HexTile::trees;
+vector<TileData>* HexEditor::selectedType = &HexTileObject::trees;
 uint HexEditor::selectedVariant;
 
 void HexEditor::Draw(const char* const name, bool& open) noexcept
@@ -36,7 +36,7 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 		const char* const tileDataPath = "Assets\\Tiles\\TileData.json";
 
 		json tileData;
-		HexTile::SaveTileDataTo(tileData);
+		HexTileObject::SaveTileDataTo(tileData);
 		json progressionData;
 		HexProgression::SaveTo(progressionData);
 		tileData["Progression"] = progressionData;
@@ -58,10 +58,10 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 
 		GUI::Spacing(3);
 
-		DrawPrefabInput("Default", HexTile::defaultTilePath);
+		DrawPrefabInput("Default", HexTileObject::defaultTilePath);
 		ImGui::TextWrapped("Left behind when moving a habitat");
 		GUI::Spacing(3);
-		DrawPrefabInput("Empty  ", HexTile::emptyTilePath);
+		DrawPrefabInput("Empty  ", HexTileObject::emptyTilePath);
 		ImGui::TextWrapped("Empty tile that can be placed on");
 
 		GUI::Spacing(3);
@@ -78,22 +78,22 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 		ImGui::BeginTabBar("Types##Tile Variants");
 		if (ImGui::BeginTabItem("Tree"))
 		{
-			DrawType(HexTile::trees);
+			DrawType(HexTileObject::trees);
 			ImGui::EndTabItem();
 		}
 		if (ImGui::BeginTabItem("Flower"))
 		{
-			DrawType(HexTile::flowers);
+			DrawType(HexTileObject::flowers);
 			ImGui::EndTabItem();
 		}
 		if (ImGui::BeginTabItem("Water"))
 		{
-			DrawType(HexTile::waters);
+			DrawType(HexTileObject::waters);
 			ImGui::EndTabItem();
 		}
 		if (ImGui::BeginTabItem("Land"))
 		{
-			DrawType(HexTile::lands);
+			DrawType(HexTileObject::lands);
 			ImGui::EndTabItem();
 		}
 		ImGui::EndTabBar();
@@ -123,22 +123,12 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 				}
 			}
 			ImGui::SameLine();
-			ImGui::Text(StringBuilder((*selectedType)[selectedVariant].GetTotalPlaced()).CStr());
+			ImGui::Text(StringBuilder((*selectedType)[selectedVariant].countPlaced).CStr());
 
 			GUI::Spacing(3);
 
 			ImGui::Text("Tile Prefabs by Density");
-			DrawPrefabInput("Low  ", (*selectedType)[selectedVariant].prefabFilepaths[0]);
-			ImGui::SameLine();
-			ImGui::Text(StringBuilder((*selectedType)[selectedVariant].countPlaced[0]).CStr());
-
-			DrawPrefabInput("Mid  ", (*selectedType)[selectedVariant].prefabFilepaths[1]);
-			ImGui::SameLine();
-			ImGui::Text(StringBuilder((*selectedType)[selectedVariant].countPlaced[1]).CStr());
-
-			DrawPrefabInput("High ", (*selectedType)[selectedVariant].prefabFilepaths[2]);
-			ImGui::SameLine();
-			ImGui::Text(StringBuilder((*selectedType)[selectedVariant].countPlaced[2]).CStr());
+			DrawPrefabInput("Prefab", (*selectedType)[selectedVariant].prefabFilepath);
 		}
 
 		GUI::Spacing(3);
@@ -310,9 +300,9 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 		GUI::Spacing(3);
 
 		ImGui::BeginTabBar("Habitats##Habitats");
-		for (uint i = 0; i < (uint)Habitat::habitats.size(); i++)
+		for (uint i = 0; i < (uint)HabitatObject::habitats.size(); i++)
 		{
-			HabitatData& habitat = Habitat::habitats[i];
+			HabitatData& habitat = HabitatObject::habitats[i];
 
 			if (ImGui::BeginTabItem(StringBuilder(habitat.name, "###", i).CStr()))
 			{
@@ -323,7 +313,7 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 				ImGui::SameLine();
 				if ((ImGui::Button("Delete")))
 				{
-					Habitat::habitats.erase(Habitat::habitats.begin() + i);
+					HabitatObject::habitats.erase(HabitatObject::habitats.begin() + i);
 					i--;
 
 					ImGui::EndTabItem();
@@ -349,7 +339,7 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 		if (!AppInfo::CompareState(AppState::Editor)) ImGui::BeginDisabled();
 		if (ImGui::TabItemButton("+"))
 		{
-			Habitat::habitats.push_back(HabitatData());
+			HabitatObject::habitats.push_back(HabitatData());
 		}
 		if (!AppInfo::CompareState(AppState::Editor)) ImGui::EndDisabled();
 		ImGui::EndTabBar();
@@ -368,9 +358,9 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 		{
 			if (!AppInfo::CompareState(AppState::Editor)) ImGui::BeginDisabled();
 			ImGui::PushID("Tree");
-			DrawSpriteInput("Regular", HexTile::treeRadialSprites[0]);
-			DrawSpriteInput("Hovered", HexTile::treeRadialSprites[1]);
-			DrawSpriteInput("Locked ", HexTile::treeRadialSprites[2]);
+			DrawSpriteInput("Regular", HexTileObject::treeRadialSprites[0]);
+			DrawSpriteInput("Hovered", HexTileObject::treeRadialSprites[1]);
+			DrawSpriteInput("Locked ", HexTileObject::treeRadialSprites[2]);
 			ImGui::PopID();
 			if (!AppInfo::CompareState(AppState::Editor)) ImGui::EndDisabled();
 			ImGui::EndTabItem();
@@ -379,9 +369,9 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 		{
 			if (!AppInfo::CompareState(AppState::Editor)) ImGui::BeginDisabled();
 			ImGui::PushID("Flower");
-			DrawSpriteInput("Regular", HexTile::flowerRadialSprites[0]);
-			DrawSpriteInput("Hovered", HexTile::flowerRadialSprites[1]);
-			DrawSpriteInput("Locked ", HexTile::flowerRadialSprites[2]);
+			DrawSpriteInput("Regular", HexTileObject::flowerRadialSprites[0]);
+			DrawSpriteInput("Hovered", HexTileObject::flowerRadialSprites[1]);
+			DrawSpriteInput("Locked ", HexTileObject::flowerRadialSprites[2]);
 			ImGui::PopID();
 			if (!AppInfo::CompareState(AppState::Editor)) ImGui::EndDisabled();
 			ImGui::EndTabItem();
@@ -390,9 +380,9 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 		{
 			if (!AppInfo::CompareState(AppState::Editor)) ImGui::BeginDisabled();
 			ImGui::PushID("Water");
-			DrawSpriteInput("Regular", HexTile::waterRadialSprites[0]);
-			DrawSpriteInput("Hovered", HexTile::waterRadialSprites[1]);
-			DrawSpriteInput("Locked ", HexTile::waterRadialSprites[2]);
+			DrawSpriteInput("Regular", HexTileObject::waterRadialSprites[0]);
+			DrawSpriteInput("Hovered", HexTileObject::waterRadialSprites[1]);
+			DrawSpriteInput("Locked ", HexTileObject::waterRadialSprites[2]);
 			ImGui::PopID();
 			if (!AppInfo::CompareState(AppState::Editor)) ImGui::EndDisabled();
 			ImGui::EndTabItem();
@@ -401,9 +391,9 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 		{
 			if (!AppInfo::CompareState(AppState::Editor)) ImGui::BeginDisabled();
 			ImGui::PushID("Land");
-			DrawSpriteInput("Regular", HexTile::landRadialSprites[0]);
-			DrawSpriteInput("Hovered", HexTile::landRadialSprites[1]);
-			DrawSpriteInput("Locked ", HexTile::landRadialSprites[2]);
+			DrawSpriteInput("Regular", HexTileObject::landRadialSprites[0]);
+			DrawSpriteInput("Hovered", HexTileObject::landRadialSprites[1]);
+			DrawSpriteInput("Locked ", HexTileObject::landRadialSprites[2]);
 			ImGui::PopID();
 			if (!AppInfo::CompareState(AppState::Editor)) ImGui::EndDisabled();
 			ImGui::EndTabItem();
@@ -476,7 +466,7 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 			for (auto it = HexAudio::spiritSounds.begin(); it != HexAudio::spiritSounds.end(); it++)
 			{
 				bool habitatExists = false;
-				for (HabitatData& habitatData : Habitat::habitats)
+				for (HabitatData& habitatData : HabitatObject::habitats)
 				{
 					if (it->first == habitatData.name)
 					{
@@ -487,7 +477,7 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 				if (!habitatExists) it = HexAudio::spiritSounds.erase(it);
 			}
 
-			for (HabitatData& habitatData : Habitat::habitats)
+			for (HabitatData& habitatData : HabitatObject::habitats)
 			{
 				auto it = HexAudio::spiritSounds.find(habitatData.name);
 				if (it == HexAudio::spiritSounds.end())
@@ -648,7 +638,7 @@ void HexEditor::DrawTileDropdown(string& tileName, const char* label) noexcept
 	{
 		if (ImGui::BeginMenu("Trees"))
 		{
-			for (TileData tile : HexTile::trees)
+			for (TileData tile : HexTileObject::trees)
 			{
 				if (ImGui::Selectable(tile.name.c_str(), tile.name == tileName))
 				{
@@ -659,7 +649,7 @@ void HexEditor::DrawTileDropdown(string& tileName, const char* label) noexcept
 		}
 		if (ImGui::BeginMenu("Flowers"))
 		{
-			for (TileData tile : HexTile::flowers)
+			for (TileData tile : HexTileObject::flowers)
 			{
 				if (ImGui::Selectable(tile.name.c_str(), tile.name == tileName))
 				{
@@ -670,7 +660,7 @@ void HexEditor::DrawTileDropdown(string& tileName, const char* label) noexcept
 		}
 		if (ImGui::BeginMenu("Waters"))
 		{
-			for (TileData tile : HexTile::waters)
+			for (TileData tile : HexTileObject::waters)
 			{
 				if (ImGui::Selectable(tile.name.c_str(), tile.name == tileName))
 				{
@@ -681,7 +671,7 @@ void HexEditor::DrawTileDropdown(string& tileName, const char* label) noexcept
 		}
 		if (ImGui::BeginMenu("Land"))
 		{
-			for (TileData tile : HexTile::lands)
+			for (TileData tile : HexTileObject::lands)
 			{
 				if (ImGui::Selectable(tile.name.c_str(), tile.name == tileName))
 				{

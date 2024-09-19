@@ -115,13 +115,13 @@
       <Filter>Rendering</Filter>
     </ClCompile>
     <ClCompile Include="ExampleGame.cpp" />
-    <ClCompile Include="HexTile.cpp">
+    <ClCompile Include="HexTileObject.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="LinkedHexGrid.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Habitat.cpp">
+    <ClCompile Include="HabitatObject.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="HexGame.cpp">
@@ -211,7 +211,13 @@
     <ClCompile Include="UISprite.cpp">
       <Filter>Rendering\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="HexGrid.cpp">
+    <ClCompile Include="HexCoords.cpp">
+      <Filter>HexGame</Filter>
+    </ClCompile>
+    <ClCompile Include="TileData.cpp">
+      <Filter>HexGame</Filter>
+    </ClCompile>
+    <ClCompile Include="HabitatData.cpp">
       <Filter>HexGame</Filter>
     </ClCompile>
   </ItemGroup>
@@ -364,13 +370,13 @@
       <Filter>Rendering</Filter>
     </ClInclude>
     <ClInclude Include="ExampleGame.h" />
-    <ClInclude Include="HexTile.h">
+    <ClInclude Include="HexTileObject.h">
       <Filter>GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="LinkedHexGrid.h">
       <Filter>GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Habitat.h">
+    <ClInclude Include="HabitatObject.h">
       <Filter>GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="HexGame.h">
@@ -532,7 +538,25 @@
     <ClInclude Include="UISprite.h">
       <Filter>Rendering\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="HexGrid.h">
+    <ClInclude Include="HexType.h">
+      <Filter>HexGame</Filter>
+    </ClInclude>
+    <ClInclude Include="HexTile.h">
+      <Filter>HexGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Habitat.h">
+      <Filter>HexGame</Filter>
+    </ClInclude>
+    <ClInclude Include="HexCoords.h">
+      <Filter>HexGame</Filter>
+    </ClInclude>
+    <ClInclude Include="HexDirection.h">
+      <Filter>HexGame</Filter>
+    </ClInclude>
+    <ClInclude Include="TileData.h">
+      <Filter>HexGame</Filter>
+    </ClInclude>
+    <ClInclude Include="HabitatData.h">
       <Filter>HexGame</Filter>
     </ClInclude>
   </ItemGroup>

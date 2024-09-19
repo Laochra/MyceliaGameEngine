@@ -13,7 +13,7 @@
 typedef unsigned int uint;
 
 inline uint currentRadialPage = 0U;
-inline vector<TileData>* currentTileType = &HexTile::trees;
+inline vector<TileData>* currentTileType = &HexTileObject::trees;
 inline uint currentTileVariant = 0U;
 
 class HexGame : public Game
@@ -37,7 +37,9 @@ public:
 
 	float moveSpeed = 3.0f;
 
+
 	LinkedHexGrid* hexGrid;
+
 	RadialMenu* treeRadial;
 	RadialMenu* flowerRadial;
 	RadialMenu* waterRadial;

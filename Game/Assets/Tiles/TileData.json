@@ -32,25 +32,19 @@
     {
       "Name": "Everlasting Daisy",
       "Prefabs": [
-        "Assets\\Tiles\\Flowers\\Everlasting Daisy\\EverlastingDaisy_Light.prefab",
-        "Assets\\Tiles\\Flowers\\Everlasting Daisy\\EverLastingDaisy_Medium.prefab",
-        "Assets\\Tiles\\Flowers\\Everlasting Daisy\\EverlastingDaisy_Dense.prefab"
+        "Assets\\Tiles\\Flowers\\Everlasting Daisy\\EverlastingDaisy_Light.prefab"
       ]
     },
     {
       "Name": "Happy Wanderer",
       "Prefabs": [
-        "Assets\\Tiles\\Flowers\\Happy Wanderer\\HappyWanderer_Light.prefab",
-        "Assets\\Tiles\\Flowers\\Happy Wanderer\\HappyWanderer_Medium.prefab",
-        "Assets\\Tiles\\Flowers\\Happy Wanderer\\HappyWanderer_Dense.prefab"
+        "Assets\\Tiles\\Flowers\\Happy Wanderer\\HappyWanderer_Light.prefab"
       ]
     },
     {
       "Name": "Prickly Tea Tree",
       "Prefabs": [
-        "Assets\\Tiles\\Flowers\\Prickly Tea Tree\\TeaTree_Light.prefab",
-        "Assets\\Tiles\\Flowers\\Prickly Tea Tree\\TeaTree_Medium.prefab",
-        "Assets\\Tiles\\Flowers\\Prickly Tea Tree\\TeaTree_Dense.prefab"
+        "Assets\\Tiles\\Flowers\\Prickly Tea Tree\\TeaTree_Light.prefab"
       ]
     }
   ],
@@ -105,25 +99,19 @@
     {
       "Name": "Grass",
       "Prefabs": [
-        "Assets\\Tiles\\Lands\\Grass\\Grass.prefab",
-        "None",
-        "None"
+        "Assets\\Tiles\\Lands\\Grass\\Grass.prefab"
       ]
     },
     {
       "Name": "Red Gravel",
       "Prefabs": [
-        "Assets\\Tiles\\Lands\\RedGravel\\RedGravel.prefab",
-        "None",
-        "None"
+        "Assets\\Tiles\\Lands\\RedGravel\\RedGravel.prefab"
       ]
     },
     {
       "Name": "Mushrooms",
       "Prefabs": [
-        "Assets\\Tiles\\Lands\\Mushroom\\Mushroom.prefab",
-        "None",
-        "None"
+        "Assets\\Tiles\\Lands\\Mushroom\\Mushroom.prefab"
       ]
     }
   ],
@@ -194,25 +182,19 @@
     {
       "Name": "Fern",
       "Prefabs": [
-        "Assets\\Tiles\\Trees\\Fern\\Fern_Light.prefab",
-        "Assets\\Tiles\\Trees\\Fern\\Fern_Medium.prefab",
-        "Assets\\Tiles\\Trees\\Fern\\Fern_Dense.prefab"
+        "Assets\\Tiles\\Trees\\Fern\\Fern_Light.prefab"
       ]
     },
     {
       "Name": "Eucalyptus",
       "Prefabs": [
-        "Assets\\Tiles\\Trees\\Eucalyptus\\Eucalyptus_Light.prefab",
-        "Assets\\Tiles\\Trees\\Eucalyptus\\Eucalyptus_Medium.prefab",
-        "Assets\\Tiles\\Trees\\Eucalyptus\\Eucalyptus_Dense.prefab"
+        "Assets\\Tiles\\Trees\\Eucalyptus\\Eucalyptus_Light.prefab"
       ]
     },
     {
       "Name": "Acacia Blackwood",
       "Prefabs": [
-        "Assets\\Tiles\\Trees\\Acacia Blackwood\\Acacia_Light.prefab",
-        "Assets\\Tiles\\Trees\\Acacia Blackwood\\Acacia_Medium.prefab",
-        "Assets\\Tiles\\Trees\\Acacia Blackwood\\Acacia_Dense.prefab"
+        "Assets\\Tiles\\Trees\\Acacia Blackwood\\Acacia_Light.prefab"
       ]
     }
   ],
@@ -220,25 +202,19 @@
     {
       "Name": "Water",
       "Prefabs": [
-        "Assets\\Tiles\\Waters\\Water\\Water.prefab",
-        "None",
-        "None"
+        "Assets\\Tiles\\Waters\\Water\\Water.prefab"
       ]
     },
     {
       "Name": "WaterLog",
       "Prefabs": [
-        "Assets\\Tiles\\Waters\\Reeds\\WaterLog.prefab",
-        "None",
-        "None"
+        "Assets\\Tiles\\Waters\\Reeds\\WaterLog.prefab"
       ]
     },
     {
       "Name": "Lily Pad",
       "Prefabs": [
-        "Assets\\Tiles\\Waters\\LilyPad\\LilyPad.prefab",
-        "None",
-        "None"
+        "Assets\\Tiles\\Waters\\LilyPad\\LilyPad.prefab"
       ]
     }
   ]

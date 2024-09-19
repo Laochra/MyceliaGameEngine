@@ -10,21 +10,19 @@
 
 #include "StringBuilder.h"
 
-#include "Habitat.h"
+#include "HabitatObject.h"
 #include "HexProgression.h"
 #include "HexAudio.h"
-
-#include "HexGrid.h"
 
 void static RadialInteractionHandler(uint selection)
 {
 	switch (currentRadialPage)
 	{
 	default:	Debug::LogWarning("Radial page index is invalid: ", currentRadialPage);	break;
-	case 0U: currentTileType = &HexTile::trees;		break;
-	case 1U: currentTileType = &HexTile::flowers;	break;
-	case 2U: currentTileType = &HexTile::waters;		break;
-	case 3U: currentTileType = &HexTile::lands;		break;
+	case 0U: currentTileType = &HexTileObject::trees;		break;
+	case 1U: currentTileType = &HexTileObject::flowers;	break;
+	case 2U: currentTileType = &HexTileObject::waters;		break;
+	case 3U: currentTileType = &HexTileObject::lands;		break;
 	}
 
 	currentTileVariant = selection;
@@ -70,9 +68,17 @@ void static DrawHexPositions(LinkedHexGrid* hexGrid, uint& hexPosFBO, uint& hexP
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glViewport(0, 0, AppInfo::screenWidth, AppInfo::screenHeight);
 
-		for (HexPair hexPair : hexGrid->lookupTable)
+		short min = hexGrid->centre.x - HexProgression::currentRadius;
+		short max = hexGrid->centre.x + HexProgression::currentRadius;
+
+		for (short c = min; c < max; c++)
 		{
-			hexPair.second->DrawHexPos();
+			for (short r = min; r < max; r++)
+			{
+				HexTile& hexTile = hexGrid->Get(HexOffsetCoord(c, r));
+
+				if (hexTile.object != nullptr) hexTile.object->DrawHexPos();
+			}
 		}
 	}
 }
@@ -172,40 +178,40 @@ void HexGame::Initialise(uint* renderTargetInit)
 	AppInfo::gameCamera->SetPosition(vec3(0, 4, 2));
 	AppInfo::gameCamera->LookAt(vec3(0, 0, 0));
 
-	HexGrid<25, 25> hexGrid;
-	HexOffsetCoord initialCoord = hexGrid.GetNeighbourCoord(hexGrid.GetNeighbourCoord(hexGrid.centre, HexDirection::NorthEast), HexDirection::South);
-	Debug::Log("Initial (Grid-Space): x=", initialCoord.x, ", y=", initialCoord.y);
-	HexCubeCoord cubeCoord = hexGrid.OffsetToCube(initialCoord);
-	Debug::Log("Initial (Cube-Space): q=", cubeCoord.q, ", r=", cubeCoord.r, ", s=", cubeCoord.s);
-	vec2 position = hexGrid.CoordToPos(initialCoord);
-	Debug::Log("Position:             x=", position.x, ", y=", position.y);
-	HexOffsetCoord resultCoord = hexGrid.PosToCoord(position);
-	Debug::Log("Result (Grid-Space):  x=", resultCoord.x, ", y=", resultCoord.y);
-	HexCubeCoord resultCubeCoord = hexGrid.OffsetToCube(resultCoord);
-	Debug::Log("Result (Cube-Space):  q=", resultCubeCoord.q, ", r=", resultCubeCoord.r, ", s=", resultCubeCoord.s);
-
-	for (int c = 0; c < hexGrid.columns; c++)
-	{
-		for (int r = 0; r < hexGrid.rows; r++)
-		{
-			HexCubeCoord cubeCoord = hexGrid.OffsetToCube(HexOffsetCoord(c, r));
-			vec2 position = hexGrid.CoordToPos(cubeCoord);
-
-			if (position.x == 0.0f && position.y == 0.0f)
-			{
-				AppInfo::debug->lines.AddSphere(vec3(position.x, 0, position.y), 0.25f, 64, Colour(1, 1, 1), -FLT_MAX);
-			}
-			else if (std::max(std::max(abs(cubeCoord.q), abs(cubeCoord.r)), std::max(abs(cubeCoord.r), abs(cubeCoord.s))) <= 12)
-			{
-				AppInfo::debug->lines.AddSphere(vec3(position.x, 0, position.y), 0.25f, 64, Colour(1, 0, 1), -FLT_MAX);
-			}
-			else
-			{
-				AppInfo::debug->lines.AddSphere(vec3(position.x, 0, position.y), 0.1f, 64, Colour(1, 1, 0), -FLT_MAX);
-			}
-		}
-	}
-
+	//HexGrid hexGrid;
+	//HexOffsetCoord initialCoord = HexOffsetCoord::GetCoords(HexOffsetCoord::GetCoords(hexGrid.centre, HexDirection::NorthEast), HexDirection::South);
+	//Debug::Log("Initial (Grid-Space): x=", initialCoord.x, ", y=", initialCoord.y);
+	//HexCubeCoord cubeCoord = HexOffsetToCube(initialCoord, hexGrid.centre);
+	//Debug::Log("Initial (Cube-Space): q=", cubeCoord.q, ", r=", cubeCoord.r);
+	//vec2 position = HexOffsetCoord::ToPos(initialCoord, hexGrid.centre);
+	//Debug::Log("Position:             x=", position.x, ", y=", position.y);
+	//HexOffsetCoord resultCoord = HexOffsetCoord::GetFromPos(position, hexGrid.centre);
+	//Debug::Log("Result (Grid-Space):  x=", resultCoord.x, ", y=", resultCoord.y);
+	//HexCubeCoord resultCubeCoord = HexOffsetToCube(resultCoord, hexGrid.centre);
+	//Debug::Log("Result (Cube-Space):  q=", resultCubeCoord.q, ", r=", resultCubeCoord.r);
+	//
+	//for (short c = 0; c < hexGrid.columns; c++)
+	//{
+	//	for (short r = 0; r < hexGrid.rows; r++)
+	//	{
+	//		HexCubeCoord cubeCoord = HexOffsetToCube(HexOffsetCoord(c, r), hexGrid.centre);
+	//		vec2 position = HexCubeCoord::ToPos(cubeCoord);
+	//
+	//		if (position.x == 0.0f && position.y == 0.0f)
+	//		{
+	//			AppInfo::debug->lines.AddSphere(vec3(position.x, 0, position.y), 0.25f, 64, Colour(1, 1, 1), -FLT_MAX);
+	//		}
+	//		else if (cubeCoord.GetMagnitude() <= hexGrid.radius)
+	//		{
+	//			AppInfo::debug->lines.AddSphere(vec3(position.x, 0, position.y), 0.25f, 64, Colour(1, 0, 1), -FLT_MAX);
+	//		}
+	//		else
+	//		{
+	//			AppInfo::debug->lines.AddSphere(vec3(position.x, 0, position.y), 0.1f, 64, Colour(1, 1, 0), -FLT_MAX);
+	//		}
+	//	}
+	//}
+	//
 	//AppInfo::debug->lines.AddSphere(vec3(0, 0, 0), 0.25f, 64, -FLT_MAX);
 	//
 	//AppInfo::debug->lines.AddSphere(vec3(position.x, 0, position.y), 0.25f, 64, Colour(1, 0, 1), -FLT_MAX);
@@ -219,19 +225,19 @@ void HexGame::OnClose()
 
 void HexGame::OnStart()
 {
-	hexGrid->AddCentre();
+	hexGrid->InitialiseCentre();
 
-	treeRadial = new RadialMenu(HexTile::treeRadialSprites[0].c_str(), HexTile::treeRadialSprites[1].c_str(), HexTile::treeRadialSprites[2].c_str());
+	treeRadial = new RadialMenu(HexTileObject::treeRadialSprites[0].c_str(), HexTileObject::treeRadialSprites[1].c_str(), HexTileObject::treeRadialSprites[2].c_str());
 	treeRadial->interactionHandler = { (RadialMenu::InteractFunc)RadialInteractionHandler };
-	flowerRadial = new RadialMenu(HexTile::flowerRadialSprites[0].c_str(), HexTile::flowerRadialSprites[1].c_str(), HexTile::flowerRadialSprites[2].c_str());
+	flowerRadial = new RadialMenu(HexTileObject::flowerRadialSprites[0].c_str(), HexTileObject::flowerRadialSprites[1].c_str(), HexTileObject::flowerRadialSprites[2].c_str());
 	flowerRadial->interactionHandler = { (RadialMenu::InteractFunc)RadialInteractionHandler };
-	waterRadial = new RadialMenu(HexTile::waterRadialSprites[0].c_str(), HexTile::waterRadialSprites[1].c_str(), HexTile::waterRadialSprites[2].c_str());
+	waterRadial = new RadialMenu(HexTileObject::waterRadialSprites[0].c_str(), HexTileObject::waterRadialSprites[1].c_str(), HexTileObject::waterRadialSprites[2].c_str());
 	waterRadial->interactionHandler = { (RadialMenu::InteractFunc)RadialInteractionHandler };
-	landRadial = new RadialMenu(HexTile::landRadialSprites[0].c_str(), HexTile::landRadialSprites[1].c_str(), HexTile::landRadialSprites[2].c_str());
+	landRadial = new RadialMenu(HexTileObject::landRadialSprites[0].c_str(), HexTileObject::landRadialSprites[1].c_str(), HexTileObject::landRadialSprites[2].c_str());
 	landRadial->interactionHandler = { (RadialMenu::InteractFunc)RadialInteractionHandler };
 
 	currentRadialPage = 0U;
-	currentTileType = &HexTile::trees;
+	currentTileType = &HexTileObject::trees;
 	currentTileVariant = 0U;
 
 	crosshair = new UISprite("Assets\\UI\\Crosshair\\Crosshair.png", vec2(), 0.035f);
@@ -243,45 +249,47 @@ void HexGame::OnStart()
 }
 void HexGame::OnStop()
 {
-	for (std::pair<glm::ivec2, HexTile*> hexPair : hexGrid->lookupTable)
-	{
-		GameObject::Destroy(hexPair.second);
-	}
-	hexGrid->lookupTable.clear();
-	hexGrid->centre = nullptr;
+	short min = hexGrid->centre.x - HexProgression::currentRadius;
+	short max = hexGrid->centre.x + HexProgression::currentRadius;
 
-	for (TileData& tileData : HexTile::trees)
+	for (short c = min; c < max; c++)
 	{
-		tileData.countPlaced[0] = 0U;
-		tileData.countPlaced[1] = 0U;
-		tileData.countPlaced[2] = 0U;
-	}
-	for (TileData& tileData : HexTile::flowers)
-	{
-		tileData.countPlaced[0] = 0U;
-		tileData.countPlaced[1] = 0U;
-		tileData.countPlaced[2] = 0U;
-	}
-	for (TileData& tileData : HexTile::waters)
-	{
-		tileData.countPlaced[0] = 0U;
-		tileData.countPlaced[1] = 0U;
-		tileData.countPlaced[2] = 0U;
-	}
-	for (TileData& tileData : HexTile::lands)
-	{
-		tileData.countPlaced[0] = 0U;
-		tileData.countPlaced[1] = 0U;
-		tileData.countPlaced[2] = 0U;
+		for (short r = min; r < max; r++)
+		{
+			HexTile& hexTile = hexGrid->Get(HexOffsetCoord(c, r));
+
+			GameObject::Destroy(hexTile.object);
+			hexTile.object = nullptr;
+			hexTile.habitat = -1;
+			hexTile.type = HexType::Unreached;
+			hexTile.variant = 0;
+		}
 	}
 
-	for (Habitat* habitat : hexGrid->habitats)
+	for (TileData& tileData : HexTileObject::trees)
 	{
-		GameObject::Destroy(habitat);
+		tileData.countPlaced = 0U;
+	}
+	for (TileData& tileData : HexTileObject::flowers)
+	{
+		tileData.countPlaced = 0U;
+	}
+	for (TileData& tileData : HexTileObject::waters)
+	{
+		tileData.countPlaced = 0U;
+	}
+	for (TileData& tileData : HexTileObject::lands)
+	{
+		tileData.countPlaced = 0U;
+	}
+
+	for (Habitat& habitat : hexGrid->habitats)
+	{
+		GameObject::Destroy(habitat.object);
 	}
 	hexGrid->habitats.clear();
 
-	for (HabitatData& habitatData : Habitat::habitats)
+	for (HabitatData& habitatData : HabitatObject::habitats)
 	{
 		habitatData.hasBeenPlaced = false;
 	}
@@ -295,8 +303,8 @@ void HexGame::OnStop()
 
 	del(crosshair);
 
-	HexTile::ClearPrefabs();
-	Habitat::ClearPrefabs();
+	HexTileObject::ClearPrefabs();
+	HabitatObject::ClearPrefabs();
 	AudioManager::EndAll();
 	AudioManager::ClearLoadedAssets();
 }
@@ -311,10 +319,10 @@ void HexGame::Update()
 	vector<TileData>* currentRadialTileType;
 	switch (currentRadialPage)
 	{
-	default: currentRadialMenu = treeRadial;		currentRadialTileType = &HexTile::trees;		break;
-	case 1U: currentRadialMenu = flowerRadial;	currentRadialTileType = &HexTile::flowers;	break;
-	case 2U: currentRadialMenu = waterRadial;		currentRadialTileType = &HexTile::waters;		break;
-	case 3U: currentRadialMenu = landRadial;		currentRadialTileType = &HexTile::lands;		break;
+	default: currentRadialMenu = treeRadial;		currentRadialTileType = &HexTileObject::trees;		break;
+	case 1U: currentRadialMenu = flowerRadial;	currentRadialTileType = &HexTileObject::flowers;	break;
+	case 2U: currentRadialMenu = waterRadial;		currentRadialTileType = &HexTileObject::waters;		break;
+	case 3U: currentRadialMenu = landRadial;		currentRadialTileType = &HexTileObject::lands;		break;
 	}
 
 	if (currentRadialMenu->enabled)
@@ -329,10 +337,10 @@ void HexGame::Update()
 
 			switch (currentRadialPage)
 			{
-			default: currentRadialMenu = treeRadial;		currentRadialTileType = &HexTile::trees;		break;
-			case 1U: currentRadialMenu = flowerRadial;	currentRadialTileType = &HexTile::flowers;	break;
-			case 2U: currentRadialMenu = waterRadial;		currentRadialTileType = &HexTile::waters;		break;
-			case 3U: currentRadialMenu = landRadial;		currentRadialTileType = &HexTile::lands;		break;
+			default: currentRadialMenu = treeRadial;		currentRadialTileType = &HexTileObject::trees;		break;
+			case 1U: currentRadialMenu = flowerRadial;	currentRadialTileType = &HexTileObject::flowers;	break;
+			case 2U: currentRadialMenu = waterRadial;		currentRadialTileType = &HexTileObject::waters;		break;
+			case 3U: currentRadialMenu = landRadial;		currentRadialTileType = &HexTileObject::lands;		break;
 			}
 			currentRadialMenu->enabled = true;
 		}
@@ -346,10 +354,10 @@ void HexGame::Update()
 
 			switch (currentRadialPage)
 			{
-			default: currentRadialMenu = treeRadial;		currentRadialTileType = &HexTile::trees;		break;
-			case 1U: currentRadialMenu = flowerRadial;	currentRadialTileType = &HexTile::flowers;	break;
-			case 2U: currentRadialMenu = waterRadial;		currentRadialTileType = &HexTile::waters;		break;
-			case 3U: currentRadialMenu = landRadial;		currentRadialTileType = &HexTile::lands;		break;
+			default: currentRadialMenu = treeRadial;		currentRadialTileType = &HexTileObject::trees;		break;
+			case 1U: currentRadialMenu = flowerRadial;	currentRadialTileType = &HexTileObject::flowers;	break;
+			case 2U: currentRadialMenu = waterRadial;		currentRadialTileType = &HexTileObject::waters;		break;
+			case 3U: currentRadialMenu = landRadial;		currentRadialTileType = &HexTileObject::lands;		break;
 			}
 			currentRadialMenu->enabled = true;
 		}
@@ -377,7 +385,7 @@ void HexGame::Update()
 			glm::ivec4 hexPos = hexPosPixels[hexPosIndex];
 			if (hexPos.a != 0)
 			{
-				hexGrid->UpdateTile((glm::ivec2)hexPos, HexTile::GetTilePrefab((*currentTileType)[currentTileVariant].name, 0));
+				hexGrid->UpdateTile(HexOffsetCoord(hexPos.x, hexPos.y), HexTileObject::GetTilePrefab((*currentTileType)[currentTileVariant].name));
 			}
 		}
 
@@ -488,7 +496,7 @@ void HexGame::LoadTileData() noexcept
 	if (!input.good())
 	{
 		Debug::Log("TileData.json was not found and has been created.");
-		HexTile::SaveTileDataTo(tileData);
+		HexTileObject::SaveTileDataTo(tileData);
 		ofstream output(tileDataPath);
 		output << std::setw(2) << tileData;
 		return;
@@ -498,13 +506,13 @@ void HexGame::LoadTileData() noexcept
 	catch (parse_error)
 	{
 		Debug::LogWarning("TileData.json was found to be corrupt, it has been recreated.");
-		HexTile::SaveTileDataTo(tileData);
+		HexTileObject::SaveTileDataTo(tileData);
 		ofstream output(tileDataPath);
 		output << std::setw(2) << tileData;
 		return;
 	}
 
-	HexTile::LoadTileDataFrom(tileData);
+	HexTileObject::LoadTileDataFrom(tileData);
 
 	if (tileData.contains("Progression"))
 	{
@@ -524,7 +532,7 @@ void HexGame::SaveTileData() noexcept
 	const char* const tileDataPath = "Assets\\Tiles\\TileData.json";
 
 	json tileData;
-	HexTile::SaveTileDataTo(tileData);
+	HexTileObject::SaveTileDataTo(tileData);
 
 	json progressionData;
 	HexProgression::SaveTo(progressionData);

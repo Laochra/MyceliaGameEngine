@@ -5,16 +5,16 @@
 
 void HexTileGUI::Draw()
 {
-	DrawHexTileGUI((HexTile*)target);
+	DrawHexTileGUI((HexTileObject*)target);
 }
 
-void HexTileGUI::DrawHexTileGUI(HexTile* hexTile)
+void HexTileGUI::DrawHexTileGUI(HexTileObject* hexTile)
 {
 	if (hexTile == nullptr || hexTile == GameObject::Destroyed) return;
 
 	MeshRendererGUI::DrawMeshRendererGUI(hexTile);
 
-	std::string idStr = GUI::GenerateID(HexTile::className, hexTile);
+	std::string idStr = GUI::GenerateID(HexTileObject::className, hexTile);
 	const char* id = idStr.c_str();
 
 	if (ImGui::CollapsingHeader(id, ImGuiTreeNodeFlags_DefaultOpen))

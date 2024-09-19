@@ -5,8 +5,8 @@
 #include "LightObject.h"
 #include "ParticleEmitter.h"
 #include "LinkedHexGrid.h"
-#include "HexTile.h"
-#include "Habitat.h"
+#include "HexTileObject.h"
+#include "HabitatObject.h"
 
 #include "GeneralMacros.h"
 
@@ -25,8 +25,8 @@ GameObject* GameObject::InstantiateFrom(json jsonObj, GuidGeneration guidOptions
 	case LightObject::classID: gameObject = new LightObject(); break;
 	case ParticleEmitter::classID: gameObject = new ParticleEmitter(); break;
 	case LinkedHexGrid::classID: gameObject = new LinkedHexGrid(); break;
-	case HexTile::classID: gameObject = new HexTile(); break;
-	case Habitat::classID: gameObject = new Habitat(); break;
+	case HexTileObject::classID: gameObject = new HexTileObject(); break;
+	case HabitatObject::classID: gameObject = new HabitatObject(); break;
 	default:
 		gameObject = new GameObject();
 		Debug::LogError(LogID::ERR151, "'", typeID, "' DO NOT SAVE! Data will be lost. ", locationinfo);

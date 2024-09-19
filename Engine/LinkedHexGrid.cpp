@@ -1,6 +1,6 @@
 #include "LinkedHexGrid.h"
 
-#include "Habitat.h"
+#include "HabitatObject.h"
 #include "HexProgression.h"
 #include "HexAudio.h"
 
@@ -27,100 +27,135 @@ void LinkedHexGrid::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
 	//...
 }
 
+HexTile& HexColumn::operator[](short row) noexcept
+{
+	return tiles[row];
+}
+const HexTile& HexColumn::operator[](short row) const noexcept
+{
+	return tiles[row];
+}
+
+HexTile& LinkedHexGrid::Get(HexOffsetCoord hexCoord) noexcept
+{
+	return tiles[hexCoord.x][hexCoord.y];
+}
+
+const HexTile& LinkedHexGrid::Get(HexOffsetCoord hexCoord) const noexcept
+{
+	return tiles[hexCoord.x][hexCoord.y];
+}
+
+HexTile& LinkedHexGrid::operator[](HexOffsetCoord hexCoord) noexcept
+{
+	return Get(hexCoord);
+}
+
+const HexTile& LinkedHexGrid::operator[](HexOffsetCoord hexCoord) const noexcept
+{
+	return Get(hexCoord);
+}
+
 void LinkedHexGrid::Initialise() noexcept
 {
 	GameObject3D::Initialise();
 }
 
-void LinkedHexGrid::UpdateTile(glm::ivec2 position, json tilePrefab) noexcept
+void LinkedHexGrid::UpdateTile(vec3 position, json tilePrefab) noexcept
 {
-	HexMap::iterator hexTileIt = lookupTable.find(position);
-	if (hexTileIt == lookupTable.end())
+	HexCubeCoord cubeCoord = HexCubeCoord::GetFromPos(vec2(position.x, position.z));
+	if (cubeCoord.GetMagnitude() > radius)
 	{
-		Debug::LogWarning("There is no hex tile at the given position.", locationinfo);
+		Debug::LogWarning("The given position is outside the hex grid.", locationinfo);
 		return;
 	}
 
-	UpdateTile(hexTileIt->second, tilePrefab);
+	UpdateTile(HexCubeToOffset(cubeCoord, centre), tilePrefab);
 }
-static void ModifyTileCount(HexType type, string variant, uint density, int modification)
+void LinkedHexGrid::UpdateTile(HexOffsetCoord hexCoord, json tilePrefab) noexcept
 {
-	vector<TileData>* tileDataList;
-	switch (type)
+	HexTile& hexTile = Get(hexCoord);
+	switch (hexTile.type)
 	{
-	case HexType::Tree:		tileDataList = &HexTile::trees;		break;
-	case HexType::Flower:	tileDataList = &HexTile::flowers;	break;
-	case HexType::Water:		tileDataList = &HexTile::waters;		break;
-	case HexType::Land:		tileDataList = &HexTile::lands;		break;
-	default:						tileDataList = nullptr;					break; // This should never happen
-	}
-	if (tileDataList != nullptr)
+	case HexType::Unreached:
 	{
-		for (TileData& tileData : *tileDataList)
-		{
-			if (tileData.name == variant)
-			{
-				tileData.countPlaced[0] += modification;
-			}
-		}
-	}
-}
-void LinkedHexGrid::UpdateTile(HexTile* hexTile, json tilePrefab) noexcept
-{
-	if (hexTile->type == (HexType)(int)tilePrefab["HexType"] &&
-		 hexTile->variant == (string)tilePrefab["HexVariant"])
-	{
-		hexTile->Rotate(glm::radians(-60.0f), vec3(0, 1, 0));
+		Debug::LogWarning(
+			"Attempted to update a tile that hasn't been reached ",
+			"(", hexCoord.x, ",", hexCoord.y, ")"
+		);
 		return;
 	}
-
-	if (hexTile->type == HexType::Empty)
+	case HexType::Perimeter:
 	{
+		const HexOffsetCoord neighbourCoords[6]{
+			// This order is for memory alignment, columns are contiguous in the grid
+			HexOffsetCoord::GetCoords(hexCoord, HexDirection::NorthWest),
+			HexOffsetCoord::GetCoords(hexCoord, HexDirection::SouthWest),
+			HexOffsetCoord::GetCoords(hexCoord, HexDirection::North),
+			HexOffsetCoord::GetCoords(hexCoord, HexDirection::South),
+			HexOffsetCoord::GetCoords(hexCoord, HexDirection::NorthEast),
+			HexOffsetCoord::GetCoords(hexCoord, HexDirection::SouthEast),
+		};
 		for (int i = 0; i < 6; i++)
 		{
-			if (hexTile->adjacent[i] == nullptr)
+			if (Get(neighbourCoords[i]).type == HexType::Unreached &&
+				neighbourCoords[i].GetMagnitude(centre) <= HexProgression::currentRadius)
 			{
-				AddTile(hexTile, (HexDir)i);
+				InitialiseTile(hexCoord);
 			}
 		}
+		short oldRadius = (short)HexProgression::currentRadius;
 		const HexProgression::Milestone* milestone = HexProgression::IncreaseLife(HexProgression::tileLifeBonus);
 		if (milestone != nullptr)
 		{
-			EnsurePerimeterIsPlacable();
+			// TODO: Play MilestoneReached SFX
+			ValidatePerimeterPlaceability(oldRadius + 1);
 		}
+		break;
 	}
-	else
+	default: // tile already exists
 	{
-		ModifyTileCount(hexTile->type, hexTile->variant, 0, -1);
+		if (hexTile.type == (HexType)(int)tilePrefab["HexType"] &&
+			TileData::GetVariantsOfType(hexTile.type)[hexTile.variant].name == (string)tilePrefab["HexVariant"])
+		{
+			hexTile.object->Rotate(glm::radians(-60.0f), vec3(0, 1, 0));
+			return;
+		}
+
+		TileData::GetVariantsOfType(hexTile.type)[hexTile.variant].countPlaced--;
+		break;
+	}
 	}
 
-	vec3 position = hexTile->GetPosition();
-	hexTile->UpdateFrom(tilePrefab, GuidGeneration::Keep);
-	hexTile->SetPosition(position);
+	
+	vec3 position = hexTile.object->GetPosition();
+	hexTile.object->UpdateFrom(tilePrefab, GuidGeneration::Keep);
+	hexTile.object->SetPosition(position);
 
-	hexTile->Rotate(glm::radians(Random::Int32(0, 5) * 60.0f), vec3(0, 1, 0));
+	hexTile.object->Rotate(glm::radians(Random::Int32(0, 5) * 60.0f), vec3(0, 1, 0));
 
-	hexTile->SetName(StringBuilder(hexTile->variant).CStr());
+	hexTile.object->SetName(TileData::GetVariantsOfType(hexTile.type)[hexTile.variant].name.c_str());
 
-	ModifyTileCount(hexTile->type, hexTile->variant, 0, +1);
+	TileData::GetVariantsOfType(hexTile.type)[hexTile.variant].countPlaced++;
 
-	Habitat* habitat = Habitat::AttemptToFormHabitat(hexTile);
+	HabitatObject* habitat = HabitatObject::AttemptToFormHabitat(hexTile.object);
 	if (habitat != nullptr)
 	{
 		HexAudio::PlayMiscSFX(HexAudio::SoundEffect::FormHabitat);
 
 		habitat->SetParent(this);
-		habitats.push_back(habitat);
+		//habitats.push_back(habitat);
+		short oldRadius = (short)HexProgression::currentRadius;
 		const HexProgression::Milestone* milestone = HexProgression::IncreaseLife(HexProgression::habitatLifeBonus);
 		if (milestone != nullptr)
 		{
 			// TODO: Play MilestoneReached SFX
-			EnsurePerimeterIsPlacable();
+			ValidatePerimeterPlaceability(oldRadius + 1);
 		}
 	}
 	else
 	{
-		switch (hexTile->type)
+		switch (hexTile.type)
 		{
 		case HexType::Tree: HexAudio::PlayMiscSFX(HexAudio::SoundEffect::PlaceTree); break;
 		case HexType::Flower: HexAudio::PlayMiscSFX(HexAudio::SoundEffect::PlaceFlower); break;
@@ -131,77 +166,62 @@ void LinkedHexGrid::UpdateTile(HexTile* hexTile, json tilePrefab) noexcept
 	}
 }
 
-void LinkedHexGrid::AddCentre() noexcept
+void LinkedHexGrid::InitialiseCentre() noexcept
 {
-	centre = (HexTile*)GameObject::InstantiateFrom(HexTile::GetDefaultTilePrefab(), GuidGeneration::New);
-	gameObjectManager->Add(centre);
-	centre->SetParent(this);
-	lookupTable.insert(HexPair(centre->GetHexPos(), centre));
-
-	centre->SetName(StringBuilder(centre->variant).CStr());
-
-	AddTile(vec3(0, 0, 0), HexDir::NorthWest);
-	AddTile(vec3(0, 0, 0), HexDir::North);
-	AddTile(vec3(0, 0, 0), HexDir::NorthEast);
-	AddTile(vec3(0, 0, 0), HexDir::SouthEast);
-	AddTile(vec3(0, 0, 0), HexDir::South);
-	AddTile(vec3(0, 0, 0), HexDir::SouthWest);
+	InitialiseTile(centre);
+	UpdateTile(centre, HexTileObject::GetDefaultTilePrefab()); // TODO: Replace with Mother Tree
 }
 
-void LinkedHexGrid::AddTile(glm::ivec2 originPosition, HexDir direction) noexcept
+void LinkedHexGrid::InitialiseTile(HexOffsetCoord hexCoord) noexcept
 {
-	HexMap::iterator hexTileIt = lookupTable.find(originPosition);
-	if (hexTileIt == lookupTable.end())
-	{
-		Debug::LogWarning("There is no hex tile at the given origin position.", locationinfo);
-		return;
-	}
-	AddTile(hexTileIt->second, direction);
-}
+	HexTile& hexTile = Get(hexCoord);
 
-void LinkedHexGrid::AddTile(HexTile* origin, HexDir direction) noexcept
-{
-	HexTile* newTile = (*origin)[direction];
-	if (newTile != nullptr)
+	if (hexTile.type != HexType::Unreached)
 	{
-		Debug::LogWarning("Attempted to add a tile in a place that already has one.", locationinfo);
+		Debug::LogWarning("Attempted to initialise a tile that is already initialised.", locationinfo);
 		return;
 	}
 
-	newTile = (HexTile*)GameObject::InstantiateFrom(HexTile::GetEmptyTilePrefab(), GuidGeneration::New);
-	gameObjectManager->Add(newTile);
-	newTile->SetParent(this);
-	newTile->SetPosition(HexTile::HexPosToRealPos(origin->GetHexPos() + HexTile::DirVec[(uint)direction]));
-
-	for (uint i = 0; i < 6; i++)
+	json perimeterPrefab = HexTileObject::GetEmptyTilePrefab();
+	const unsigned long long typeID = perimeterPrefab["TypeID"];
+	if (typeID != HexTileObject::classID)
 	{
-		HexMap::iterator hexTileIt = lookupTable.find(newTile->GetHexPos() + HexTile::DirVec[i]);
-		if (hexTileIt != lookupTable.end())
-		{
-			(*newTile)[(HexDir)i] = hexTileIt->second;
-			(*hexTileIt->second)[HexTile::OppositeDir((HexDir)i)] = newTile;
-		}
+		Debug::LogError("TypeID ", typeID, " is not valid for initialising a HexTile", locationinfo);
+		return;
 	}
 
-	lookupTable.insert(HexPair(newTile->GetHexPos(), newTile));
-
-	vec2 xzPos((float)newTile->GetPosition().x, newTile->GetPosition().z);
-	if (glm::length(xzPos) > (float)HexProgression::currentRadius)
-	{
-		newTile->SetMesh(nullptr);
-	}
+	hexTile.type = HexType::Perimeter;
+	hexTile.object = (HexTileObject*)GameObject::InstantiateFrom(perimeterPrefab, GuidGeneration::New);
+	gameObjectManager->Add(hexTile.object);
+	hexTile.object->SetParent(this);
+	vec2 position = HexOffsetCoord::ToPos(hexCoord, centre);
+	hexTile.object->SetPosition(vec3(position.x, 0, position.y));
 }
 
-void LinkedHexGrid::EnsurePerimeterIsPlacable() noexcept
+static void ValidateEdgePlaceability(LinkedHexGrid& hexGrid, short radius, HexCubeCoord offsetDir, HexCubeCoord moveDir, HexCubeCoord lookupDirA, HexCubeCoord lookupDirB) noexcept
 {
-	for (HexMap::iterator it = lookupTable.begin(); it != lookupTable.end(); it++)
+	HexCubeCoord tileCoord(offsetDir.q * radius, offsetDir.r * radius);
+
+	for (short i = 0; i < radius; i++)
 	{
-		HexTile& hexTile = *it->second;
-		if (hexTile.type == HexType::Empty && hexTile.GetMesh() == nullptr)
+		HexTile& currentTile = hexGrid.Get(HexCubeToOffset(tileCoord, hexGrid.centre));
+		const HexTile& lookupTileA = hexGrid.Get(HexCubeToOffset(tileCoord + lookupDirA, hexGrid.centre));
+		const HexTile& lookupTileB = hexGrid.Get(HexCubeToOffset(tileCoord + lookupDirB, hexGrid.centre));
+
+		if ((char)lookupTileA.type > 0 || (char)lookupTileB.type > 0)
 		{
-			vec3 position = hexTile.GetPosition();
-			hexTile.UpdateFrom(HexTile::GetEmptyTilePrefab(), GuidGeneration::New);
-			hexTile.SetPosition(position);
+			hexGrid.InitialiseTile(HexCubeToOffset(tileCoord, hexGrid.centre));
 		}
+
+		tileCoord += moveDir;
 	}
+}
+void LinkedHexGrid::ValidatePerimeterPlaceability(short perimeterRadius) noexcept
+{
+	ValidateEdgePlaceability(*this, perimeterRadius, {  0, -1 }, { +1,  0 }, { -1, +1 }, {  0, +1 }); // From North to NorthEast
+	ValidateEdgePlaceability(*this, perimeterRadius, { +1, -1 }, {  0, +1 }, { -1,  0 }, { -1, +1 }); // From NorthEast to SouthEast
+	ValidateEdgePlaceability(*this, perimeterRadius, { +1,  0 }, { -1, +1 }, {  0, -1 }, { -1,  0 }); // From SouthEast to South
+	ValidateEdgePlaceability(*this, perimeterRadius, {  0, +1 }, { -1,  0 }, { +1, -1 }, {  0, -1 }); // From South to SouthWest
+	ValidateEdgePlaceability(*this, perimeterRadius, { -1, +1 }, {  0, -1 }, { +1,  0 }, { +1, -1 }); // From SouthWest to NorthWest
+	ValidateEdgePlaceability(*this, perimeterRadius, { -1,  0 }, { +1, -1 }, {  0, +1 }, { +1,  0 }); // From NorthWest to North
 }

@@ -4,16 +4,16 @@
 
 void HabitatGUI::Draw()
 {
-	DrawHabitatGUI((Habitat*)target);
+	DrawHabitatGUI((HabitatObject*)target);
 }
 
-void HabitatGUI::DrawHabitatGUI(Habitat* habitat)
+void HabitatGUI::DrawHabitatGUI(HabitatObject* habitat)
 {
 	if (habitat == nullptr || habitat == GameObject::Destroyed) return;
 
 	MeshRendererGUI::DrawMeshRendererGUI(habitat);
 
-	std::string idStr = GUI::GenerateID(Habitat::className, habitat);
+	std::string idStr = GUI::GenerateID(HabitatObject::className, habitat);
 	const char* id = idStr.c_str();
 
 	if (ImGui::CollapsingHeader(id, ImGuiTreeNodeFlags_DefaultOpen))

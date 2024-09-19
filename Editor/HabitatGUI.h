@@ -3,7 +3,7 @@
 #include "ImGuiIncludes.h"
 #include "MeshRendererGUI.h"
 
-#include "Habitat.h"
+#include "HabitatObject.h"
 
 class HabitatGUI : public MeshRendererGUI
 {
@@ -13,5 +13,5 @@ public:
 	virtual void Draw() override;
 
 protected:
-	static void DrawHabitatGUI(Habitat* habitat);
+	static void DrawHabitatGUI(HabitatObject* habitat);
 };

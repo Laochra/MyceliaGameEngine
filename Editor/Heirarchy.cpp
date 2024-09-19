@@ -7,8 +7,8 @@
 #include "MeshRenderer.h"
 #include "LightObject.h"
 #include "ParticleEmitter.h"
-#include "HexTile.h"
-#include "Habitat.h"
+#include "HexTileObject.h"
+#include "HabitatObject.h"
 
 #include "Inspector.h"
 
@@ -189,7 +189,7 @@ namespace Heirarchy
 					if (filepath.size() != 0)
 					{
 						json prefab = rightClickMenu.target;
-						prefab["TypeID"] = HexTile::classID;
+						prefab["TypeID"] = HexTileObject::classID;
 						prefab["HexType"] = HexType::Tree;
 						prefab["HexVariant"] = rightClickMenu.target->GetName();
 						if (!prefab.contains("Mesh")) prefab["Mesh"] = "None";
@@ -214,7 +214,7 @@ namespace Heirarchy
 					if (filepath.size() != 0)
 					{
 						json prefab = rightClickMenu.target;
-						prefab["TypeID"] = Habitat::classID;
+						prefab["TypeID"] = HabitatObject::classID;
 						if (!prefab.contains("Mesh")) prefab["Mesh"] = "None";
 						if (!prefab.contains("Material")) prefab["Material"] = "Default";
 

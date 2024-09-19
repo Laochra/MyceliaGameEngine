@@ -1,6 +1,6 @@
 #include "HexProgression.h"
 
-#include "HexTile.h"
+#include "HexTileObject.h"
 
 std::vector<HexProgression::Milestone> HexProgression::lifeMilestones;
 
@@ -46,7 +46,7 @@ const HexProgression::Milestone* HexProgression::IncreaseLife(uint lifeToAdd) no
 void HexProgression::ResetProgression() noexcept
 {
 	std::vector<std::string> startingVariants = HexProgression::startingVariants;
-	for (TileData& tileData : HexTile::trees)
+	for (TileData& tileData : HexTileObject::trees)
 	{
 		if (std::find(startingVariants.begin(), startingVariants.end(), tileData.name) != startingVariants.end())
 		{
@@ -57,7 +57,7 @@ void HexProgression::ResetProgression() noexcept
 			tileData.unlocked = false;
 		}
 	}
-	for (TileData& tileData : HexTile::flowers)
+	for (TileData& tileData : HexTileObject::flowers)
 	{
 		if (std::find(startingVariants.begin(), startingVariants.end(), tileData.name) != startingVariants.end())
 		{
@@ -68,7 +68,7 @@ void HexProgression::ResetProgression() noexcept
 			tileData.unlocked = false;
 		}
 	}
-	for (TileData& tileData : HexTile::waters)
+	for (TileData& tileData : HexTileObject::waters)
 	{
 		if (std::find(startingVariants.begin(), startingVariants.end(), tileData.name) != startingVariants.end())
 		{
@@ -79,7 +79,7 @@ void HexProgression::ResetProgression() noexcept
 			tileData.unlocked = false;
 		}
 	}
-	for (TileData& tileData : HexTile::lands)
+	for (TileData& tileData : HexTileObject::lands)
 	{
 		if (std::find(startingVariants.begin(), startingVariants.end(), tileData.name) != startingVariants.end())
 		{
@@ -165,28 +165,28 @@ void HexProgression::CompleteMilestone(const Milestone& milestone)
 	{
 		const std::vector<std::string>& unlockedVariants = milestone.names;
 
-		for (TileData& tileData : HexTile::trees)
+		for (TileData& tileData : HexTileObject::trees)
 		{
 			if (std::find(unlockedVariants.begin(), unlockedVariants.end(), tileData.name) != unlockedVariants.end())
 			{
 				tileData.unlocked = true;
 			}
 		}
-		for (TileData& tileData : HexTile::flowers)
+		for (TileData& tileData : HexTileObject::flowers)
 		{
 			if (std::find(unlockedVariants.begin(), unlockedVariants.end(), tileData.name) != unlockedVariants.end())
 			{
 				tileData.unlocked = true;
 			}
 		}
-		for (TileData& tileData : HexTile::waters)
+		for (TileData& tileData : HexTileObject::waters)
 		{
 			if (std::find(unlockedVariants.begin(), unlockedVariants.end(), tileData.name) != unlockedVariants.end())
 			{
 				tileData.unlocked = true;
 			}
 		}
-		for (TileData& tileData : HexTile::lands)
+		for (TileData& tileData : HexTileObject::lands)
 		{
 			if (std::find(unlockedVariants.begin(), unlockedVariants.end(), tileData.name) != unlockedVariants.end())
 			{

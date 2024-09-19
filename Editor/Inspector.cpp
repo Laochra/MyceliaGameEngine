@@ -33,8 +33,8 @@ void Inspector::SetTarget(GameObject* target)
 	case LightObject::classID: targetGUI = new LightObjectGUI(target); break;
 	case ParticleEmitter::classID: targetGUI = new ParticleEmitterGUI(target); break;
 	case LinkedHexGrid::classID: targetGUI = new LinkedHexGridGUI(target); break;
-	case HexTile::classID: targetGUI = new HexTileGUI(target); break;
-	case Habitat::classID: targetGUI = new HabitatGUI(target); break;
+	case HexTileObject::classID: targetGUI = new HexTileGUI(target); break;
+	case HabitatObject::classID: targetGUI = new HabitatGUI(target); break;
 	default:
 		targetGUI = new GameObjectGUI(target);
 		Debug::LogError(LogID::ERR151,

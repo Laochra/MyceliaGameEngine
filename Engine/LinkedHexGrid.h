@@ -1,31 +1,26 @@
 #pragma once
 
+#include "HexCoords.h"
 #include "HexTile.h"
+#include "Habitat.h"
 
 #include "MathIncludes.h"
-
-#include <unordered_map>
 
 #include "GameObject3D.h"
 
 typedef unsigned int uint;
 typedef unsigned long long ulong;
 
-class Habitat;
+#define HEX_GRID_RADIUS 18
 
-struct HexPosHash
+struct HexColumn
 {
-	ulong operator()(const glm::ivec2& k) const
-	{
-		ulong x = *(uint*)&k.x;
-		ulong z = *(uint*)&k.y;
-		return (x << 32) + z;
-	}
+	HexTile tiles[HEX_GRID_RADIUS * 2 + 1];
+	HexTile& operator[](short row) noexcept;
+	const HexTile& operator[](short row) const noexcept;
 };
 
-typedef std::unordered_map<glm::ivec2, HexTile*, HexPosHash> HexMap;
-typedef std::pair<glm::ivec2, HexTile*> HexPair;
-
+// Implemented with Offset Coordinates
 class LinkedHexGrid : public GameObject3D
 {
 public:
@@ -33,19 +28,31 @@ public:
 
 	using GameObject3D::GameObject3D;
 
-	HexTile* centre = nullptr;
-	HexMap lookupTable;
-	vector<Habitat*> habitats;
+	static constexpr short radius = HEX_GRID_RADIUS;
+	static constexpr short columns = radius * 2 + 1;
+	static constexpr short rows = radius * 2 + 1;
+
+	static const inline HexOffsetCoord centre{ columns / 2, rows / 2 };
+
+	HexColumn tiles[columns];
+	HexTile& Get(HexOffsetCoord hexCoord) noexcept;
+	const HexTile& Get(HexOffsetCoord hexCoord) const noexcept;
+	HexTile& operator[](HexOffsetCoord hexCoord) noexcept;
+	const HexTile& operator[](HexOffsetCoord hexCoord) const noexcept;
+
+	vector<Habitat> habitats;
 
 	virtual void Initialise() noexcept override;
 
-	void UpdateTile(glm::ivec2 position, json tilePrefab) noexcept;
-	void UpdateTile(HexTile* hexTile, json tilePrefab) noexcept;
+	void InitialiseCentre() noexcept;
+	void InitialiseTile(HexOffsetCoord hexCoord) noexcept;
 
-	void AddCentre() noexcept;
-	void AddTile(glm::ivec2 originPosition, HexDir direction) noexcept;
-	void AddTile(HexTile* origin, HexDir direction) noexcept;
+	void UpdateTile(vec3 position, json tilePrefab) noexcept;
+	void UpdateTile(HexOffsetCoord hexCoord, json tilePrefab) noexcept;
 
 private:
-	void EnsurePerimeterIsPlacable() noexcept;
+	// TODO: This needs testing still, very experimental way of navigating the grid
+	void ValidatePerimeterPlaceability(short perimeterRadius) noexcept;
 };
+
+#undef HEX_GRID_RADIUS

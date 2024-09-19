@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GUI.h"
-#include "HexTile.h"
+#include "HexTileObject.h"
 
 typedef unsigned int uint;
 

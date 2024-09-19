@@ -3,7 +3,7 @@
 #include "ImGuiIncludes.h"
 #include "MeshRendererGUI.h"
 
-#include "HexTile.h"
+#include "HexTileObject.h"
 
 class HexTileGUI : public MeshRendererGUI
 {
@@ -13,5 +13,5 @@ public:
 	virtual void Draw() override;
 
 protected:
-	static void DrawHexTileGUI(HexTile* hexTile);
+	static void DrawHexTileGUI(HexTileObject* hexTile);
 };

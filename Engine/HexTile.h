@@ -1,79 +1,13 @@
 #pragma once
 
-#include "MathIncludes.h"
-#include <unordered_map>
-#include <vector>
+#include "HexTileObject.h"
+#include "HexType.h"
 
-#include "MeshRenderer.h"
-
-class Habitat;
-
-typedef unsigned int uint;
-typedef unsigned char ubyte;
-
-enum class HexDir : ubyte { NorthWest, North, NorthEast, SouthEast, South, SouthWest };
-enum class HexType { Empty, Tree, Flower, Water, Land };
-struct TileData
+struct HexTile
 {
-	string name = "New Variant";
-	string prefabFilepaths[3] = { "None", "None", "None" };
-	uint countPlaced[3] = { 0U, 0U, 0U };
-	bool unlocked = false;
+	HexTileObject* object = nullptr;
 
-	TileData() noexcept = default;
-	TileData(const char* const nameInit) noexcept : name(nameInit) {}
-
-	uint GetTotalPlaced() const noexcept { return countPlaced[0] + countPlaced[1] + countPlaced[2]; }
-};
-
-class HexTile : public MeshRenderer
-{
-public:
-	SerialiseAs(HexTile)
-
-	using MeshRenderer::MeshRenderer;
-
-	Habitat* habitat = nullptr;
-	HexTile* adjacent[6] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, };
-
-	HexType type = HexType::Empty;
-	string variant = "Empty";
-
-	virtual void Initialise() override;
-	void DrawHexPos() noexcept;
-	void DrawFogMasks() noexcept;
-	
-	glm::ivec2 GetHexPos() const noexcept;
-
-	HexTile*& operator[](HexDir direction) noexcept;
-
-	const static std::vector<glm::ivec2> DirVec;
-	static vec3 HexPosToRealPos(glm::ivec2 hexPos);
-	static glm::ivec2 RealPosToHexPos(vec3 hexPos);
-	static HexDir OppositeDir(HexDir dir);
-
-	static void LoadTileDataFrom(json& tilesFile) noexcept;
-	static void SaveTileDataTo(json& tilesFile) noexcept;
-
-	static string emptyTilePath;
-	static string defaultTilePath;
-	static vector<TileData> trees;
-	static vector<TileData> flowers;
-	static vector<TileData> waters;
-	static vector<TileData> lands;
-
-	static string treeRadialSprites[3];
-	static string flowerRadialSprites[3];
-	static string waterRadialSprites[3];
-	static string landRadialSprites[3];
-
-	static json GetEmptyTilePrefab() noexcept;
-	static json GetDefaultTilePrefab() noexcept;
-	static json GetTilePrefab(string name, uint density) noexcept;
-	static void ClearPrefabs() noexcept;
-
-private:
-	static void AddDefaultPrefab(string name, string path) noexcept;
-	static void AddTilePrefab(string name, uint density) noexcept;
-	static map<string, json> prefabs;
+	char habitat = -1; // -1 means not part of a habitat
+	HexType type = HexType::Unreached;
+	char variant = 0;
 };
