@@ -10,10 +10,12 @@
 
 #include "LinkedHexGrid.h"
 
+#include "TileData.h"
+
 typedef unsigned int uint;
 
 inline uint currentRadialPage = 0U;
-inline vector<TileData>* currentTileType = &HexTileObject::trees;
+inline vector<TileData>* currentTileType = &TileData::Get(HexType::Tree);
 inline uint currentTileVariant = 0U;
 
 class HexGame : public Game

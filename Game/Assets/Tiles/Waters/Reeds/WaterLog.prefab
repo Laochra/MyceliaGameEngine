@@ -122,7 +122,7 @@
     }
   ],
   "GUID": 11256043524688278419,
-  "HexType": 3,
+  "HexType": 2,
   "HexVariant": "WaterLog",
   "Material": "Assets\\Tiles\\Waters\\Reeds\\Reeds.mat",
   "Mesh": "Hexagon",
@@ -148,5 +148,5 @@
     1.0,
     1.0
   ],
-  "TypeID": 73778508
+  "TypeID": 181025226017607
 }

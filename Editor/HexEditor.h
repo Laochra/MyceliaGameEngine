@@ -1,17 +1,10 @@
 #pragma once
 
 #include "GUI.h"
-#include "HexTileObject.h"
+#include "TileData.h"
+#include "HexType.h"
 
 typedef unsigned int uint;
-
-enum TileType : uint
-{
-	Tree,
-	Flower,
-	Water,
-	Land
-};
 
 class HexEditor
 {

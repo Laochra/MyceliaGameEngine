@@ -2,6 +2,7 @@
 
 #define ID(idName, idMessage) const LogID LogID::idName = LogID(#idName, idMessage)
 
+ID(NoError, "No Error");
 ID(Undefined, "");
 
 ID(WRN, "");

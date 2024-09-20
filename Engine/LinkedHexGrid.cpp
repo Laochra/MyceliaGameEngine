@@ -1,6 +1,7 @@
 #include "LinkedHexGrid.h"
 
-#include "HabitatObject.h"
+#include "TileData.h"
+
 #include "HexProgression.h"
 #include "HexAudio.h"
 
@@ -101,7 +102,7 @@ void LinkedHexGrid::UpdateTile(HexOffsetCoord hexCoord, json tilePrefab) noexcep
 			if (Get(neighbourCoords[i]).type == HexType::Unreached &&
 				neighbourCoords[i].GetMagnitude(centre) <= HexProgression::currentRadius)
 			{
-				InitialiseTile(hexCoord);
+				InitialiseTile(neighbourCoords[i]);
 			}
 		}
 		short oldRadius = (short)HexProgression::currentRadius;
@@ -115,14 +116,16 @@ void LinkedHexGrid::UpdateTile(HexOffsetCoord hexCoord, json tilePrefab) noexcep
 	}
 	default: // tile already exists
 	{
-		if (hexTile.type == (HexType)(int)tilePrefab["HexType"] &&
-			TileData::GetVariantsOfType(hexTile.type)[hexTile.variant].name == (string)tilePrefab["HexVariant"])
+		if ((int)hexTile.type == tilePrefab["HexType"] &&
+			TileData::Get(hexTile.type)[hexTile.variant].name == (string)tilePrefab["HexVariant"])
 		{
 			hexTile.object->Rotate(glm::radians(-60.0f), vec3(0, 1, 0));
 			return;
 		}
-
-		TileData::GetVariantsOfType(hexTile.type)[hexTile.variant].countPlaced--;
+		if ((char)hexTile.type >= 0)
+		{
+			TileData::Get(hexTile.type)[hexTile.variant].countPlaced--;
+		}
 		break;
 	}
 	}
@@ -131,19 +134,22 @@ void LinkedHexGrid::UpdateTile(HexOffsetCoord hexCoord, json tilePrefab) noexcep
 	vec3 position = hexTile.object->GetPosition();
 	hexTile.object->UpdateFrom(tilePrefab, GuidGeneration::Keep);
 	hexTile.object->SetPosition(position);
-
 	hexTile.object->Rotate(glm::radians(Random::Int32(0, 5) * 60.0f), vec3(0, 1, 0));
 
-	hexTile.object->SetName(TileData::GetVariantsOfType(hexTile.type)[hexTile.variant].name.c_str());
+	hexTile.type = tilePrefab["HexType"];
+	if ((char)hexTile.type >= 0)
+	{
+		hexTile.variant = TileData::GetVariantIndex(hexTile.type, tilePrefab["HexVariant"]);
+		hexTile.object->SetName(TileData::Get(hexTile.type)[hexTile.variant].name.c_str());
+		TileData::Get(hexTile.type)[hexTile.variant].countPlaced++;
+	}
 
-	TileData::GetVariantsOfType(hexTile.type)[hexTile.variant].countPlaced++;
-
-	HabitatObject* habitat = HabitatObject::AttemptToFormHabitat(hexTile.object);
-	if (habitat != nullptr)
+	Habitat habitat = Habitat::AttemptToFormHabitat(this, hexCoord);
+	if (habitat.object != nullptr)
 	{
 		HexAudio::PlayMiscSFX(HexAudio::SoundEffect::FormHabitat);
 
-		habitat->SetParent(this);
+		habitat.object->SetParent(this);
 		//habitats.push_back(habitat);
 		short oldRadius = (short)HexProgression::currentRadius;
 		const HexProgression::Milestone* milestone = HexProgression::IncreaseLife(HexProgression::habitatLifeBonus);
@@ -169,7 +175,7 @@ void LinkedHexGrid::UpdateTile(HexOffsetCoord hexCoord, json tilePrefab) noexcep
 void LinkedHexGrid::InitialiseCentre() noexcept
 {
 	InitialiseTile(centre);
-	UpdateTile(centre, HexTileObject::GetDefaultTilePrefab()); // TODO: Replace with Mother Tree
+	UpdateTile(centre, TileData::GetMotherTreePrefab()); // TODO: Replace with Mother Tree
 }
 
 void LinkedHexGrid::InitialiseTile(HexOffsetCoord hexCoord) noexcept
@@ -182,16 +188,10 @@ void LinkedHexGrid::InitialiseTile(HexOffsetCoord hexCoord) noexcept
 		return;
 	}
 
-	json perimeterPrefab = HexTileObject::GetEmptyTilePrefab();
-	const unsigned long long typeID = perimeterPrefab["TypeID"];
-	if (typeID != HexTileObject::classID)
-	{
-		Debug::LogError("TypeID ", typeID, " is not valid for initialising a HexTile", locationinfo);
-		return;
-	}
+	json perimeterPrefab = TileData::GetPerimeterPrefab();
 
 	hexTile.type = HexType::Perimeter;
-	hexTile.object = (HexTileObject*)GameObject::InstantiateFrom(perimeterPrefab, GuidGeneration::New);
+	hexTile.object = (GameObject3D*)GameObject::InstantiateFrom(perimeterPrefab, GuidGeneration::New);
 	gameObjectManager->Add(hexTile.object);
 	hexTile.object->SetParent(this);
 	vec2 position = HexOffsetCoord::ToPos(hexCoord, centre);

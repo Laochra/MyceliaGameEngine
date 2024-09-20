@@ -2,8 +2,8 @@
 
 enum class HexType : char
 {
-	Unreached = -1,
-	Perimeter,
+	Unreached = -2,
+	Perimeter = -1,
 	Tree,
 	Flower,
 	Water,

@@ -99,16 +99,10 @@
     <ClCompile Include="TransformEdit.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
-    <ClCompile Include="HexTileGUI.cpp">
-      <Filter>GUI\EditorWindows\GameObjects</Filter>
-    </ClCompile>
     <ClCompile Include="LinkedHexGridGUI.cpp">
       <Filter>GUI\EditorWindows\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="CameraGUI.cpp">
-      <Filter>GUI\EditorWindows\GameObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="HabitatGUI.cpp">
       <Filter>GUI\EditorWindows\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="HexEditor.cpp">
@@ -269,16 +263,10 @@
     <ClInclude Include="TransformEdit.h">
       <Filter>GUI</Filter>
     </ClInclude>
-    <ClInclude Include="HexTileGUI.h">
-      <Filter>GUI\EditorWindows\GameObjects</Filter>
-    </ClInclude>
     <ClInclude Include="LinkedHexGridGUI.h">
       <Filter>GUI\EditorWindows\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="CameraGUI.h">
-      <Filter>GUI\EditorWindows\GameObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="HabitatGUI.h">
       <Filter>GUI\EditorWindows\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="HexEditor.h">

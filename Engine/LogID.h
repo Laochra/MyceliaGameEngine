@@ -14,6 +14,7 @@ public:
 	LogID& operator=(const LogID& other) { name = other.name; message = other.message; return *this; }
 	bool operator==(const LogID& other) const { return this->name == other.name; }
 
+	static const LogID NoError; // No Error Or Warning
 	static const LogID Undefined;	// Default ID
 
 #pragma region Warnings

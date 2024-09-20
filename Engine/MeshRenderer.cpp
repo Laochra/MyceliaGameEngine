@@ -13,7 +13,7 @@
 void MeshRenderer::SerialiseTo(json& jsonObj) const
 {
 	GameObject3D::SerialiseTo(jsonObj);
-
+	MeshRenderer::classID;
 	if (mesh != nullptr)
 	{
 		const char* meshFilepath = mesh->GetFilePath();

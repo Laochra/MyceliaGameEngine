@@ -7,8 +7,6 @@
 #include "MeshRenderer.h"
 #include "LightObject.h"
 #include "ParticleEmitter.h"
-#include "HexTileObject.h"
-#include "HabitatObject.h"
 
 #include "Inspector.h"
 
@@ -153,78 +151,25 @@ namespace Heirarchy
 
 				rightClickMenu.Close();
 			}
-			if (ImGui::BeginMenu("Save As"))
+
+			if (ImGui::MenuItem("Save As Prefab"))
 			{
-				if (ImGui::IsWindowHovered()) isHovered = true;
+				using namespace FileDialogue;
+				string defaultPath = StringBuilder(
+					"Assets\\",
+					rightClickMenu.target->GetName()
+				).value;
 
-				if (ImGui::MenuItem(StringBuilder("Prefab (", rightClickMenu.target->GetClassName(), ")").CStr()))
+				string filepath = GetSavePath(PathDetails("Save As Prefab", defaultPath.c_str(), { "*.prefab" }), LimitToAssetFolder::False);
+
+				if (filepath.size() != 0)
 				{
-					using namespace FileDialogue;
-					string defaultPath = StringBuilder(
-						"Assets\\",
-						rightClickMenu.target->GetName()
-					).value;
-
-					string filepath = GetSavePath(PathDetails("Save As Prefab", defaultPath.c_str(), { "*.prefab" }), LimitToAssetFolder::False);
-
-					if (filepath.size() != 0)
-					{
-						json prefab = rightClickMenu.target;
-						ofstream file(filepath);
-						file << std::setw(2) << prefab;
-					}
-
-					rightClickMenu.Close();
+					json prefab = rightClickMenu.target;
+					ofstream file(filepath);
+					file << std::setw(2) << prefab;
 				}
-				if (ImGui::MenuItem("HexTile"))
-				{
-					using namespace FileDialogue;
-					string defaultPath = StringBuilder(
-						"Assets\\Tiles\\",
-						rightClickMenu.target->GetName()
-					).value;
 
-					string filepath = GetSavePath(PathDetails("Save As HexTile", defaultPath.c_str(), { "*.prefab" }), LimitToAssetFolder::True);
-
-					if (filepath.size() != 0)
-					{
-						json prefab = rightClickMenu.target;
-						prefab["TypeID"] = HexTileObject::classID;
-						prefab["HexType"] = HexType::Tree;
-						prefab["HexVariant"] = rightClickMenu.target->GetName();
-						if (!prefab.contains("Mesh")) prefab["Mesh"] = "None";
-						if (!prefab.contains("Material")) prefab["Material"] = "Default";
-
-						ofstream file(filepath);
-						file << std::setw(2) << prefab;
-					}
-
-					rightClickMenu.Close();
-				}
-				if (ImGui::MenuItem("Habitat"))
-				{
-					using namespace FileDialogue;
-					string defaultPath = StringBuilder(
-						"Assets\\Tiles\\",
-						rightClickMenu.target->GetName()
-					).value;
-
-					string filepath = GetSavePath(PathDetails("Save As Habitat", defaultPath.c_str(), { "*.prefab" }), LimitToAssetFolder::True);
-
-					if (filepath.size() != 0)
-					{
-						json prefab = rightClickMenu.target;
-						prefab["TypeID"] = HabitatObject::classID;
-						if (!prefab.contains("Mesh")) prefab["Mesh"] = "None";
-						if (!prefab.contains("Material")) prefab["Material"] = "Default";
-
-						ofstream file(filepath);
-						file << std::setw(2) << prefab;
-					}
-
-					rightClickMenu.Close();
-				}
-				ImGui::EndMenu();
+				rightClickMenu.Close();
 			}
 			if (ImGui::MenuItem("Delete"))
 			{

@@ -152,7 +152,7 @@
     }
   ],
   "GUID": 5266190691223346971,
-  "HexType": 3,
+  "HexType": 2,
   "HexVariant": "Lily Pad",
   "Material": "Assets\\Tiles\\Waters\\LilyPad\\LilyPad.mat",
   "Mesh": "Hexagon",
@@ -178,5 +178,5 @@
     1.0,
     1.0
   ],
-  "TypeID": 73778508
+  "TypeID": 181025226017607
 }

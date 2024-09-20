@@ -11,7 +11,7 @@ struct HexOffsetCoord
 {
 	short x, y;
 
-	constexpr HexOffsetCoord(short xInit = 0, short yInit = 0) noexcept;
+	HexOffsetCoord(short xInit = 0, short yInit = 0) noexcept;
 
 	static const HexOffsetCoord neighbours[12];
 

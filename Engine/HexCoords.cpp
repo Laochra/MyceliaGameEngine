@@ -3,19 +3,19 @@
 #include "MathIncludes.h"
 
 const HexOffsetCoord HexOffsetCoord::neighbours[12] {
-	// Even Column Coords
-	{ 0, -1},
-	{ -1, -1 }, { +1, -1 },
-	{ -1,  0 }, { +1,  0 },
-	{ 0, +1 },
+		// Even Column Coords
+				{  0, -1 },
+	{ -1, -1 },			{ +1, -1 },
+	{ -1,  0 },			{ +1,  0 },
+				{  0, +1 },
 		// Odd Column Coords
-	{ 0, -1 },
-	{ -1,  0 }, { +1,  0 },
-	{ -1, +1 }, { +1, +1 },
-	{ 0, +1 },
+				{  0, -1 },
+	{ -1,  0 },			{ +1,  0 },
+	{ -1, +1 },			{ +1, +1 },
+				{  0, +1 },
 };
 
-constexpr HexOffsetCoord::HexOffsetCoord(short xInit, short yInit) noexcept :
+HexOffsetCoord::HexOffsetCoord(short xInit, short yInit) noexcept :
 	x(xInit),
 	y(yInit) {}
 

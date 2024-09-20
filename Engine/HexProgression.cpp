@@ -1,6 +1,6 @@
 #include "HexProgression.h"
 
-#include "HexTileObject.h"
+#include "TileData.h"
 
 std::vector<HexProgression::Milestone> HexProgression::lifeMilestones;
 
@@ -45,52 +45,27 @@ const HexProgression::Milestone* HexProgression::IncreaseLife(uint lifeToAdd) no
 
 void HexProgression::ResetProgression() noexcept
 {
-	std::vector<std::string> startingVariants = HexProgression::startingVariants;
-	for (TileData& tileData : HexTileObject::trees)
-	{
-		if (std::find(startingVariants.begin(), startingVariants.end(), tileData.name) != startingVariants.end())
-		{
-			tileData.unlocked = true;
-		}
-		else
-		{
-			tileData.unlocked = false;
-		}
-	}
-	for (TileData& tileData : HexTileObject::flowers)
-	{
-		if (std::find(startingVariants.begin(), startingVariants.end(), tileData.name) != startingVariants.end())
-		{
-			tileData.unlocked = true;
-		}
-		else
-		{
-			tileData.unlocked = false;
-		}
-	}
-	for (TileData& tileData : HexTileObject::waters)
-	{
-		if (std::find(startingVariants.begin(), startingVariants.end(), tileData.name) != startingVariants.end())
-		{
-			tileData.unlocked = true;
-		}
-		else
-		{
-			tileData.unlocked = false;
-		}
-	}
-	for (TileData& tileData : HexTileObject::lands)
-	{
-		if (std::find(startingVariants.begin(), startingVariants.end(), tileData.name) != startingVariants.end())
-		{
-			tileData.unlocked = true;
-		}
-		else
-		{
-			tileData.unlocked = false;
-		}
-	}
+	std::vector<std::string> variantsToUnlock = HexProgression::startingVariants;
 
+	for (vector<TileData>& tileType : TileData::tilesData)
+	{
+		for (TileData& tileVariant : tileType)
+		{
+			auto variantIt = std::find(variantsToUnlock.begin(), variantsToUnlock.end(), tileVariant.name);
+			if (variantIt != variantsToUnlock.end())
+			{
+				tileVariant.unlocked = true;
+				variantsToUnlock.erase(variantIt);
+				if (variantsToUnlock.size() == 0) break;
+			}
+			else
+			{
+				tileVariant.unlocked = false;
+			}
+		}
+		if (variantsToUnlock.size() == 0) break;
+	}
+	
 	currentMilestone = 0U;
 	currentLife = 0U;
 	currentRadius = startingRadius;
@@ -163,35 +138,21 @@ void HexProgression::CompleteMilestone(const Milestone& milestone)
 
 	if (milestone.type == Milestone::VariantUnlock)
 	{
-		const std::vector<std::string>& unlockedVariants = milestone.names;
+		std::vector<std::string> variantsToUnlock = milestone.names;
 
-		for (TileData& tileData : HexTileObject::trees)
+		for (vector<TileData>& tileType : TileData::tilesData)
 		{
-			if (std::find(unlockedVariants.begin(), unlockedVariants.end(), tileData.name) != unlockedVariants.end())
+			for (TileData& tileVariant : tileType)
 			{
-				tileData.unlocked = true;
+				auto variantIt = std::find(variantsToUnlock.begin(), variantsToUnlock.end(), tileVariant.name);
+				if (variantIt != variantsToUnlock.end())
+				{
+					tileVariant.unlocked = true;
+					variantsToUnlock.erase(variantIt);
+					if (variantsToUnlock.size() == 0) break;
+				}
 			}
-		}
-		for (TileData& tileData : HexTileObject::flowers)
-		{
-			if (std::find(unlockedVariants.begin(), unlockedVariants.end(), tileData.name) != unlockedVariants.end())
-			{
-				tileData.unlocked = true;
-			}
-		}
-		for (TileData& tileData : HexTileObject::waters)
-		{
-			if (std::find(unlockedVariants.begin(), unlockedVariants.end(), tileData.name) != unlockedVariants.end())
-			{
-				tileData.unlocked = true;
-			}
-		}
-		for (TileData& tileData : HexTileObject::lands)
-		{
-			if (std::find(unlockedVariants.begin(), unlockedVariants.end(), tileData.name) != unlockedVariants.end())
-			{
-				tileData.unlocked = true;
-			}
+			if (variantsToUnlock.size() == 0) break;
 		}
 	}
 }

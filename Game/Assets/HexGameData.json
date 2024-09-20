@@ -1,0 +1,132 @@
+{
+  "Audio": {
+    "Ambience": [],
+    "AmbienceVolume": 1.0,
+    "Music": "None",
+    "MusicVolume": 1.0,
+    "SoundEffects": {
+      "FormHabitat": "None",
+      "PlaceFlower": "None",
+      "PlaceLand": "None",
+      "PlaceTree": "None",
+      "PlaceWater": "None",
+      "RadialClose": "None",
+      "RadialCycle Page": "None",
+      "RadialCycleDensity": "None",
+      "RadialOpen": "None",
+      "ScrapbookClose": "None",
+      "ScrapbookNewHabitatPage": "None",
+      "ScrapbookNotification": "None",
+      "ScrapbookOpen": "None",
+      "ScrapbookTurnPage": "None"
+    },
+    "SoundEffectsVolume": 1.0,
+    "SpiritSounds": null,
+    "SpiritSoundsVolume": 1.0
+  },
+  "Habitats": [],
+  "Progression": {
+    "HabitatLifeBonus": 3,
+    "LifeMilestones": [
+      {
+        "LifeRequirement": 30,
+        "Names": [],
+        "RadiusIncrease": 2,
+        "Type": 0
+      }
+    ],
+    "StartingRadius": 3,
+    "StartingVariants": [
+      "Fern",
+      "Everlasting Daisy",
+      "Water",
+      "Grass"
+    ],
+    "TileLifeBonus": 1
+  },
+  "RadialSprites": {
+    "Flower": {
+      "Hovered": "Assets\\UI\\RadialMenu\\Flower\\RW_Flower_Hovered.png",
+      "Locked": "Assets\\UI\\RadialMenu\\Flower\\RW_Flower_Locked.png",
+      "Regular": "Assets\\UI\\RadialMenu\\Flower\\RW_Flower_Unlocked.png"
+    },
+    "Land": {
+      "Hovered": "Assets\\UI\\RadialMenu\\Land\\RW_Land_Hovered.png",
+      "Locked": "Assets\\UI\\RadialMenu\\Land\\RW_Land_Locked.png",
+      "Regular": "Assets\\UI\\RadialMenu\\Land\\RW_Land_Unlocked.png"
+    },
+    "Trees": {
+      "Hovered": "Assets\\UI\\RadialMenu\\Tree\\RW_Tree_Hovered.png",
+      "Locked": "Assets\\UI\\RadialMenu\\Tree\\RW_Tree_Locked.png",
+      "Regular": "Assets\\UI\\RadialMenu\\Tree\\RW_Tree_Unlocked.png"
+    },
+    "Water": {
+      "Hovered": "Assets\\UI\\RadialMenu\\Water\\RW_Water_Hovered.png",
+      "Locked": "Assets\\UI\\RadialMenu\\Water\\RW_Water_Locked.png",
+      "Regular": "Assets\\UI\\RadialMenu\\Water\\RW_Water_Unlocked.png"
+    }
+  },
+  "Tiles": {
+    "Flowers": [
+      {
+        "Name": "Everlasting Daisy",
+        "Prefab": "Assets\\Tiles\\Flowers\\Everlasting Daisy\\EverlastingDaisy_Dense.prefab"
+      },
+      {
+        "Name": "Happy Wanderer",
+        "Prefab": "Assets\\Tiles\\Flowers\\Happy Wanderer\\HappyWanderer_Dense.prefab"
+      },
+      {
+        "Name": "Prickly Tea Tree",
+        "Prefab": "Assets\\Tiles\\Flowers\\Prickly Tea Tree\\TeaTree_Dense.prefab"
+      }
+    ],
+    "Lands": [
+      {
+        "Name": "Grass",
+        "Prefab": "Assets\\Tiles\\Lands\\Grass\\Grass.prefab"
+      },
+      {
+        "Name": "Red Gravel",
+        "Prefab": "Assets\\Tiles\\Lands\\RedGravel\\RedGravel.prefab"
+      },
+      {
+        "Name": "Mushroom",
+        "Prefab": "Assets\\Tiles\\Lands\\Mushroom\\Mushroom.prefab"
+      }
+    ],
+    "Required": {
+      "Default": "Assets\\Tiles\\Lands\\Grass\\Grass.prefab",
+      "MotherTree": "Assets\\Tiles\\Lands\\Grass\\Grass.prefab",
+      "Perimeter": "Assets\\Tiles\\Perimeter\\Perimeter.prefab"
+    },
+    "Trees": [
+      {
+        "Name": "Fern",
+        "Prefab": "Assets\\Tiles\\Trees\\Fern\\Fern_Dense.prefab"
+      },
+      {
+        "Name": "Eucalyptus",
+        "Prefab": "Assets\\Tiles\\Trees\\Eucalyptus\\Eucalyptus_Medium.prefab"
+      },
+      {
+        "Name": "Acacia Blackwood",
+        "Prefab": "Assets\\Tiles\\Trees\\Acacia Blackwood\\Acacia_Light.prefab"
+      }
+    ],
+    "Waters": [
+      {
+        "Name": "Water",
+        "Prefab": "Assets\\Tiles\\Waters\\Water\\Water.prefab"
+      },
+      {
+        "Name": "Reeds",
+        "Prefab": "Assets\\Tiles\\Waters\\Reeds\\WaterLog.prefab"
+      },
+      {
+        "Name": "Lilypad",
+        "Prefab": "Assets\\Tiles\\Waters\\Lilypad\\LilyPad.prefab"
+      }
+    ]
+  }
+}

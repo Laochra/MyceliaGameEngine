@@ -115,13 +115,7 @@
       <Filter>Rendering</Filter>
     </ClCompile>
     <ClCompile Include="ExampleGame.cpp" />
-    <ClCompile Include="HexTileObject.cpp">
-      <Filter>GameObjects</Filter>
-    </ClCompile>
     <ClCompile Include="LinkedHexGrid.cpp">
-      <Filter>GameObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="HabitatObject.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="HexGame.cpp">
@@ -218,6 +212,18 @@
       <Filter>HexGame</Filter>
     </ClCompile>
     <ClCompile Include="HabitatData.cpp">
+      <Filter>HexGame</Filter>
+    </ClCompile>
+    <ClCompile Include="HexRadial.cpp">
+      <Filter>HexGame</Filter>
+    </ClCompile>
+    <ClCompile Include="HexTile.cpp">
+      <Filter>HexGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Habitat.cpp">
+      <Filter>HexGame</Filter>
+    </ClCompile>
+    <ClCompile Include="HexGameSerialiser.cpp">
       <Filter>HexGame</Filter>
     </ClCompile>
   </ItemGroup>
@@ -370,13 +376,7 @@
       <Filter>Rendering</Filter>
     </ClInclude>
     <ClInclude Include="ExampleGame.h" />
-    <ClInclude Include="HexTileObject.h">
-      <Filter>GameObjects</Filter>
-    </ClInclude>
     <ClInclude Include="LinkedHexGrid.h">
-      <Filter>GameObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="HabitatObject.h">
       <Filter>GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="HexGame.h">
@@ -557,6 +557,12 @@
       <Filter>HexGame</Filter>
     </ClInclude>
     <ClInclude Include="HabitatData.h">
+      <Filter>HexGame</Filter>
+    </ClInclude>
+    <ClInclude Include="HexGameSerialiser.h">
+      <Filter>HexGame</Filter>
+    </ClInclude>
+    <ClInclude Include="HexRadial.h">
       <Filter>HexGame</Filter>
     </ClInclude>
   </ItemGroup>

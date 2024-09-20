@@ -151,6 +151,14 @@ void GameObjectManager::Clear() noexcept
 		graveyard.erase(graveyard.begin() + 0);
 	}
 }
+void GameObjectManager::ClearGraveyard() noexcept
+{
+	while (graveyard.size() > 0)
+	{
+		Delete(graveyard[0]);
+		graveyard.erase(graveyard.begin() + 0);
+	}
+}
 
 void GameObjectManager::DrawGUIDs(uint& framebuffer, uint& texture, uint& depth, DrawFunc drawTransformIDsFunction) noexcept
 {

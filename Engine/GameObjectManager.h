@@ -33,6 +33,7 @@ public:
 	int GetIndexOf(GameObject* gameObject) const noexcept;
 
 	void Clear() noexcept;
+	void ClearGraveyard() noexcept;
 
 	typedef void(*DrawFunc)() noexcept;
 	static void DrawGUIDs(uint& framebuffer, uint& texture, uint& depth, DrawFunc drawTransformIDsFunction = nullptr) noexcept;
