@@ -76,6 +76,10 @@ void LinkedHexGrid::UpdateTile(vec3 position, json tilePrefab) noexcept
 void LinkedHexGrid::UpdateTile(HexOffsetCoord hexCoord, json tilePrefab) noexcept
 {
 	HexTile& hexTile = Get(hexCoord);
+	
+	short oldRadius = (short)HexProgression::currentRadius;
+	bool radiusExpanded = false;
+
 	switch (hexTile.type)
 	{
 	case HexType::Unreached:
@@ -105,12 +109,11 @@ void LinkedHexGrid::UpdateTile(HexOffsetCoord hexCoord, json tilePrefab) noexcep
 				InitialiseTile(neighbourCoords[i]);
 			}
 		}
-		short oldRadius = (short)HexProgression::currentRadius;
 		const HexProgression::Milestone* milestone = HexProgression::IncreaseLife(HexProgression::tileLifeBonus);
 		if (milestone != nullptr)
 		{
 			// TODO: Play MilestoneReached SFX
-			ValidatePerimeterPlaceability(oldRadius + 1);
+			if (milestone->radiusIncrease > 0) radiusExpanded = true;
 		}
 		break;
 	}
@@ -129,7 +132,6 @@ void LinkedHexGrid::UpdateTile(HexOffsetCoord hexCoord, json tilePrefab) noexcep
 		break;
 	}
 	}
-
 	
 	vec3 position = hexTile.object->GetPosition();
 	hexTile.object->UpdateFrom(tilePrefab, GuidGeneration::Keep);
@@ -150,13 +152,12 @@ void LinkedHexGrid::UpdateTile(HexOffsetCoord hexCoord, json tilePrefab) noexcep
 		HexAudio::PlayMiscSFX(HexAudio::SoundEffect::FormHabitat);
 
 		habitat.object->SetParent(this);
-		//habitats.push_back(habitat);
-		short oldRadius = (short)HexProgression::currentRadius;
+		habitats.push_back(habitat);
 		const HexProgression::Milestone* milestone = HexProgression::IncreaseLife(HexProgression::habitatLifeBonus);
 		if (milestone != nullptr)
 		{
 			// TODO: Play MilestoneReached SFX
-			ValidatePerimeterPlaceability(oldRadius + 1);
+			if (milestone->radiusIncrease > 0) radiusExpanded = true;
 		}
 	}
 	else
@@ -169,6 +170,11 @@ void LinkedHexGrid::UpdateTile(HexOffsetCoord hexCoord, json tilePrefab) noexcep
 		case HexType::Land: HexAudio::PlayMiscSFX(HexAudio::SoundEffect::PlaceLand); break;
 		default: break;
 		}
+	}
+
+	if (radiusExpanded)
+	{
+		ValidatePerimeterPlaceability(oldRadius + 1);
 	}
 }
 
@@ -208,7 +214,7 @@ static void ValidateEdgePlaceability(LinkedHexGrid& hexGrid, short radius, HexCu
 		const HexTile& lookupTileA = hexGrid.Get(HexCubeToOffset(tileCoord + lookupDirA, hexGrid.centre));
 		const HexTile& lookupTileB = hexGrid.Get(HexCubeToOffset(tileCoord + lookupDirB, hexGrid.centre));
 
-		if ((char)lookupTileA.type > 0 || (char)lookupTileB.type > 0)
+		if ((char)lookupTileA.type >= 0 || (char)lookupTileB.type >= 0)
 		{
 			hexGrid.InitialiseTile(HexCubeToOffset(tileCoord, hexGrid.centre));
 		}

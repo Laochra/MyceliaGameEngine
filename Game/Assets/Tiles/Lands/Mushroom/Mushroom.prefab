@@ -183,7 +183,7 @@
   ],
   "GUID": 614175263492416703,
   "HexType": 3,
-  "HexVariant": "Mushrooms",
+  "HexVariant": "Mushroom",
   "Material": "Assets\\Tiles\\Lands\\Mushroom\\Mushroom.mat",
   "Mesh": "Hexagon",
   "Name": "Mushroom",

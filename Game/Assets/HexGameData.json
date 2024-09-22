@@ -5,33 +5,119 @@
     "Music": "None",
     "MusicVolume": 1.0,
     "SoundEffects": {
-      "FormHabitat": "None",
-      "PlaceFlower": "None",
-      "PlaceLand": "None",
-      "PlaceTree": "None",
-      "PlaceWater": "None",
-      "RadialClose": "None",
-      "RadialCycle Page": "None",
+      "FormHabitat": "Assets\\Habitats\\FormHabitat.wav",
+      "PlaceFlower": "Assets\\Tiles\\Flowers\\PlaceFlower.wav",
+      "PlaceLand": "Assets\\Tiles\\Lands\\PlaceLand.wav",
+      "PlaceTree": "Assets\\Tiles\\Trees\\PlaceTree.wav",
+      "PlaceWater": "Assets\\Tiles\\Waters\\PlaceWater.wav",
+      "RadialClose": "Assets\\UI\\RadialMenu\\RadialMenu_Close.wav",
+      "RadialCycle Page": "Assets\\UI\\RadialMenu\\RadialMenu_CyclePage.wav",
       "RadialCycleDensity": "None",
-      "RadialOpen": "None",
-      "ScrapbookClose": "None",
-      "ScrapbookNewHabitatPage": "None",
-      "ScrapbookNotification": "None",
-      "ScrapbookOpen": "None",
+      "RadialOpen": "Assets\\UI\\RadialMenu\\RadialMenu_Open.wav",
+      "ScrapbookClose": "Assets\\UI\\Scrapbook\\Scrapbook_Close.wav",
+      "ScrapbookNewHabitatPage": "Assets\\UI\\Scrapbook\\Scrapbook_NewHabitat.wav",
+      "ScrapbookNotification": "Assets\\UI\\Scrapbook\\Scrapbook_Notification.wav",
+      "ScrapbookOpen": "Assets\\UI\\Scrapbook\\Scrapbook_Open.wav",
       "ScrapbookTurnPage": "None"
     },
     "SoundEffectsVolume": 1.0,
     "SpiritSounds": null,
     "SpiritSoundsVolume": 1.0
   },
-  "Habitats": [],
+  "Habitats": [
+    {
+      "Name": "Bee",
+      "PrefabFilepath": "Assets\\Habitats\\Bee\\BeeHabitat.prefab",
+      "RequiredTiles": [
+        "Fern",
+        "Everlasting Daisy",
+        "Everlasting Daisy"
+      ]
+    },
+    {
+      "Name": "Tassie Tiger",
+      "PrefabFilepath": "Assets\\Habitats\\Tassie\\HabitatTassie.prefab",
+      "RequiredTiles": [
+        "Eucalyptus",
+        "Eucalyptus",
+        "Red Gravel"
+      ]
+    },
+    {
+      "Name": "Frog",
+      "PrefabFilepath": "Assets\\Habitats\\Frog\\FrogHabitat.prefab",
+      "RequiredTiles": [
+        "Fern",
+        "Eucalyptus",
+        "Lilypad"
+      ]
+    },
+    {
+      "Name": "Slug",
+      "PrefabFilepath": "Assets\\Habitats\\Slug\\SlugHabitat.prefab",
+      "RequiredTiles": [
+        "Eucalyptus",
+        "Prickly Tea Tree",
+        "Water"
+      ]
+    },
+    {
+      "Name": "Platypus",
+      "PrefabFilepath": "Assets\\Habitats\\Platypus\\PlatypusHabitat.prefab",
+      "RequiredTiles": [
+        "Acacia Blackwood",
+        "Mushroom",
+        "Reeds"
+      ]
+    }
+  ],
   "Progression": {
     "HabitatLifeBonus": 3,
     "LifeMilestones": [
       {
         "LifeRequirement": 30,
-        "Names": [],
+        "Names": [
+          "Eucalyptus",
+          "Happy Wanderer",
+          "Reeds",
+          "Red Gravel"
+        ],
         "RadiusIncrease": 2,
+        "Type": 0
+      },
+      {
+        "LifeRequirement": 50,
+        "Names": [],
+        "RadiusIncrease": 1,
+        "Type": 0
+      },
+      {
+        "LifeRequirement": 80,
+        "Names": [
+          "Acacia Blackwood",
+          "Prickly Tea Tree",
+          "Lilypad",
+          "Mushroom"
+        ],
+        "RadiusIncrease": 2,
+        "Type": 0
+      },
+      {
+        "LifeRequirement": 100,
+        "Names": [],
+        "RadiusIncrease": 1,
+        "Type": 0
+      },
+      {
+        "LifeRequirement": 120,
+        "Names": [],
+        "RadiusIncrease": 1,
+        "Type": 0
+      },
+      {
+        "LifeRequirement": 140,
+        "Names": [],
+        "RadiusIncrease": 1,
         "Type": 0
       }
     ],

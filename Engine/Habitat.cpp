@@ -12,10 +12,18 @@ Habitat Habitat::AttemptToFormHabitat(LinkedHexGrid* hexGrid, HexOffsetCoord new
 
 	Habitat newHabitat;
 
+	HexDirection directions[6] {
+		HexDirection::North,
+		HexDirection::NorthEast,
+		HexDirection::SouthEast,
+		HexDirection::South,
+		HexDirection::SouthWest,
+		HexDirection::NorthWest
+	};
 	for (int i = 0; i < 6; i++)
 	{
-		HexOffsetCoord neighbour1Coords = HexOffsetCoord::GetCoords(newHexCoords, HexDirection(i));
-		HexOffsetCoord neighbour2Coords = HexOffsetCoord::GetCoords(newHexCoords, HexDirection(i < 5 ? i + 1 : 0));
+		HexOffsetCoord neighbour1Coords = HexOffsetCoord::GetCoords(newHexCoords, directions[i]);
+		HexOffsetCoord neighbour2Coords = HexOffsetCoord::GetCoords(newHexCoords, directions[i < 5 ? i + 1 : 0]);
 
 		HexTile& neighbour1 = hexGrid->Get(neighbour1Coords);
 		HexTile& neighbour2 = hexGrid->Get(neighbour2Coords);
@@ -63,7 +71,6 @@ Habitat Habitat::AttemptToFormHabitat(LinkedHexGrid* hexGrid, HexOffsetCoord new
 			{
 				int habitatIndex = HabitatData::GetPrefabIndex(habitatData.name);
 
-				newHabitat.object->InstantiateFrom(HabitatData::GetPrefab(habitatIndex), GuidGeneration::New);
 				newHabitat.FormHabitat(hexGrid, habitatIndex, newHexCoords, neighbour1Coords, neighbour2Coords);
 				habitatData.hasBeenPlaced = true;
 				habitatDataFound == true;
@@ -85,7 +92,7 @@ void Habitat::FormHabitat(LinkedHexGrid* hexGrid, int habitatIndex, HexOffsetCoo
 	HexTile& hex3 = hexGrid->Get(hexCoord3);
 
 	// If the habitat is being moved, set existing tiles to be the default tile
-	if (hexGrid->Get(tileCoords[0]).habitat >= 0)
+	if (object != nullptr)
 	{
 		for (HexOffsetCoord hexCoord : tileCoords)
 		{
@@ -99,6 +106,11 @@ void Habitat::FormHabitat(LinkedHexGrid* hexGrid, int habitatIndex, HexOffsetCoo
 			hexTile.object->SetState(GameObject::Active);
 			hexTile.habitat = habitatIndex;
 		}
+	}
+	else
+	{
+		// Instantiate the habitat object
+		object = (GameObject3D*)GameObject::InstantiateFrom(HabitatData::GetPrefab(habitatIndex), GuidGeneration::New);
 	}
 
 	// Update tiles its made up of

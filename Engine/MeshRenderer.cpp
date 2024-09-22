@@ -265,7 +265,6 @@ void MeshRenderer::Initialise()
 
 	Updater::DrawAdd(this);
 
-	if (mesh == nullptr) mesh = meshManager->GetMesh("Cube");
 	if (material == nullptr) material = materialManager->GetMaterial("Default");
 }
 

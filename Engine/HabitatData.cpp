@@ -22,6 +22,8 @@ const json& HabitatData::GetPrefab(string name) noexcept
 {
 	int index = GetPrefabIndex(name);
 
+	if (index < 0) return TileData::GetDefaultPrefab();
+
 	HabitatData& habitat = habitatsData[index];
 
 	if (!habitat.prefabLoaded) PopulatePrefab(index);
@@ -37,6 +39,8 @@ int HabitatData::GetPrefabIndex(string name) noexcept
 			return h;
 		}
 	}
+
+	return -1;
 }
 
 void HabitatData::ClearAndReset() noexcept
