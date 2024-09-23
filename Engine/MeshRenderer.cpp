@@ -10,6 +10,8 @@
 
 #include "GeneralMacros.h"
 
+#include <string>
+
 void MeshRenderer::SerialiseTo(json& jsonObj) const
 {
 	GameObject3D::SerialiseTo(jsonObj);
@@ -66,8 +68,8 @@ void MeshRenderer::Draw()
 	//material->shaderProgram->BindUniform("AmbientColour", LightingManager::ambientLight.colour);
 	
 	sp.BindUniform("DirectionalLightCount", (int)1);
-	sp.BindUniform(StringBuilder("DirectionalLights[",0,"].colour").value.c_str(), LightingManager::directionalLight.colour);
-	sp.BindUniform(StringBuilder("DirectionalLights[",0,"].direction").value.c_str(), LightingManager::directionalLight.direction);
+	sp.BindUniform("DirectionalLights[0].colour", LightingManager::directionalLight.colour);
+	sp.BindUniform("DirectionalLights[0].direction", LightingManager::directionalLight.direction);
 
 	vector<LightObject*> lightObjects = LightingManager::GetClosestLightObjects(GetGlobalPosition(), 4);
 	sp.BindUniform("LightObjectCount", (int)lightObjects.size());
@@ -77,29 +79,31 @@ void MeshRenderer::Draw()
 	{
 		LightObject& lightObject = *lightObjects[l];
 
-		sp.BindUniform(StringBuilder("LightSpaceMatrices[",l,"]").CStr(), glm::inverse(lightObject.GetMatrix()));
-		sp.BindUniform(StringBuilder("LightObjects[",l,"].colour").CStr(), lightObject.colour * lightObject.intensity);
-		sp.BindUniform(StringBuilder("LightObjects[",l,"].position").CStr(), lightObject.GetGlobalPosition());
+		std::string lStr = std::to_string(l);
+
+		sp.BindUniform(("LightSpaceMatrices[" + lStr + "]").c_str(), glm::inverse(lightObject.GetMatrix()));
+		sp.BindUniform(("LightObjects[" + lStr + "].colour").c_str(), lightObject.colour * lightObject.intensity);
+		sp.BindUniform(("LightObjects[" + lStr + "].position").c_str(), lightObject.GetGlobalPosition());
 		if (lightObjects[l]->angle[1] == 1.0f) // Check for no angle. 1.0 is the cosine of 0 degrees
 		{
-			sp.BindUniform(StringBuilder("LightObjects[",l,"].direction").CStr(), vec3(0.0f));
+			sp.BindUniform(("LightObjects[" + lStr + "].direction").c_str(), vec3(0.0f));
 		}
 		else
 		{
 			const mat3& lightRotationMatrix = lightObjects[l]->GetRotationMatrix();
 			vec3 direction = glm::normalize(vec3(lightRotationMatrix[2]));
-			sp.BindUniform(StringBuilder("LightObjects[",l,"].direction").CStr(), direction);
+			sp.BindUniform(("LightObjects[" + lStr + "].direction").c_str(), direction);
 		}
-		sp.BindUniform(StringBuilder("LightObjects[",l,"].range").CStr(), lightObject.range);
-		sp.BindUniform(StringBuilder("LightObjects[",l,"].angle").CStr(), lightObject.angle);
+		sp.BindUniform(("LightObjects[" + lStr + "].range").c_str(), lightObject.range);
+		sp.BindUniform(("LightObjects[" + lStr + "].angle").c_str(), lightObject.angle);
 
-		sp.BindUniform(StringBuilder("LightObjects[",l,"].softShadows").CStr(), int(lightObject.shadowMode == SoftShadows));
-		sp.BindUniform(StringBuilder("LightObjects[",l,"].shadowMapCount").CStr(), lightObject.shadowMapCount);
+		sp.BindUniform(("LightObjects[" + lStr + "].softShadows").c_str(), int(lightObject.shadowMode == SoftShadows));
+		sp.BindUniform(("LightObjects[" + lStr + "].shadowMapCount").c_str(), lightObject.shadowMapCount);
 		vector<mat4> pvMatrices = lightObject.GetLightPVMatrices();
 		for (int m = 0; m < lightObjects[l]->shadowMapCount; m++)
 		{
-			sp.BindUniform(StringBuilder("LightObjects[",l,"].shadowMapIndices[",m,"]").CStr(), (int)currentMapIndex);
-			sp.BindUniform(StringBuilder("LightSpaceMatrices[",currentMapIndex,"]").CStr(), pvMatrices[m]);
+			sp.BindUniform(("LightObjects[" + lStr + "].shadowMapIndices[" + std::to_string(m) + "]").c_str(), (int)currentMapIndex);
+			sp.BindUniform(("LightSpaceMatrices[" + std::to_string(currentMapIndex) + "]").c_str(), pvMatrices[m]);
 			currentMapIndex++;
 		}
 	}

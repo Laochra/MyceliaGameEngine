@@ -46,8 +46,12 @@ TextureManager::~TextureManager()
 
 Texture* TextureManager::GetTexture(const char* filepath, Texture::Linearity linearity)
 {
-   if (loadedTextures.count(filepath) == 0) return AddTexture(filepath, linearity);
-   else return loadedTextures[filepath];
+   if (filepath == nullptr) return nullptr;
+
+   string filepathStr = filepath;
+
+   if (loadedTextures.count(filepathStr) == 0) return AddTexture(filepath, linearity);
+   else return loadedTextures[filepathStr];
 }
 
 void TextureManager::ReloadTexture(const char* filepath)

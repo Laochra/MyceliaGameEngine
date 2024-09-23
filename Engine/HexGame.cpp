@@ -270,7 +270,7 @@ void HexGame::Update()
 	}
 	currentRadialTileType = &TileData::Get(HexType(currentRadialPage));
 
-	crosshair->normalisedPosition = vec2(cos(Time::time), sin(Time::time * 2.0f));
+	//crosshair->normalisedPosition = vec2(cos(Time::time), sin(Time::time * 2.0f));
 
 	if (currentRadialMenu->enabled)
 	{
@@ -336,6 +336,7 @@ void HexGame::Update()
 			{
 				hexGrid->UpdateTile(HexOffsetCoord(hexPos.x, hexPos.y), TileData::GetPrefab((*currentTileType)[currentTileVariant].name));
 			}
+			delete[] hexPosPixels;
 		}
 
 		if (gameInputs.openRadial.pressed())
