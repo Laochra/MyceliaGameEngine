@@ -8,6 +8,9 @@
 #include "LightObject.h"
 #include "ParticleEmitter.h"
 
+#include "UIManager.h"
+#include "UISprite.h"
+
 #include "Inspector.h"
 
 #include "Input.h"
@@ -20,7 +23,7 @@ namespace Heirarchy
 
 	RightClickMenu rightClickMenu;
 
-	void RightClickMenu::Open(GameObject* targetInit, ImVec2 positionInit)
+	void RightClickMenu::Open(InspectableObject* targetInit, ImVec2 positionInit)
 	{
 		open = true;
 		position = positionInit;
@@ -36,12 +39,13 @@ namespace Heirarchy
 	{
 		ImGui::Begin(name, &open);
 
-		ImGui::BeginDisabled();
-		if (ImGui::CollapsingHeader("2D"))
+		if (ImGui::CollapsingHeader("UI", ImGuiTreeNodeFlags_DefaultOpen))
 		{
-
+			for (int i = 0; i < UIManager::sprites.size(); i++)
+			{
+				DrawEntry(&UIManager::sprites[i], i);
+			}
 		}
-		ImGui::EndDisabled();
 
 		if (ImGui::CollapsingHeader("3D", ImGuiTreeNodeFlags_DefaultOpen))
 		{
@@ -77,13 +81,12 @@ namespace Heirarchy
 
 			bool isHovered = false;
 
-			if (ImGui::BeginMenu("Add New"))
+			GameObject3D* gameObject3D = dynamic_cast<GameObject3D*>(rightClickMenu.target);
+			if (gameObject3D != nullptr)
 			{
-				if (ImGui::IsWindowHovered()) isHovered = true;
-
-				if (dynamic_cast<GameObject3D*>(rightClickMenu.target) != nullptr)
+				if (ImGui::BeginMenu("Add New"))
 				{
-					GameObject3D* target = (GameObject3D*)rightClickMenu.target;
+					if (ImGui::IsWindowHovered()) isHovered = true;
 
 					if (ImGui::MenuItem("Prefab"))
 					{
@@ -117,66 +120,72 @@ namespace Heirarchy
 								}
 							}
 						}
-						
+
 						rightClickMenu.Close();
 					}
 					if (ImGui::MenuItem(GameObject3D::className))
 					{
-						GameObject3D::Instantiate<GameObject3D>(target);
+						GameObject3D::Instantiate<GameObject3D>(gameObject3D);
 						rightClickMenu.Close();
 					}
 					if (ImGui::MenuItem(MeshRenderer::className))
 					{
-						GameObject3D::Instantiate<MeshRenderer>(target);
+						GameObject3D::Instantiate<MeshRenderer>(gameObject3D);
 						rightClickMenu.Close();
 					}
 					if (ImGui::MenuItem(LightObject::className))
 					{
-						GameObject3D::Instantiate<LightObject>(target);
+						GameObject3D::Instantiate<LightObject>(gameObject3D);
 						rightClickMenu.Close();
 					}
 					if (ImGui::MenuItem(ParticleEmitter::className))
 					{
-						GameObject3D::Instantiate<ParticleEmitter>(target);
+						GameObject3D::Instantiate<ParticleEmitter>(gameObject3D);
 						rightClickMenu.Close();
 					}
+
+					ImGui::EndMenu();
 				}
-				ImGui::EndMenu();
-			}
 
-			ImGui::BeginDisabled(rightClickMenu.target == nullptr || rightClickMenu.target->GetClassID() == Camera::classID);
-			if (ImGui::MenuItem("Duplicate"))
-			{
-				Duplicate((GameObject3D*)rightClickMenu.target);
-
-				rightClickMenu.Close();
-			}
-
-			if (ImGui::MenuItem("Save As Prefab"))
-			{
-				using namespace FileDialogue;
-				string defaultPath = StringBuilder(
-					"Assets\\",
-					rightClickMenu.target->GetName()
-				).value;
-
-				string filepath = GetSavePath(PathDetails("Save As Prefab", defaultPath.c_str(), { "*.prefab" }), LimitToAssetFolder::False);
-
-				if (filepath.size() != 0)
+				ImGui::BeginDisabled(gameObject3D == nullptr || gameObject3D->GetClassID() == Camera::classID);
+				if (ImGui::MenuItem("Duplicate"))
 				{
-					json prefab = rightClickMenu.target;
-					ofstream file(filepath);
-					file << std::setw(2) << prefab;
+					Duplicate((GameObject3D*)rightClickMenu.target);
+
+					rightClickMenu.Close();
 				}
 
-				rightClickMenu.Close();
+				if (ImGui::MenuItem("Save As Prefab"))
+				{
+					using namespace FileDialogue;
+					string defaultPath = StringBuilder(
+						"Assets\\",
+						rightClickMenu.target->GetName()
+					).value;
+
+					string filepath = GetSavePath(PathDetails("Save As Prefab", defaultPath.c_str(), { "*.prefab" }), LimitToAssetFolder::False);
+
+					if (filepath.size() != 0)
+					{
+						json prefab = gameObject3D;
+						ofstream file(filepath);
+						file << std::setw(2) << prefab;
+					}
+
+					rightClickMenu.Close();
+				}
+				if (ImGui::MenuItem("Delete"))
+				{
+					GameObject::Destroy(gameObject3D);
+					rightClickMenu.Close();
+				}
+				ImGui::EndDisabled();
 			}
-			if (ImGui::MenuItem("Delete"))
+			UISprite* uiSprite = dynamic_cast<UISprite*>(rightClickMenu.target);
+			if (uiSprite != nullptr)
 			{
-				GameObject::Destroy(rightClickMenu.target);
-				rightClickMenu.Close();
+				ImGui::Text(":)");
 			}
-			ImGui::EndDisabled();
 
 			if (ImGui::IsWindowHovered()) isHovered = true;
 
@@ -190,7 +199,7 @@ namespace Heirarchy
 			{
 				if (ImGui::IsKeyPressed(ImGuiKey_Delete, false) || ImGui::IsKeyPressed(ImGuiKey_KeypadDecimal, false))
 				{
-					GameObject::Destroy(inspector->GetTarget());
+					GameObject::Destroy((GameObject*)inspector->GetTarget());
 				}
 
 				if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl) || ImGui::IsKeyDown(ImGuiKey_RightCtrl))
@@ -270,6 +279,24 @@ namespace Heirarchy
 		ImGui::PopID();
 	}
 
+	void Heirarchy::DrawEntry(UISprite* uiSprite, int index)
+	{
+		ImGui::PushID(StringBuilder(index).CStr());
+
+		bool isSelected = inspector->GetTarget() == uiSprite;
+
+
+		if (ImGui::Selectable(uiSprite->name.c_str()))
+		{
+			if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenOverlapped))
+			{
+				AcceptInputFor(uiSprite);
+			}
+		}
+
+		ImGui::PopID();
+	}
+
 	void Heirarchy::DragDropTarget(const char* id, GameObject3D* target, DragDropTargetOffset offset)
 	{
 		if (ImGui::BeginDragDropTarget())
@@ -318,16 +345,16 @@ namespace Heirarchy
 		}
 	}
 
-	void Heirarchy::AcceptInputFor(GameObject3D* gameObject3D)
+	void Heirarchy::AcceptInputFor(InspectableObject* object)
 	{
 		if (!AppInfo::input->enabled && ImGui::IsKeyReleased(ImGuiKey_MouseLeft))
 		{
-			inspector->SetTarget(gameObject3D);
+			inspector->SetTarget(object);
 		}
 		if (!AppInfo::input->enabled && ImGui::IsKeyReleased(ImGuiKey_MouseRight))
 		{
-			inspector->SetTarget(gameObject3D);
-			rightClickMenu.Open(gameObject3D, ImGui::GetCursorScreenPos());
+			inspector->SetTarget(object);
+			rightClickMenu.Open(object, ImGui::GetCursorScreenPos());
 		}
 	}
 }
@@ -352,7 +379,7 @@ void Heirarchy::Duplicate(GameObject3D* gameObject3D) noexcept
 {
 	GameObject3D* parent = gameObject3D->GetParent();
 
-	json prefab = rightClickMenu.target;
+	json prefab = gameObject3D;
 
 	GameObject3D* clone = (GameObject3D*)GameObject::InstantiateFrom(prefab, GuidGeneration::New);
 	gameObjectManager->Add(clone);

@@ -11,7 +11,7 @@ Inspector* inspector = new Inspector();
 
 #include "GeneralMacros.h"
 
-void Inspector::SetTarget(GameObject* target)
+void Inspector::SetTarget(InspectableObject* target)
 {
 	if (targetGUI != nullptr)
 	{
@@ -22,24 +22,28 @@ void Inspector::SetTarget(GameObject* target)
 
 	if (target == nullptr) return;
 
-	switch (target->GetClassID())
+	GameObject* gameObject = dynamic_cast<GameObject*>(target);
+	if (gameObject != nullptr)
 	{
-	case GameObject::classID: targetGUI = new GameObjectGUI(target); break;
-	case GameObject3D::classID: targetGUI = new GameObject3DGUI(target); break;
-	case Camera::classID: targetGUI = new CameraGUI(target); break;
-	case MeshRenderer::classID: targetGUI = new MeshRendererGUI(target); break;
-	case LightObject::classID: targetGUI = new LightObjectGUI(target); break;
-	case ParticleEmitter::classID: targetGUI = new ParticleEmitterGUI(target); break;
-	case LinkedHexGrid::classID: targetGUI = new LinkedHexGridGUI(target); break;
-	default:
-		targetGUI = new GameObjectGUI(target);
-		Debug::LogError(LogID::ERR151,
-			target->GetClassName(), " "
-			"was not accounted for when selecting inspector display.",
-			"Editable fields will be limited."
-			locationinfo
-		);
-		break;
+		switch (gameObject->GetClassID())
+		{
+		case GameObject::classID: targetGUI = new GameObjectGUI(gameObject); break;
+		case GameObject3D::classID: targetGUI = new GameObject3DGUI(gameObject); break;
+		case Camera::classID: targetGUI = new CameraGUI(gameObject); break;
+		case MeshRenderer::classID: targetGUI = new MeshRendererGUI(gameObject); break;
+		case LightObject::classID: targetGUI = new LightObjectGUI(gameObject); break;
+		case ParticleEmitter::classID: targetGUI = new ParticleEmitterGUI(gameObject); break;
+		case LinkedHexGrid::classID: targetGUI = new LinkedHexGridGUI(gameObject); break;
+		default:
+			targetGUI = new GameObjectGUI(gameObject);
+			Debug::LogError(LogID::ERR151,
+				gameObject->GetClassName(), " "
+				"was not accounted for when selecting inspector display.",
+				"Editable fields will be limited."
+				locationinfo
+			);
+			break;
+		}
 	}
 
 	target->selected = true;
@@ -50,7 +54,7 @@ const GameObjectGUI* Inspector::GetTargetGUI()
 	return targetGUI;
 }
 
-GameObject* Inspector::GetTarget()
+InspectableObject* Inspector::GetTarget()
 {
 	if (targetGUI == nullptr) return nullptr;
 	return targetGUI->target;
@@ -62,10 +66,15 @@ void Inspector::Draw(const char* const name, bool& open)
 
 	if (inspector->targetGUI != nullptr)
 	{
-		if (inspector->targetGUI->target == nullptr || inspector->targetGUI->target != GameObject::Destroyed)
+		GameObject* gameObject = dynamic_cast<GameObject*>(inspector->targetGUI->target);
+
+		if (inspector->targetGUI->target != nullptr)
 		{
 			inspector->targetGUI->Draw();
-			inspector->targetGUI->target->DrawDebug();
+			if (gameObject != nullptr && gameObject != GameObject::Destroyed)
+			{
+				gameObject->DrawDebug();
+			}
 		}
 		else
 		{

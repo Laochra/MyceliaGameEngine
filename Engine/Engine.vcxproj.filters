@@ -202,9 +202,6 @@
     <ClCompile Include="HexAudio.cpp">
       <Filter>HexGame</Filter>
     </ClCompile>
-    <ClCompile Include="UISprite.cpp">
-      <Filter>Rendering\GUI</Filter>
-    </ClCompile>
     <ClCompile Include="HexCoords.cpp">
       <Filter>HexGame</Filter>
     </ClCompile>
@@ -225,6 +222,12 @@
     </ClCompile>
     <ClCompile Include="HexGameSerialiser.cpp">
       <Filter>HexGame</Filter>
+    </ClCompile>
+    <ClCompile Include="UISprite.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="UIManager.cpp">
+      <Filter>Rendering\GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -535,9 +538,6 @@
     <ClInclude Include="HexAudio.h">
       <Filter>HexGame</Filter>
     </ClInclude>
-    <ClInclude Include="UISprite.h">
-      <Filter>Rendering\GUI</Filter>
-    </ClInclude>
     <ClInclude Include="HexType.h">
       <Filter>HexGame</Filter>
     </ClInclude>
@@ -564,6 +564,15 @@
     </ClInclude>
     <ClInclude Include="HexRadial.h">
       <Filter>HexGame</Filter>
+    </ClInclude>
+    <ClInclude Include="UISprite.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="UIManager.h">
+      <Filter>Rendering\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectableObject.h">
+      <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

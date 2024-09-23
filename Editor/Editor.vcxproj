@@ -194,6 +194,7 @@
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="Heirarchy.cpp" />
     <ClCompile Include="InputEditor.cpp" />
+    <ClCompile Include="InspectableObjectGUI.cpp" />
     <ClCompile Include="Inspector.cpp" />
     <ClCompile Include="LightObjectGUI.cpp" />
     <ClCompile Include="LinkedHexGridGUI.cpp" />
@@ -231,6 +232,7 @@
     <ClInclude Include="EditorGUI.h" />
     <ClInclude Include="EditorStyler.h" />
     <ClInclude Include="GameObjectGUI.h" />
+    <ClInclude Include="InspectableObjectGUI.h" />
     <ClInclude Include="GameObject3DGUI.h" />
     <ClInclude Include="GUI.h" />
     <ClInclude Include="FileDialogue.h" />

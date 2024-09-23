@@ -22,7 +22,7 @@ public:
 	virtual void OnDestroy() override;
 	virtual void OnRestore() override;
 
-	bool IsActive() noexcept override;
+	bool IsActive() const noexcept override;
 
 
 	void UpdateMatrices() noexcept;

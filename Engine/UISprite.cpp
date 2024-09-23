@@ -43,3 +43,8 @@ void UISprite::Draw() const noexcept
 
 	spriteMesh->Draw();
 }
+
+const char* UISprite::GetName() const noexcept
+{
+	return name.c_str();
+}

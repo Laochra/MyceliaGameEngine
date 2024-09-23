@@ -30,9 +30,6 @@
     <ClCompile Include="..\External\imgui\imgui_widgets.cpp">
       <Filter>3rd Party\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="Inspector.cpp">
-      <Filter>GUI\EditorWindows</Filter>
-    </ClCompile>
     <ClCompile Include="GUI.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
@@ -40,22 +37,19 @@
       <Filter>Utility</Filter>
     </ClCompile>
     <ClCompile Include="EditorCameraGUI.cpp">
-      <Filter>GUI\EditorWindows\GameObjects</Filter>
+      <Filter>GUI\EditorWindows\Inspector\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="GameObject3DGUI.cpp">
-      <Filter>GUI\EditorWindows\GameObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObjectGUI.cpp">
-      <Filter>GUI\EditorWindows\GameObjects</Filter>
+      <Filter>GUI\EditorWindows\Inspector\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="LightObjectGUI.cpp">
-      <Filter>GUI\EditorWindows\GameObjects</Filter>
+      <Filter>GUI\EditorWindows\Inspector\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="MeshRendererGUI.cpp">
-      <Filter>GUI\EditorWindows\GameObjects</Filter>
+      <Filter>GUI\EditorWindows\Inspector\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="ParticleEmitterGUI.cpp">
-      <Filter>GUI\EditorWindows\GameObjects</Filter>
+      <Filter>GUI\EditorWindows\Inspector\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="Heirarchy.cpp">
       <Filter>GUI\EditorWindows</Filter>
@@ -100,13 +94,22 @@
       <Filter>GUI</Filter>
     </ClCompile>
     <ClCompile Include="LinkedHexGridGUI.cpp">
-      <Filter>GUI\EditorWindows\GameObjects</Filter>
+      <Filter>GUI\EditorWindows\Inspector\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="CameraGUI.cpp">
-      <Filter>GUI\EditorWindows\GameObjects</Filter>
+      <Filter>GUI\EditorWindows\Inspector\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="HexEditor.cpp">
       <Filter>GUI\EditorWindows\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Inspector.cpp">
+      <Filter>GUI\EditorWindows\Inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectGUI.cpp">
+      <Filter>GUI\EditorWindows\Inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="InspectableObjectGUI.cpp">
+      <Filter>GUI\EditorWindows\Inspector</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -134,9 +137,6 @@
     <Filter Include="3rd Party\imgui">
       <UniqueIdentifier>{b21dc611-2b18-4119-ba21-fbe6d2f378f2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GUI\EditorWindows\GameObjects">
-      <UniqueIdentifier>{98854a77-5f41-4e2d-97a3-f359bffece5e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="3rd Party\tinyfiledialogs">
       <UniqueIdentifier>{c5bfb596-71a4-4cbd-b761-7f14c6abcd6b}</UniqueIdentifier>
     </Filter>
@@ -145,6 +145,12 @@
     </Filter>
     <Filter Include="GUI\EditorWindows\Settings">
       <UniqueIdentifier>{2510f597-4832-4e02-a16e-754420af2387}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\EditorWindows\Inspector">
+      <UniqueIdentifier>{d5dbb0c9-0d86-42ab-ad8c-25901a69ff48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\EditorWindows\Inspector\GameObjects">
+      <UniqueIdentifier>{98854a77-5f41-4e2d-97a3-f359bffece5e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -194,9 +200,6 @@
     <ClInclude Include="Heirarchy.h">
       <Filter>GUI\EditorWindows</Filter>
     </ClInclude>
-    <ClInclude Include="Inspector.h">
-      <Filter>GUI\EditorWindows</Filter>
-    </ClInclude>
     <ClInclude Include="GUI.h">
       <Filter>GUI</Filter>
     </ClInclude>
@@ -210,22 +213,19 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="EditorCameraGUI.h">
-      <Filter>GUI\EditorWindows\GameObjects</Filter>
+      <Filter>GUI\EditorWindows\Inspector\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="GameObject3DGUI.h">
-      <Filter>GUI\EditorWindows\GameObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObjectGUI.h">
-      <Filter>GUI\EditorWindows\GameObjects</Filter>
+      <Filter>GUI\EditorWindows\Inspector\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="LightObjectGUI.h">
-      <Filter>GUI\EditorWindows\GameObjects</Filter>
+      <Filter>GUI\EditorWindows\Inspector\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="MeshRendererGUI.h">
-      <Filter>GUI\EditorWindows\GameObjects</Filter>
+      <Filter>GUI\EditorWindows\Inspector\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="ParticleEmitterGUI.h">
-      <Filter>GUI\EditorWindows\GameObjects</Filter>
+      <Filter>GUI\EditorWindows\Inspector\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="..\External\tinyfiledialogs\tinyfiledialogs.h">
       <Filter>3rd Party\tinyfiledialogs</Filter>
@@ -264,13 +264,22 @@
       <Filter>GUI</Filter>
     </ClInclude>
     <ClInclude Include="LinkedHexGridGUI.h">
-      <Filter>GUI\EditorWindows\GameObjects</Filter>
+      <Filter>GUI\EditorWindows\Inspector\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="CameraGUI.h">
-      <Filter>GUI\EditorWindows\GameObjects</Filter>
+      <Filter>GUI\EditorWindows\Inspector\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="HexEditor.h">
       <Filter>GUI\EditorWindows\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Inspector.h">
+      <Filter>GUI\EditorWindows\Inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectableObjectGUI.h">
+      <Filter>GUI\EditorWindows\Inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectGUI.h">
+      <Filter>GUI\EditorWindows\Inspector</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

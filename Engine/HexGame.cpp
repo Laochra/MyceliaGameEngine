@@ -18,6 +18,8 @@
 
 #include "HexGameSerialiser.h"
 
+#include "RandomGen.h"
+
 #include "Debug.h"
 
 void static RadialInteractionHandler(uint selection)
@@ -201,7 +203,7 @@ void HexGame::OnStart()
 	currentTileType = &TileData::Get(HexType::Tree);
 	currentTileVariant = 0U;
 
-	crosshair = new UISprite("Assets\\UI\\Crosshair\\Crosshair.png", vec2(), 0.035f);
+	crosshair = new UISprite("Assets\\UI\\Crosshair\\Crosshair.png", vec2(0.0f, 0.0f), 0.035f);
 
 	HexProgression::Initialise();
 
@@ -267,6 +269,8 @@ void HexGame::Update()
 	case 3U: currentRadialMenu = landRadial;		break;
 	}
 	currentRadialTileType = &TileData::Get(HexType(currentRadialPage));
+
+	crosshair->normalisedPosition = vec2(cos(Time::time), sin(Time::time * 2.0f));
 
 	if (currentRadialMenu->enabled)
 	{

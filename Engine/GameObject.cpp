@@ -74,7 +74,7 @@ GameObject::GameObjectState GameObject::GetState() const noexcept
 	return state;
 }
 
-bool GameObject::IsActive() noexcept
+bool GameObject::IsActive() const noexcept
 {
 	return this == Active;
 }
@@ -207,11 +207,11 @@ void GameObject::Restore(GameObject* gameObject, GameObjectState stateInit)
 	gameObject->OnRestore();
 }
 
-bool operator==(GameObject* gameObject, GameObject::GameObjectState state) noexcept
+bool operator==(const GameObject* gameObject, GameObject::GameObjectState state) noexcept
 {
 	return gameObject->state == state;
 }
-bool operator!=(GameObject* gameObject, GameObject::GameObjectState state) noexcept
+bool operator!=(const GameObject* gameObject, GameObject::GameObjectState state) noexcept
 {
 	return gameObject->state != state;
 }

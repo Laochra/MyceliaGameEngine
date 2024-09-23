@@ -6,12 +6,7 @@
 
 void GameObjectGUI::Draw()
 {
-	DrawGameObjectGUI(target);
-}
-
-GameObjectGUI::GameObjectGUI(GameObject* targetInit)
-{
-	target = targetInit;
+	DrawGameObjectGUI((GameObject*)target);
 }
 
 void GameObjectGUI::DrawGameObjectGUI(GameObject* gameObject)

@@ -73,7 +73,7 @@ Habitat Habitat::AttemptToFormHabitat(LinkedHexGrid* hexGrid, HexOffsetCoord new
 
 				newHabitat.FormHabitat(hexGrid, habitatIndex, newHexCoords, neighbour1Coords, neighbour2Coords);
 				habitatData.hasBeenPlaced = true;
-				habitatDataFound == true;
+				habitatDataFound = true;
 				break;
 			}
 		}

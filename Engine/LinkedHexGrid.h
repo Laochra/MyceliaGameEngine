@@ -47,8 +47,8 @@ public:
 	void InitialiseCentre() noexcept;
 	void InitialiseTile(HexOffsetCoord hexCoord) noexcept;
 
-	void UpdateTile(vec3 position, json tilePrefab) noexcept;
-	void UpdateTile(HexOffsetCoord hexCoord, json tilePrefab) noexcept;
+	void UpdateTile(vec3 position, const json& tilePrefab) noexcept;
+	void UpdateTile(HexOffsetCoord hexCoord, const json& tilePrefab) noexcept;
 
 private:
 	// TODO: This needs testing still, very experimental way of navigating the grid

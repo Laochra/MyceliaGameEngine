@@ -5,6 +5,7 @@
 #include "GuidGenerator.h"
 
 #include "GameObjectManager.h"
+#include "InspectableObject.h"
 
 #include "StringIncludes.h"
 
@@ -70,7 +71,7 @@ virtual void UpdateFrom(const json& serialisedObject, GuidGeneration guidOptions
 
 enum class GuidGeneration : unsigned char { New, File, Keep };
 
-class GameObject
+class GameObject : public InspectableObject
 {
 public:
 	SerialiseAs(GameObject);
@@ -94,11 +95,11 @@ public:
 
 	/// <returns>The Globally Unique Identifier of the GameObject</returns>
 	unsigned long long int GetGUID() const noexcept;
-	const char* GetName() const noexcept;
+	const char* GetName() const noexcept override;
 	void SetName(const char* newName) noexcept;
 	/// <returns>The current state of the GameObject</returns>
 	GameObjectState GetState() const noexcept;
-	virtual bool IsActive() noexcept;
+	virtual bool IsActive() const noexcept;
 	/// <param name="newState">: The state to set the GameObject to</param>
 	void SetState(GameObjectState newState) noexcept;
 	
@@ -137,15 +138,12 @@ private:
 	unsigned long long int guid = 0;
 	char* name;
 	GameObjectState state = Active;
-public:
-	bool selected = false;
-private:
 
 	// Friends
 	friend class GameObjectManager;
 
-	friend bool operator==(GameObject* gameObject, GameObjectState state) noexcept;
-	friend bool operator!=(GameObject* gameObject, GameObjectState state) noexcept;
+	friend bool operator==(const GameObject* gameObject, GameObjectState state) noexcept;
+	friend bool operator!=(const GameObject* gameObject, GameObjectState state) noexcept;
 	friend void to_json(json& jsonObject, const GameObject* gameObject) noexcept;
 	friend void from_json(const json& jsonObject, GameObject* gameObject) noexcept;
 };

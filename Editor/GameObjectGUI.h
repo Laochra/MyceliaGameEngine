@@ -1,17 +1,15 @@
 #pragma once
 
-#include "ImGuiIncludes.h"
-
-#include <sstream>
+#include "InspectableObjectGUI.h"
 
 #include "GameObject.h"
 
-class GameObjectGUI
+class GameObjectGUI : public InspectableObjectGUI
 {
 public:
-	GameObject* target;
-	virtual void Draw();
-	GameObjectGUI(GameObject* targetInit);
+	using InspectableObjectGUI::InspectableObjectGUI;
+
+	virtual void Draw() override;
 
 protected:
 	static void DrawGameObjectGUI(GameObject* gameObject);

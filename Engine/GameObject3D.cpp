@@ -109,7 +109,7 @@ void GameObject3D::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
 		{
 			if (childData["GUID"] == child->GetGUID())
 			{
-				child->MoveTo(i);
+				child->MoveTo((int)i);
 				break;
 			}
 		}
@@ -143,7 +143,7 @@ void GameObject3D::OnRestore()
 
 
 
-bool GameObject3D::IsActive() noexcept
+bool GameObject3D::IsActive() const noexcept
 {
 	if (parent == nullptr) { return this == Active; }
 	else { return this == Active && parent->IsActive(); }

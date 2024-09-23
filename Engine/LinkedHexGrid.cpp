@@ -62,7 +62,7 @@ void LinkedHexGrid::Initialise() noexcept
 	GameObject3D::Initialise();
 }
 
-void LinkedHexGrid::UpdateTile(vec3 position, json tilePrefab) noexcept
+void LinkedHexGrid::UpdateTile(vec3 position, const json& tilePrefab) noexcept
 {
 	HexCubeCoord cubeCoord = HexCubeCoord::GetFromPos(vec2(position.x, position.z));
 	if (cubeCoord.GetMagnitude() > radius)
@@ -73,7 +73,7 @@ void LinkedHexGrid::UpdateTile(vec3 position, json tilePrefab) noexcept
 
 	UpdateTile(HexCubeToOffset(cubeCoord, centre), tilePrefab);
 }
-void LinkedHexGrid::UpdateTile(HexOffsetCoord hexCoord, json tilePrefab) noexcept
+void LinkedHexGrid::UpdateTile(HexOffsetCoord hexCoord, const json& tilePrefab) noexcept
 {
 	HexTile& hexTile = Get(hexCoord);
 	

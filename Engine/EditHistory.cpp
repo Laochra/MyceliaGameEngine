@@ -91,11 +91,11 @@
 				if (parentChanged)
 				{
 					gameObject3D->SetParent((GameObject3D*)gameObjectManager->Find(parentingData.oldParentGUID));
-					gameObject3D->MoveTo(parentingData.oldIndex);
+					gameObject3D->MoveTo((int)parentingData.oldIndex);
 				}
 				else if (gameObject3D->GetIndex() != parentingData.oldIndex)
 				{
-					gameObject3D->MoveTo(parentingData.oldIndex);
+					gameObject3D->MoveTo((int)parentingData.oldIndex);
 				}
 			}
 		}
@@ -138,11 +138,11 @@
 				if (parentChanged)
 				{
 					gameObject3D->SetParent((GameObject3D*)gameObjectManager->Find(parentingData.newParentGUID));
-					gameObject3D->MoveTo(parentingData.newIndex);
+					gameObject3D->MoveTo((int)parentingData.newIndex);
 				}
 				else if (gameObject3D->GetIndex() != parentingData.newIndex)
 				{
-					gameObject3D->MoveTo(parentingData.newIndex);
+					gameObject3D->MoveTo((int)parentingData.newIndex);
 				}
 			}
 		}

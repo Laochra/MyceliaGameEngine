@@ -86,6 +86,7 @@ void TileData::ClearAndReset() noexcept
 void TileData::PopulatePrefab(HexType hexType, char variant) noexcept
 {
 	TileData& tileData = Get(hexType, variant);
+	tileData.prefabLoaded = true;
 	if (tileData.prefabFilepath == "None")
 	{
 		Debug::LogWarning(tileData.name, " doesn't have a prefab specified. It will instead use the default tile file.", locationinfo);
