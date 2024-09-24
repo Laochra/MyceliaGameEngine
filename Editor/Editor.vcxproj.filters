@@ -105,10 +105,13 @@
     <ClCompile Include="Inspector.cpp">
       <Filter>GUI\EditorWindows\Inspector</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjectGUI.cpp">
+    <ClCompile Include="InspectableObjectGUI.cpp">
       <Filter>GUI\EditorWindows\Inspector</Filter>
     </ClCompile>
-    <ClCompile Include="InspectableObjectGUI.cpp">
+    <ClCompile Include="GameObjectGUI.cpp">
+      <Filter>GUI\EditorWindows\Inspector\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="UISpriteGUI.cpp">
       <Filter>GUI\EditorWindows\Inspector</Filter>
     </ClCompile>
   </ItemGroup>
@@ -278,8 +281,11 @@
     <ClInclude Include="InspectableObjectGUI.h">
       <Filter>GUI\EditorWindows\Inspector</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjectGUI.h">
+    <ClInclude Include="UISpriteGUI.h">
       <Filter>GUI\EditorWindows\Inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectGUI.h">
+      <Filter>GUI\EditorWindows\Inspector\GameObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

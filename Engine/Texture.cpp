@@ -6,15 +6,15 @@
 
 #include "Debug.h"
 
-Texture::Texture() : fileName("none"), width(0), height(0), glHandle(0), format(None) { }
+Texture::Texture() : fileName("None"), width(0), height(0), glHandle(0), format(None) { }
 
-Texture::Texture(const char* fileNameInit, Linearity linearity) : fileName("none"), width(0), height(0), glHandle(0), format(None)
+Texture::Texture(const char* fileNameInit, Linearity linearity) : fileName("None"), width(0), height(0), glHandle(0), format(None)
 {
 	Load(fileNameInit, linearity);
 }
 
 Texture::Texture(unsigned int widthInit, unsigned int heightInit, Format formatInit, unsigned char* pixels, Linearity linearity) :
-	fileName("none"), width(widthInit), height(heightInit), format(formatInit)
+	fileName("None"), width(widthInit), height(heightInit), format(formatInit)
 {
 	Create(width, height, formatInit, pixels, linearity);
 }
@@ -22,6 +22,11 @@ Texture::Texture(unsigned int widthInit, unsigned int heightInit, Format formatI
 Texture::~Texture()
 {
 	if (glHandle != 0) glDeleteTextures(1, &glHandle);
+}
+
+void Texture::Clear() noexcept
+{
+	if (glHandle != 0) glDeleteTextures(1, &glHandle);;
 }
 
 bool Texture::Load(const char* filename, Linearity linearity)
@@ -32,7 +37,7 @@ bool Texture::Load(const char* filename, Linearity linearity)
 		glHandle = 0;
 		width = 0;
 		height = 0;
-		fileName = "none";
+		fileName = "None";
 	}
 
 	int x = 0, y = 0, comp = 0;

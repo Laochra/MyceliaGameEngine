@@ -43,7 +43,7 @@ namespace Heirarchy
 		{
 			for (int i = 0; i < UIManager::sprites.size(); i++)
 			{
-				DrawEntry(&UIManager::sprites[i], i);
+				DrawEntry(UIManager::sprites[i], i);
 			}
 		}
 
@@ -283,15 +283,21 @@ namespace Heirarchy
 	{
 		ImGui::PushID(StringBuilder(index).CStr());
 
-		bool isSelected = inspector->GetTarget() == uiSprite;
+		bool isSelected = inspector->GetTarget() != nullptr && inspector->GetTarget() == uiSprite;
 
+		int flags = 0;
+		flags |= ImGuiTreeNodeFlags_FramePadding;
+		flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
+		flags |= ImGuiTreeNodeFlags_Leaf;
+		flags |= ImGuiTreeNodeFlags_Selected * isSelected;
 
-		if (ImGui::Selectable(uiSprite->name.c_str()))
+		if (ImGui::TreeNodeEx(uiSprite->name.c_str(), flags))
 		{
 			if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenOverlapped))
 			{
 				AcceptInputFor(uiSprite);
 			}
+			ImGui::TreePop();
 		}
 
 		ImGui::PopID();

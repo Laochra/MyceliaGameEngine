@@ -9,6 +9,8 @@ Inspector* inspector = new Inspector();
 #include "ParticleEmitterGUI.h"
 #include "LinkedHexGridGUI.h"
 
+#include "UISpriteGUI.h"
+
 #include "GeneralMacros.h"
 
 void Inspector::SetTarget(InspectableObject* target)
@@ -45,11 +47,19 @@ void Inspector::SetTarget(InspectableObject* target)
 			break;
 		}
 	}
+	else
+	{
+		UISprite* uiSprite = dynamic_cast<UISprite*>(target);
+		if (uiSprite != nullptr)
+		{
+			targetGUI = new UISpriteGUI(uiSprite);
+		}
+	}
 
 	target->selected = true;
 }
 
-const GameObjectGUI* Inspector::GetTargetGUI()
+const InspectableObjectGUI* Inspector::GetTargetGUI()
 {
 	return targetGUI;
 }
@@ -64,7 +74,7 @@ void Inspector::Draw(const char* const name, bool& open)
 {
 	ImGui::Begin(name, &open);
 
-	if (inspector->targetGUI != nullptr)
+	if (inspector->targetGUI != nullptr && inspector->targetGUI->target != nullptr)
 	{
 		GameObject* gameObject = dynamic_cast<GameObject*>(inspector->targetGUI->target);
 

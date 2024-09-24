@@ -16,6 +16,8 @@
 #include "LightObjectGUI.h"
 #include "ParticleEmitter.h"
 
+#include "UIManager.h"
+
 #include "stb/stb_image.h"
 
 #include <algorithm>
@@ -272,8 +274,9 @@ namespace EditorGUI
 			GUI::Spacing(4);
 			if (ImGui::BeginMenu("Create"))
 			{
-				if (ImGui::BeginMenu(" 2D   ", false))
+				if (ImGui::BeginMenu(" UI   "))
 				{
+					if (ImGui::MenuItem("UISprite")) { UIManager::sprites.push_back(new UISprite()); }
 					ImGui::EndMenu();
 				}
 				if (ImGui::BeginMenu(" 3D   "))

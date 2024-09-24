@@ -7,5 +7,7 @@ using std::vector;
 class UIManager
 {
 public:
-	static vector<UISprite> sprites;
+	static vector<UISprite*> sprites;
+
+	void CleanUp() noexcept;
 };

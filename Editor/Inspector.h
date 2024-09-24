@@ -1,7 +1,6 @@
 #pragma once
 
-#include "InspectableObject.h"
-#include "GameObjectGUI.h"
+#include "InspectableObjectGUI.h"
 
 class Inspector
 {
@@ -12,13 +11,13 @@ public:
 	Inspector& operator=(const Inspector&) = delete;
 
 	void SetTarget(InspectableObject* target);
-	const GameObjectGUI* GetTargetGUI();
+	const InspectableObjectGUI* GetTargetGUI();
 	InspectableObject* GetTarget();
 
 	static void Draw(const char* const name, bool& open);
 
 private:
-	GameObjectGUI* targetGUI = nullptr;
+	InspectableObjectGUI* targetGUI = nullptr;
 };
 
 extern Inspector* inspector;

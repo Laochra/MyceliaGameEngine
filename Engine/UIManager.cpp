@@ -1,3 +1,13 @@
 #include "UIManager.h"
 
-vector<UISprite> UIManager::sprites;
+#include "GeneralMacros.h"
+
+vector<UISprite*> UIManager::sprites;
+
+void UIManager::CleanUp() noexcept
+{
+	for (UISprite* uiSprite : sprites)
+	{
+		del(uiSprite);
+	}
+}

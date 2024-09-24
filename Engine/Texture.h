@@ -23,12 +23,13 @@ public:
 	Texture(const char* filename, Linearity linearity = Linear);
 	Texture(unsigned int widthInit, unsigned int heightInit, Format formatInit, unsigned char* pixels = nullptr, Linearity linearity = Linear);
 	virtual ~Texture();
+	void Clear() noexcept;
 
 	// Supports .jpg, .bmp, .png and .tga
 	bool Load(const char* filename, Linearity linearity = Linear);
 	void Create(unsigned int widthInit, unsigned int heightInit, Format formatInit, unsigned char* pixels = nullptr, Linearity linearity = Linear);
 
-	// Returns the filename or "none" if not loaded from a file
+	// Returns the filename or "None" if not loaded from a file
 	const std::string& GetFileName() const { return fileName; }
 
 	// Binds the Texture to Specified Slot for GL Use

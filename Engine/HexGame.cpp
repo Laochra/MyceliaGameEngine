@@ -4,6 +4,7 @@
 #include "LightingManager.h"
 #include "GameObjectManager.h"
 #include "AudioManager.h"
+#include "UIManager.h"
 
 #include "Shader.h"
 #include "Camera.h"
@@ -123,10 +124,14 @@ static void DrawUI(RadialMenu* radialMenu, vector<UISprite*> sprites, uint& uiFB
 
 	for (uint i = 0; i < (uint)sprites.size(); i++)
 	{
-		sprites[i]->Draw();
+		if (sprites[i] != nullptr) sprites[i]->Draw();
+	}
+	for (uint i = 0; i < (uint)UIManager::sprites.size(); i++)
+	{
+		if (UIManager::sprites[i] != nullptr) UIManager::sprites[i]->Draw();
 	}
 
-	radialMenu->Draw();
+	if (radialMenu != nullptr) radialMenu->Draw();
 
 }
 
@@ -269,8 +274,6 @@ void HexGame::Update()
 	case 3U: currentRadialMenu = landRadial;		break;
 	}
 	currentRadialTileType = &TileData::Get(HexType(currentRadialPage));
-
-	//crosshair->normalisedPosition = vec2(cos(Time::time), sin(Time::time * 2.0f));
 
 	if (currentRadialMenu->enabled)
 	{
