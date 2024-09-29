@@ -6,6 +6,9 @@
 #include "HexProgression.h"
 #include "HexAudio.h"
 #include "HexRadial.h"
+#include "HexScrapbook.h"
+
+#include "UIManager.h"
 
 #include "HexGameSerialiser.h"
 
@@ -176,7 +179,7 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 
 		for (std::vector<std::string>::iterator it = startingVariants.begin(); it < startingVariants.end(); it++)
 		{
-			DrawTileDropdown(*it, StringBuilder("##", uint(it - startingVariants.begin())).CStr());
+			DrawTileDropdown(StringBuilder("##", uint(it - startingVariants.begin())).CStr(), *it);
 			ImGui::SameLine();
 			GUI::HSpacing(3);
 			ImGui::SameLine();
@@ -270,7 +273,7 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 
 					for (std::vector<std::string>::iterator it = unlockedVariants.begin(); it < unlockedVariants.end(); it++)
 					{
-						DrawTileDropdown(*it, StringBuilder("##", uint(it - unlockedVariants.begin())).CStr());
+						DrawTileDropdown(StringBuilder("##", uint(it - unlockedVariants.begin())).CStr(), *it);
 						ImGui::SameLine();
 						GUI::HSpacing(3);
 						ImGui::SameLine();
@@ -330,9 +333,9 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 				GUI::Spacing();
 
 				ImGui::Text("Required Tiles");
-				DrawTileDropdown(habitat.requiredTiles[0], "##1");
-				DrawTileDropdown(habitat.requiredTiles[1], "##2");
-				DrawTileDropdown(habitat.requiredTiles[2], "##3");
+				DrawTileDropdown("##1", habitat.requiredTiles[0]);
+				DrawTileDropdown("##2", habitat.requiredTiles[1]);
+				DrawTileDropdown("##3", habitat.requiredTiles[2]);
 
 				if (!AppInfo::CompareState(AppState::Editor)) ImGui::EndDisabled();
 
@@ -400,6 +403,79 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 			ImGui::PopID();
 			if (!AppInfo::CompareState(AppState::Editor)) ImGui::EndDisabled();
 			ImGui::EndTabItem();
+		}
+
+		ImGui::EndTabBar();
+
+		GUI::Spacing(3);
+	}
+
+	GUI::Spacing(3);
+
+	if (ImGui::CollapsingHeader("Scrapbook Sprites"))
+	{
+		GUI::Spacing(3);
+
+		ImGui::Text("Scrapbook");
+		DrawUISpriteDropdown("UI Reference", HexScrapbook::base);
+		GUI::Spacing();
+		DrawSpriteInput("Sprite", HexScrapbook::baseTexture);
+
+		GUI::Spacing(3);
+
+		ImGui::BeginTabBar("Habitats##Scrapbook Sprites");
+		for (int i = 0; i < (int)HabitatData::habitatsData.size(); i++)
+		{
+			if (HexScrapbook::habitats.size() < HabitatData::habitatsData.size())
+			{
+				HexScrapbook::habitats.push_back(HexScrapbook::HabitatCollection());
+			}
+			if (ImGui::BeginTabItem(HabitatData::habitatsData[i].name.c_str()))
+			{
+				if (!AppInfo::CompareState(AppState::Editor)) ImGui::BeginDisabled();
+				ImGui::PushID(HabitatData::habitatsData[i].name.c_str());
+
+				ImGui::PushID("Habitat");
+				ImGui::Text("Habitat");
+				DrawUISpriteDropdown("UI Reference", HexScrapbook::habitats[i].habitat);
+				GUI::Spacing();
+				DrawSpriteInput("Hidden", HexScrapbook::habitats[i].habitatTextures[0]);
+				DrawSpriteInput("Revealed", HexScrapbook::habitats[i].habitatTextures[1]);
+				ImGui::PopID();
+
+				GUI::Spacing(3);
+
+				ImGui::PushID("Tile 0");
+				ImGui::Text(StringBuilder("Tile 0: ", HabitatData::habitatsData[i].requiredTiles[0]).CStr());
+				DrawUISpriteDropdown("UI Reference", HexScrapbook::habitats[i].tiles[0]);
+				GUI::Spacing();
+				DrawSpriteInput("Hidden", HexScrapbook::habitats[i].tileTextures[0]);
+				DrawSpriteInput("Revealed", HexScrapbook::habitats[i].tileTextures[1]);
+				ImGui::PopID();
+				GUI::Spacing(3);
+				ImGui::PushID("Tile 1");
+				ImGui::Text(StringBuilder("Tile 1: ", HabitatData::habitatsData[i].requiredTiles[1]).CStr());
+				DrawUISpriteDropdown("UI Reference", HexScrapbook::habitats[i].tiles[1]);
+				GUI::Spacing();
+				DrawSpriteInput("Hidden", HexScrapbook::habitats[i].tileTextures[2]);
+				DrawSpriteInput("Revealed", HexScrapbook::habitats[i].tileTextures[3]);
+				ImGui::PopID();
+				GUI::Spacing(3);
+				ImGui::PushID("Tile 2");
+				ImGui::Text(StringBuilder("Tile 2: ", HabitatData::habitatsData[i].requiredTiles[2]).CStr());
+				DrawUISpriteDropdown("UI Reference", HexScrapbook::habitats[i].tiles[2]);
+				GUI::Spacing();
+				DrawSpriteInput("Hidden", HexScrapbook::habitats[i].tileTextures[4]);
+				DrawSpriteInput("Revealed", HexScrapbook::habitats[i].tileTextures[5]);
+				ImGui::PopID();
+
+				GUI::Spacing(3);
+
+				ImGui::PopID();
+				if (!AppInfo::CompareState(AppState::Editor)) ImGui::EndDisabled();
+				ImGui::EndTabItem();
+			}
+
 		}
 
 		ImGui::EndTabBar();
@@ -635,7 +711,7 @@ void HexEditor::DrawAudioInput(const char* const name, string& audioFilepath) no
 	ImGui::EndDisabled();
 }
 
-void HexEditor::DrawTileDropdown(string& tileName, const char* label) noexcept
+void HexEditor::DrawTileDropdown(const char* label, string& tileName) noexcept
 {
 	if (ImGui::BeginCombo(label, tileName.c_str()))
 	{
@@ -682,6 +758,26 @@ void HexEditor::DrawTileDropdown(string& tileName, const char* label) noexcept
 				}
 			}
 			ImGui::EndMenu();
+		}
+
+		ImGui::EndCombo();
+	}
+}
+
+void HexEditor::DrawUISpriteDropdown(const char* label, UISprite*& uiSprite) noexcept
+{
+	if (ImGui::BeginCombo(label, uiSprite != nullptr ? StringBuilder( "\"", uiSprite->GetName(), "\" ", (void*)uiSprite).CStr() : "\"None\" nullptr"))
+	{
+		if (ImGui::Selectable("\"None\" nullptr", uiSprite == nullptr))
+		{
+			uiSprite = nullptr;
+		}
+		for (UISprite* sprite : UIManager::sprites)
+		{
+			if (ImGui::Selectable(StringBuilder("\"", sprite->GetName(), "\" ", (void*)sprite).CStr(), uiSprite != nullptr && uiSprite->GetName() == sprite->GetName()))
+			{
+				uiSprite = sprite;
+			}
 		}
 
 		ImGui::EndCombo();

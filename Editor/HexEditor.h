@@ -6,6 +6,8 @@
 
 typedef unsigned int uint;
 
+class UISprite;
+
 class HexEditor
 {
 public:
@@ -19,5 +21,6 @@ private:
 	static void DrawPrefabInput(const char* const name, string& prefabFilepath) noexcept;
 	static void DrawSpriteInput(const char* const name, string& spriteFilepath) noexcept;
 	static void DrawAudioInput(const char* const name, string& audioFilepath) noexcept;
-	static void DrawTileDropdown(string& tileName, const char* label) noexcept;
+	static void DrawTileDropdown(const char* label, string& tileName) noexcept;
+	static void DrawUISpriteDropdown(const char* label, UISprite*& uiSprite) noexcept;
 };

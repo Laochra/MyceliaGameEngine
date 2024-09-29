@@ -15,7 +15,7 @@ using SoundEffect = HexAudio::SoundEffect;
 map<SoundEffect, string> HexAudio::soundEffectNames {
 	{ SoundEffect::PlaceTree, "PlaceTree" }, { SoundEffect::PlaceFlower, "PlaceFlower" }, { SoundEffect::PlaceWater, "PlaceWater" }, { SoundEffect::PlaceLand, "PlaceLand" },
 	{ SoundEffect::FormHabitat, "FormHabitat" },
-	{ SoundEffect::RadialOpen, "RadialOpen" }, { SoundEffect::RadialClose, "RadialClose" }, { SoundEffect::RadialCyclePage, "RadialCycle Page" }, { SoundEffect::RadialCycleDensity, "RadialCycleDensity" },
+	{ SoundEffect::RadialOpen, "RadialOpen" }, { SoundEffect::RadialClose, "RadialClose" }, { SoundEffect::RadialCyclePage, "RadialCyclePage" }, { SoundEffect::RadialCycleDensity, "RadialCycleDensity" },
 	{ SoundEffect::ScrapbookOpen, "ScrapbookOpen" }, { SoundEffect::ScrapbookClose, "ScrapbookClose" }, { SoundEffect::ScrapbookTurnPage, "ScrapbookTurnPage" }, { SoundEffect::ScrapbookNotification, "ScrapbookNotification" }, { SoundEffect::ScrapbookNewHabitatPage, "ScrapbookNewHabitatPage" },
 };
 string HexAudio::soundEffects[SoundEffect_Count] { "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None" };

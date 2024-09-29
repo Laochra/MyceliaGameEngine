@@ -78,7 +78,7 @@ void UISprite::Draw() const noexcept
 
 	shaderProgram->BindUniform("SpritePos", normalisedPosition);
 
-	float aspect = 1.0f / (AppInfo::screenHeight == 0 ? 0.0f : (AppInfo::screenWidth / (float)AppInfo::screenHeight));
+	float aspect = 1.0f / (AppInfo::screenHeight == 0 ? 0.0f : (AppInfo::screenWidth / (float)AppInfo::screenHeight)) * texture.GetWidth() / texture.GetHeight();
 	shaderProgram->BindUniform("Aspect", aspect);
 
 	shaderProgram->BindUniform("Scale", scale);

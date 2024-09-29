@@ -5,6 +5,8 @@
 #include "HexRadial.h"
 #include "HexProgression.h"
 #include "HexAudio.h"
+#include "HexScrapbook.h"
+#include "UIManager.h"
 
 void HexGameSerialiser::LoadDataFrom(json& dataFile) noexcept
 {
@@ -82,6 +84,78 @@ void HexGameSerialiser::LoadDataFrom(json& dataFile) noexcept
 		HexRadial::landRadialSprites[0] = radialSpritesJSON["Land"]["Regular"];
 		HexRadial::landRadialSprites[1] = radialSpritesJSON["Land"]["Hovered"];
 		HexRadial::landRadialSprites[2] = radialSpritesJSON["Land"]["Locked"];
+	}
+
+	if (dataFile.contains("ScrapbookSprites"))
+	{
+		json scrapbookJSON = dataFile["ScrapbookSprites"];
+
+		vector<json> uiSpritesJSON = scrapbookJSON["UISprites"];
+		for (json uiSpriteJSON : uiSpritesJSON)
+		{
+			UISprite* uiSprite = new UISprite;
+			uiSprite->DeserialiseFrom(uiSpriteJSON);
+			UIManager::sprites.push_back(uiSprite);
+		}
+
+		string baseName = scrapbookJSON["Base"];
+		HexScrapbook::base = nullptr;
+		if (baseName != "None")
+		{
+			for (UISprite*& uiSprite : UIManager::sprites)
+			{
+				if (uiSprite->GetName() == baseName)
+				{
+					HexScrapbook::base = uiSprite;
+					break;
+				}
+			}
+		}
+		HexScrapbook::baseTexture = scrapbookJSON["BaseSprite"];
+
+
+		vector<json> scrapbookHabitatsJSON = scrapbookJSON["Habitats"];
+
+		for (json habitatJSON : scrapbookHabitatsJSON)
+		{
+			HexScrapbook::HabitatCollection habitat;
+			string habitatName = habitatJSON["Habitat"];
+			habitat.habitat = nullptr;
+			if (habitatName != "None")
+			{
+				for (UISprite*& uiSprite : UIManager::sprites)
+				{
+					if (uiSprite->GetName() == habitatName)
+					{
+						habitat.habitat = uiSprite;
+						break;
+					}
+				}
+			}
+			habitat.habitatTextures[0] = habitatJSON["HabitatTextures"][0];
+			habitat.habitatTextures[1] = habitatJSON["HabitatTextures"][1];
+
+			vector<json> habitatTilesJSON = habitatJSON["Tiles"];
+			string tileNames[std::size(habitat.tiles)] = { habitatTilesJSON[0], habitatTilesJSON[1], habitatTilesJSON[2] };
+			habitat.tiles[0] = nullptr; habitat.tiles[1] = nullptr; habitat.tiles[2] = nullptr;
+			for (UISprite*& uiSprite : UIManager::sprites)
+			{
+				for (int i = 0; i < (int)habitatTilesJSON.size() && i < std::size(habitat.tiles); i++)
+				{
+					if (uiSprite->GetName() == tileNames[i])
+					{
+						habitat.tiles[i] = uiSprite;
+					}
+				}
+			}
+
+			vector<json> habitatTileTexturesJSON = habitatJSON["TileTextures"];
+			for (int i = 0; i < (int)habitatTileTexturesJSON.size() && i < std::size(habitat.tileTextures); i++)
+			{
+				habitat.tileTextures[i] = habitatTileTexturesJSON[i];
+			}
+			HexScrapbook::habitats.push_back(habitat);
+		}
 	}
 
 	if (dataFile.contains("Progression"))
@@ -183,6 +257,52 @@ void HexGameSerialiser::SaveDataTo(json& dataFile) noexcept
 		dataFile["RadialSprites"] = radialSpritesJSON;
 	}
 
+	json scrapbookJSON;
+	{
+		vector<json> uiSpritesJSON;
+		for (UISprite* uiSprite : UIManager::sprites)
+		{
+			if (uiSprite != nullptr)
+			{
+				json uiSpriteJSON;
+				uiSprite->SerialiseTo(uiSpriteJSON);
+				uiSpritesJSON.push_back(uiSpriteJSON);
+			}
+		}
+		scrapbookJSON["UISprites"] = uiSpritesJSON;
+
+
+		if (HexScrapbook::base == nullptr) scrapbookJSON["Base"] = "None";
+		else scrapbookJSON["Base"] = HexScrapbook::base->name;
+
+		scrapbookJSON["BaseSprite"] = HexScrapbook::baseTexture;
+
+
+		vector<json> scrapbookHabitatsJSON;
+
+		for (HexScrapbook::HabitatCollection habitat : HexScrapbook::habitats)
+		{
+			json habitatJSON;
+			if (habitat.habitat == nullptr) habitatJSON["Habitat"] = "None";
+			else habitatJSON["Habitat"] = habitat.habitat->name;
+			habitatJSON["HabitatTextures"] = habitat.habitatTextures;
+
+			vector<json> habitatTilesJSON;
+			for (int i = 0; i < std::size(habitat.tiles); i++)
+			{
+				if (habitat.tiles[i] == nullptr) habitatTilesJSON.push_back("None");
+				else habitatTilesJSON.push_back(habitat.tiles[i]->name);
+			}
+			habitatJSON["Tiles"] = habitatTilesJSON;
+			habitatJSON["TileTextures"] = habitat.tileTextures;
+			scrapbookHabitatsJSON.push_back(habitatJSON);
+		}
+
+		scrapbookJSON["Habitats"] = scrapbookHabitatsJSON;
+
+		dataFile["ScrapbookSprites"] = scrapbookJSON;
+	}
+
 	json progressionJSON;
 	{
 		HexProgression::SaveTo(progressionJSON);
@@ -194,5 +314,4 @@ void HexGameSerialiser::SaveDataTo(json& dataFile) noexcept
 		HexAudio::SaveTo(audioJSON);
 		dataFile["Audio"] = audioJSON;
 	}
-
 }
