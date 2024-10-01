@@ -59,7 +59,6 @@ public:
 
 		uint uiFBO = 0;
 		uint uiTexture = 0;
-		uint uiDepth = 0;
 
 		uint hexPosFBO;
 		uint hexPosTexture;

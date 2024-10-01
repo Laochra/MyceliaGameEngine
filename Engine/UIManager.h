@@ -9,5 +9,7 @@ class UIManager
 public:
 	static vector<UISprite*> sprites;
 
-	void CleanUp() noexcept;
+	static void Sort() noexcept;
+
+	static void CleanUp() noexcept;
 };

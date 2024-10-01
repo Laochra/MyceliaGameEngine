@@ -23,13 +23,16 @@ public:
 	uncopyable(TextureManager);
 	immovable(TextureManager);
 
-	Texture* GetTexture(const char* filepath, Texture::Linearity linearity = Texture::Linear);
+	Texture* GetTexture(const char* filepath, bool isNonlinear = false);
+	Texture* GetTexture(const char* filepath, bool isNonlinear, bool wrap, Texture::Filter filter);
+	
 	void ReloadTexture(const char* filepath);
+	void ReloadAll();
 
 private:
 	map<string, Texture*> loadedTextures = map<string, Texture*>();
 
-	Texture* AddTexture(const char* filepath, Texture::Linearity linearity = Texture::Linear);
+	Texture* AddTexture(const char* filepath, bool isNonlinear, bool wrap, Texture::Filter filter);
 };
 
 extern TextureManager* textureManager;

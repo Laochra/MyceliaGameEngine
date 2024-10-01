@@ -134,7 +134,7 @@ void MeshRenderer::Draw()
 
 			if (filepath == "None") filepath = "DefaultColour";
 
-			textureManager->GetTexture(filepath.c_str(), Texture::NonLinear)->Bind(0);
+			textureManager->GetTexture(filepath.c_str(), true)->Bind(0);
 			sp.BindUniform("ColourMap", 0);
 			colourMapBound = true;
 			continue;
@@ -193,18 +193,18 @@ void MeshRenderer::Draw()
 	
 	if (!colourMapBound)
 	{
-		textureManager->GetTexture("DefaultColour", Texture::NonLinear)->Bind(0);
+		textureManager->GetTexture("DefaultColour", true)->Bind(0);
 		sp.BindUniform("ColourMap", 0);
 	}
 	if (!colourTintBound) sp.BindUniform("ColourTint", vec3(1.0f, 1.0f, 1.0f));
 	if (!normalMapBound)
 	{
-		textureManager->GetTexture("DefaultNormal", Texture::NonLinear)->Bind(1);
+		textureManager->GetTexture("DefaultNormal")->Bind(1);
 		sp.BindUniform("NormalMap", 1);
 	}
 	if (!rmaoMapBound)
 	{
-		textureManager->GetTexture("DefaultRMAO", Texture::NonLinear)->Bind(2);
+		textureManager->GetTexture("DefaultRMAO")->Bind(2);
 		sp.BindUniform("RMAOMap", 2);
 	}
 	if (!emissionColourBound) sp.BindUniform("EmissionColour", vec3(1.0f, 1.0f, 1.0f));

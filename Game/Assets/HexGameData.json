@@ -260,11 +260,25 @@
     "UISprites": [
       {
         "Enabled": true,
+        "Layer": 0,
         "Name": "ScrapbookSprite",
         "PositionX": 0.0,
         "PositionY": 0.0,
         "Scale": 1.0,
-        "Texture": "Assets\\Textures\\shroom.png"
+        "Texture": "Assets\\Textures\\shroom.png",
+        "TextureFilter": 0,
+        "TextureWrap": false
+      },
+      {
+        "Enabled": true,
+        "Layer": -1,
+        "Name": "UISprite",
+        "PositionX": 0.0,
+        "PositionY": 0.0,
+        "Scale": 1.0,
+        "Texture": "Assets\\UI\\RadialMenu\\Tree\\RW_Tree_Hovered.png",
+        "TextureFilter": 0,
+        "TextureWrap": false
       }
     ]
   },

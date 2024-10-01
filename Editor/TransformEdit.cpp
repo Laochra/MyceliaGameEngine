@@ -391,7 +391,7 @@ namespace TransformEdit
 					(space == Space::Local ? unscaledModelMatrix : modelTranslationMatrix) *
 					coneOffset);
 
-				textureManager->GetTexture("DefaultColour", Texture::NonLinear)->Bind(0);
+				textureManager->GetTexture("DefaultColour", true)->Bind(0);
 				unlit->BindUniform("ColourMap", 0);
 
 				unlit->BindUniform("ColourTint", vec3(1, 0, 0));
@@ -408,7 +408,7 @@ namespace TransformEdit
 					(space == Space::Local ? unscaledModelMatrix : modelTranslationMatrix) *
 					coneOffset);
 
-				textureManager->GetTexture("DefaultColour", Texture::NonLinear)->Bind(0);
+				textureManager->GetTexture("DefaultColour", true)->Bind(0);
 				unlit->BindUniform("ColourMap", 0);
 
 				unlit->BindUniform("ColourTint", vec3(0, 1, 0));
@@ -425,7 +425,7 @@ namespace TransformEdit
 					(space == Space::Local ? unscaledModelMatrix : modelTranslationMatrix) *
 					coneOffset);
 
-				textureManager->GetTexture("DefaultColour", Texture::NonLinear)->Bind(0);
+				textureManager->GetTexture("DefaultColour", true)->Bind(0);
 				unlit->BindUniform("ColourMap", 0);
 
 				unlit->BindUniform("ColourTint", vec3(0, 0, 1));
@@ -447,7 +447,7 @@ namespace TransformEdit
 					(space == Space::Local ? unscaledModelMatrix : modelTranslationMatrix) *
 					ringOffset);
 
-				textureManager->GetTexture("DefaultColour", Texture::NonLinear)->Bind(0);
+				textureManager->GetTexture("DefaultColour", true)->Bind(0);
 				unlit->BindUniform("ColourMap", 0);
 
 				unlit->BindUniform("ColourTint", vec3(1, 0, 0));
@@ -463,7 +463,7 @@ namespace TransformEdit
 					(space == Space::Local ? unscaledModelMatrix : modelTranslationMatrix) *
 					ringOffset);
 
-				textureManager->GetTexture("DefaultColour", Texture::NonLinear)->Bind(0);
+				textureManager->GetTexture("DefaultColour", true)->Bind(0);
 				unlit->BindUniform("ColourMap", 0);
 
 				unlit->BindUniform("ColourTint", vec3(0, 1, 0));
@@ -478,7 +478,7 @@ namespace TransformEdit
 					(space == Space::Local ? unscaledModelMatrix : modelTranslationMatrix) *
 					ringOffset);
 
-				textureManager->GetTexture("DefaultColour", Texture::NonLinear)->Bind(0);
+				textureManager->GetTexture("DefaultColour", true)->Bind(0);
 				unlit->BindUniform("ColourMap", 0);
 
 				unlit->BindUniform("ColourTint", vec3(0, 0, 1));
@@ -498,7 +498,7 @@ namespace TransformEdit
 				glm::scale(modelTranslationMatrix, scale)
 			);
 
-			textureManager->GetTexture("DefaultColour", Texture::NonLinear)->Bind(0);
+			textureManager->GetTexture("DefaultColour", true)->Bind(0);
 			unlit->BindUniform("ColourMap", 0);
 
 			unlit->BindUniform("ColourTint", vec3(1, 1, 1));

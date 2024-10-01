@@ -5,32 +5,34 @@
 class Texture
 {
 public:
-	enum Format
+	enum class Format
 	{
 		None,
-		SingleChannel,
-		DualChannel,
+		R,
+		RG,
 		RGB,
 		RGBA
 	};
-	enum Linearity : bool
+	enum class Filter
 	{
-		Linear = false, // Standard for most non-colour textures
-		NonLinear = true // Standard for most display colour textures
+		None,
+		Bilinear,
+		Trilinear
 	};
 
 	Texture();
-	Texture(const char* filename, Linearity linearity = Linear);
-	Texture(unsigned int widthInit, unsigned int heightInit, Format formatInit, unsigned char* pixels = nullptr, Linearity linearity = Linear);
+	Texture(const char* filename, bool isNonlinearInit, bool wrapInit, Filter filterInit);
+	Texture(unsigned int widthInit, unsigned int heightInit, bool isNonlinearInit, bool wrapInit, Filter filterInit, Format formatInit, unsigned char* pixels = nullptr);
 	virtual ~Texture();
 	void Clear() noexcept;
 
 	// Supports .jpg, .bmp, .png and .tga
-	bool Load(const char* filename, Linearity linearity = Linear);
-	void Create(unsigned int widthInit, unsigned int heightInit, Format formatInit, unsigned char* pixels = nullptr, Linearity linearity = Linear);
+	bool Load(const char* filename, bool isNonlinearInit, bool wrapInit, Filter filterInit);
+	bool Reload();
+	void Create(unsigned int widthInit, unsigned int heightInit, bool isNonlinearInit, bool wrapInit, Filter filterInit, Format formatInit, unsigned char* pixels = nullptr);
 
-	// Returns the filename or "None" if not loaded from a file
-	const std::string& GetFileName() const { return fileName; }
+	// Returns the filepath or "None" if not loaded from a file
+	const std::string& GetFilepath() const { return filepath; }
 
 	// Binds the Texture to Specified Slot for GL Use
 	void Bind(unsigned int slot) const;
@@ -39,15 +41,23 @@ public:
 
 	unsigned int GetWidth() const { return width; }
 	unsigned int GetHeight() const { return height; }
+
 	Format GetFormat() const { return format; }
+	Filter GetFilter() const { return filter; }
+	bool GetIsNonlinear() const { return isNonlinear; }
+	bool GetWrap() const { return wrap; }
 
 protected:
+	std::string	filepath;
+	unsigned int glHandle;
 
-	std::string	fileName;
 	unsigned int width;
 	unsigned int height;
-	unsigned int glHandle;
-	Format format;
+
+	Format format = Format::RGB;
+	Filter filter = Filter::None;
+	bool isNonlinear = false;
+	bool wrap = false;
 
 	friend class TextureManager;
 	friend class Material;

@@ -14,12 +14,13 @@ class UISprite : public InspectableObject
 {
 public:
 	vec2 normalisedPosition;
+	int layer;
 	float scale;
 	bool enabled;
 	std::string name;
 
 	UISprite() noexcept;
-	UISprite(const char* spriteFile, vec2 normalisedPositionInit = vec2(), float scaleInit = 1.0f) noexcept;
+	UISprite(const char* spriteFile, vec2 normalisedPositionInit = vec2(), int layerInit = 0, float scaleInit = 1.0f) noexcept;
 	void Load(const char* spriteFile) noexcept;
 
 	void SerialiseTo(json& jsonObj) const noexcept;

@@ -40,10 +40,20 @@ void UISpriteGUI::DrawUISpriteGUI(UISprite* uiSprite)
 
 		GUI::Spacing(3);
 
+		ImGui::PushItemWidth(ImGui::CalcItemWidth() / 5.0f);
+		ImGui::DragInt("Layer", &uiSprite->layer, 0.05f);
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_ForTooltip))
+		{
+			ImGui::BeginTooltip();
+			ImGui::Text("Layers with a lower number\nare rendered in front of layers\nwith a higher number.");
+			ImGui::EndTooltip();
+		}
+		ImGui::PopItemWidth();
+
+		GUI::Spacing(3);
+
 		ImGui::PushItemWidth(ImGui::CalcItemWidth() / 1.5f);
 		ImGui::DragFloat2("Position", (float*)&uiSprite->normalisedPosition, 0.001f, 0.0f, 0.0f, "%.5f");
-		ImGui::PopItemWidth();
-		ImGui::PushItemWidth(ImGui::CalcItemWidth() / 3.025f);
 		ImGui::DragFloat("Scale", &uiSprite->scale, 0.001f, 0.0f, 0.0f, "%.5f");
 		ImGui::PopItemWidth();
 

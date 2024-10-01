@@ -87,13 +87,12 @@ void static DrawHexPositions(LinkedHexGrid* hexGrid, uint& hexPosFBO, uint& hexP
 	}
 }
 
-static void RefreshUI(uint& uiFBO, uint& uiTexture, uint& uiDepth)
+static void RefreshUI(uint& uiFBO, uint& uiTexture)
 {
 	if (uiFBO == 0)
 	{
 		glGenFramebuffers(1, &uiFBO);
 		glGenTextures(1, &uiTexture);
-		glGenRenderbuffers(1, &uiDepth);
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, uiFBO);
@@ -104,35 +103,38 @@ static void RefreshUI(uint& uiFBO, uint& uiTexture, uint& uiDepth)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	glBindRenderbuffer(GL_RENDERBUFFER, uiDepth);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, AppInfo::screenWidth, AppInfo::screenHeight);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, uiDepth);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, uiTexture, 0);
 }
-static void DrawUI(RadialMenu* radialMenu, vector<UISprite*> sprites, uint& uiFBO, uint& uiTexture, uint& uiDepth)
+static void DrawUI(RadialMenu* radialMenu, vector<UISprite*> sprites, uint& uiFBO, uint& uiTexture)
 {
 	if (uiFBO == 0 || AppInfo::screenSizeJustChanged)
 	{
-		RefreshUI(uiFBO, uiTexture, uiDepth);
+		RefreshUI(uiFBO, uiTexture);
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, uiFBO);
 	
 	glClearColor(0, 0, 0, 0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT);
 
+	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendEquation(GL_FUNC_ADD);
 	for (uint i = 0; i < (uint)sprites.size(); i++)
 	{
 		if (sprites[i] != nullptr) sprites[i]->Draw();
 	}
+	UIManager::Sort();
 	for (uint i = 0; i < (uint)UIManager::sprites.size(); i++)
 	{
 		if (UIManager::sprites[i] != nullptr) UIManager::sprites[i]->Draw();
 	}
-
+	
 	if (radialMenu != nullptr) radialMenu->Draw();
 
+	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_BLEND);
 }
 
 void HexGame::Initialise(uint* renderTargetInit)
@@ -208,7 +210,7 @@ void HexGame::OnStart()
 	currentTileType = &TileData::Get(HexType::Tree);
 	currentTileVariant = 0U;
 
-	crosshair = new UISprite("Assets\\UI\\Crosshair\\Crosshair.png", vec2(0.0f, 0.0f), 0.035f);
+	crosshair = new UISprite("Assets\\UI\\Crosshair\\Crosshair.png", vec2(0.0f, 0.0f), -10, 0.035f);
 
 	HexProgression::Initialise();
 
@@ -426,8 +428,7 @@ void HexGame::Draw()
 			currentRadialMenu,
 			{crosshair},
 			handles.uiFBO,
-			handles.uiTexture,
-			handles.uiDepth);
+			handles.uiTexture);
 	}
 
 	/// Screen Post Processing
