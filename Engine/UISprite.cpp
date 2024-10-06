@@ -90,10 +90,10 @@ void UISprite::Draw() const noexcept
 	shaderProgram->Bind();
 
 	shaderProgram->BindUniform("SpritePos", normalisedPosition);
-
-	float aspect = 1.0f / (AppInfo::screenHeight == 0 ? 0.0f : (AppInfo::screenWidth / (float)AppInfo::screenHeight)) * texture.GetWidth() / texture.GetHeight();
-	shaderProgram->BindUniform("Aspect", aspect);
-
+	float spriteAspect = (float)texture.GetWidth() / (float)texture.GetHeight();
+	shaderProgram->BindUniform("SpriteAspect", spriteAspect);
+	float screenAspect = 1.0f / (AppInfo::screenHeight == 0 ? 0.0f : (AppInfo::screenWidth / (float)AppInfo::screenHeight));
+	shaderProgram->BindUniform("ScreenAspect", screenAspect);
 	shaderProgram->BindUniform("Scale", scale);
 
 	texture.Bind(0);
