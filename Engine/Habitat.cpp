@@ -3,6 +3,9 @@
 #include "TileData.h"
 #include "HabitatData.h"
 
+#include "HexScrapbook.h"
+#include "HexProgression.h"
+
 #include "GameObject3D.h"
 #include "LinkedHexGrid.h"
 
@@ -86,6 +89,8 @@ Habitat Habitat::AttemptToFormHabitat(LinkedHexGrid* hexGrid, HexOffsetCoord new
 void Habitat::FormHabitat(LinkedHexGrid* hexGrid, int habitatIndex, HexOffsetCoord hexCoord1, HexOffsetCoord hexCoord2, HexOffsetCoord hexCoord3) noexcept
 {
 	HabitatData& habitatData = HabitatData::Get(habitatIndex);
+	HexScrapbook::RevealHabitat(habitatIndex);
+	HexProgression::currentRadius += 2;
 
 	HexTile& hex1 = hexGrid->Get(hexCoord1);
 	HexTile& hex2 = hexGrid->Get(hexCoord2);

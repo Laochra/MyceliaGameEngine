@@ -19,4 +19,16 @@ public:
 	static UISprite* base;
 	static std::string baseTexture;
 	static std::vector<HabitatCollection> habitats;
+
+	static void SetEnabled(bool enabledStatus) noexcept;
+	static bool IsEnabled() noexcept;
+
+	static void ConcealSprites() noexcept;
+	static void RevealSprites() noexcept;
+
+	static void RevealHabitat(int index) noexcept;
+	static void RevealHabitatTile(int habitatIndex, int tileIndex) noexcept;
+
+private:
+	static bool enabled;
 };

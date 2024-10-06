@@ -12,7 +12,7 @@ typedef unsigned short ushort;
 class RadialMenu
 {
 public:
-	typedef void (*InteractFunc)(uint selection) noexcept;
+	typedef void (*InteractFunc)(int selection) noexcept;
 
 	float scale = 0.75f;
 	float deadzoneMagnitudeSqr = 0.15f * 0.15f;

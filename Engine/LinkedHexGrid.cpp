@@ -113,7 +113,7 @@ void LinkedHexGrid::UpdateTile(HexOffsetCoord hexCoord, const json& tilePrefab) 
 		if (milestone != nullptr)
 		{
 			// TODO: Play MilestoneReached SFX
-			if (milestone->radiusIncrease > 0) radiusExpanded = true;
+
 		}
 		break;
 	}
@@ -149,6 +149,8 @@ void LinkedHexGrid::UpdateTile(HexOffsetCoord hexCoord, const json& tilePrefab) 
 	Habitat habitat = Habitat::AttemptToFormHabitat(this, hexCoord);
 	if (habitat.object != nullptr)
 	{
+		radiusExpanded = true;
+
 		HexAudio::PlayMiscSFX(HexAudio::SoundEffect::FormHabitat);
 
 		habitat.object->SetParent(this);
@@ -157,7 +159,7 @@ void LinkedHexGrid::UpdateTile(HexOffsetCoord hexCoord, const json& tilePrefab) 
 		if (milestone != nullptr)
 		{
 			// TODO: Play MilestoneReached SFX
-			if (milestone->radiusIncrease > 0) radiusExpanded = true;
+
 		}
 	}
 	else

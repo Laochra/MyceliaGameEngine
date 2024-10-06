@@ -134,7 +134,7 @@ void HexProgression::LoadFrom(const json& jsonObj)
 
 void HexProgression::CompleteMilestone(const Milestone& milestone)
 {
-	currentRadius += milestone.radiusIncrease;
+	//currentRadius += milestone.radiusIncrease;
 
 	if (milestone.type == Milestone::VariantUnlock)
 	{

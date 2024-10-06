@@ -14,6 +14,7 @@
 #include "HexProgression.h"
 #include "HexAudio.h"
 #include "HexRadial.h"
+#include "HexScrapbook.h"
 
 #include "HabitatData.h"
 
@@ -21,12 +22,18 @@
 
 #include "RandomGen.h"
 
+#include "Application.h"
 #include "Debug.h"
 
-void static RadialInteractionHandler(uint selection)
+void static RadialInteractionHandler(int selection)
 {
-	currentTileType = &TileData::Get(HexType(currentRadialPage));
-	currentTileVariant = selection;
+	if (selection >= 0)
+	{
+		currentTileType = &TileData::Get(HexType(currentRadialPage));
+		currentTileVariant = selection;
+	}
+	
+	((HexGame*)AppInfo::application->game)->SetState(HexGame::State::Place);
 }
 
 void static RefreshHexPositions(uint& hexPosFBO, uint& hexPosTexture, uint& hexPosDepth)
@@ -137,6 +144,65 @@ static void DrawUI(RadialMenu* radialMenu, vector<UISprite*> sprites, uint& uiFB
 	glDisable(GL_BLEND);
 }
 
+void HexGame::SetState(HexGame::State newState) noexcept
+{
+	switch (gameState) // Clean up old state
+	{
+	case HexGame::State::Place:
+	{
+		break;
+	}
+	case HexGame::State::Radial:
+	{
+		switch (currentRadialPage)
+		{
+		default: treeRadial->enabled = false;		break;
+		case 1U: flowerRadial->enabled = false;	break;
+		case 2U: waterRadial->enabled = false;		break;
+		case 3U: landRadial->enabled = false;		break;
+		}
+		HexAudio::PlayMiscSFX(HexAudio::SoundEffect::RadialClose);
+		break;
+	}
+	case HexGame::State::Scrapbook:
+	{
+		HexScrapbook::SetEnabled(false);
+		HexAudio::PlayMiscSFX(HexAudio::SoundEffect::ScrapbookClose);
+		break;
+	}
+	default: Debug::LogWarning("Unaccounted for game state", locationinfo); break;
+	}
+
+	gameState = newState;
+	
+	switch (newState) // Initialise new state
+	{
+	case HexGame::State::Place:
+	{
+		break;
+	}
+	case HexGame::State::Radial:
+	{
+		switch (currentRadialPage)
+		{
+		default: treeRadial->enabled = true;		break;
+		case 1U: flowerRadial->enabled = true;		break;
+		case 2U: waterRadial->enabled = true;		break;
+		case 3U: landRadial->enabled = true;		break;
+		}
+		HexAudio::PlayMiscSFX(HexAudio::SoundEffect::RadialOpen);
+		break;
+	}
+	case HexGame::State::Scrapbook:
+	{
+		HexScrapbook::SetEnabled(true);
+		HexAudio::PlayMiscSFX(HexAudio::SoundEffect::ScrapbookOpen);
+		break;
+	}
+	default: Debug::LogWarning("Unaccounted for game state", locationinfo); break;
+	}
+}
+
 void HexGame::Initialise(uint* renderTargetInit)
 {
 	AppInfo::name = "Cosy Hex Game";
@@ -185,8 +251,9 @@ void HexGame::Initialise(uint* renderTargetInit)
 
 	hexGrid = GameObject::Instantiate<LinkedHexGrid>();
 
-	AppInfo::gameCamera->SetPosition(vec3(0, 4, 2));
+	AppInfo::gameCamera->SetPosition(vec3(0, 6, 5.5f));
 	AppInfo::gameCamera->LookAt(vec3(0, 0, 0));
+	AppInfo::gameCamera->fov = glm::radians(50.0f);
 }
 void HexGame::OnClose()
 {
@@ -195,6 +262,7 @@ void HexGame::OnClose()
 
 void HexGame::OnStart()
 {
+	AppInfo::gameCamera->SetPosition(vec3(0, 6, 5.5f));
 	hexGrid->InitialiseCentre();
 
 	treeRadial = new RadialMenu(HexRadial::treeRadialSprites[0].c_str(), HexRadial::treeRadialSprites[1].c_str(), HexRadial::treeRadialSprites[2].c_str());
@@ -214,11 +282,15 @@ void HexGame::OnStart()
 
 	HexProgression::Initialise();
 
+	HexScrapbook::ConcealSprites();
+
 	HexAudio::BeginMusic();
 	HexAudio::BeginAmbience();
 }
 void HexGame::OnStop()
 {
+	SetState(HexGame::State::Place);
+
 	short min = hexGrid->centre.x - HexProgression::currentRadius;
 	short max = hexGrid->centre.x + HexProgression::currentRadius;
 
@@ -256,6 +328,7 @@ void HexGame::OnStop()
 	HabitatData::ClearAndReset();
 	AudioManager::EndAll();
 	AudioManager::ClearLoadedAssets();
+	HexScrapbook::RevealSprites();
 
 	gameObjectManager->ClearGraveyard();
 }
@@ -277,7 +350,31 @@ void HexGame::Update()
 	}
 	currentRadialTileType = &TileData::Get(HexType(currentRadialPage));
 
-	if (currentRadialMenu->enabled)
+	switch (gameState)
+	{
+	case HexGame::State::Place:
+	{
+		if (gameInputs.place.pressed())
+		{
+			// TODO: replace this with a raycast for performance reasons
+			const int pixelCount = AppInfo::screenWidth * AppInfo::screenHeight;
+			glm::ivec4* hexPosPixels = new glm::ivec4[pixelCount];
+			glGetTextureImage(handles.hexPosTexture, 0, GL_RGBA_INTEGER, GL_INT, pixelCount * sizeof(glm::ivec4), hexPosPixels);
+
+			uint hexPosIndex = (int)AppInfo::screenWidth / 2 + (int)AppInfo::screenHeight / 2 * AppInfo::screenWidth;
+			glm::ivec4 hexPos = hexPosPixels[hexPosIndex];
+			if (hexPos.a != 0)
+			{
+				hexGrid->UpdateTile(HexOffsetCoord(hexPos.x, hexPos.y), TileData::GetPrefab((*currentTileType)[currentTileVariant].name));
+			}
+			delete[] hexPosPixels;
+		}
+
+		if (gameInputs.openRadial.pressed()) SetState(HexGame::State::Radial);
+		else if (gameInputs.openScrapbook.pressed()) SetState(HexGame::State::Scrapbook);
+		break;
+	}
+	case HexGame::State::Radial:
 	{
 		if (gameInputs.radialPageLeft.pressed())
 		{
@@ -315,40 +412,19 @@ void HexGame::Update()
 			currentRadialTileType = &TileData::Get(HexType(currentRadialPage));
 			currentRadialMenu->enabled = true;
 		}
-		if (gameInputs.radialClose.pressed())
-		{
-			HexAudio::PlayMiscSFX(HexAudio::SoundEffect::RadialClose);
-			currentRadialMenu->enabled = false;
-		}
+		if (gameInputs.radialClose.pressed()) SetState(HexGame::State::Place);
 
 		for (ushort i = 0; i < (ushort)currentTileType->size(); i++)
 		{
 			currentRadialMenu->sliceEnabledFlags[i] = (*currentRadialTileType)[i].unlocked;
 		}
+		break;
 	}
-	else
+	case HexGame::State::Scrapbook:
 	{
-		if (gameInputs.place.pressed())
-		{
-			// TODO: replace this with a raycast for performance reasons
-			const int pixelCount = AppInfo::screenWidth * AppInfo::screenHeight;
-			glm::ivec4* hexPosPixels = new glm::ivec4[pixelCount];
-			glGetTextureImage(handles.hexPosTexture, 0, GL_RGBA_INTEGER, GL_INT, pixelCount * sizeof(glm::ivec4), hexPosPixels);
-
-			uint hexPosIndex = (int)AppInfo::screenWidth/2 + (int)AppInfo::screenHeight/2 * AppInfo::screenWidth;
-			glm::ivec4 hexPos = hexPosPixels[hexPosIndex];
-			if (hexPos.a != 0)
-			{
-				hexGrid->UpdateTile(HexOffsetCoord(hexPos.x, hexPos.y), TileData::GetPrefab((*currentTileType)[currentTileVariant].name));
-			}
-			delete[] hexPosPixels;
-		}
-
-		if (gameInputs.openRadial.pressed())
-		{
-			HexAudio::PlayMiscSFX(HexAudio::SoundEffect::RadialOpen);
-			currentRadialMenu->enabled = true;
-		}
+		if (gameInputs.scrapbookClose.pressed()) SetState(HexGame::State::Place);
+		break;
+	}
 	}
 
 	vec2 radialDirection = vec2(gameInputs.radialX, -gameInputs.radialY);

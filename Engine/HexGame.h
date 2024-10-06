@@ -25,6 +25,7 @@ public:
 	{
 		InputBind place = InputBind({ InputCode::Space, InputCode::GamepadA });
 		InputBind openRadial = InputBind({ InputCode::R, InputCode::Q, InputCode::E, InputCode::GamepadX, InputCode::GamepadLB, InputCode::GamepadRB });
+		InputBind openScrapbook = InputBind({ InputCode::F, InputCode::GamepadY });
 		InputAxis moveX = InputAxis(InputCode::A, InputCode::D, InputCode::GamepadLSX);
 		InputAxis moveZ = InputAxis(InputCode::W, InputCode::S, InputCode::GamepadLSY);
 
@@ -34,11 +35,16 @@ public:
 		InputBind radialPageRight = InputBind({ InputCode::E, InputCode::GamepadRB });
 		InputAxis radialX = InputAxis(InputCode::A, InputCode::D, InputCode::GamepadLSX);
 		InputAxis radialY = InputAxis(InputCode::W, InputCode::S, InputCode::GamepadLSY);
+
+		InputBind scrapbookClose = InputBind({ InputCode::Esc, InputCode::F, InputCode::GamepadB, InputCode::GamepadY });
 	};
 	HexGame::Inputs gameInputs;
 
 	float moveSpeed = 3.0f;
 
+	enum class State : unsigned char { Place, Radial, Scrapbook };
+	HexGame::State gameState;
+	void SetState(HexGame::State newState) noexcept;
 
 	LinkedHexGrid* hexGrid;
 

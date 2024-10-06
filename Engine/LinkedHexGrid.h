@@ -21,7 +21,7 @@ struct HexColumn
 };
 
 // Implemented with Offset Coordinates
-class LinkedHexGrid : public GameObject3D
+class LinkedHexGrid : public GameObject3D // TODO: Rename LinkedHexGrid
 {
 public:
 	SerialiseAs(LinkedHexGrid)

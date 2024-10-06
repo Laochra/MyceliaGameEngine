@@ -56,8 +56,6 @@ void RadialMenu::Update(vec2 input, InputBind interactKey) noexcept
 
 	if (interactKey.pressed())
 	{
-		enabled = false;
-
 		float inputMagSqr = glm::length2(input);
 		vec2 inputDirection = input / sqrt(inputMagSqr);
 

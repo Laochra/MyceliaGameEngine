@@ -254,7 +254,9 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 				ImGui::SameLine();
 				GUI::HSpacing(3);
 				ImGui::SameLine();
+				ImGui::BeginDisabled();
 				ImGui::DragInt("Radius Increase", (int*)&lifeMilestone.radiusIncrease, 0.25f, 0, 16U);
+				ImGui::EndDisabled();
 				ImGui::PopItemWidth();
 
 				GUI::Spacing();
