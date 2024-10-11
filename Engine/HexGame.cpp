@@ -262,6 +262,10 @@ void HexGame::OnClose()
 
 void HexGame::OnStart()
 {
+	HexScrapbook::CacheEnabledStatus();
+
+	HexScrapbook::SetEnabled(false);
+
 	AppInfo::gameCamera->SetPosition(vec3(0, 6, 5.5f));
 	hexGrid->InitialiseCentre();
 
@@ -289,6 +293,8 @@ void HexGame::OnStart()
 }
 void HexGame::OnStop()
 {
+	HexScrapbook::RestoreEnabledStatus();
+
 	SetState(HexGame::State::Place);
 
 	short min = hexGrid->centre.x - HexProgression::currentRadius;

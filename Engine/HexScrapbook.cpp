@@ -27,6 +27,43 @@ bool HexScrapbook::IsEnabled() noexcept
 	return enabled;
 }
 
+struct EnabledStatusCache
+{
+	bool base;
+	std::vector<std::array<bool, 4>> habitatsCache;
+};
+
+bool baseEnabledCache;
+std::vector<std::tuple<bool, bool, bool, bool>> habitatsEnabledCache;
+void HexScrapbook::CacheEnabledStatus() noexcept
+{
+	baseEnabledCache = base->enabled;
+
+	habitatsEnabledCache.clear();
+	for (const HabitatCollection& habitat : habitats)
+	{
+		habitatsEnabledCache.push_back( {
+			habitat.habitat->enabled,
+			habitat.tiles[0]->enabled,
+			habitat.tiles[1]->enabled,
+			habitat.tiles[2]->enabled
+		} );
+	}
+}
+void HexScrapbook::RestoreEnabledStatus() noexcept
+{
+	base->enabled = baseEnabledCache;
+	for (int i = 0; i < (int)habitats.size(); i++)
+	{
+		std::tie(
+			habitats[i].habitat->enabled,
+			habitats[i].tiles[0]->enabled,
+			habitats[i].tiles[1]->enabled,
+			habitats[i].tiles[2]->enabled
+		) = habitatsEnabledCache[i];
+	}
+}
+
 void HexScrapbook::ConcealSprites() noexcept
 {
 	for (HabitatCollection& habitat : habitats)

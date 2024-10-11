@@ -259,7 +259,7 @@
     ],
     "UISprites": [
       {
-        "Enabled": false,
+        "Enabled": true,
         "Layer": 1,
         "Name": "ScrapbookBG",
         "PositionX": 0.0,
@@ -270,7 +270,7 @@
         "TextureWrap": false
       },
       {
-        "Enabled": false,
+        "Enabled": true,
         "Layer": 0,
         "Name": "BeeHabitat",
         "PositionX": -0.7329999804496765,
@@ -281,7 +281,7 @@
         "TextureWrap": false
       },
       {
-        "Enabled": false,
+        "Enabled": true,
         "Layer": 0,
         "Name": "BeeFern",
         "PositionX": -0.9369999766349792,
@@ -292,7 +292,7 @@
         "TextureWrap": false
       },
       {
-        "Enabled": false,
+        "Enabled": true,
         "Layer": 0,
         "Name": "BeeDaisyOne",
         "PositionX": -0.8809999823570251,
@@ -303,7 +303,7 @@
         "TextureWrap": false
       },
       {
-        "Enabled": false,
+        "Enabled": true,
         "Layer": 0,
         "Name": "BeeDaisyTwo",
         "PositionX": -0.41100001335144043,
@@ -314,7 +314,7 @@
         "TextureWrap": false
       },
       {
-        "Enabled": false,
+        "Enabled": true,
         "Layer": 0,
         "Name": "TassieHabitat",
         "PositionX": 0.7730000019073486,
@@ -325,7 +325,7 @@
         "TextureWrap": false
       },
       {
-        "Enabled": false,
+        "Enabled": true,
         "Layer": 0,
         "Name": "TassieEucaOne",
         "PositionX": 0.44699999690055847,
@@ -336,7 +336,7 @@
         "TextureWrap": false
       },
       {
-        "Enabled": false,
+        "Enabled": true,
         "Layer": 0,
         "Name": "TassieEucaTwo",
         "PositionX": 0.9319999814033508,
@@ -347,7 +347,7 @@
         "TextureWrap": false
       },
       {
-        "Enabled": false,
+        "Enabled": true,
         "Layer": 0,
         "Name": "TassieGravel",
         "PositionX": 0.5740000009536743,
@@ -358,7 +358,7 @@
         "TextureWrap": false
       },
       {
-        "Enabled": false,
+        "Enabled": true,
         "Layer": 0,
         "Name": "FrogHabitat",
         "PositionX": -0.6380000114440918,
@@ -369,7 +369,7 @@
         "TextureWrap": false
       },
       {
-        "Enabled": false,
+        "Enabled": true,
         "Layer": 0,
         "Name": "FrogFern",
         "PositionX": -0.9779999852180481,
@@ -380,7 +380,7 @@
         "TextureWrap": false
       },
       {
-        "Enabled": false,
+        "Enabled": true,
         "Layer": 0,
         "Name": "FrogEuca",
         "PositionX": -0.29499998688697815,
@@ -391,7 +391,7 @@
         "TextureWrap": false
       },
       {
-        "Enabled": false,
+        "Enabled": true,
         "Layer": 0,
         "Name": "FrogLilyPad",
         "PositionX": -0.5180000066757202,
@@ -402,7 +402,7 @@
         "TextureWrap": false
       },
       {
-        "Enabled": false,
+        "Enabled": true,
         "Layer": 0,
         "Name": "SlugHabitat",
         "PositionX": 0.597000002861023,
@@ -413,7 +413,7 @@
         "TextureWrap": false
       },
       {
-        "Enabled": false,
+        "Enabled": true,
         "Layer": 0,
         "Name": "SlugEuca",
         "PositionX": 0.27399998903274536,
@@ -424,7 +424,7 @@
         "TextureWrap": false
       },
       {
-        "Enabled": false,
+        "Enabled": true,
         "Layer": 0,
         "Name": "SlugTeaTree",
         "PositionX": 0.9369999766349792,
@@ -435,7 +435,7 @@
         "TextureWrap": false
       },
       {
-        "Enabled": false,
+        "Enabled": true,
         "Layer": 0,
         "Name": "SlugWater",
         "PositionX": 0.5139999985694885,
@@ -446,7 +446,7 @@
         "TextureWrap": false
       },
       {
-        "Enabled": false,
+        "Enabled": true,
         "Layer": 0,
         "Name": "PlatypusHabitat",
         "PositionX": 0.02500000037252903,
@@ -457,7 +457,7 @@
         "TextureWrap": false
       },
       {
-        "Enabled": false,
+        "Enabled": true,
         "Layer": 0,
         "Name": "PlatypusAcacia",
         "PositionX": -0.03200000151991844,
@@ -468,7 +468,7 @@
         "TextureWrap": false
       },
       {
-        "Enabled": false,
+        "Enabled": true,
         "Layer": 0,
         "Name": "PlatypusMushroom",
         "PositionX": -0.29899999499320984,
@@ -479,7 +479,7 @@
         "TextureWrap": false
       },
       {
-        "Enabled": false,
+        "Enabled": true,
         "Layer": 0,
         "Name": "PlatypusLog",
         "PositionX": 0.1889999955892563,

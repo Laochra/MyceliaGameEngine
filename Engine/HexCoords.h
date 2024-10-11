@@ -21,6 +21,7 @@ struct HexOffsetCoord
 	static vec2 ToPos(HexOffsetCoord hexOffsetCoord, HexOffsetCoord centre) noexcept;
 	static HexOffsetCoord GetFromPos(vec2 position, HexOffsetCoord centre) noexcept;
 
+	bool operator==(const HexOffsetCoord& other) const noexcept = default;
 	auto operator<=>(const HexOffsetCoord& other) const noexcept = default;
 };
 HexOffsetCoord operator+(HexOffsetCoord a, HexOffsetCoord b) noexcept;

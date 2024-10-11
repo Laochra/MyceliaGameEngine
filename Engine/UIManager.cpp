@@ -20,4 +20,5 @@ void UIManager::CleanUp() noexcept
 	{
 		del(uiSprite);
 	}
+	sprites.clear();
 }

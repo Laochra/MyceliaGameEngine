@@ -51,7 +51,6 @@ public:
 	void UpdateTile(HexOffsetCoord hexCoord, const json& tilePrefab) noexcept;
 
 private:
-	// TODO: This needs testing still, very experimental way of navigating the grid
 	void ValidatePerimeterPlaceability(short perimeterRadius) noexcept;
 };
 

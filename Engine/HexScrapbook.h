@@ -23,6 +23,9 @@ public:
 	static void SetEnabled(bool enabledStatus) noexcept;
 	static bool IsEnabled() noexcept;
 
+	static void CacheEnabledStatus() noexcept;
+	static void RestoreEnabledStatus() noexcept;
+
 	static void ConcealSprites() noexcept;
 	static void RevealSprites() noexcept;
 
