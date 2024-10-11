@@ -41,10 +41,9 @@ void LightObject::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOption
 	else if(angle[1] != 1.0f) shadowMapCount = 1U;
 	else shadowMapCount = 6U;
 }
-void LightObject::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
+bool LightObject::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
 {
-	// Populate this properly
-	GameObject3D::UpdateFrom(jsonObj, guidOptions);
+	if (!GameObject3D::UpdateFrom(jsonObj, guidOptions)) return false;
 
 	range = jsonObj["Range"];
 
@@ -60,6 +59,8 @@ void LightObject::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
 	if (shadowMode == NoShadows) shadowMapCount = 0U;
 	else if (angle[1] != 1.0f) shadowMapCount = 1U;
 	else shadowMapCount = 6U;
+
+	return true;
 }
 
 vector<mat4> LightObject::GetLightPVMatrices() noexcept

@@ -53,13 +53,27 @@ void GameObject::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptions
 
 	state = bool(jsonObj["Active"]) ? GameObject::Active : GameObject::Inactive;
 }
-void GameObject::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
+bool GameObject::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
 {
 	const unsigned long long typeID = jsonObj["TypeID"];
 	if (typeID != GetClassID())
 	{
 		Debug::LogError(LogID::ERR150, "TypeID of the GameObject does not match the serialised file it is being updated with.", locationinfo);
-		return;
+		
+		// Possible way of handling this, it seems like a pain to interface with though
+		//if (guidOptions == GuidGeneration::Keep)
+		//{
+		//	json jsonObjCopy = jsonObj;
+		//	jsonObjCopy["GUID"] = GetGUID();
+		//	GameObject::InstantiateFrom(jsonObjCopy, GuidGeneration::File);
+		//}
+		//else
+		//{
+		//	GameObject::InstantiateFrom(jsonObj, guidOptions);
+		//}
+		//GameObject::Destroy(this);
+		
+		return false;
 	}
 
 	string nameStr = string(jsonObj["Name"]);
@@ -67,6 +81,8 @@ void GameObject::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
 	if (guidOptions == GuidGeneration::File) guid = jsonObj["GUID"];
 
 	state = bool(jsonObj["Active"]) ? GameObject::Active : GameObject::Inactive;
+
+	return true;
 }
 
 GameObject::GameObjectState GameObject::GetState() const noexcept

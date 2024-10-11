@@ -37,9 +37,9 @@ void MeshRenderer::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptio
 	string materialFilePath = jsonObj["Material"];
 	material = materialManager->GetMaterial(materialFilePath.c_str());
 }
-void MeshRenderer::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
+bool MeshRenderer::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
 {
-	GameObject3D::UpdateFrom(jsonObj, guidOptions);
+	if (!GameObject3D::UpdateFrom(jsonObj, guidOptions)) return false;
 
 	string meshFilePath = jsonObj["Mesh"];
 	if (meshFilePath == "None") mesh = nullptr;
@@ -47,6 +47,8 @@ void MeshRenderer::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
 
 	string materialFilePath = jsonObj["Material"];
 	material = materialManager->GetMaterial(materialFilePath.c_str());
+
+	return true;
 }
 
 void MeshRenderer::Draw()

@@ -56,9 +56,9 @@ void GameObject3D::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptio
 		child->parent = this;
 	}
 }
-void GameObject3D::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
+bool GameObject3D::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
 {
-	GameObject::UpdateFrom(jsonObj, guidOptions);
+	if (!GameObject::UpdateFrom(jsonObj, guidOptions)) return false;
 
 	vector<float> positionData = jsonObj["Position"];
 	memcpy(&position[0], positionData.data(), 3 * sizeof(float));
@@ -114,6 +114,8 @@ void GameObject3D::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
 			}
 		}
 	}
+
+	return true;
 }
 
 void GameObject3D::OnDestroy()

@@ -94,9 +94,9 @@ void ParticleEmitter::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOp
 	shaderProgram = new ShaderProgram();
 	shaderProgram->LoadAndLinkFromJSON(shaderProgramFilepath.c_str());
 }
-void ParticleEmitter::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
+bool ParticleEmitter::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
 {
-	GameObject3D::UpdateFrom(jsonObj, guidOptions);
+	if (!GameObject3D::UpdateFrom(jsonObj, guidOptions)) return false;
 
 	// Particle Properties
 	{
@@ -144,6 +144,8 @@ void ParticleEmitter::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions
 	del(shaderProgram);
 	shaderProgram = new ShaderProgram();
 	shaderProgram->LoadAndLinkFromJSON(shaderProgramFilepath.c_str());
+
+	return true;
 }
 
 void ParticleEmitter::Draw()

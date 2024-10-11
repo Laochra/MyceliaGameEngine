@@ -22,13 +22,15 @@ void Camera::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptions)
 
 	if (AppInfo::gameCamera == nullptr) AppInfo::gameCamera = this;
 }
-void Camera::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
+bool Camera::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
 {
-	GameObject3D::UpdateFrom(jsonObj, guidOptions);
+	if (!GameObject3D::UpdateFrom(jsonObj, guidOptions)) return false;
 
 	fov = jsonObj["FOV"];
 	nearClip = jsonObj["NearClip"];
 	farClip = jsonObj["FarClip"];
+
+	return true;
 }
 
 glm::mat4 Camera::GetViewMatrix()

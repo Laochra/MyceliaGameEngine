@@ -67,7 +67,7 @@ static constexpr const unsigned long long classID = HashID(#nameInit); \
 virtual const unsigned long long GetClassID() const noexcept { return nameInit::classID; } \
 virtual void SerialiseTo(json& serialisedObject) const; \
 virtual void DeserialiseFrom(const json& serialisedObject, GuidGeneration guidOptions = GuidGeneration::File); \
-virtual void UpdateFrom(const json& serialisedObject, GuidGeneration guidOptions = GuidGeneration::File);
+virtual bool UpdateFrom(const json& serialisedObject, GuidGeneration guidOptions = GuidGeneration::File);
 
 enum class GuidGeneration : unsigned char { New, File, Keep };
 

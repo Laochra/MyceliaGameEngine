@@ -21,11 +21,13 @@ void LinkedHexGrid::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOpti
 
 	//...
 }
-void LinkedHexGrid::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
+bool LinkedHexGrid::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
 {
-	GameObject3D::UpdateFrom(jsonObj, guidOptions);
+	if (!GameObject3D::UpdateFrom(jsonObj, guidOptions)) return false;
 
 	//...
+
+	return true;
 }
 
 HexTile& HexColumn::operator[](short row) noexcept
@@ -75,6 +77,8 @@ void LinkedHexGrid::UpdateTile(vec3 position, const json& tilePrefab) noexcept
 }
 void LinkedHexGrid::UpdateTile(HexOffsetCoord hexCoord, const json& tilePrefab) noexcept
 {
+	if (hexCoord == centre && tilePrefab != TileData::GetMotherTreePrefab()) return;
+
 	HexTile& hexTile = Get(hexCoord);
 	
 	short oldRadius = (short)HexProgression::currentRadius;
@@ -134,7 +138,9 @@ void LinkedHexGrid::UpdateTile(HexOffsetCoord hexCoord, const json& tilePrefab) 
 	}
 	
 	vec3 position = hexTile.object->GetPosition();
+	unsigned long long guid = hexTile.object->GetGUID();
 	hexTile.object->UpdateFrom(tilePrefab, GuidGeneration::Keep);
+	if (hexTile.object == GameObject::Destroyed) hexTile.object == gameObjectManager->Find(guid);
 	hexTile.object->SetPosition(position);
 	hexTile.object->Rotate(glm::radians(Random::Int32(0, 5) * 60.0f), vec3(0, 1, 0));
 
