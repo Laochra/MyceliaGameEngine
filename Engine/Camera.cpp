@@ -33,35 +33,55 @@ bool Camera::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
 	return true;
 }
 
-glm::mat4 Camera::GetViewMatrix()
+glm::mat4 Camera::UpdateProjectionMatrix()
 {
-	return glm::inverse(GetMatrix());
+	return UpdateProjectionMatrix(AppInfo::screenWidth, AppInfo::screenHeight);
 }
-
-glm::mat4 Camera::GetProjectionMatrix(float w, float h)
+glm::mat4 Camera::UpdateProjectionMatrix(float w, float h)
 {
 	float aspect;
 	if (h == 0.0f || w == 0.0f) aspect = 0.0f;
 	else aspect = w / h;
 
-   return glm::perspective(fov, aspect, nearClip, farClip);
+	projectionMatrix = glm::perspective(fov, aspect, nearClip, farClip);
+   return projectionMatrix;
+}
+glm::mat4 Camera::UpdatePVMatrix()
+{
+	pvMatrix = GetProjectionMatrix() * GetViewMatrix();
+	return pvMatrix;
+}
+glm::mat4 Camera::UpdateViewMatrix()
+{
+	viewMatrix = glm::inverse(GetMatrix());
+	return viewMatrix;
 }
 
-glm::mat4 Camera::GetProjectionMatrix()
+const glm::mat4& Camera::GetProjectionMatrix() const noexcept
 {
-	return GetProjectionMatrix(AppInfo::screenWidth, AppInfo::screenHeight);
+	return projectionMatrix;
 }
-
-glm::mat4 Camera::GetPVMatrix()
+const glm::mat4& Camera::GetPVMatrix() const noexcept
 {
-	return GetProjectionMatrix((float)AppInfo::screenWidth, (float)AppInfo::screenHeight) * GetViewMatrix();;
+	return pvMatrix;
+}
+const glm::mat4& Camera::GetViewMatrix() const noexcept
+{
+	return viewMatrix;
 }
 
 void Camera::Initialise()
 {
-	Updater::UpdateAdd(this);
+	GameObject3D::Initialise();
 
 	fov = glm::radians(80.0f);
+}
+
+void Camera::Update()
+{
+	UpdateProjectionMatrix(AppInfo::screenWidth, AppInfo::screenHeight);
+	UpdateViewMatrix();
+	UpdatePVMatrix();
 }
 
 void Camera::DrawDebug()

@@ -20,7 +20,7 @@ public:
 	float maxElevation = 15;
 
 
-	glm::mat4 GetViewMatrix() override;
+	glm::mat4 UpdateViewMatrix() override;
 
 	void Update() override;
 };

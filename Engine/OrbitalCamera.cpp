@@ -5,14 +5,17 @@
 
 #include "AppInfo.h"
 
-glm::mat4 OrbitalCamera::GetViewMatrix()
+glm::mat4 OrbitalCamera::UpdateViewMatrix()
 {
     vec3 up = vec3(0, 1, 0);
-    return glm::lookAt(GetGlobalPosition(), centre, up);
+	 viewMatrix = glm::lookAt(GetGlobalPosition(), centre, up);
+    return viewMatrix;
 }
 
 void OrbitalCamera::Update()
 {
+	Camera::Update();
+
 	vec3 forward = glm::normalize(vec3(GetGlobalPosition().x, 0, GetGlobalPosition().z) - vec3(centre.x, 0, centre.z));
 	vec3 up = vec3(0, 1, 0);
 	vec3 right = glm::cross(forward, up);

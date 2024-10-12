@@ -9,7 +9,7 @@ void EditorCamera::SerialiseTo(json& jsonObj) const {}
 void EditorCamera::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOptions) {}
 bool EditorCamera::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions) { return true; }
 
-glm::mat4 EditorCamera::GetViewMatrix()
+glm::mat4 EditorCamera::UpdateViewMatrix()
 {
 	float thetaR = glm::radians(xRotation);
 	float phiR = glm::radians(yRotation);
@@ -18,7 +18,8 @@ glm::mat4 EditorCamera::GetViewMatrix()
 	vec3 up(0, 1, 0);
 
 	vec3 globalPosition = GetGlobalPosition();
-	return glm::lookAt(globalPosition, globalPosition + forward, up);
+	viewMatrix = glm::lookAt(globalPosition, globalPosition + forward, up);
+	return viewMatrix;
 }
 
 void EditorCamera::Initialise()
@@ -75,4 +76,6 @@ void EditorCamera::Update()
 	}
 
 	SetRotation(quat(glm::vec3(glm::radians(xRotation), glm::radians(yRotation), glm::radians(0.0f))));
+
+	Camera::Update();
 }

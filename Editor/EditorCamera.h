@@ -25,7 +25,7 @@ public:
 	InputBind freeCamera;
 	InputBind quickMode;
 
-	glm::mat4 GetViewMatrix() override;
+	glm::mat4 UpdateViewMatrix() override;
 
 	void Initialise() override;
 	void Update() override;
