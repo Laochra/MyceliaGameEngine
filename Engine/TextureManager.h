@@ -24,15 +24,17 @@ public:
 	immovable(TextureManager);
 
 	Texture* GetTexture(const char* filepath, bool isNonlinear = false);
+	Texture* GetTexture(const string& filepath, bool isNonlinear = false);
 	Texture* GetTexture(const char* filepath, bool isNonlinear, bool wrap, Texture::Filter filter);
+	Texture* GetTexture(const string& filepath, bool isNonlinear, bool wrap, Texture::Filter filter);
 	
-	void ReloadTexture(const char* filepath);
+	void ReloadTexture(const string& filepath);
 	void ReloadAll();
 
 private:
 	map<string, Texture*> loadedTextures = map<string, Texture*>();
 
-	Texture* AddTexture(const char* filepath, bool isNonlinear, bool wrap, Texture::Filter filter);
+	Texture* AddTexture(const string& filepath, bool isNonlinear, bool wrap, Texture::Filter filter);
 };
 
 extern TextureManager* textureManager;

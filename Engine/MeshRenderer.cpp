@@ -136,7 +136,7 @@ void MeshRenderer::Draw()
 
 			if (filepath == "None") filepath = "DefaultColour";
 
-			textureManager->GetTexture(filepath.c_str(), true)->Bind(0);
+			textureManager->GetTexture(filepath, true)->Bind(0);
 			sp.BindUniform("ColourMap", 0);
 			colourMapBound = true;
 			continue;
@@ -157,7 +157,7 @@ void MeshRenderer::Draw()
 
 			if (filepath == "None") filepath = "DefaultNormal";
 
-			textureManager->GetTexture(filepath.c_str())->Bind(1);
+			textureManager->GetTexture(filepath)->Bind(1);
 			sp.BindUniform("NormalMap", 1);
 			normalMapBound = true;
 			continue;
@@ -169,7 +169,7 @@ void MeshRenderer::Draw()
 
 			if (filepath == "None") filepath = "DefaultRMAO";
 
-			textureManager->GetTexture(filepath.c_str())->Bind(2);
+			textureManager->GetTexture(filepath)->Bind(2);
 			sp.BindUniform("RMAOMap", 2);
 			rmaoMapBound = true;
 			continue;

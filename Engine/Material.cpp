@@ -95,7 +95,7 @@ bool Material::LoadFromJSON(const char* filepathInit) noexcept
 					{
 						string path = attribute["Data"];
 						attributes.push_back(MaterialInput(name, path, (ShaderInputType)type));
-						Texture* texture = textureManager->GetTexture(path.c_str());
+						Texture* texture = textureManager->GetTexture(path);
 						boundTextureHandles.insert(std::pair<string, uint>(name, texture->glHandle));
 					}
 					else
