@@ -6,7 +6,7 @@
 
 #include "Debug.h"
 
-#include <map>
+#include <array>
 
 const std::map<InputCode, const char*> inputCodeToName = {
 		// Mouse
@@ -171,12 +171,12 @@ const std::map<InputCode, const char*> inputCodeToName = {
 		{ InputCode::GamepadDPDown, "Gamepad D-Pad Down"},
 		{ InputCode::GamepadDPLeft, "Gamepad D-Pad Left"},
 
-		{ InputCode::GamepadLT, "Gamepad Left Trigger"},
-		{ InputCode::GamepadRT, "Gamepad Right Trigger"},
 		{ InputCode::GamepadLSX, "Gamepad Left Stick X Axis"},
 		{ InputCode::GamepadLSY, "Gamepad Left Stick Y Axis"},
 		{ InputCode::GamepadRSX, "Gamepad Right Stick X Axis"},
 		{ InputCode::GamepadRSY, "Gamepad Right Stick Y Axis"},
+		{ InputCode::GamepadLT, "Gamepad Left Trigger"},
+		{ InputCode::GamepadRT, "Gamepad Right Trigger"},
 
 		{ InputCode::GamepadUndefined, "Gamepad Undefined Input"},
 	};
@@ -343,12 +343,12 @@ const std::map<const char*, InputCode> inputNameToCode = {
 	{ "Gamepad D-Pad Down", InputCode::GamepadDPDown },
 	{ "Gamepad D-Pad Left", InputCode::GamepadDPLeft },
 
-	{ "Gamepad Left Trigger", InputCode::GamepadLT },
-	{ "Gamepad Right Trigger", InputCode::GamepadRT },
 	{ "Gamepad Left Stick X Axis", InputCode::GamepadLSX },
 	{ "Gamepad Left Stick Y Axis", InputCode::GamepadLSY },
 	{ "Gamepad Right Stick X Axis", InputCode::GamepadRSX },
 	{ "Gamepad Right Stick Y Axis", InputCode::GamepadRSY },
+	{ "Gamepad Left Trigger", InputCode::GamepadLT },
+	{ "Gamepad Right Trigger", InputCode::GamepadRT },
 
 	{ "Gamepad Undefined Input", InputCode::GamepadUndefined },
 };
@@ -363,7 +363,6 @@ Input::Input() noexcept
 			const char* name = glfwGetGamepadName(i);
 			gamepad.Connect(GetTypeFromDeviceName(name));
 			Debug::Log("Gamepad ", i, " is present on startup (", name, ")");
-
 		}
 		gamepads.push_back(gamepad);
 	}
@@ -421,36 +420,27 @@ void Input::Update()
 	AppInfo::input->cursorMovement = vec2(0, 0);
 	AppInfo::input->scrollInput = vec2(0, 0);
 
-	std::map<InputCode, bool> globalButtons;
-	for (uint i = (uint)InputCode::GamepadFirstButton; i <= (uint)InputCode::GamepadLastButton; i++)
-	{
-		globalButtons.insert(std::pair(InputCode(i), false));
-	}
+	std::array<bool, 15> globalButtons = {};
+	globalButtons.fill(false);
 
 	// Get Gamepad Inputs
 	for (uint g = 0; g < (uint)gamepads.size(); g++)
 	{
-		if (gamepads[g].IsEnabled())
+		GLFWgamepadstate gamepadState;
+		if (glfwGetGamepadState(g, &gamepadState))
 		{
-			int buttonCount = 0;
-			const unsigned char* buttons = glfwGetJoystickButtons(g, &buttonCount);
-			if (buttonCount > (int)globalButtons.size())
-			{
-				//Debug::LogWarning("Gamepad has more buttons than expected, some are being ignored");
-				buttonCount = (int)globalButtons.size();
-			}
-
-			for (uint b = 0; b < buttonCount; b++)
+			const int buttonCount = 15;
+			for (uint b = 0; b < (uint)buttonCount; b++)
 			{
 				InputCode globalInputCode = gamepads[g].GetGlobalInputCode(b);
 				InputCode localInputCode = gamepads[g].GetLocalInputCode(b);
 
 				if (globalInputCode == InputCode::GamepadUndefined) continue;
 
-				switch (buttons[b])
+				switch (gamepadState.buttons[b])
 				{
 				case GLFW_PRESS:
-					globalButtons[globalInputCode] = true;
+					globalButtons[b] = true;
 					if (!GetInputDown(localInputCode))
 					{
 						downInputs.insert(localInputCode);
@@ -468,42 +458,39 @@ void Input::Update()
 				}
 			}
 
-			int axisCount = 0;
-			const float* axes = glfwGetJoystickAxes(g, &axisCount);
-			if (axisCount > 6)
-			{
-				//Debug::LogWarning("Gamepad has more axes than expected, some are being ignored");
-				axisCount = 6;
-			}
+			const int axisCount = 6;
 
 			for (uint a = 0; a < (uint)axisCount; a++)
 			{
 				InputCode globalInputCode = gamepads[g].GetGlobalInputCode(buttonCount + a);
 				InputCode localInputCode = gamepads[g].GetLocalInputCode(buttonCount + a);
 
-				axisInputs[localInputCode] = axes[a];
-				if (abs(axes[a]) > abs(axisInputs[globalInputCode]))
+				axisInputs[localInputCode] = gamepadState.axes[a];
+				if (abs(gamepadState.axes[a]) > abs(axisInputs[globalInputCode]))
 				{
-					axisInputs[globalInputCode] = axes[a];
+					axisInputs[globalInputCode] = gamepadState.axes[a];
 				}
 			}
 		}
 	}
 	// Consolidate Input Info for if Multiple Gamepads Aren't Needed
-	for (std::pair<InputCode, bool> globalButton: globalButtons)
+	for (int b = 0; b < globalButtons.size(); b++)
 	{
-		bool wasDown = GetInputDown(globalButton.first);
-		bool isDownNow = globalButton.second;
+		InputCode inputCode = InputCode(int(InputCode::GamepadFirstButton) + b);
+		bool& globalButton = globalButtons[b];
+
+		bool wasDown = GetInputDown(inputCode);
+		bool isDownNow = globalButton;
 
 		if (!wasDown && isDownNow)
 		{
-			downInputs.insert(globalButton.first);
-			pressedInputs.insert(globalButton.first);
+			downInputs.insert(inputCode);
+			pressedInputs.insert(inputCode);
 		}
 		else if (wasDown && !isDownNow)
 		{
-			downInputs.erase(globalButton.first);
-			releasedInputs.insert(globalButton.first);
+			downInputs.erase(inputCode);
+			releasedInputs.insert(inputCode);
 		}
 	}
 }
