@@ -75,21 +75,27 @@ bool GameObject3D::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
 	dirty = true;
 
 	vector<json> childrenData = jsonObj["Children"];
-	for (GameObject3D* child : children)
+	for (int c = 0; c < children.size();)
 	{
+		GameObject3D*& child = children[c];
 		bool matchFound = false;
-		for (vector<json>::const_iterator iter = childrenData.begin(); iter != childrenData.end(); iter++)
+		for (vector<json>::const_iterator dataIt = childrenData.begin(); dataIt != childrenData.end();)
 		{
-			const json& childData = iter[0];
+			const json& childData = dataIt[0];
 			if (childData["GUID"] == child->GetGUID()) // If child still exists, update it
 			{
 				child->UpdateFrom(childData);
-				iter = childrenData.erase(iter);
+				dataIt = childrenData.erase(dataIt);
 				matchFound = true;
 				break;
 			}
+			else
+			{
+				dataIt++;
+			}
 		}
 		if (!matchFound) GameObject::Destroy(child); // If child no longer exists, destroy it
+		else c++;
 	}
 	for (const json& childData : childrenData)
 	{

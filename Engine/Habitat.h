@@ -9,6 +9,7 @@ class LinkedHexGrid;
 struct Habitat
 {
 	GameObject3D* object = nullptr;
+	char habitatID = 0;
 
 	HexOffsetCoord tileCoords[3] = { {0,0}, {0,0}, {0,0} };
 

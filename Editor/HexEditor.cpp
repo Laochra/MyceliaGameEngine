@@ -177,7 +177,7 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 			startingVariants.push_back("Undefined");
 		}
 
-		for (std::vector<std::string>::iterator it = startingVariants.begin(); it < startingVariants.end(); it++)
+		for (std::vector<std::string>::iterator it = startingVariants.begin(); it < startingVariants.end();)
 		{
 			DrawTileDropdown(StringBuilder("##", uint(it - startingVariants.begin())).CStr(), *it);
 			ImGui::SameLine();
@@ -187,6 +187,10 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 			{
 				it = startingVariants.erase(it);
 				if (it == startingVariants.end()) break;
+			}
+			else
+			{
+				it++;
 			}
 		}
 
@@ -273,7 +277,7 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 						unlockedVariants.push_back("Undefined");
 					}
 
-					for (std::vector<std::string>::iterator it = unlockedVariants.begin(); it < unlockedVariants.end(); it++)
+					for (std::vector<std::string>::iterator it = unlockedVariants.begin(); it < unlockedVariants.end();)
 					{
 						DrawTileDropdown(StringBuilder("##", uint(it - unlockedVariants.begin())).CStr(), *it);
 						ImGui::SameLine();
@@ -283,6 +287,10 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 						{
 							it = unlockedVariants.erase(it);
 							if (it == unlockedVariants.end()) break;
+						}
+						else
+						{
+							it++;
 						}
 					}
 				}
@@ -519,7 +527,7 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 			{
 				HexAudio::ambience.push_back("None");
 			}
-			for (auto it = HexAudio::ambience.begin(); it != HexAudio::ambience.end(); it++)
+			for (auto it = HexAudio::ambience.begin(); it != HexAudio::ambience.end();)
 			{
 				DrawAudioInput(StringBuilder("##", it - HexAudio::ambience.begin()).CStr(), *it);
 				ImGui::SameLine();
@@ -529,6 +537,10 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 				{
 					it = HexAudio::ambience.erase(it);
 					if (it == HexAudio::ambience.end()) break;
+				}
+				else
+				{
+					it++;
 				}
 			}
 

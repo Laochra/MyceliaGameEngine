@@ -12,6 +12,4 @@ struct HexTile
 	char habitat = -1; // -1 means not part of a habitat
 	HexType type = HexType::Unreached;
 	char variant = 0;
-
-	void DrawHexPos(HexOffsetCoord centre) noexcept;
 };

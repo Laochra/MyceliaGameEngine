@@ -67,11 +67,7 @@ void LinkedHexGrid::Initialise() noexcept
 void LinkedHexGrid::UpdateTile(vec3 position, const json& tilePrefab) noexcept
 {
 	HexCubeCoord cubeCoord = HexCubeCoord::GetFromPos(vec2(position.x, position.z));
-	if (cubeCoord.GetMagnitude() > radius)
-	{
-		Debug::LogWarning("The given position is outside the hex grid.", locationinfo);
-		return;
-	}
+	if (cubeCoord.GetMagnitude() > radius) return;
 
 	UpdateTile(HexCubeToOffset(cubeCoord, centre), tilePrefab);
 }
@@ -81,6 +77,8 @@ void LinkedHexGrid::UpdateTile(HexOffsetCoord hexCoord, const json& tilePrefab) 
 
 	HexTile& hexTile = Get(hexCoord);
 	
+	if (hexTile.habitat >= 0) return; // TODO: Implement moving the habitat
+
 	short oldRadius = (short)HexProgression::currentRadius;
 	bool radiusExpanded = false;
 

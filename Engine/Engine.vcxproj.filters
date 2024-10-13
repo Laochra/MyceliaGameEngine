@@ -214,9 +214,6 @@
     <ClCompile Include="HexRadial.cpp">
       <Filter>HexGame</Filter>
     </ClCompile>
-    <ClCompile Include="HexTile.cpp">
-      <Filter>HexGame</Filter>
-    </ClCompile>
     <ClCompile Include="Habitat.cpp">
       <Filter>HexGame</Filter>
     </ClCompile>
@@ -578,6 +575,9 @@
       <Filter>Rendering\GUI</Filter>
     </ClInclude>
     <ClInclude Include="HexScrapbook.h">
+      <Filter>HexGame</Filter>
+    </ClInclude>
+    <ClInclude Include="HexCameraData.h">
       <Filter>HexGame</Filter>
     </ClInclude>
   </ItemGroup>

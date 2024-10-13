@@ -36,64 +36,6 @@ void static RadialInteractionHandler(int selection)
 	((HexGame*)AppInfo::application->game)->SetState(HexGame::State::Place);
 }
 
-void static RefreshHexPositions(uint& hexPosFBO, uint& hexPosTexture, uint& hexPosDepth)
-{
-	if (hexPosFBO == 0)
-	{
-		glGenFramebuffers(1, &hexPosFBO);
-		glGenRenderbuffers(1, &hexPosDepth);
-		glGenTextures(1, &hexPosTexture);
-	}
-
-	glBindFramebuffer(GL_FRAMEBUFFER, hexPosFBO);
-
-	glBindRenderbuffer(GL_RENDERBUFFER, hexPosDepth);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, AppInfo::screenWidth, AppInfo::screenHeight);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, hexPosDepth);
-
-	glBindTexture(GL_TEXTURE_2D, hexPosTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32I, AppInfo::screenWidth, AppInfo::screenHeight, 0, GL_RGBA_INTEGER, GL_INT, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, hexPosTexture, 0);
-}
-void static DrawHexPositions(LinkedHexGrid* hexGrid, uint& hexPosFBO, uint& hexPosTexture, uint &hexPosDepth)
-{
-	if (hexPosFBO == 0 || AppInfo::screenSizeJustChanged)
-	{
-		RefreshHexPositions(hexPosFBO, hexPosTexture, hexPosDepth);
-	}
-
-	if (AppInfo::CompareState(AppState::Playing))
-	{
-		glBindFramebuffer(GL_FRAMEBUFFER, hexPosFBO);
-
-		glClearColor(0, 0, 0, 0);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glViewport(0, 0, AppInfo::screenWidth, AppInfo::screenHeight);
-
-		short min = hexGrid->centre.x - HexProgression::currentRadius;
-		short max = hexGrid->centre.x + HexProgression::currentRadius;
-
-		for (short c = min; c <= max; c++)
-		{
-			for (short r = min; r <= max; r++)
-			{
-				HexTile& hexTile = hexGrid->Get(HexOffsetCoord(c, r));
-
-				if (hexTile.object != nullptr)
-				{
-					hexTile.DrawHexPos(hexGrid->centre);
-				}
-			}
-		}
-	}
-}
-
 static void RefreshUI(uint& uiFBO, uint& uiTexture)
 {
 	if (uiFBO == 0)
@@ -362,18 +304,7 @@ void HexGame::Update()
 	{
 		if (gameInputs.place.pressed())
 		{
-			// TODO: replace this with a raycast for performance reasons
-			const int pixelCount = AppInfo::screenWidth * AppInfo::screenHeight;
-			glm::ivec4* hexPosPixels = new glm::ivec4[pixelCount];
-			glGetTextureImage(handles.hexPosTexture, 0, GL_RGBA_INTEGER, GL_INT, pixelCount * sizeof(glm::ivec4), hexPosPixels);
-
-			uint hexPosIndex = (int)AppInfo::screenWidth / 2 + (int)AppInfo::screenHeight / 2 * AppInfo::screenWidth;
-			glm::ivec4 hexPos = hexPosPixels[hexPosIndex];
-			if (hexPos.a != 0)
-			{
-				hexGrid->UpdateTile(HexOffsetCoord(hexPos.x, hexPos.y), TileData::GetPrefab((*currentTileType)[currentTileVariant].name));
-			}
-			delete[] hexPosPixels;
+			hexGrid->UpdateTile(vec3(selectedPosition.x, 0, selectedPosition.y), TileData::GetPrefab((*currentTileType)[currentTileVariant].name));
 		}
 
 		if (gameInputs.openRadial.pressed()) SetState(HexGame::State::Radial);
@@ -445,6 +376,9 @@ void HexGame::Update()
 	{
 		xMovement = gameInputs.moveX;
 		zMovement = gameInputs.moveZ;
+
+		cameraData.currentZoom += (gameInputs.zoom - gameInputs.zoomIn + gameInputs.zoomOut) * cameraData.zoomSpeed * Time::delta;
+		cameraData.currentZoom = glm::clamp(cameraData.currentZoom, cameraData.minZoom, cameraData.maxZoom);
 	}
 	crosshair->enabled = !currentRadialMenu->enabled;
 
@@ -458,8 +392,42 @@ void HexGame::Update()
 		moveDir = vec2(xMovement, zMovement);
 	}
 
-	vec3 moveStep = vec3(moveDir.x, 0, moveDir.y) * moveSpeed * Time::delta;
-	AppInfo::gameCamera->Translate(moveStep);
+	selectedPosition += moveDir * moveSpeed * Time::delta;
+	vec3 offset3D = vec3(0, cameraData.offsetDirection) * cameraData.currentZoom;
+	AppInfo::gameCamera->SetPosition(vec3(selectedPosition.x, 0, selectedPosition.y) + offset3D);
+
+	HexTile& hoveredHex = hexGrid->Get(HexOffsetCoord::GetFromPos(selectedPosition, hexGrid->centre));
+	GameObject3D* hoveredGameObject;
+	if (hoveredHex.habitat < 0)
+	{
+		hoveredGameObject = hoveredHex.object;
+	}
+	else
+	{
+		hoveredGameObject = nullptr;
+
+		for (Habitat& habitat : hexGrid->habitats)
+		{
+			if (habitat.habitatID == hoveredHex.habitat)
+			{
+				hoveredGameObject = habitat.object;
+				break;
+			}
+		}
+	}
+	if (selectedGameObject != hoveredGameObject)
+	{
+		if (selectedGameObject != nullptr)
+		{
+			selectedGameObject->Translate(vec3(0, -0.1f, 0));
+		}
+		if (hoveredGameObject != nullptr)
+		{
+			hoveredGameObject->Translate(vec3(0, 0.1f, 0));
+		}
+
+		selectedGameObject = hoveredGameObject;
+	}
 }
 void HexGame::Draw()
 {
@@ -476,14 +444,6 @@ void HexGame::Draw()
 		LightingManager::maxShadowMaps,
 		LightingManager::shadowMapSideLength,
 		LightingManager::lightObjects);
-
-	// Hex Pos Drawing
-	DrawHexPositions(
-		hexGrid,
-		handles.hexPosFBO,
-		handles.hexPosTexture,
-		handles.hexPosDepth
-	);
 
 	// Scene Drawing
 	GameObjectManager::DrawScene(

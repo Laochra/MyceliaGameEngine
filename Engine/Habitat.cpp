@@ -45,28 +45,40 @@ Habitat Habitat::AttemptToFormHabitat(LinkedHexGrid* hexGrid, HexOffsetCoord new
 				habitatData.requiredTiles[2]
 			};
 
-			for (vector<string>::iterator it = variantsToCheckFor.begin(); it != variantsToCheckFor.end(); it++)
+			for (vector<string>::iterator it = variantsToCheckFor.begin(); it != variantsToCheckFor.end();)
 			{
 				if (TileData::Get(newHexTile.type, newHexTile.variant).name == *it)
 				{
 					it = variantsToCheckFor.erase(it);
 					break;
 				}
+				else
+				{
+					it++;
+				}
 			}
-			for (vector<string>::iterator it = variantsToCheckFor.begin(); it != variantsToCheckFor.end(); it++)
+			for (vector<string>::iterator it = variantsToCheckFor.begin(); it != variantsToCheckFor.end();)
 			{
 				if (TileData::Get(neighbour1.type, neighbour1.variant).name == *it)
 				{
 					it = variantsToCheckFor.erase(it);
 					break;
 				}
+				else
+				{
+					it++;
+				}
 			}
-			for (vector<string>::iterator it = variantsToCheckFor.begin(); it != variantsToCheckFor.end(); it++)
+			for (vector<string>::iterator it = variantsToCheckFor.begin(); it != variantsToCheckFor.end();)
 			{
 				if (TileData::Get(neighbour2.type, neighbour2.variant).name == *it)
 				{
 					it = variantsToCheckFor.erase(it);
 					break;
+				}
+				else
+				{
+					it++;
 				}
 			}
 
@@ -88,6 +100,8 @@ Habitat Habitat::AttemptToFormHabitat(LinkedHexGrid* hexGrid, HexOffsetCoord new
 
 void Habitat::FormHabitat(LinkedHexGrid* hexGrid, int habitatIndex, HexOffsetCoord hexCoord1, HexOffsetCoord hexCoord2, HexOffsetCoord hexCoord3) noexcept
 {
+	habitatID = habitatIndex;
+
 	HabitatData& habitatData = HabitatData::Get(habitatIndex);
 	HexScrapbook::RevealHabitat(habitatIndex);
 	HexProgression::currentRadius += 2;

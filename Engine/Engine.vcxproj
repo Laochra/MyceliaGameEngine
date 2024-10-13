@@ -211,7 +211,6 @@
     <ClCompile Include="HexProgression.cpp" />
     <ClCompile Include="HexRadial.cpp" />
     <ClCompile Include="HexScrapbook.cpp" />
-    <ClCompile Include="HexTile.cpp" />
     <ClCompile Include="InputAxis.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Input.cpp" />
@@ -315,6 +314,7 @@
     <ClInclude Include="GuidGenerator.h" />
     <ClInclude Include="Habitat.h" />
     <ClInclude Include="HabitatData.h" />
+    <ClInclude Include="HexCameraData.h" />
     <ClInclude Include="HexDirection.h" />
     <ClInclude Include="Heirarchical.h" />
     <ClInclude Include="HeirarchicalDefinitions.h" />

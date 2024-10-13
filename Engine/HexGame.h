@@ -12,6 +12,8 @@
 
 #include "TileData.h"
 
+#include "HexCameraData.h"
+
 typedef unsigned int uint;
 
 inline uint currentRadialPage = 0U;
@@ -28,6 +30,9 @@ public:
 		InputBind openScrapbook = InputBind({ InputCode::F, InputCode::GamepadY });
 		InputAxis moveX = InputAxis(InputCode::A, InputCode::D, InputCode::GamepadLSX);
 		InputAxis moveZ = InputAxis(InputCode::W, InputCode::S, InputCode::GamepadLSY);
+		InputAxis zoom = InputAxis(InputCode::LShift, InputCode::LControl);
+		InputAxis zoomIn = InputAxis(InputCode::GamepadRT);
+		InputAxis zoomOut = InputAxis(InputCode::GamepadLT);
 
 		InputBind radialSelect = InputBind({ InputCode::Space, InputCode::GamepadA });
 		InputBind radialClose = InputBind({ InputCode::Esc, InputCode::R, InputCode::GamepadB, InputCode::GamepadX });
@@ -40,6 +45,9 @@ public:
 	};
 	HexGame::Inputs gameInputs;
 
+	HexCameraData cameraData;
+	vec2 selectedPosition = { 0.0f, 0.0f };
+	GameObject3D* selectedGameObject = nullptr;
 	float moveSpeed = 3.0f;
 
 	enum class State : unsigned char { Place, Radial, Scrapbook };
@@ -65,10 +73,6 @@ public:
 
 		uint uiFBO = 0;
 		uint uiTexture = 0;
-
-		uint hexPosFBO;
-		uint hexPosTexture;
-		uint hexPosDepth;
 
 		uint bloomFBOs[2] = { 0, 0 };
 		uint bloomTextures[2] = { 0, 0 };
