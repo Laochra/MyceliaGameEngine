@@ -208,6 +208,8 @@ void HexGame::OnStart()
 
 	HexScrapbook::SetEnabled(false);
 
+	selectedPosition = vec2(0, 0);
+	selectedGameObject = nullptr;
 	AppInfo::gameCamera->SetPosition(vec3(0, HexCameraData::offsetDirection.x, HexCameraData::offsetDirection.y));
 	AppInfo::gameCamera->LookAt(vec3(0, 0, 0));
 	HexCameraData::currentZoom = HexCameraData::startZoom;
