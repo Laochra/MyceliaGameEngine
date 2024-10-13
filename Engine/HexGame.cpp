@@ -193,7 +193,7 @@ void HexGame::Initialise(uint* renderTargetInit)
 
 	hexGrid = GameObject::Instantiate<LinkedHexGrid>();
 
-	AppInfo::gameCamera->SetPosition(vec3(0, 6, 5.5f));
+	AppInfo::gameCamera->SetPosition(vec3(0, HexCameraData::offsetDirection.x, HexCameraData::offsetDirection.y));
 	AppInfo::gameCamera->LookAt(vec3(0, 0, 0));
 	AppInfo::gameCamera->fov = glm::radians(50.0f);
 }
@@ -208,7 +208,9 @@ void HexGame::OnStart()
 
 	HexScrapbook::SetEnabled(false);
 
-	AppInfo::gameCamera->SetPosition(vec3(0, 6, 5.5f));
+	AppInfo::gameCamera->SetPosition(vec3(0, HexCameraData::offsetDirection.x, HexCameraData::offsetDirection.y));
+	AppInfo::gameCamera->LookAt(vec3(0, 0, 0));
+	HexCameraData::currentZoom = HexCameraData::startZoom;
 	hexGrid->InitialiseCentre();
 
 	treeRadial = new RadialMenu(HexRadial::treeRadialSprites[0].c_str(), HexRadial::treeRadialSprites[1].c_str(), HexRadial::treeRadialSprites[2].c_str());
@@ -377,8 +379,8 @@ void HexGame::Update()
 		xMovement = gameInputs.moveX;
 		zMovement = gameInputs.moveZ;
 
-		cameraData.currentZoom += (gameInputs.zoom - gameInputs.zoomIn + gameInputs.zoomOut) * cameraData.zoomSpeed * Time::delta;
-		cameraData.currentZoom = glm::clamp(cameraData.currentZoom, cameraData.minZoom, cameraData.maxZoom);
+		HexCameraData::currentZoom += (gameInputs.zoom - gameInputs.zoomIn + gameInputs.zoomOut) * HexCameraData::zoomSpeed * Time::delta;
+		HexCameraData::currentZoom = glm::clamp(HexCameraData::currentZoom, HexCameraData::minZoom, HexCameraData::maxZoom);
 	}
 	crosshair->enabled = !currentRadialMenu->enabled;
 
@@ -393,7 +395,7 @@ void HexGame::Update()
 	}
 
 	selectedPosition += moveDir * moveSpeed * Time::delta;
-	vec3 offset3D = vec3(0, cameraData.offsetDirection) * cameraData.currentZoom;
+	vec3 offset3D = vec3(0, HexCameraData::offsetDirection) * HexCameraData::currentZoom;
 	AppInfo::gameCamera->SetPosition(vec3(selectedPosition.x, 0, selectedPosition.y) + offset3D);
 
 	HexTile& hoveredHex = hexGrid->Get(HexOffsetCoord::GetFromPos(selectedPosition, hexGrid->centre));

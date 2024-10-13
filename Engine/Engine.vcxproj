@@ -205,6 +205,7 @@
     <ClCompile Include="Habitat.cpp" />
     <ClCompile Include="HabitatData.cpp" />
     <ClCompile Include="HexAudio.cpp" />
+    <ClCompile Include="HexCameraData.cpp" />
     <ClCompile Include="HexGame.cpp" />
     <ClCompile Include="HexCoords.cpp" />
     <ClCompile Include="HexGameSerialiser.cpp" />

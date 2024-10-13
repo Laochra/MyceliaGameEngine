@@ -1,12 +1,14 @@
 #include "HexGameSerialiser.h"
 
+#include "UIManager.h"
+
 #include "TileData.h"
 #include "HabitatData.h"
 #include "HexRadial.h"
-#include "HexProgression.h"
-#include "HexAudio.h"
 #include "HexScrapbook.h"
-#include "UIManager.h"
+#include "HexProgression.h"
+#include "HexCameraData.h"
+#include "HexAudio.h"
 
 void HexGameSerialiser::LoadDataFrom(json& dataFile) noexcept
 {
@@ -164,6 +166,18 @@ void HexGameSerialiser::LoadDataFrom(json& dataFile) noexcept
 		HexProgression::LoadFrom(progressionData);
 	}
 
+	if (dataFile.contains("Camera"))
+	{
+		json cameraJSON = dataFile["Camera"];
+
+		HexCameraData::offsetDirection = vec2((float)cameraJSON["OffsetY"], (float)cameraJSON["OffsetZ"]);
+		
+		HexCameraData::maxZoom = cameraJSON["MaxZoom"];
+		HexCameraData::minZoom = cameraJSON["MinZoom"];
+		HexCameraData::startZoom = cameraJSON["StartZoom"];
+		HexCameraData::currentZoom = HexCameraData::startZoom;
+	}
+
 	if (dataFile.contains("Audio"))
 	{
 		json audioData = dataFile["Audio"];
@@ -307,6 +321,18 @@ void HexGameSerialiser::SaveDataTo(json& dataFile) noexcept
 	{
 		HexProgression::SaveTo(progressionJSON);
 		dataFile["Progression"] = progressionJSON;
+	}
+
+	json cameraJSON;
+	{
+		cameraJSON["OffsetY"] = HexCameraData::offsetDirection.x;
+		cameraJSON["OffsetZ"] = HexCameraData::offsetDirection.y;
+
+		cameraJSON["MaxZoom"] = HexCameraData::maxZoom;
+		cameraJSON["MinZoom"] = HexCameraData::minZoom;
+		cameraJSON["StartZoom"] = HexCameraData::startZoom;
+
+		dataFile["Camera"] = cameraJSON;
 	}
 
 	json audioJSON;

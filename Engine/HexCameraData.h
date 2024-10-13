@@ -4,12 +4,12 @@
 
 struct HexCameraData
 {
-	vec2 offsetDirection = glm::normalize(vec2(6.0f, 5.5f));
+	static vec2 offsetDirection;
 
-	float minZoom = 4.0f;
-	float maxZoom = 12.0f;
-	float zoomSpeed = 6.0f;
-	float startZoom = 8.0f;
+	static float minZoom;
+	static float maxZoom;
+	static float zoomSpeed;
+	static float startZoom;
 
-	float currentZoom = 8.0f;
+	static float currentZoom;
 };

@@ -3,10 +3,11 @@
 #include "TileData.h"
 #include "HabitatData.h"
 
-#include "HexProgression.h"
-#include "HexAudio.h"
 #include "HexRadial.h"
 #include "HexScrapbook.h"
+#include "HexProgression.h"
+#include "HexCameraData.h"
+#include "HexAudio.h"
 
 #include "UIManager.h"
 
@@ -489,6 +490,40 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 		}
 
 		ImGui::EndTabBar();
+
+		GUI::Spacing(3);
+	}
+
+	GUI::Spacing(3);
+
+	if (ImGui::CollapsingHeader("Camera"))
+	{
+		GUI::Spacing(3);
+
+		ImGui::PushItemWidth(ImGui::CalcItemWidth() / 2.0f);
+		if (ImGui::DragFloat("##OffsetDirectionY", &HexCameraData::offsetDirection.x, 0.005f, 0, 1, "%.3f", ImGuiSliderFlags_AlwaysClamp))
+		{
+			HexCameraData::offsetDirection.y = sin(acos(HexCameraData::offsetDirection.x));
+		}
+		ImGui::SameLine();
+		GUI::HSpacing(3);
+		ImGui::SameLine();
+		if (ImGui::DragFloat("##OffsetDirectionZ", &HexCameraData::offsetDirection.y, 0.005f, 0, 1, "%.3f", ImGuiSliderFlags_AlwaysClamp))
+		{
+			HexCameraData::offsetDirection.x = cos(asin(HexCameraData::offsetDirection.y));
+		}
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+		GUI::HSpacing(3);
+		ImGui::SameLine();
+		ImGui::Text("Offset Direction");
+
+		GUI::Spacing();
+
+		ImGui::DragFloat("Max Zoom", &HexCameraData::maxZoom);
+		ImGui::DragFloat("Min Zoom", &HexCameraData::minZoom);
+		ImGui::DragFloat("Start Zoom", &HexCameraData::startZoom);
+		ImGui::Text(StringBuilder("Current Zoom: ", HexCameraData::currentZoom).CStr());
 
 		GUI::Spacing(3);
 	}

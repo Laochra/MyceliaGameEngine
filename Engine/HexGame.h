@@ -45,7 +45,6 @@ public:
 	};
 	HexGame::Inputs gameInputs;
 
-	HexCameraData cameraData;
 	vec2 selectedPosition = { 0.0f, 0.0f };
 	GameObject3D* selectedGameObject = nullptr;
 	float moveSpeed = 3.0f;
