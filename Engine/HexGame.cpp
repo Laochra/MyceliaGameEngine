@@ -398,37 +398,49 @@ void HexGame::Update()
 	vec3 offset3D = vec3(0, HexCameraData::offsetDirection) * HexCameraData::currentZoom;
 	AppInfo::gameCamera->SetPosition(vec3(selectedPosition.x, 0, selectedPosition.y) + offset3D);
 
-	HexTile& hoveredHex = hexGrid->Get(HexOffsetCoord::GetFromPos(selectedPosition, hexGrid->centre));
-	GameObject3D* hoveredGameObject;
-	if (hoveredHex.habitat < 0)
-	{
-		hoveredGameObject = hoveredHex.object;
-	}
-	else
-	{
-		hoveredGameObject = nullptr;
-
-		for (Habitat& habitat : hexGrid->habitats)
-		{
-			if (habitat.habitatID == hoveredHex.habitat)
-			{
-				hoveredGameObject = habitat.object;
-				break;
-			}
-		}
-	}
-	if (selectedGameObject != hoveredGameObject)
+	HexOffsetCoord hoveredHexCoord = HexOffsetCoord::GetFromPos(selectedPosition, hexGrid->centre);
+	if (hoveredHexCoord == hexGrid->centre)
 	{
 		if (selectedGameObject != nullptr)
 		{
 			selectedGameObject->Translate(vec3(0, -0.1f, 0));
+			selectedGameObject = nullptr;
 		}
-		if (hoveredGameObject != nullptr)
+	}
+	else
+	{
+		HexTile& hoveredHex = hexGrid->Get(hoveredHexCoord);
+		GameObject3D* hoveredGameObject = nullptr;
+
+		if (hoveredHex.habitat < 0)
 		{
-			hoveredGameObject->Translate(vec3(0, 0.1f, 0));
+			hoveredGameObject = hoveredHex.object;
+		}
+		else
+		{
+			for (Habitat& habitat : hexGrid->habitats)
+			{
+				if (habitat.habitatID == hoveredHex.habitat)
+				{
+					hoveredGameObject = habitat.object;
+					break;
+				}
+			}
 		}
 
-		selectedGameObject = hoveredGameObject;
+		if (selectedGameObject != hoveredGameObject)
+		{
+			if (selectedGameObject != nullptr)
+			{
+				selectedGameObject->Translate(vec3(0, -0.1f, 0));
+			}
+			if (hoveredGameObject != nullptr)
+			{
+				hoveredGameObject->Translate(vec3(0, 0.1f, 0));
+			}
+
+			selectedGameObject = hoveredGameObject;
+		}
 	}
 }
 void HexGame::Draw()
