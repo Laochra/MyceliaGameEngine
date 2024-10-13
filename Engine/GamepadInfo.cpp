@@ -34,10 +34,10 @@ GamepadType GamepadInfo::GetGamepadType() const noexcept
 
 InputCode GamepadInfo::GetGlobalInputCode(uint index) const noexcept
 {
-	return GetGamepadLayout(gamepadType)[index];
+	return InputCode(uint(InputCode::GamepadFirstButton) + index);
 }
 
 InputCode GamepadInfo::GetLocalInputCode(uint index) const noexcept
 {
-	return InputCode(uint(GetGamepadLayout(gamepadType)[index]) + ((gamepadID + 1) * 100));
+	return InputCode(uint(InputCode::GamepadFirstButton) + index + ((gamepadID + 1) * 100));
 }
