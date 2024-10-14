@@ -117,7 +117,7 @@ void Habitat::FormHabitat(LinkedHexGrid* hexGrid, int habitatIndex, HexOffsetCoo
 		{
 			HexTile& hexTile = hexGrid->Get(hexCoord);
 			TileData::Get(hexTile.type, hexTile.variant).countPlaced--;
-			json defaultPrefab = TileData::GetDefaultPrefab();
+			json defaultPrefab = *TileData::GetDefaultPrefab();
 			hexTile.object->UpdateFrom(defaultPrefab, GuidGeneration::Keep);
 			hexTile.type = defaultPrefab["HexType"];
 			hexTile.variant = TileData::GetVariantIndex(hexTile.type, defaultPrefab["HexVariant"]);

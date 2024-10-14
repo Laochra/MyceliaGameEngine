@@ -190,6 +190,15 @@ void HexGame::Initialise(uint* renderTargetInit)
 
 	LoadTileData();
 
+	// Preload
+	//for (std::vector<TileData>& tileType : TileData::tilesData)
+	//{
+	//	for (TileData& tileVariant : tileType)
+	//	{
+	//		TileData::GetPrefab(tileVariant.name);
+	//	}
+	//}
+
 
 	hexGrid = GameObject::Instantiate<LinkedHexGrid>();
 
@@ -308,7 +317,15 @@ void HexGame::Update()
 	{
 		if (gameInputs.place.pressed())
 		{
-			hexGrid->UpdateTile(vec3(selectedPosition.x, 0, selectedPosition.y), TileData::GetPrefab((*currentTileType)[currentTileVariant].name));
+			const json* prefab = TileData::GetPrefab((*currentTileType)[currentTileVariant].name);
+			if (prefab == nullptr)
+			{
+				Debug::LogWarning("Tile ", (*currentTileType)[currentTileVariant].name, " couldn't load a valid prefab", locationinfo);
+			}
+			else
+			{
+				hexGrid->UpdateTile(vec3(selectedPosition.x, 0, selectedPosition.y), *prefab);
+			}
 		}
 
 		if (gameInputs.openRadial.pressed()) SetState(HexGame::State::Radial);

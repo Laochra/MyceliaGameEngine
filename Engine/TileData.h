@@ -32,10 +32,10 @@ public:
 
 	static char GetVariantIndex(HexType hexType, string name) noexcept;
 
-	static const json& GetDefaultPrefab() noexcept;
-	static const json& GetPerimeterPrefab() noexcept;
-	static const json& GetMotherTreePrefab() noexcept;
-	static const json& GetPrefab(string name) noexcept;
+	static const json* GetDefaultPrefab() noexcept;
+	static const json* GetPerimeterPrefab() noexcept;
+	static const json* GetMotherTreePrefab() noexcept;
+	static const json* GetPrefab(string name) noexcept;
 
 	static void ClearAndReset() noexcept;
 

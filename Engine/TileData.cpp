@@ -29,23 +29,23 @@ char TileData::GetVariantIndex(HexType hexType, string name) noexcept
 	return 0;
 }
 
-const json& TileData::GetDefaultPrefab() noexcept
+const json* TileData::GetDefaultPrefab() noexcept
 {
 	if (defaultTilePrefabs[0].empty()) PopulateDefaultPrefab(0);
-	return defaultTilePrefabs[0];
+	return &defaultTilePrefabs[0];
 }
-const json& TileData::GetPerimeterPrefab() noexcept
+const json* TileData::GetPerimeterPrefab() noexcept
 {
 	if (defaultTilePrefabs[1].empty()) PopulateDefaultPrefab(1);
-	return defaultTilePrefabs[1];
+	return &defaultTilePrefabs[1];
 }
-const json& TileData::GetMotherTreePrefab() noexcept
+const json* TileData::GetMotherTreePrefab() noexcept
 {
 	if (defaultTilePrefabs[2].empty()) PopulateDefaultPrefab(2);
-	return defaultTilePrefabs[2];
+	return &defaultTilePrefabs[2];
 }
 
-const json& TileData::GetPrefab(string name) noexcept
+const json* TileData::GetPrefab(string name) noexcept
 {
 	for (char t = 0; t < (char)tilesData.size(); t++)
 	{
@@ -56,10 +56,12 @@ const json& TileData::GetPrefab(string name) noexcept
 			if (name == tileVariant.name)
 			{
 				if (!tileVariant.prefabLoaded) PopulatePrefab((HexType)t, v);
-				return tileVariant.prefab;
+				return &tileVariant.prefab;
 			}
 		}
 	}
+	
+	return nullptr;
 }
 
 void TileData::ClearAndReset() noexcept
@@ -83,6 +85,21 @@ void TileData::ClearAndReset() noexcept
 	}
 }
 
+#include "MaterialManager.h"
+static void RecursiveLoadMaterial(json& jsonObj) noexcept
+{
+	if (jsonObj.contains("Material"))
+	{
+		materialManager->GetMaterial(string(jsonObj["Material"]).c_str());
+	}
+
+	vector<json> children = jsonObj["Children"];
+	for (int i = 0; i < children.size(); i++)
+	{
+		RecursiveLoadMaterial(children[i]);
+	}
+}
+
 void TileData::PopulatePrefab(HexType hexType, char variant) noexcept
 {
 	TileData& tileData = Get(hexType, variant);
@@ -90,7 +107,7 @@ void TileData::PopulatePrefab(HexType hexType, char variant) noexcept
 	if (tileData.prefabFilepath == "None")
 	{
 		Debug::LogWarning(tileData.name, " doesn't have a prefab specified. It will instead use the default tile file.", locationinfo);
-		tileData.prefab = GetDefaultPrefab();
+		tileData.prefab = *GetDefaultPrefab();
 		return;
 	}
 
@@ -99,7 +116,7 @@ void TileData::PopulatePrefab(HexType hexType, char variant) noexcept
 	if (!prefabFile.good())
 	{
 		Debug::LogWarning(LogID::WRN101, tileData.name, ". It will instead use the default tile file.", locationinfo);
-		tileData.prefab = GetDefaultPrefab();
+		tileData.prefab = *GetDefaultPrefab();
 		return;
 	}
 
@@ -113,9 +130,12 @@ void TileData::PopulatePrefab(HexType hexType, char variant) noexcept
 	{
 		tileData.prefab["HexType"] = hexType;
 		tileData.prefab["HexVariant"] = tileData.name;
+		
 		ofstream updatedFile(tileData.prefabFilepath);
 		updatedFile << std::setw(2) << tileData.prefab;
 	}
+
+	RecursiveLoadMaterial(tileData.prefab);
 }
 void TileData::PopulateDefaultPrefab(int index) noexcept
 {

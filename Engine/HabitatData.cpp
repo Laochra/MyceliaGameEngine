@@ -22,7 +22,7 @@ const json& HabitatData::GetPrefab(string name) noexcept
 {
 	int index = GetPrefabIndex(name);
 
-	if (index < 0) return TileData::GetDefaultPrefab();
+	if (index < 0) return *TileData::GetDefaultPrefab();
 
 	HabitatData& habitat = habitatsData[index];
 
@@ -61,7 +61,7 @@ void HabitatData::PopulatePrefab(int index) noexcept
 	if (habitatData.prefabFilepath == "None")
 	{
 		Debug::LogWarning(habitatData.name, " doesn't have a prefab specified. It will instead use the default tile file.", locationinfo);
-		habitatData.prefab = TileData::GetDefaultPrefab();
+		habitatData.prefab = *TileData::GetDefaultPrefab();
 		return;
 	}
 
@@ -70,7 +70,7 @@ void HabitatData::PopulatePrefab(int index) noexcept
 	if (!prefabFile.good())
 	{
 		Debug::LogWarning(LogID::WRN101, habitatData.name, ". It will instead use the default tile file.", locationinfo);
-		habitatData.prefab = TileData::GetDefaultPrefab();
+		habitatData.prefab = *TileData::GetDefaultPrefab();
 		return;
 	}
 

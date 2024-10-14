@@ -73,7 +73,7 @@ void LinkedHexGrid::UpdateTile(vec3 position, const json& tilePrefab) noexcept
 }
 void LinkedHexGrid::UpdateTile(HexOffsetCoord hexCoord, const json& tilePrefab) noexcept
 {
-	if (hexCoord == centre && tilePrefab != TileData::GetMotherTreePrefab()) return;
+	if (hexCoord == centre && tilePrefab != *TileData::GetMotherTreePrefab()) return;
 
 	HexTile& hexTile = Get(hexCoord);
 	
@@ -138,7 +138,7 @@ void LinkedHexGrid::UpdateTile(HexOffsetCoord hexCoord, const json& tilePrefab) 
 	vec3 position = hexTile.object->GetPosition();
 	unsigned long long guid = hexTile.object->GetGUID();
 	hexTile.object->UpdateFrom(tilePrefab, GuidGeneration::Keep);
-	if (hexTile.object == GameObject::Destroyed) hexTile.object == gameObjectManager->Find(guid);
+	//if (hexTile.object == GameObject::Destroyed) hexTile.object = (GameObject3D*)gameObjectManager->Find(guid);
 	hexTile.object->SetPosition(position);
 	hexTile.object->Rotate(glm::radians(Random::Int32(0, 5) * 60.0f), vec3(0, 1, 0));
 
@@ -187,7 +187,7 @@ void LinkedHexGrid::UpdateTile(HexOffsetCoord hexCoord, const json& tilePrefab) 
 void LinkedHexGrid::InitialiseCentre() noexcept
 {
 	InitialiseTile(centre);
-	UpdateTile(centre, TileData::GetMotherTreePrefab()); // TODO: Replace with Mother Tree
+	UpdateTile(centre, *TileData::GetMotherTreePrefab()); // TODO: Replace with Mother Tree
 }
 
 void LinkedHexGrid::InitialiseTile(HexOffsetCoord hexCoord) noexcept
@@ -200,7 +200,7 @@ void LinkedHexGrid::InitialiseTile(HexOffsetCoord hexCoord) noexcept
 		return;
 	}
 
-	json perimeterPrefab = TileData::GetPerimeterPrefab();
+	json perimeterPrefab = *TileData::GetPerimeterPrefab();
 
 	hexTile.type = HexType::Perimeter;
 	hexTile.object = (GameObject3D*)GameObject::InstantiateFrom(perimeterPrefab, GuidGeneration::New);
