@@ -89,11 +89,11 @@ public:
 	Material() noexcept = default;
 	uncopyable(Material)
 
-	bool LoadFromJSON(const char* filepathInit) noexcept;
+	bool LoadFromJSON(const string& filepathInit) noexcept;
 	const char* GetFilePath() const noexcept;
 
 protected:
-	char* filepath;
+	string filepath;
 	ShaderProgram* shaderProgram;
 
 	vector<MaterialInput> attributes;
