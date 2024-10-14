@@ -6,15 +6,9 @@
 
 #include "Debug.h"
 
-bool Material::LoadFromJSON(const char* filepathInit) noexcept
+bool Material::LoadFromJSON(const string& filepathInit) noexcept
 {
-	int size = 1;
-	while (filepathInit[size] != '\0') { size++; }
-	filepath = new char[size];
-	for (int currentChar = 0; currentChar <= size; currentChar++)
-	{
-		filepath[currentChar] = filepathInit[currentChar];
-	}
+	filepath = filepathInit;
 
 	ifstream materialInput(filepathInit);
 	if (!materialInput.good())
@@ -145,5 +139,5 @@ bool Material::LoadFromJSON(const char* filepathInit) noexcept
 
 const char* Material::GetFilePath() const noexcept
 {
-	return filepath;
+	return filepath.c_str();
 }
