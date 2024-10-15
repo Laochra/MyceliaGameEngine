@@ -4,6 +4,7 @@
 
 #include "TileData.h"
 #include "HabitatData.h"
+#include "SpiritData.h"
 #include "HexRadial.h"
 #include "HexScrapbook.h"
 #include "HexProgression.h"
@@ -64,6 +65,18 @@ void HexGameSerialiser::LoadDataFrom(json& dataFile) noexcept
 			habitat.requiredTiles[2] = requiredTiles[2];
 
 			HabitatData::habitatsData.push_back(habitat);
+		}
+	}
+
+	if (dataFile.contains("Spirits"))
+	{
+		vector<json> spiritsJSON = dataFile["Spirits"];
+
+		for (json spiritJSON : spiritsJSON)
+		{
+			SpiritData spirit;
+
+			SpiritData::spiritsData.push_back(spirit);
 		}
 	}
 
@@ -248,6 +261,14 @@ void HexGameSerialiser::SaveDataTo(json& dataFile) noexcept
 			habitatsJSON.push_back(habitatJSON);
 		}
 		dataFile["Habitats"] = habitatsJSON;
+	}
+
+	vector<json> spiritsJSON;
+	{
+		for (SpiritData spirit : SpiritData::spiritsData)
+		{
+			spiritsJSON.push_back(spirit.prefabFilepath);
+		}
 	}
 
 	json radialSpritesJSON;

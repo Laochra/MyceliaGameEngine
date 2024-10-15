@@ -2,6 +2,7 @@
 
 #include "TileData.h"
 #include "HabitatData.h"
+#include "SpiritData.h"
 
 #include "HexRadial.h"
 #include "HexScrapbook.h"
@@ -359,6 +360,44 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 			HabitatData::habitatsData.push_back(HabitatData());
 		}
 		if (!AppInfo::CompareState(AppState::Editor)) ImGui::EndDisabled();
+		ImGui::EndTabBar();
+
+		GUI::Spacing(3);
+	}
+
+	GUI::Spacing(3);
+
+	if (ImGui::CollapsingHeader("Spirits"))
+	{
+		GUI::Spacing(3);
+
+		ImGui::BeginTabBar("Spirits##Spirits");
+		for (int i = 0; i < (int)HabitatData::habitatsData.size(); i++)
+		{
+			if (SpiritData::spiritsData.size() < HabitatData::habitatsData.size())
+			{
+				SpiritData::spiritsData.push_back(SpiritData());
+			}
+			
+			SpiritData& spirit = SpiritData::spiritsData[i];
+
+			spirit.name = HabitatData::habitatsData[i].name;
+
+			if (ImGui::BeginTabItem(HabitatData::habitatsData[i].name.c_str()))
+			{
+				if (!AppInfo::CompareState(AppState::Editor)) ImGui::BeginDisabled();
+				ImGui::PushID(HabitatData::habitatsData[i].name.c_str());
+
+				DrawPrefabInput("Prefab ", spirit.prefabFilepath);
+
+				GUI::Spacing(3);
+
+				ImGui::PopID();
+				if (!AppInfo::CompareState(AppState::Editor)) ImGui::EndDisabled();
+				ImGui::EndTabItem();
+			}
+
+		}
 		ImGui::EndTabBar();
 
 		GUI::Spacing(3);
