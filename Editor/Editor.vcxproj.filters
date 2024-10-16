@@ -93,7 +93,7 @@
     <ClCompile Include="TransformEdit.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
-    <ClCompile Include="LinkedHexGridGUI.cpp">
+    <ClCompile Include="HexGridGUI.cpp">
       <Filter>GUI\EditorWindows\Inspector\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="CameraGUI.cpp">
@@ -266,7 +266,7 @@
     <ClInclude Include="TransformEdit.h">
       <Filter>GUI</Filter>
     </ClInclude>
-    <ClInclude Include="LinkedHexGridGUI.h">
+    <ClInclude Include="HexGridGUI.h">
       <Filter>GUI\EditorWindows\Inspector\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="CameraGUI.h">

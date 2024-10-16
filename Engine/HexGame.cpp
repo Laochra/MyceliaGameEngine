@@ -200,7 +200,7 @@ void HexGame::Initialise(uint* renderTargetInit)
 	//}
 
 
-	hexGrid = GameObject::Instantiate<LinkedHexGrid>();
+	hexGrid = GameObject::Instantiate<HexGrid>();
 
 	AppInfo::gameCamera->SetPosition(vec3(0, HexCameraData::offsetDirection.x, HexCameraData::offsetDirection.y));
 	AppInfo::gameCamera->LookAt(vec3(0, 0, 0));

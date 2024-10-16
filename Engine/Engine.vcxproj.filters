@@ -115,7 +115,7 @@
       <Filter>Rendering</Filter>
     </ClCompile>
     <ClCompile Include="ExampleGame.cpp" />
-    <ClCompile Include="LinkedHexGrid.cpp">
+    <ClCompile Include="HexGrid.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="HexGame.cpp">
@@ -385,7 +385,7 @@
       <Filter>Rendering</Filter>
     </ClInclude>
     <ClInclude Include="ExampleGame.h" />
-    <ClInclude Include="LinkedHexGrid.h">
+    <ClInclude Include="HexGrid.h">
       <Filter>GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="HexGame.h">

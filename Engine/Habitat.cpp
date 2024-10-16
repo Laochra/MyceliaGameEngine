@@ -7,9 +7,9 @@
 #include "HexProgression.h"
 
 #include "GameObject3D.h"
-#include "LinkedHexGrid.h"
+#include "HexGrid.h"
 
-Habitat Habitat::AttemptToFormHabitat(LinkedHexGrid* hexGrid, HexOffsetCoord newHexCoords) noexcept
+Habitat Habitat::AttemptToFormHabitat(HexGrid* hexGrid, HexOffsetCoord newHexCoords) noexcept
 {
 	HexTile& newHexTile = hexGrid->Get(newHexCoords);
 
@@ -98,7 +98,7 @@ Habitat Habitat::AttemptToFormHabitat(LinkedHexGrid* hexGrid, HexOffsetCoord new
 	return newHabitat;
 }
 
-void Habitat::FormHabitat(LinkedHexGrid* hexGrid, int habitatIndex, HexOffsetCoord hexCoord1, HexOffsetCoord hexCoord2, HexOffsetCoord hexCoord3) noexcept
+void Habitat::FormHabitat(HexGrid* hexGrid, int habitatIndex, HexOffsetCoord hexCoord1, HexOffsetCoord hexCoord2, HexOffsetCoord hexCoord3) noexcept
 {
 	habitatID = habitatIndex;
 

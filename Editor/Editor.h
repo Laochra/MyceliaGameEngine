@@ -2,7 +2,7 @@
 
 #include "Application.h"
 
-#include "LinkedHexGrid.h"
+#include "HexGrid.h"
 
 class Editor : public Application
 {

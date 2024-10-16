@@ -7,7 +7,7 @@ Inspector* inspector = new Inspector();
 #include "MeshRendererGUI.h"
 #include "LightObjectGUI.h"
 #include "ParticleEmitterGUI.h"
-#include "LinkedHexGridGUI.h"
+#include "HexGridGUI.h"
 
 #include "UISpriteGUI.h"
 
@@ -35,7 +35,7 @@ void Inspector::SetTarget(InspectableObject* target)
 		case MeshRenderer::classID: targetGUI = new MeshRendererGUI(gameObject); break;
 		case LightObject::classID: targetGUI = new LightObjectGUI(gameObject); break;
 		case ParticleEmitter::classID: targetGUI = new ParticleEmitterGUI(gameObject); break;
-		case LinkedHexGrid::classID: targetGUI = new LinkedHexGridGUI(gameObject); break;
+		case HexGrid::classID: targetGUI = new HexGridGUI(gameObject); break;
 		default:
 			targetGUI = new GameObjectGUI(gameObject);
 			Debug::LogError(LogID::ERR151,

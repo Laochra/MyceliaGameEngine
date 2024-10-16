@@ -8,7 +8,7 @@
 #include "RadialMenu.h"
 #include "UISprite.h"
 
-#include "LinkedHexGrid.h"
+#include "HexGrid.h"
 
 #include "TileData.h"
 
@@ -53,7 +53,7 @@ public:
 	HexGame::State gameState;
 	void SetState(HexGame::State newState) noexcept;
 
-	LinkedHexGrid* hexGrid;
+	HexGrid* hexGrid;
 
 	RadialMenu* treeRadial;
 	RadialMenu* flowerRadial;

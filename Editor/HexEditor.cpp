@@ -181,19 +181,26 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 
 		for (std::vector<std::string>::iterator it = startingVariants.begin(); it < startingVariants.end();)
 		{
-			DrawTileDropdown(StringBuilder("##", uint(it - startingVariants.begin())).CStr(), *it);
+			uint id = uint(it - startingVariants.begin());
+			ImGui::PushID(id);
+			DrawTileDropdown(StringBuilder("##", id).CStr(), *it);
 			ImGui::SameLine();
 			GUI::HSpacing(3);
 			ImGui::SameLine();
 			if (ImGui::Button("Remove"))
 			{
 				it = startingVariants.erase(it);
-				if (it == startingVariants.end()) break;
+				if (it == startingVariants.end())
+				{
+					ImGui::PopID();
+					break;
+				}
 			}
 			else
 			{
 				it++;
 			}
+			ImGui::PopID();
 		}
 
 		GUI::Spacing(3);
