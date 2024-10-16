@@ -53,14 +53,14 @@ public:
 	HexGame::State gameState;
 	void SetState(HexGame::State newState) noexcept;
 
-	HexGrid* hexGrid;
+	HexGrid* hexGrid = nullptr;
 
-	RadialMenu* treeRadial;
-	RadialMenu* flowerRadial;
-	RadialMenu* waterRadial;
-	RadialMenu* landRadial;
+	RadialMenu* treeRadial = nullptr;
+	RadialMenu* flowerRadial = nullptr;
+	RadialMenu* waterRadial = nullptr;
+	RadialMenu* landRadial = nullptr;
 
-	UISprite* crosshair;
+	UISprite* crosshair = nullptr;
 
 	struct RenderHandles
 	{

@@ -35,7 +35,7 @@ bool Camera::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
 
 glm::mat4 Camera::UpdateProjectionMatrix()
 {
-	return UpdateProjectionMatrix(AppInfo::screenWidth, AppInfo::screenHeight);
+	return UpdateProjectionMatrix((float)AppInfo::screenWidth, (float)AppInfo::screenHeight);
 }
 glm::mat4 Camera::UpdateProjectionMatrix(float w, float h)
 {
@@ -79,7 +79,7 @@ void Camera::Initialise()
 
 void Camera::Update()
 {
-	UpdateProjectionMatrix(AppInfo::screenWidth, AppInfo::screenHeight);
+	UpdateProjectionMatrix((float)AppInfo::screenWidth, (float)AppInfo::screenHeight);
 	UpdateViewMatrix();
 	UpdatePVMatrix();
 }

@@ -83,7 +83,7 @@ HexCubeCoord HexCubeCoord::GetRounded(vec3 unrounded) noexcept
 
 vec2 HexCubeCoord::ToPos(HexCubeCoord hexCubeCoord) noexcept
 {
-	float x = 3.0f / 2.0f * hexCubeCoord.q * invSqrt3;
+	float x = 3.0f / 2.0f * hexCubeCoord.q * (float)invSqrt3;
 	float y = 1.0f / 2.0f * hexCubeCoord.q + hexCubeCoord.r;
 	return vec2(x, y);
 }

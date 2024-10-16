@@ -402,7 +402,7 @@ namespace ArtImporter
 		while (fileQueue.size() > 0)
 		{
 			Preload(fileQueue[fileQueue.size() - 1].c_str());
-			Cook(fileQueue.size() - 1, savePath, true);
+			Cook(uint(fileQueue.size() - 1), savePath, true);
 		}
 	}
 }

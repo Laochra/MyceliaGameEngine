@@ -106,7 +106,7 @@ void HexGrid::UpdateTile(HexOffsetCoord hexCoord, const json& tilePrefab) noexce
 		for (int i = 0; i < 6; i++)
 		{
 			if (Get(neighbourCoords[i]).type == HexType::Unreached &&
-				neighbourCoords[i].GetMagnitude(centre) <= HexProgression::currentRadius)
+				neighbourCoords[i].GetMagnitude(centre) <= (short)HexProgression::currentRadius)
 			{
 				InitialiseTile(neighbourCoords[i]);
 			}

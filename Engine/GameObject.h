@@ -156,8 +156,8 @@ template<GameObjectClass T> inline T* GameObject::Instantiate(GameObjectState st
 	gameObject->guid = GuidGenerator::NewGuid();
 	gameObject->state = stateInit;
 
-	std::string className = gameObject->GetClassName();
-	AssignStringToCString(gameObject->name, className);
+	std::string classNameStr = gameObject->GetClassName();
+	AssignStringToCString(gameObject->name, classNameStr);
 
 	gameObjectManager->Add(gameObject);
 

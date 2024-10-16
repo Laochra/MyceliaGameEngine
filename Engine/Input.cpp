@@ -405,7 +405,7 @@ float Input::GetAxis(InputCode axisInputCode) const noexcept
 }
 int Input::GetAxis(InputCode negativeInputCode, InputCode positiveInputCode) const noexcept
 {
-	return downInputs.count(positiveInputCode) - downInputs.count(positiveInputCode);
+	return int(downInputs.count(positiveInputCode) - downInputs.count(positiveInputCode));
 }
 
 void Input::Update()
