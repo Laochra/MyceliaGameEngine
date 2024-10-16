@@ -107,7 +107,7 @@ public:
 	virtual void OnFrameStart();
 	virtual void FixedUpdate();
 	virtual void Update();
-	virtual void Draw();
+	virtual void Draw(intptr_t lastUsedMaterial);
 	virtual void DrawDepth(mat4 PVMatrix);
 	virtual void DrawGUID();
 	virtual void DrawDebug();

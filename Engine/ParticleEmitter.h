@@ -11,7 +11,7 @@ public:
 
 	using GameObject3D::GameObject3D;
 	
-	virtual void Draw() override;
+	virtual void Draw(intptr_t lastUsedMaterial) override;
 	virtual void DrawDebug() override;
 	virtual void Update() override;
 

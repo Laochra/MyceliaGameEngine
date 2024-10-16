@@ -1,6 +1,7 @@
 #include "Updater.h"
 
 #include "GameObject.h"
+#include "MeshRenderer.h"
 
 namespace Updater
 {
@@ -78,14 +79,28 @@ namespace Updater
 			i++;
 		}
 	}
+	static bool ShouldSwapDrawnObjects(const GameObject* a, const GameObject* b)
+	{
+		if (b->GetClassID() != MeshRenderer::classID) return false;
+		if (a->GetClassID() != MeshRenderer::classID) return true;
+
+		return (intptr_t)((MeshRenderer*)a)->GetMaterial() < (intptr_t)((MeshRenderer*)b)->GetMaterial();
+	}
 	void CallDraw()
 	{
+		std::sort(drawList.begin(), drawList.end(), ShouldSwapDrawnObjects);
+
 		int i = 0;
+		const Material* lastUsedMaterial = nullptr;
 		while (i < drawList.size())
 		{
 			if (drawList[i]->IsActive())
 			{
-				drawList[i]->Draw();
+				drawList[i]->Draw((intptr_t)lastUsedMaterial);
+				if (drawList[i]->GetClassID() == MeshRenderer::classID)
+				{
+					lastUsedMaterial = ((MeshRenderer*)drawList[i])->GetMaterial();
+				}
 			}
 			else if (drawList[i] == GameObject::Destroyed)
 			{

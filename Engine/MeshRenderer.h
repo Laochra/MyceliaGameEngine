@@ -15,7 +15,7 @@ public:
 	virtual void Initialise() override;
 	virtual void OnDestroy() override;
 	virtual void OnRestore() override;
-	virtual void Draw() override;
+	virtual void Draw(intptr_t lastUsedMaterial) override;
 	virtual void DrawDepth(mat4 PVMatrix) override;
 	virtual void DrawGUID() override;
 

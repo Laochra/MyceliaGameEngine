@@ -158,7 +158,7 @@ void GameObject::Update()
 {
 
 }
-void GameObject::Draw()
+void GameObject::Draw(intptr_t lastUsedMaterial)
 {
 
 }

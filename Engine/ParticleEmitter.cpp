@@ -148,7 +148,7 @@ bool ParticleEmitter::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions
 	return true;
 }
 
-void ParticleEmitter::Draw()
+void ParticleEmitter::Draw(intptr_t lastUsedMaterial)
 {	
 	if (this != Active) return;
 	if (GetEmissionState() == ParticleSystem::WaitingToStart) return;

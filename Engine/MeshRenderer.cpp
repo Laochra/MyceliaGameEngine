@@ -51,7 +51,7 @@ bool MeshRenderer::UpdateFrom(const json& jsonObj, GuidGeneration guidOptions)
 	return true;
 }
 
-void MeshRenderer::Draw()
+void MeshRenderer::Draw(intptr_t lastUsedMaterial)
 {
 	if (material == nullptr) return;
 	if (material->shaderProgram == nullptr) return;
@@ -59,12 +59,15 @@ void MeshRenderer::Draw()
 
 	mat4 ProjectionViewMatrix = AppInfo::ActiveCamera()->GetPVMatrix();
 
-	// Bind Shader
 	ShaderProgram& sp = *material->shaderProgram;
-	sp.Bind();
+	if ((intptr_t)material != lastUsedMaterial)
+	{
+		// Bind Shader
+		sp.Bind();
 
-	// Bind Camera Posiiton
-	sp.BindUniform("CameraPosition", AppInfo::ActiveCamera()->GetGlobalPosition());
+		// Bind Camera Posiiton
+		sp.BindUniform("CameraPosition", AppInfo::ActiveCamera()->GetGlobalPosition());
+	}
 
 	// Bind Light
 	//material->shaderProgram->BindUniform("AmbientColour", LightingManager::ambientLight.colour);
@@ -120,97 +123,100 @@ void MeshRenderer::Draw()
 	// Bind Transform for Lighting
 	sp.BindUniform("ModelMatrix", GetMatrix());
 	
-	// Bind Colour and Normal Maps
-	bool colourMapBound = false;
-	bool colourTintBound = false;
-	bool normalMapBound = false;
-	bool rmaoMapBound = false;
-	bool emissionColourBound = false;
-	bool emissionIntensityBound = false;
-	for (int i = 0; i < material->uniforms.size(); i++)
+	if ((intptr_t)material != lastUsedMaterial)
 	{
-		if (material->uniforms[i].name == "ColourMap")
+		// Bind Colour and Normal Maps
+		bool colourMapBound = false;
+		bool colourTintBound = false;
+		bool normalMapBound = false;
+		bool rmaoMapBound = false;
+		bool emissionColourBound = false;
+		bool emissionIntensityBound = false;
+		for (int i = 0; i < material->uniforms.size(); i++)
 		{
-			string filepath = material->uniforms[i].GetAsFilepath();
-			filepath.pop_back();
+			if (material->uniforms[i].name == "ColourMap")
+			{
+				string filepath = material->uniforms[i].GetAsFilepath();
+				filepath.pop_back();
 
-			if (filepath == "None") filepath = "DefaultColour";
+				if (filepath == "None") filepath = "DefaultColour";
 
-			textureManager->GetTexture(filepath, true)->Bind(0);
+				textureManager->GetTexture(filepath, true)->Bind(0);
+				sp.BindUniform("ColourMap", 0);
+				colourMapBound = true;
+				continue;
+			}
+			else if (material->uniforms[i].name == "ColourTint")
+			{
+				vec3 colourTint;
+				material->uniforms[i].Get(&colourTint);
+				colourTint = vec3(powf(colourTint.x, 2.2f), powf(colourTint.y, 2.2f), powf(colourTint.z, 2.2f));
+				sp.BindUniform("ColourTint", colourTint);
+				colourTintBound = true;
+				continue;
+			}
+			else if (material->uniforms[i].name == "NormalMap")
+			{
+				string filepath = material->uniforms[i].GetAsFilepath();
+				filepath.pop_back();
+
+				if (filepath == "None") filepath = "DefaultNormal";
+
+				textureManager->GetTexture(filepath)->Bind(1);
+				sp.BindUniform("NormalMap", 1);
+				normalMapBound = true;
+				continue;
+			}
+			else if (material->uniforms[i].name == "RMAOMap")
+			{
+				string filepath = material->uniforms[i].GetAsFilepath();
+				filepath.pop_back();
+
+				if (filepath == "None") filepath = "DefaultRMAO";
+
+				textureManager->GetTexture(filepath)->Bind(2);
+				sp.BindUniform("RMAOMap", 2);
+				rmaoMapBound = true;
+				continue;
+			}
+			else if (material->uniforms[i].name == "EmissionColour")
+			{
+				vec3 emissionColour;
+				material->uniforms[i].Get(&emissionColour);
+				emissionColour = vec3(powf(emissionColour.x, 2.2f), powf(emissionColour.y, 2.2f), powf(emissionColour.z, 2.2f));
+				sp.BindUniform("EmissionColour", emissionColour);
+				emissionColourBound = true;
+				continue;
+			}
+			else if (material->uniforms[i].name == "EmissionIntensity")
+			{
+				float emissionIntensity;
+				material->uniforms[i].Get(&emissionIntensity);
+				sp.BindUniform("EmissionIntensity", emissionIntensity);
+				emissionIntensityBound = true;
+				continue;
+			}
+		}
+
+		if (!colourMapBound)
+		{
+			textureManager->GetTexture("DefaultColour", true)->Bind(0);
 			sp.BindUniform("ColourMap", 0);
-			colourMapBound = true;
-			continue;
 		}
-		else if (material->uniforms[i].name == "ColourTint")
+		if (!colourTintBound) sp.BindUniform("ColourTint", vec3(1.0f, 1.0f, 1.0f));
+		if (!normalMapBound)
 		{
-			vec3 colourTint;
-			material->uniforms[i].Get(&colourTint);
-			colourTint = vec3(powf(colourTint.x, 2.2f), powf(colourTint.y, 2.2f), powf(colourTint.z, 2.2f));
-			sp.BindUniform("ColourTint", colourTint);
-			colourTintBound = true;
-			continue;
-		}
-		else if (material->uniforms[i].name == "NormalMap")
-		{
-			string filepath = material->uniforms[i].GetAsFilepath();
-			filepath.pop_back();
-
-			if (filepath == "None") filepath = "DefaultNormal";
-
-			textureManager->GetTexture(filepath)->Bind(1);
+			textureManager->GetTexture("DefaultNormal")->Bind(1);
 			sp.BindUniform("NormalMap", 1);
-			normalMapBound = true;
-			continue;
 		}
-		else if (material->uniforms[i].name == "RMAOMap")
+		if (!rmaoMapBound)
 		{
-			string filepath = material->uniforms[i].GetAsFilepath();
-			filepath.pop_back();
-
-			if (filepath == "None") filepath = "DefaultRMAO";
-
-			textureManager->GetTexture(filepath)->Bind(2);
+			textureManager->GetTexture("DefaultRMAO")->Bind(2);
 			sp.BindUniform("RMAOMap", 2);
-			rmaoMapBound = true;
-			continue;
 		}
-		else if (material->uniforms[i].name == "EmissionColour")
-		{
-			vec3 emissionColour;
-			material->uniforms[i].Get(&emissionColour);
-			emissionColour = vec3(powf(emissionColour.x, 2.2f), powf(emissionColour.y, 2.2f), powf(emissionColour.z, 2.2f));
-			sp.BindUniform("EmissionColour", emissionColour);
-			emissionColourBound = true;
-			continue;
-		}
-		else if (material->uniforms[i].name == "EmissionIntensity")
-		{
-			float emissionIntensity;
-			material->uniforms[i].Get(&emissionIntensity);
-			sp.BindUniform("EmissionIntensity", emissionIntensity);
-			emissionIntensityBound = true;
-			continue;
-		}
+		if (!emissionColourBound) sp.BindUniform("EmissionColour", vec3(1.0f, 1.0f, 1.0f));
+		if (!emissionIntensityBound) sp.BindUniform("EmissionIntensity", 0.0f);
 	}
-	
-	if (!colourMapBound)
-	{
-		textureManager->GetTexture("DefaultColour", true)->Bind(0);
-		sp.BindUniform("ColourMap", 0);
-	}
-	if (!colourTintBound) sp.BindUniform("ColourTint", vec3(1.0f, 1.0f, 1.0f));
-	if (!normalMapBound)
-	{
-		textureManager->GetTexture("DefaultNormal")->Bind(1);
-		sp.BindUniform("NormalMap", 1);
-	}
-	if (!rmaoMapBound)
-	{
-		textureManager->GetTexture("DefaultRMAO")->Bind(2);
-		sp.BindUniform("RMAOMap", 2);
-	}
-	if (!emissionColourBound) sp.BindUniform("EmissionColour", vec3(1.0f, 1.0f, 1.0f));
-	if (!emissionIntensityBound) sp.BindUniform("EmissionIntensity", 0.0f);
 
 	if (AppInfo::CompareState(AppState::Editor)) sp.BindUniform("Selected", (int)selected);
 	else sp.BindUniform("Selected", (int)false);
