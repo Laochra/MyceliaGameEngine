@@ -101,7 +101,7 @@ int Application::Setup()
 
 	glfwMakeContextCurrent(AppInfo::window);
 
-	glfwSwapInterval(0); // Disables VSync
+	glfwSwapInterval(1); // Controls VSync
 
 	if (!gladLoadGL())
 	{
