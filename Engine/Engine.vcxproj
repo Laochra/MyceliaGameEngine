@@ -195,6 +195,7 @@
     <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="Colour.cpp" />
     <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="Easing.cpp" />
     <ClCompile Include="EditHistory.cpp" />
     <ClCompile Include="ExampleGame.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -287,6 +288,7 @@
     <ClInclude Include="Colour.h" />
     <ClInclude Include="ComputeShader.h" />
     <ClInclude Include="Debug.h" />
+    <ClInclude Include="Easing.h" />
     <ClInclude Include="EditHistory.h" />
     <ClInclude Include="ExampleGame.h" />
     <ClInclude Include="FilesIncludes.h" />

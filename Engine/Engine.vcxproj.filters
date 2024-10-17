@@ -187,6 +187,9 @@
     <ClCompile Include="..\External\soloud\src\backend\winmm\soloud_winmm.cpp">
       <Filter>3rd Party\soloud</Filter>
     </ClCompile>
+    <ClCompile Include="Easing.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -480,6 +483,9 @@
     </ClInclude>
     <ClInclude Include="..\External\soloud\include\zx7decompress.h">
       <Filter>3rd Party\soloud</Filter>
+    </ClInclude>
+    <ClInclude Include="Easing.h">
+      <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
