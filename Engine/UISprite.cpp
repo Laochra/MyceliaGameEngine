@@ -10,7 +10,8 @@ ShaderProgram* UISprite::shaderProgram = nullptr;
 
 UISprite::UISprite() noexcept :
 	texture(Texture()),
-	normalisedPosition({0,0}),
+	anchor({0,0}),
+	offset({0,0}),
 	layer(0),
 	scale(1.0f),
 	enabled(true),
@@ -26,8 +27,9 @@ UISprite::UISprite() noexcept :
 		shaderProgram = new ShaderProgram("Assets\\Shaders\\Sprite.vert", "Assets\\Shaders\\Sprite.frag");
 	}
 }
-UISprite::UISprite(const char* spriteFile, vec2 normalisedPositionInit, int layerInit, float scaleInit) noexcept :
-	normalisedPosition(normalisedPositionInit),
+UISprite::UISprite(const char* spriteFile, vec2 anchorInit, vec2 offsetInit, int layerInit, float scaleInit) noexcept :
+	anchor(anchorInit),
+	offset(offsetInit),
 	layer(layerInit),
 	scale(scaleInit),
 	enabled(true),
@@ -56,8 +58,10 @@ void UISprite::SerialiseTo(json& jsonObj) const noexcept
 	jsonObj["Name"] = name;
 	jsonObj["Enabled"] = enabled;
 	
-	jsonObj["PositionX"] = normalisedPosition.x;
-	jsonObj["PositionY"] = normalisedPosition.y;
+	jsonObj["AnchorX"] = anchor.x;
+	jsonObj["AnchorY"] = anchor.y;
+	jsonObj["OffsetX"] = offset.x;
+	jsonObj["OffsetY"] = offset.y;
 	jsonObj["Layer"] = layer;
 	jsonObj["Scale"] = scale;
 
@@ -70,7 +74,8 @@ void UISprite::DeserialiseFrom(const json& jsonObj) noexcept
 	name = jsonObj["Name"];
 	enabled = jsonObj["Enabled"];
 
-	normalisedPosition = vec2(float(jsonObj["PositionX"]), float(jsonObj["PositionY"]));
+	anchor = vec2(float(jsonObj["AnchorX"]), float(jsonObj["AnchorY"]));
+	offset = vec2(float(jsonObj["OffsetX"]), float(jsonObj["OffsetY"]));
 	if (jsonObj.contains("Layer")) layer = jsonObj["Layer"];
 	scale = jsonObj["Scale"];
 
@@ -89,11 +94,12 @@ void UISprite::Draw() const noexcept
 
 	shaderProgram->Bind();
 
-	shaderProgram->BindUniform("SpritePos", normalisedPosition);
 	float spriteAspect = (float)texture.GetWidth() / (float)texture.GetHeight();
-	shaderProgram->BindUniform("SpriteAspect", spriteAspect);
 	float screenAspect = 1.0f / (AppInfo::screenHeight == 0 ? 0.0f : (AppInfo::screenWidth / (float)AppInfo::screenHeight));
-	shaderProgram->BindUniform("ScreenAspect", screenAspect);
+	vec2 spritePos = vec2(anchor.x + offset.x * screenAspect, anchor.y + offset.y);
+	
+	shaderProgram->BindUniform("SpritePos", spritePos);
+	shaderProgram->BindUniform("Aspect", spriteAspect * screenAspect);
 	shaderProgram->BindUniform("Scale", scale);
 
 	texture.Bind(0);

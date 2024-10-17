@@ -237,7 +237,7 @@ void HexGame::OnStart()
 	currentTileType = &TileData::Get(HexType::Tree);
 	currentTileVariant = 0U;
 
-	crosshair = new UISprite("Assets\\UI\\Crosshair\\Crosshair.png", vec2(0.0f, 0.0f), -10, 0.035f);
+	crosshair = new UISprite("Assets\\UI\\Crosshair\\Crosshair.png", vec2(0.0f, 0.0f), vec2(0.0f, 0.0f), -10, 0.035f);
 
 	HexProgression::Initialise();
 
