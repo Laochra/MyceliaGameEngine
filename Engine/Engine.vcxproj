@@ -303,7 +303,7 @@
     <ClInclude Include="AppInfo.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="AudioManager.h" />
-    <ClInclude Include="SimpleCoroutine.h" />
+    <ClInclude Include="MycCoroutine.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Colour.h" />
     <ClInclude Include="ComputeShader.h" />

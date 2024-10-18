@@ -8,6 +8,7 @@
 class HexScrapbook
 {
 public:
+	enum class State { Closed, Opening, Open, Closing };
 	struct HabitatCollection
 	{
 		UISprite* habitat;
@@ -20,8 +21,12 @@ public:
 	static std::string baseTexture;
 	static std::vector<HabitatCollection> habitats;
 
-	static void SetEnabled(bool enabledStatus) noexcept;
-	static bool IsEnabled() noexcept;
+	static void Open() noexcept;
+	static void Close() noexcept;
+
+	static void Reset() noexcept;
+
+	static State GetState() noexcept;
 
 	static void CacheEnabledStatus() noexcept;
 	static void RestoreEnabledStatus() noexcept;
@@ -32,6 +37,12 @@ public:
 	static void RevealHabitat(int index) noexcept;
 	static void RevealHabitatTile(int habitatIndex, int tileIndex) noexcept;
 
+	friend struct ScrapbookAnimationData;
+	friend class ScrapbookAnimation;
+
 private:
-	static bool enabled;
+	static float openness; // 0 for not open, 1 for open
+	static float animationSpeed;
+	static State state;
+	static void SetState(State newState) noexcept;
 };

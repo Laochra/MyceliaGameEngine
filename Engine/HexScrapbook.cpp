@@ -1,30 +1,148 @@
 #include "HexScrapbook.h"
 
+#include "TimeManager.h"
+#include "MycCoroutine.h"
+#include "Easing.h"
+
 UISprite* HexScrapbook::base;
 std::string HexScrapbook::baseTexture;
 
 std::vector<HexScrapbook::HabitatCollection> HexScrapbook::habitats;
 
-bool HexScrapbook::enabled = false;
+float HexScrapbook::openness = 0.0f;
+float HexScrapbook::animationSpeed = 2.0f;
+HexScrapbook::State HexScrapbook::state = HexScrapbook::State::Closed;
 
-void HexScrapbook::SetEnabled(bool enabledStatus) noexcept
+void HexScrapbook::SetState(State newState) noexcept
 {
-	enabled = enabledStatus;
+	state = newState;
 
-	base->enabled = enabledStatus;
+	bool shouldBeEnabled = newState != State::Closed;
 
+	base->enabled = shouldBeEnabled;
 	for (HabitatCollection& habitat : habitats)
 	{
-		habitat.habitat->enabled = enabledStatus;
-		habitat.tiles[0]->enabled = enabledStatus;
-		habitat.tiles[1]->enabled = enabledStatus;
-		habitat.tiles[2]->enabled = enabledStatus;
+		habitat.habitat->enabled = shouldBeEnabled;
+		habitat.tiles[0]->enabled = shouldBeEnabled;
+		habitat.tiles[1]->enabled = shouldBeEnabled;
+		habitat.tiles[2]->enabled = shouldBeEnabled;
 	}
 }
 
-bool HexScrapbook::IsEnabled() noexcept
+struct ScrapbookAnimationData
 {
-	return enabled;
+	const HexScrapbook::State& state = HexScrapbook::state;
+	float& openness = HexScrapbook::openness;
+	UISprite*& base = HexScrapbook::base;
+	std::vector<HexScrapbook::HabitatCollection>& habitats = HexScrapbook::habitats;
+	const float& speed = HexScrapbook::animationSpeed;
+};
+ScrapbookAnimationData scrapbookAnimationData;
+class ScrapbookAnimation : public Coroutine::Function<ScrapbookAnimationData>
+{
+	void operator()(Coroutine::Package& package)
+	{
+		ScrapbookAnimationData& data = GetData(package);
+
+		bool finalising = false;
+
+		switch (data.state)
+		{
+		case HexScrapbook::State::Opening:
+			data.openness += data.speed * Time::delta;
+			finalising = data.openness >= 1.0f;
+			if (finalising)
+			{
+				data.openness = 1.0f;
+				HexScrapbook::SetState(HexScrapbook::State::Open);
+			}
+			break;
+		case HexScrapbook::State::Closing:
+			data.openness -= data.speed * Time::delta;
+			finalising = data.openness <= 0.0f;
+			if (finalising)
+			{
+				data.openness = 0.0f;
+				HexScrapbook::SetState(HexScrapbook::State::Closed);
+			}
+			break;
+		default:
+			CoroutineFinalise();
+		}
+
+		float easedValue = Easing::QuadInOut(data.openness);
+		float newY = std::lerp(-2.0f, 0.0f, easedValue);
+		data.base->anchor.y = newY;
+		for (auto& habitat : data.habitats)
+		{
+			habitat.habitat->anchor.y = newY;
+			for (UISprite* tile : habitat.tiles)
+			{
+				tile->anchor.y = newY;
+			}
+		}
+
+		if (finalising) { CoroutineFinalise(); }
+		else { CoroutineYield(); }
+	}
+};
+void HexScrapbook::Open() noexcept
+{
+	switch (state)
+	{
+	case State::Closed:
+		SetState(State::Opening);
+		Coroutine::Start<ScrapbookAnimation>(&scrapbookAnimationData);
+		return;
+	case State::Opening:
+		return;
+	case State::Open:
+		SetState(State::Open);
+		return;
+	case State::Closing:
+		SetState(State::Opening);
+		return;
+	}
+}
+void HexScrapbook::Close() noexcept
+{
+	switch (state)
+	{
+	case State::Closed:
+		SetState(State::Closed);
+		return;
+	case State::Opening:
+		SetState(State::Closing);
+		return;
+	case State::Open:
+		SetState(State::Closing);
+		Coroutine::Start<ScrapbookAnimation>(&scrapbookAnimationData);
+		return;
+	case State::Closing:
+		return;
+	}
+}
+
+void HexScrapbook::Reset() noexcept
+{
+	state = State::Closed;
+	openness = 0.0f;
+
+	float newY = 0.0f;
+	base->anchor.y = newY;
+	for (auto& habitat : habitats)
+	{
+		habitat.habitat->anchor.y = newY;
+		for (UISprite* tile : habitat.tiles)
+		{
+			tile->anchor.y = newY;
+		}
+	}
+}
+
+HexScrapbook::State HexScrapbook::GetState() noexcept
+{
+	return state;
 }
 
 struct EnabledStatusCache

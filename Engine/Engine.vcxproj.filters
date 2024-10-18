@@ -234,7 +234,7 @@
     </ClCompile>
     <ClCompile Include="SpiritData.cpp">
       <Filter>HexGame</Filter>
-	 </ClCompile>
+    </ClCompile>
     <ClCompile Include="Easing.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
@@ -594,7 +594,7 @@
     </ClInclude>
     <ClInclude Include="SpiritData.h">
       <Filter>HexGame</Filter>
-	 </ClInclude>
+    </ClInclude>
     <ClInclude Include="Easing.h">
       <Filter>Utility</Filter>
     </ClInclude>

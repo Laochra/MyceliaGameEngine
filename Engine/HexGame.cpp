@@ -108,7 +108,7 @@ void HexGame::SetState(HexGame::State newState) noexcept
 	}
 	case HexGame::State::Scrapbook:
 	{
-		HexScrapbook::SetEnabled(false);
+		HexScrapbook::Close();
 		HexAudio::PlayMiscSFX(HexAudio::SoundEffect::ScrapbookClose);
 		break;
 	}
@@ -137,7 +137,7 @@ void HexGame::SetState(HexGame::State newState) noexcept
 	}
 	case HexGame::State::Scrapbook:
 	{
-		HexScrapbook::SetEnabled(true);
+		HexScrapbook::Open();
 		HexAudio::PlayMiscSFX(HexAudio::SoundEffect::ScrapbookOpen);
 		break;
 	}
@@ -202,7 +202,7 @@ void HexGame::Initialise(uint* renderTargetInit)
 
 	hexGrid = GameObject::Instantiate<HexGrid>();
 
-	AppInfo::gameCamera->SetPosition(vec3(0, HexCameraData::offsetDirection.x, HexCameraData::offsetDirection.y));
+	AppInfo::gameCamera->SetPosition(vec3(0, HexCameraData::offsetDirection.x, HexCameraData::offsetDirection.y) * HexCameraData::startZoom);
 	AppInfo::gameCamera->LookAt(vec3(0, 0, 0));
 	AppInfo::gameCamera->fov = glm::radians(50.0f);
 }
@@ -215,11 +215,11 @@ void HexGame::OnStart()
 {
 	HexScrapbook::CacheEnabledStatus();
 
-	HexScrapbook::SetEnabled(false);
+	HexScrapbook::Close();
 
 	selectedPosition = vec2(0, 0);
 	selectedGameObject = nullptr;
-	AppInfo::gameCamera->SetPosition(vec3(0, HexCameraData::offsetDirection.x, HexCameraData::offsetDirection.y));
+	AppInfo::gameCamera->SetPosition(vec3(0, HexCameraData::offsetDirection.x, HexCameraData::offsetDirection.y) * HexCameraData::startZoom);
 	AppInfo::gameCamera->LookAt(vec3(0, 0, 0));
 	HexCameraData::currentZoom = HexCameraData::startZoom;
 	hexGrid->InitialiseCentre();
@@ -290,6 +290,7 @@ void HexGame::OnStop()
 	AudioManager::EndAll();
 	AudioManager::ClearLoadedAssets();
 	HexScrapbook::RevealSprites();
+	HexScrapbook::Reset();
 
 	gameObjectManager->ClearGraveyard();
 }
