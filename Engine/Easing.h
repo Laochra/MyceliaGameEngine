@@ -4,45 +4,45 @@
 
 namespace Easing
 {
-	inline constexpr float QuadIn(float t) noexcept;
-	inline constexpr float QuadOut(float t) noexcept;
-	inline constexpr float QuadInOut(float t) noexcept;
+	extern constexpr float QuadIn(float t) noexcept;
+	extern constexpr float QuadOut(float t) noexcept;
+	extern constexpr float QuadInOut(float t) noexcept;
 
-	inline constexpr float CubicIn(float t) noexcept;
-	inline constexpr float CubicOut(float t) noexcept;
-	inline constexpr float CubicInOut(float t) noexcept;
+	extern constexpr float CubicIn(float t) noexcept;
+	extern constexpr float CubicOut(float t) noexcept;
+	extern constexpr float CubicInOut(float t) noexcept;
 
-	inline constexpr float QuartIn(float t) noexcept;
-	inline constexpr float QuartOut(float t) noexcept;
-	inline constexpr float QuartInOut(float t) noexcept;
+	extern constexpr float QuartIn(float t) noexcept;
+	extern constexpr float QuartOut(float t) noexcept;
+	extern constexpr float QuartInOut(float t) noexcept;
 
-	inline constexpr float QuintIn(float t) noexcept;
-	inline constexpr float QuintOut(float t) noexcept;
-	inline constexpr float QuintInOut(float t) noexcept;
+	extern constexpr float QuintIn(float t) noexcept;
+	extern constexpr float QuintOut(float t) noexcept;
+	extern constexpr float QuintInOut(float t) noexcept;
 
-	inline constexpr float BackIn(float t) noexcept;
-	inline constexpr float BackOut(float t) noexcept;
-	inline constexpr float BackInOut(float t) noexcept;
+	extern constexpr float BackIn(float t) noexcept;
+	extern constexpr float BackOut(float t) noexcept;
+	extern constexpr float BackInOut(float t) noexcept;
 
 
 	// Expensive! Uses cos(), use Easing::QuadIn() for similar results
-	inline float SineIn(float t) noexcept;
+	extern float SineIn(float t) noexcept;
 	// Expensive! Uses sin(), use Easing::QuadOut() for similar results
-	inline float SineOut(float t) noexcept;
+	extern float SineOut(float t) noexcept;
 	// Expensive! Uses cos(), use Easing::QuadInOut() for similar results
-	inline float SineInOut(float t) noexcept;
+	extern float SineInOut(float t) noexcept;
 
 	// Expensive! Uses pow(), use Easing::QuintIn() for similar results
-	inline float ExpoIn(float t) noexcept;
+	extern float ExpoIn(float t) noexcept;
 	// Expensive! Uses pow(), use Easing::QuintOut() for similar results
-	inline float ExpoOut(float t) noexcept;
+	extern float ExpoOut(float t) noexcept;
 	// Expensive! Uses pow(), use Easing::QuintInOut() for similar results
-	inline float ExpoInOut(float t) noexcept;
+	extern float ExpoInOut(float t) noexcept;
 
 	// Expensive! Uses sqrt()
-	inline float CircIn(float t) noexcept;
+	extern float CircIn(float t) noexcept;
 	// Expensive! Uses sqrt()
-	inline float CircOut(float t) noexcept;
+	extern float CircOut(float t) noexcept;
 	// Expensive! Uses sqrt(), use Easing::QuintInOut() for similar results
-	inline float CircInOut(float t) noexcept;
+	extern float CircInOut(float t) noexcept;
 }
