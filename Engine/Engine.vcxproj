@@ -197,6 +197,7 @@
     <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="Colour.cpp" />
     <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="Easing.cpp" />
     <ClCompile Include="EditHistory.cpp" />
     <ClCompile Include="ExampleGame.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -238,6 +239,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="SpiritData.cpp" />
+    <ClCompile Include="MycCoroutine.cpp" />
     <ClCompile Include="StackTimer.cpp" />
     <ClCompile Include="StringBuilder.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -301,10 +303,12 @@
     <ClInclude Include="AppInfo.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="AudioManager.h" />
+    <ClInclude Include="SimpleCoroutine.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Colour.h" />
     <ClInclude Include="ComputeShader.h" />
     <ClInclude Include="Debug.h" />
+    <ClInclude Include="Easing.h" />
     <ClInclude Include="EditHistory.h" />
     <ClInclude Include="ExampleGame.h" />
     <ClInclude Include="FilesIncludes.h" />
