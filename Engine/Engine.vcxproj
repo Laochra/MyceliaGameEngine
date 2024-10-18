@@ -224,6 +224,7 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
+    <ClCompile Include="SimpleCoroutine.cpp" />
     <ClCompile Include="StackTimer.cpp" />
     <ClCompile Include="StringBuilder.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -284,6 +285,7 @@
     <ClInclude Include="AppInfo.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="AudioManager.h" />
+    <ClInclude Include="SimpleCoroutine.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Colour.h" />
     <ClInclude Include="ComputeShader.h" />

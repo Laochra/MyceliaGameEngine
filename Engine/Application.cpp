@@ -17,6 +17,8 @@
 
 #include "GeneralMacros.h"
 
+#include "MycCoroutine.h"
+
 bool applicationFocused = true;
 
 int Application::Run()
@@ -149,6 +151,7 @@ void Application::GameLoop()
 			}
 
 			Update();
+			Coroutine::Update(Time::delta);
 
 			Draw();
 

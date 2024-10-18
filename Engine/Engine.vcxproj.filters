@@ -190,6 +190,9 @@
     <ClCompile Include="Easing.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
+    <ClCompile Include="SimpleCoroutine.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -485,6 +488,9 @@
       <Filter>3rd Party\soloud</Filter>
     </ClInclude>
     <ClInclude Include="Easing.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleCoroutine.h">
       <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
