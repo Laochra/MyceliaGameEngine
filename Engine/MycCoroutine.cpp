@@ -2,10 +2,12 @@
 
 void Coroutine::Update(float delta) noexcept
 {
-	for (int i = 0; i < (int)Coroutine::active.size();)
+	for (int i = 0; i < (int)Coroutine::list.size(); i++)
 	{
-		Coroutine::FunctionInterface& coroutine = *Coroutine::active[i].first;
-		Coroutine::Package& package = Coroutine::active[i].second;
+		if (Coroutine::list[i].function == nullptr) continue;
+
+		Coroutine::FunctionInterface& function = *Coroutine::list[i].function;
+		Coroutine::Package& package = Coroutine::list[i].package;
 
 		if (package.yieldTimer > 0.0f)
 		{
@@ -14,15 +16,14 @@ void Coroutine::Update(float delta) noexcept
 		else
 		{
 			package.yieldTimer = 0.0f;
-			coroutine(package);
+			function(package);
+
 			if (package.state == Coroutine::State::Finalised)
 			{
-				delete& coroutine;
-				Coroutine::active.erase(Coroutine::active.begin() + i);
-				continue;
+				delete &function;
+				Coroutine::list[i].function = nullptr;
+				package.data = nullptr;
 			}
 		}
-
-		++i;
 	}
 }
