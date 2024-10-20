@@ -173,6 +173,19 @@ void HexGameSerialiser::LoadDataFrom(json& dataFile) noexcept
 		}
 	}
 
+	if (dataFile.contains("StickerEvent"))
+	{
+		json stickerEventJSON = dataFile["StickerEvent"];
+		HexProgression::stickerEvent.moveAmount = stickerEventJSON["MoveAmount"];
+		HexProgression::stickerEvent.moveSpeed = stickerEventJSON["MoveSpeed"];
+
+		HexProgression::stickerEvent.startDelay = stickerEventJSON["StartDelay"];
+		HexProgression::stickerEvent.stickerPlaceDelay = stickerEventJSON["StickerPlaceDelay"];
+		HexProgression::stickerEvent.closeDelay = stickerEventJSON["CloseDelay"];
+		HexProgression::stickerEvent.expandBorderDelay = stickerEventJSON["ExpandBorderDelay"];
+		HexProgression::stickerEvent.endDelay = stickerEventJSON["EndDelay"];
+	}
+
 	if (dataFile.contains("Progression"))
 	{
 		json progressionData = dataFile["Progression"];
@@ -336,6 +349,20 @@ void HexGameSerialiser::SaveDataTo(json& dataFile) noexcept
 		scrapbookJSON["Habitats"] = scrapbookHabitatsJSON;
 
 		dataFile["ScrapbookSprites"] = scrapbookJSON;
+	}
+
+	json stickerEventJSON;
+	{
+		stickerEventJSON["MoveAmount"] = HexProgression::stickerEvent.moveAmount;
+		stickerEventJSON["MoveSpeed"] = HexProgression::stickerEvent.moveSpeed;
+
+		stickerEventJSON["StartDelay"] = HexProgression::stickerEvent.startDelay;
+		stickerEventJSON["StickerPlaceDelay"] = HexProgression::stickerEvent.stickerPlaceDelay;
+		stickerEventJSON["CloseDelay"] = HexProgression::stickerEvent.closeDelay;
+		stickerEventJSON["ExpandBorderDelay"] = HexProgression::stickerEvent.expandBorderDelay;
+		stickerEventJSON["EndDelay"] = HexProgression::stickerEvent.endDelay;
+
+		dataFile["StickerEvent"] = stickerEventJSON;
 	}
 
 	json progressionJSON;

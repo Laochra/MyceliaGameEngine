@@ -33,6 +33,19 @@ public:
 	static uint tileLifeBonus;
 	static uint habitatLifeBonus;
 
+	struct StickerEventData
+	{
+		float moveAmount = 0.35f;
+		float moveSpeed = 1.5f;
+
+		float startDelay = 0.5f;
+		float stickerPlaceDelay = 0.5f;
+		float closeDelay = 0.75f;
+		float expandBorderDelay = 0.0f;
+		float endDelay = 0.0f;
+	};
+	static StickerEventData stickerEvent;
+
 	static void Initialise() noexcept;
 
 	static uint GetLife() noexcept;
@@ -40,7 +53,7 @@ public:
 	static const Milestone* IncreaseLife(uint lifeToAdd) noexcept;
 	static void ResetProgression() noexcept;
 
-	static const Coroutine::Pair* PlayHabitatStickerAnimation(char habitatIndex, float moveAmount, float moveSpeed) noexcept;
+	static const Coroutine::Pair* PlayHabitatStickerAnimation(char habitatIndex) noexcept;
 
 	static void SaveTo(json& jsonObj);
 	static void LoadFrom(const json& jsonObj);

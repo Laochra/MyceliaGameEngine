@@ -345,7 +345,7 @@ void HexGame::Update()
 					if (returnInfo.value & HexGrid::UpdateTileReturnInfo::NewHabitat)
 					{
 						HexAudio::PlayMiscSFX(HexAudio::SoundEffect::FormHabitat);
-						currentEvent = HexProgression::PlayHabitatStickerAnimation(returnInfo.habitatID, 0.35f, 1.5f);
+						currentEvent = HexProgression::PlayHabitatStickerAnimation(returnInfo.habitatID);
 						SetState(State::StickerEvent);
 					}
 					if (returnInfo.value & HexGrid::UpdateTileReturnInfo::MilestoneReached)

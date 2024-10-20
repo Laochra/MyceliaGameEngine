@@ -35,43 +35,32 @@ void HexScrapbook::SetState(State newState) noexcept
 	}
 }
 
-struct ScrapbookAnimationData
-{
-	const HexScrapbook::State& state = HexScrapbook::state;
-	float& openness = HexScrapbook::openness;
-	UISprite*& base = HexScrapbook::base;
-	std::vector<HexScrapbook::HabitatCollection>& habitats = HexScrapbook::habitats;
-	const float& speed = HexScrapbook::animationSpeed;
-};
-ScrapbookAnimationData scrapbookAnimationData;
-class ScrapbookAnimation : public Coroutine::Function<ScrapbookAnimationData>
+class ScrapbookAnimation : public Coroutine::Function<char>
 {
 	void operator()(Coroutine::Package& package)
 	{
-		ScrapbookAnimationData& data = GetData(package);
-
 		bool finalising = false;
-		if (data.habitats[0].habitat->enabled)
+		if (HexScrapbook::habitats[0].habitat->enabled)
 		{
 			finalising = false;
 		}
-		switch (data.state)
+		switch (HexScrapbook::state)
 		{
 		case HexScrapbook::State::Opening:
-			data.openness += data.speed * Time::delta;
-			finalising = data.openness >= 1.0f;
+			HexScrapbook::openness += HexScrapbook::animationSpeed * Time::delta;
+			finalising = HexScrapbook::openness >= 1.0f;
 			if (finalising)
 			{
-				data.openness = 1.0f;
+				HexScrapbook::openness = 1.0f;
 				HexScrapbook::SetState(HexScrapbook::State::Open);
 			}
 			break;
 		case HexScrapbook::State::Closing:
-			data.openness -= data.speed * Time::delta;
-			finalising = data.openness <= 0.0f;
+			HexScrapbook::openness -= HexScrapbook::animationSpeed * Time::delta;
+			finalising = HexScrapbook::openness <= 0.0f;
 			if (finalising)
 			{
-				data.openness = 0.0f;
+				HexScrapbook::openness = 0.0f;
 				HexScrapbook::SetState(HexScrapbook::State::Closed);
 			}
 			break;
@@ -79,10 +68,10 @@ class ScrapbookAnimation : public Coroutine::Function<ScrapbookAnimationData>
 			CoroutineFinalise();
 		}
 
-		float easedValue = Easing::QuadInOut(data.openness);
+		float easedValue = Easing::QuadInOut(HexScrapbook::openness);
 		float newY = std::lerp(-2.0f, 0.0f, easedValue);
-		data.base->anchor.y = newY;
-		for (auto& habitat : data.habitats)
+		HexScrapbook::base->anchor.y = newY;
+		for (auto& habitat : HexScrapbook::habitats)
 		{
 			habitat.habitat->anchor.y = newY;
 			for (UISprite* tile : habitat.tiles)
@@ -101,7 +90,7 @@ const Coroutine::Pair* HexScrapbook::Open() noexcept
 	{
 	case State::Closed:
 		SetState(State::Opening);
-		return Coroutine::Start<ScrapbookAnimation>(&scrapbookAnimationData);
+		return Coroutine::Start<ScrapbookAnimation>((char*)nullptr, false);
 	case State::Opening:
 		return nullptr;
 	case State::Open:
@@ -126,7 +115,7 @@ const Coroutine::Pair* HexScrapbook::Close() noexcept
 		return nullptr;
 	case State::Open:
 		SetState(State::Closing);
-		return Coroutine::Start<ScrapbookAnimation>(&scrapbookAnimationData);
+		return Coroutine::Start<ScrapbookAnimation>((char*)nullptr, false);
 	case State::Closing:
 		return nullptr;
 	default:

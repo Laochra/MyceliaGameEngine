@@ -469,74 +469,99 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 
 	GUI::Spacing(3);
 
-	if (ImGui::CollapsingHeader("Scrapbook Sprites"))
+	if (ImGui::CollapsingHeader("Scrapbook"))
 	{
 		GUI::Spacing(3);
+		ImGui::Indent();
 
-		ImGui::Text("Scrapbook");
-		DrawUISpriteDropdown("UI Reference", HexScrapbook::base);
-		GUI::Spacing();
-		DrawSpriteInput("Sprite", HexScrapbook::baseTexture);
+		if (ImGui::CollapsingHeader("Sprites"))
+		{
+			ImGui::Text("Scrapbook");
+			DrawUISpriteDropdown("UI Reference", HexScrapbook::base);
+			GUI::Spacing();
+			DrawSpriteInput("Sprite", HexScrapbook::baseTexture);
+
+			GUI::Spacing(3);
+
+			ImGui::BeginTabBar("Habitats##Scrapbook Sprites");
+			for (int i = 0; i < (int)HabitatData::habitatsData.size(); i++)
+			{
+				if (HexScrapbook::habitats.size() < HabitatData::habitatsData.size())
+				{
+					HexScrapbook::habitats.push_back(HexScrapbook::HabitatCollection());
+				}
+				if (ImGui::BeginTabItem(HabitatData::habitatsData[i].name.c_str()))
+				{
+					if (!AppInfo::CompareState(AppState::Editor)) ImGui::BeginDisabled();
+					ImGui::PushID(HabitatData::habitatsData[i].name.c_str());
+
+					ImGui::PushID("Habitat");
+					ImGui::Text("Habitat");
+					DrawUISpriteDropdown("UI Reference", HexScrapbook::habitats[i].habitat);
+					GUI::Spacing();
+					DrawSpriteInput("Hidden", HexScrapbook::habitats[i].habitatTextures[0]);
+					DrawSpriteInput("Revealed", HexScrapbook::habitats[i].habitatTextures[1]);
+					ImGui::PopID();
+
+					GUI::Spacing(3);
+
+					ImGui::PushID("Tile 0");
+					ImGui::Text(StringBuilder("Tile 0: ", HabitatData::habitatsData[i].requiredTiles[0]).CStr());
+					DrawUISpriteDropdown("UI Reference", HexScrapbook::habitats[i].tiles[0]);
+					GUI::Spacing();
+					DrawSpriteInput("Hidden", HexScrapbook::habitats[i].tileTextures[0]);
+					DrawSpriteInput("Revealed", HexScrapbook::habitats[i].tileTextures[1]);
+					ImGui::PopID();
+					GUI::Spacing(3);
+					ImGui::PushID("Tile 1");
+					ImGui::Text(StringBuilder("Tile 1: ", HabitatData::habitatsData[i].requiredTiles[1]).CStr());
+					DrawUISpriteDropdown("UI Reference", HexScrapbook::habitats[i].tiles[1]);
+					GUI::Spacing();
+					DrawSpriteInput("Hidden", HexScrapbook::habitats[i].tileTextures[2]);
+					DrawSpriteInput("Revealed", HexScrapbook::habitats[i].tileTextures[3]);
+					ImGui::PopID();
+					GUI::Spacing(3);
+					ImGui::PushID("Tile 2");
+					ImGui::Text(StringBuilder("Tile 2: ", HabitatData::habitatsData[i].requiredTiles[2]).CStr());
+					DrawUISpriteDropdown("UI Reference", HexScrapbook::habitats[i].tiles[2]);
+					GUI::Spacing();
+					DrawSpriteInput("Hidden", HexScrapbook::habitats[i].tileTextures[4]);
+					DrawSpriteInput("Revealed", HexScrapbook::habitats[i].tileTextures[5]);
+					ImGui::PopID();
+
+					GUI::Spacing(3);
+
+					ImGui::PopID();
+					if (!AppInfo::CompareState(AppState::Editor)) ImGui::EndDisabled();
+					ImGui::EndTabItem();
+				}
+
+			}
+
+			ImGui::EndTabBar();
+		}
 
 		GUI::Spacing(3);
 
-		ImGui::BeginTabBar("Habitats##Scrapbook Sprites");
-		for (int i = 0; i < (int)HabitatData::habitatsData.size(); i++)
+		if (ImGui::CollapsingHeader("Sticker Event"))
 		{
-			if (HexScrapbook::habitats.size() < HabitatData::habitatsData.size())
-			{
-				HexScrapbook::habitats.push_back(HexScrapbook::HabitatCollection());
-			}
-			if (ImGui::BeginTabItem(HabitatData::habitatsData[i].name.c_str()))
-			{
-				if (!AppInfo::CompareState(AppState::Editor)) ImGui::BeginDisabled();
-				ImGui::PushID(HabitatData::habitatsData[i].name.c_str());
+			HexProgression::StickerEventData& stickerEvent = HexProgression::stickerEvent;
 
-				ImGui::PushID("Habitat");
-				ImGui::Text("Habitat");
-				DrawUISpriteDropdown("UI Reference", HexScrapbook::habitats[i].habitat);
-				GUI::Spacing();
-				DrawSpriteInput("Hidden", HexScrapbook::habitats[i].habitatTextures[0]);
-				DrawSpriteInput("Revealed", HexScrapbook::habitats[i].habitatTextures[1]);
-				ImGui::PopID();
+			ImGui::SeparatorText("Sticker Movement");
+			ImGui::DragFloat("Amount", &stickerEvent.moveAmount);
+			ImGui::DragFloat("Speed", &stickerEvent.moveSpeed);
 
-				GUI::Spacing(3);
-
-				ImGui::PushID("Tile 0");
-				ImGui::Text(StringBuilder("Tile 0: ", HabitatData::habitatsData[i].requiredTiles[0]).CStr());
-				DrawUISpriteDropdown("UI Reference", HexScrapbook::habitats[i].tiles[0]);
-				GUI::Spacing();
-				DrawSpriteInput("Hidden", HexScrapbook::habitats[i].tileTextures[0]);
-				DrawSpriteInput("Revealed", HexScrapbook::habitats[i].tileTextures[1]);
-				ImGui::PopID();
-				GUI::Spacing(3);
-				ImGui::PushID("Tile 1");
-				ImGui::Text(StringBuilder("Tile 1: ", HabitatData::habitatsData[i].requiredTiles[1]).CStr());
-				DrawUISpriteDropdown("UI Reference", HexScrapbook::habitats[i].tiles[1]);
-				GUI::Spacing();
-				DrawSpriteInput("Hidden", HexScrapbook::habitats[i].tileTextures[2]);
-				DrawSpriteInput("Revealed", HexScrapbook::habitats[i].tileTextures[3]);
-				ImGui::PopID();
-				GUI::Spacing(3);
-				ImGui::PushID("Tile 2");
-				ImGui::Text(StringBuilder("Tile 2: ", HabitatData::habitatsData[i].requiredTiles[2]).CStr());
-				DrawUISpriteDropdown("UI Reference", HexScrapbook::habitats[i].tiles[2]);
-				GUI::Spacing();
-				DrawSpriteInput("Hidden", HexScrapbook::habitats[i].tileTextures[4]);
-				DrawSpriteInput("Revealed", HexScrapbook::habitats[i].tileTextures[5]);
-				ImGui::PopID();
-
-				GUI::Spacing(3);
-
-				ImGui::PopID();
-				if (!AppInfo::CompareState(AppState::Editor)) ImGui::EndDisabled();
-				ImGui::EndTabItem();
-			}
-
+			ImGui::SeparatorText("Timing Delays");
+			ImGui::DragFloat("Open Sheet", &stickerEvent.startDelay);
+			ImGui::DragFloat("Place Sticker", &stickerEvent.stickerPlaceDelay);
+			ImGui::DragFloat("Close Sheet", &stickerEvent.closeDelay);
+			ImGui::BeginDisabled();
+			ImGui::DragFloat("Expand Border", &stickerEvent.expandBorderDelay);
+			ImGui::DragFloat("End", &stickerEvent.endDelay);
+			ImGui::EndDisabled();
 		}
 
-		ImGui::EndTabBar();
-
+		ImGui::Unindent();
 		GUI::Spacing(3);
 	}
 
@@ -545,6 +570,7 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 	if (ImGui::CollapsingHeader("Camera"))
 	{
 		GUI::Spacing(3);
+		ImGui::BeginDisabled(!AppInfo::CompareState(AppState::Editor));
 
 		ImGui::PushItemWidth(ImGui::CalcItemWidth() / 2.0f);
 		if (ImGui::DragFloat("##OffsetDirectionY", &HexCameraData::offsetDirection.x, 0.005f, 0, 1, "%.3f", ImGuiSliderFlags_AlwaysClamp))
@@ -571,6 +597,7 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 		ImGui::DragFloat("Start Zoom", &HexCameraData::startZoom);
 		ImGui::Text(StringBuilder("Current Zoom: ", HexCameraData::currentZoom).CStr());
 
+		ImGui::EndDisabled();
 		GUI::Spacing(3);
 	}
 
