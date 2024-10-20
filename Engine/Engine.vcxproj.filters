@@ -190,7 +190,7 @@
     <ClCompile Include="Easing.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
-    <ClCompile Include="SimpleCoroutine.cpp">
+    <ClCompile Include="MycCoroutine.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
   </ItemGroup>
@@ -490,7 +490,7 @@
     <ClInclude Include="Easing.h">
       <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="SimpleCoroutine.h">
+    <ClInclude Include="MycCoroutine.h">
       <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>

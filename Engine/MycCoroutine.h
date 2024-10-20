@@ -39,15 +39,19 @@
 class Coroutine
 {
 public:
-	enum State { New, Yielding, Finalised };
+	enum State : char { New, Yielding, Finalised };
 	struct Package
 	{
 		void* data = nullptr;
-		Coroutine::State state = Coroutine::New;
 		float yieldTimer = 0.0f;
+		Coroutine::State state = Coroutine::New;
+		bool ownsData = false;
 
-		Package() noexcept : data(nullptr) {};
-		Package(void* dataInit) noexcept : data(dataInit) {};
+		Package() noexcept :
+			data(nullptr) {};
+		Package(void* dataInit, bool ownsDataInit) noexcept :
+			data(dataInit),
+			ownsData(ownsDataInit) {};
 	};
 
 	class FunctionInterface
@@ -74,7 +78,7 @@ public:
 	/// <summary> C must be a Coroutine::Function with a Type matching the Data's Type </summary> <param name="C">The Coroutine Type to be ran</param> <param name="T">The Data Type</param> <param name="data">The Data for the Coroutine</param>
 	template<typename C, typename T>
 		requires std::is_base_of<Coroutine::Function<T>, C>::value
-	static inline const Coroutine::Pair* Start(T* data) noexcept
+	static inline const Coroutine::Pair* Start(T* data, bool takePossession) noexcept
 	{
 		for (int i = 0; i < (int)Coroutine::list.size(); i++)
 		{
@@ -82,6 +86,7 @@ public:
 			{
 				Coroutine::list[i].function = new C();
 				Coroutine::list[i].package.data = data;
+				Coroutine::list[i].package.ownsData = takePossession;
 				return &Coroutine::list[i];
 			}
 		}

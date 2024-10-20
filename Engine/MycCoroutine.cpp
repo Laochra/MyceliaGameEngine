@@ -22,7 +22,9 @@ void Coroutine::Update(float delta) noexcept
 			{
 				delete &function;
 				Coroutine::list[i].function = nullptr;
+				if (package.ownsData) delete &package.data;
 				package.data = nullptr;
+				package.ownsData = false;
 			}
 		}
 	}
