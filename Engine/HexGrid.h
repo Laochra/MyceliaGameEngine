@@ -47,8 +47,21 @@ public:
 	void InitialiseCentre() noexcept;
 	void InitialiseTile(HexOffsetCoord hexCoord) noexcept;
 
-	void UpdateTile(vec3 position, const json& tilePrefab) noexcept;
-	void UpdateTile(HexOffsetCoord hexCoord, const json& tilePrefab) noexcept;
+	struct UpdateTileReturnInfo
+	{
+		char value = None;
+		char habitatID = 0;
+
+		typedef enum : char
+		{
+			None = 0,
+			NewHabitat = 1,
+			MilestoneReached = 2,
+			HabitatPickedUp = 4
+		} bitmask;
+	};
+	UpdateTileReturnInfo UpdateTile(vec3 position, const json& tilePrefab) noexcept;
+	UpdateTileReturnInfo UpdateTile(HexOffsetCoord hexCoord, const json& tilePrefab) noexcept;
 
 private:
 	void ValidatePerimeterPlaceability(short perimeterRadius) noexcept;

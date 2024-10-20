@@ -14,6 +14,8 @@
 
 #include "HexCameraData.h"
 
+#include "MycCoroutine.h"
+
 typedef unsigned int uint;
 
 inline uint currentRadialPage = 0U;
@@ -49,8 +51,9 @@ public:
 	GameObject3D* selectedGameObject = nullptr;
 	float moveSpeed = 3.0f;
 
-	enum class State : unsigned char { Place, Radial, Scrapbook };
+	enum class State : unsigned char { Place, Radial, Scrapbook, StickerEvent };
 	HexGame::State gameState;
+	const Coroutine::Pair* currentEvent = nullptr;
 	void SetState(HexGame::State newState) noexcept;
 
 	HexGrid* hexGrid = nullptr;

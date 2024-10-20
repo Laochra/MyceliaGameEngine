@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <array>
 #include <type_traits>
 
 // USAGE EXAMPLE
@@ -46,7 +46,8 @@ public:
 		Coroutine::State state = Coroutine::New;
 		float yieldTimer = 0.0f;
 
-		Package(void* dataInit = nullptr) noexcept : data(dataInit) {};
+		Package() noexcept : data(nullptr) {};
+		Package(void* dataInit) noexcept : data(dataInit) {};
 	};
 
 	class FunctionInterface
@@ -62,17 +63,31 @@ public:
 		T& GetData(Coroutine::Package& package) { return *(T*)package.data; }
 	};
 
+	struct Pair
+	{
+		Coroutine::FunctionInterface* function = nullptr;
+		Coroutine::Package package;
+	};
+
 	static void Update(float delta) noexcept;
 
 	/// <summary> C must be a Coroutine::Function with a Type matching the Data's Type </summary> <param name="C">The Coroutine Type to be ran</param> <param name="T">The Data Type</param> <param name="data">The Data for the Coroutine</param>
 	template<typename C, typename T>
 		requires std::is_base_of<Coroutine::Function<T>, C>::value
-	static inline void Start(T* data) noexcept
+	static inline const Coroutine::Pair* Start(T* data) noexcept
 	{
-		Coroutine::active.push_back({ new C(), Coroutine::Package(data) });
+		for (int i = 0; i < (int)Coroutine::list.size(); i++)
+		{
+			if (Coroutine::list[i].function == nullptr)
+			{
+				Coroutine::list[i].function = new C();
+				Coroutine::list[i].package.data = data;
+				return &Coroutine::list[i];
+			}
+		}
+		return nullptr;
 	}
 
 private:
-	typedef std::pair<Coroutine::FunctionInterface*, Coroutine::Package> CoroutineFunctionPackagePair;
-	static inline std::vector<CoroutineFunctionPackagePair> active;
+	static inline std::array<Coroutine::Pair, 1024> list;
 };

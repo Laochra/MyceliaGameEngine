@@ -1,6 +1,10 @@
 #include "HexProgression.h"
 
 #include "TileData.h"
+#include "HexScrapbook.h"
+
+#include "Easing.h"
+#include "TimeManager.h"
 
 std::vector<HexProgression::Milestone> HexProgression::lifeMilestones;
 
@@ -155,4 +159,102 @@ void HexProgression::CompleteMilestone(const Milestone& milestone)
 			if (variantsToUnlock.size() == 0) break;
 		}
 	}
+}
+
+struct HabitatStickerEventData
+{
+	enum class Stage : unsigned char
+	{
+		WaitingToStart,
+		OpenScrapbook,
+		PlaceSticker,
+		CloseScrapbook,
+		ExpandBorder,
+		WaitingToEnd
+	};
+
+	float stickerPlaceProgress = 0.0f;
+	float stickerMoveAmount = 0.5f;
+	float stickerMoveSpeed = 1.0f;
+
+	Stage stage = Stage::WaitingToStart;
+	char habitatIndex = 0;
+};
+class HabitatStickerEvent : public Coroutine::Function<HabitatStickerEventData>
+{
+	using Data = HabitatStickerEventData;
+	void operator()(Coroutine::Package& package)
+	{
+		Data& data = GetData(package);
+
+		switch (data.stage)
+		{
+		case Data::Stage::WaitingToStart:
+		{
+			data.stage = Data::Stage::OpenScrapbook;
+			CoroutineYieldFor(0.5f);
+			break;
+		}
+		case Data::Stage::OpenScrapbook:
+		{
+			HexScrapbook::Open(); // Reuse existing open animation and wait for it to end
+			HexScrapbook::habitats[data.habitatIndex].habitat->enabled = false;
+			data.stage = Data::Stage::PlaceSticker;
+			CoroutineYieldFor(1.0f / HexScrapbook::animationSpeed + 0.5f);
+			break;
+		}
+		case Data::Stage::PlaceSticker:
+		{
+			UISprite& sticker = *HexScrapbook::habitats[data.habitatIndex].habitat;
+			sticker.enabled = true;
+			bool finished = data.stickerPlaceProgress >= 1.0f;
+			if (finished) data.stickerPlaceProgress = 1.0f;
+
+			sticker.anchor = std::lerp(
+				data.stickerMoveAmount,
+				0.0f,
+				Easing::BackIn(data.stickerPlaceProgress)
+			) * glm::normalize(vec2(1.0f, 1.5f));
+
+			if (finished)
+			{
+				data.stage = Data::Stage::CloseScrapbook;
+				CoroutineYieldFor(0.75f);
+			}
+			else
+			{
+				data.stickerPlaceProgress += data.stickerMoveSpeed * Time::delta;
+			}
+			break;
+		}
+		case Data::Stage::CloseScrapbook:
+		{
+			HexScrapbook::Close(); // Reuse existing close animation and wait for it to end
+			data.stage = Data::Stage::ExpandBorder;
+			CoroutineYieldFor(1.0f / HexScrapbook::animationSpeed + 0.5f);
+			break;
+		}
+		case Data::Stage::ExpandBorder:
+		{
+			// ExpandBorder Animation
+			data.stage = Data::Stage::WaitingToEnd;
+			//CoroutineYieldFor();
+			break;
+		}
+		case Data::Stage::WaitingToEnd:
+		{
+			CoroutineFinalise();
+			break;
+		}
+		}
+	}
+};
+
+const Coroutine::Pair* HexProgression::PlayHabitatStickerAnimation(char habitatIndex, float moveAmount, float moveSpeed) noexcept
+{
+	HabitatStickerEventData* data = new HabitatStickerEventData;
+	data->habitatIndex = habitatIndex;
+	data->stickerMoveAmount = moveAmount;
+	data->stickerMoveSpeed = moveSpeed;
+	return Coroutine::Start<HabitatStickerEvent>(data);
 }

@@ -112,6 +112,11 @@ void HexGame::SetState(HexGame::State newState) noexcept
 		HexAudio::PlayMiscSFX(HexAudio::SoundEffect::ScrapbookClose);
 		break;
 	}
+	case HexGame::State::StickerEvent:
+	{
+		currentEvent = nullptr;
+		break;
+	}
 	default: Debug::LogWarning("Unaccounted for game state", locationinfo); break;
 	}
 
@@ -139,6 +144,10 @@ void HexGame::SetState(HexGame::State newState) noexcept
 	{
 		HexScrapbook::Open();
 		HexAudio::PlayMiscSFX(HexAudio::SoundEffect::ScrapbookOpen);
+		break;
+	}
+	case HexGame::State::StickerEvent:
+	{
 		break;
 	}
 	default: Debug::LogWarning("Unaccounted for game state", locationinfo); break;
@@ -325,7 +334,26 @@ void HexGame::Update()
 			}
 			else
 			{
-				hexGrid->UpdateTile(vec3(selectedPosition.x, 0, selectedPosition.y), *prefab);
+				HexGrid::UpdateTileReturnInfo returnInfo = hexGrid->UpdateTile(vec3(selectedPosition.x, 0, selectedPosition.y), *prefab);
+				if (returnInfo.value & HexGrid::UpdateTileReturnInfo::HabitatPickedUp)
+				{
+					//SetState(State::MoveHabitat);
+					// TODO: Implement moving the habitat
+				}
+				else
+				{
+					if (returnInfo.value & HexGrid::UpdateTileReturnInfo::NewHabitat)
+					{
+						HexAudio::PlayMiscSFX(HexAudio::SoundEffect::FormHabitat);
+						currentEvent = HexProgression::PlayHabitatStickerAnimation(returnInfo.habitatID, 0.35f, 1.5f);
+						SetState(State::StickerEvent);
+					}
+					if (returnInfo.value & HexGrid::UpdateTileReturnInfo::MilestoneReached)
+					{
+						//HexAudio::PlayMiscSFX(HexAudio::SoundEffect::MilestoneReached);
+						// TODO: Play MilestoneReached SFX
+					}
+				}
 			}
 		}
 
@@ -384,6 +412,13 @@ void HexGame::Update()
 		if (gameInputs.scrapbookClose.pressed()) SetState(HexGame::State::Place);
 		break;
 	}
+	case HexGame::State::StickerEvent:
+	{
+		if (currentEvent->function == nullptr)
+		{
+			SetState(State::Place);
+		}
+	}
 	}
 
 	vec2 radialDirection = vec2(gameInputs.radialX, -gameInputs.radialY);
@@ -394,7 +429,7 @@ void HexGame::Update()
 	float xMovement = 0.0f;
 	float zMovement = 0.0f;
 
-	if (!currentRadialMenu->enabled)
+	if (gameState == State::Place || gameState == State::Scrapbook)
 	{
 		xMovement = gameInputs.moveX;
 		zMovement = gameInputs.moveZ;

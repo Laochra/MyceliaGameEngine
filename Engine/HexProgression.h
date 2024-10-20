@@ -3,6 +3,9 @@
 #include <vector>
 #include <string>
 
+
+#include "MycCoroutine.h"
+
 #include "JsonIncludes.h"
 
 typedef unsigned int uint;
@@ -36,6 +39,8 @@ public:
 	// If a milestone is hit a pointer to it will be returned, otherwise returns nullptr
 	static const Milestone* IncreaseLife(uint lifeToAdd) noexcept;
 	static void ResetProgression() noexcept;
+
+	static const Coroutine::Pair* PlayHabitatStickerAnimation(char habitatIndex, float moveAmount, float moveSpeed) noexcept;
 
 	static void SaveTo(json& jsonObj);
 	static void LoadFrom(const json& jsonObj);

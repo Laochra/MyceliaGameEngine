@@ -5,6 +5,8 @@
 #include <vector>
 #include <string>
 
+#include "MycCoroutine.h"
+
 class HexScrapbook
 {
 public:
@@ -17,12 +19,14 @@ public:
 		std::string tileTextures[6];
 	};
 
+	static float animationSpeed;
+
 	static UISprite* base;
 	static std::string baseTexture;
 	static std::vector<HabitatCollection> habitats;
 
-	static void Open() noexcept;
-	static void Close() noexcept;
+	static const Coroutine::Pair* Open() noexcept;
+	static const Coroutine::Pair* Close() noexcept;
 
 	static void Reset() noexcept;
 
@@ -42,7 +46,6 @@ public:
 
 private:
 	static float openness; // 0 for not open, 1 for open
-	static float animationSpeed;
 	static State state;
 	static void SetState(State newState) noexcept;
 };

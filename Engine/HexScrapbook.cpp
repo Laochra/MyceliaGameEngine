@@ -17,7 +17,13 @@ void HexScrapbook::SetState(State newState) noexcept
 {
 	state = newState;
 
-	bool shouldBeEnabled = newState != State::Closed;
+	bool shouldBeEnabled;
+	switch (newState)
+	{
+	case State::Opening: shouldBeEnabled = true; break;
+	case State::Closed: shouldBeEnabled = false; break;
+	default: return;
+	}
 
 	base->enabled = shouldBeEnabled;
 	for (HabitatCollection& habitat : habitats)
@@ -45,7 +51,10 @@ class ScrapbookAnimation : public Coroutine::Function<ScrapbookAnimationData>
 		ScrapbookAnimationData& data = GetData(package);
 
 		bool finalising = false;
-
+		if (data.habitats[0].habitat->enabled)
+		{
+			finalising = false;
+		}
 		switch (data.state)
 		{
 		case HexScrapbook::State::Opening:
@@ -86,40 +95,42 @@ class ScrapbookAnimation : public Coroutine::Function<ScrapbookAnimationData>
 		else { CoroutineYield(); }
 	}
 };
-void HexScrapbook::Open() noexcept
+const Coroutine::Pair* HexScrapbook::Open() noexcept
 {
 	switch (state)
 	{
 	case State::Closed:
 		SetState(State::Opening);
-		Coroutine::Start<ScrapbookAnimation>(&scrapbookAnimationData);
-		return;
+		return Coroutine::Start<ScrapbookAnimation>(&scrapbookAnimationData);
 	case State::Opening:
-		return;
+		return nullptr;
 	case State::Open:
 		SetState(State::Open);
-		return;
+		return nullptr;
 	case State::Closing:
 		SetState(State::Opening);
-		return;
+		return nullptr;
+	default:
+		return nullptr;
 	}
 }
-void HexScrapbook::Close() noexcept
+const Coroutine::Pair* HexScrapbook::Close() noexcept
 {
 	switch (state)
 	{
 	case State::Closed:
 		SetState(State::Closed);
-		return;
+		return nullptr;
 	case State::Opening:
 		SetState(State::Closing);
-		return;
+		return nullptr;
 	case State::Open:
 		SetState(State::Closing);
-		Coroutine::Start<ScrapbookAnimation>(&scrapbookAnimationData);
-		return;
+		return Coroutine::Start<ScrapbookAnimation>(&scrapbookAnimationData);
 	case State::Closing:
-		return;
+		return nullptr;
+	default:
+		return nullptr;
 	}
 }
 
@@ -191,6 +202,7 @@ void HexScrapbook::ConcealSprites() noexcept
 		habitat.tiles[1]->Load(habitat.tileTextures[2].c_str());
 		habitat.tiles[2]->Load(habitat.tileTextures[4].c_str());
 	}
+	HexScrapbook::habitats[0].habitat->enabled = HexScrapbook::habitats[0].habitat->enabled;
 }
 
 void HexScrapbook::RevealSprites() noexcept

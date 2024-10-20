@@ -64,23 +64,29 @@ void HexGrid::Initialise() noexcept
 	GameObject3D::Initialise();
 }
 
-void HexGrid::UpdateTile(vec3 position, const json& tilePrefab) noexcept
+HexGrid::UpdateTileReturnInfo HexGrid::UpdateTile(vec3 position, const json& tilePrefab) noexcept
 {
 	HexCubeCoord cubeCoord = HexCubeCoord::GetFromPos(vec2(position.x, position.z));
-	if (cubeCoord.GetMagnitude() > radius) return;
+	if (cubeCoord.GetMagnitude() > radius) return UpdateTileReturnInfo();
 
-	UpdateTile(HexCubeToOffset(cubeCoord, centre), tilePrefab);
+	return UpdateTile(HexCubeToOffset(cubeCoord, centre), tilePrefab);
 }
-void HexGrid::UpdateTile(HexOffsetCoord hexCoord, const json& tilePrefab) noexcept
+HexGrid::UpdateTileReturnInfo HexGrid::UpdateTile(HexOffsetCoord hexCoord, const json& tilePrefab) noexcept
 {
-	if (hexCoord == centre && tilePrefab != *TileData::GetMotherTreePrefab()) return;
+	UpdateTileReturnInfo returnInfo;
+
+	if (hexCoord == centre && tilePrefab != *TileData::GetMotherTreePrefab()) return returnInfo;
 
 	HexTile& hexTile = Get(hexCoord);
 	
-	if (hexTile.habitat >= 0) return; // TODO: Implement moving the habitat
+	if (hexTile.habitat >= 0)
+	{
+		returnInfo.value |= UpdateTileReturnInfo::HabitatPickedUp;
+		returnInfo.habitatID = hexTile.habitat;
+		return returnInfo;
+	}
 
 	short oldRadius = (short)HexProgression::currentRadius;
-	bool radiusExpanded = false;
 
 	switch (hexTile.type)
 	{
@@ -90,7 +96,7 @@ void HexGrid::UpdateTile(HexOffsetCoord hexCoord, const json& tilePrefab) noexce
 			"Attempted to update a tile that hasn't been reached ",
 			"(", hexCoord.x, ",", hexCoord.y, ")"
 		);
-		return;
+		return returnInfo;
 	}
 	case HexType::Perimeter:
 	{
@@ -114,8 +120,7 @@ void HexGrid::UpdateTile(HexOffsetCoord hexCoord, const json& tilePrefab) noexce
 		const HexProgression::Milestone* milestone = HexProgression::IncreaseLife(HexProgression::tileLifeBonus);
 		if (milestone != nullptr)
 		{
-			// TODO: Play MilestoneReached SFX
-
+			returnInfo.value |= UpdateTileReturnInfo::MilestoneReached;
 		}
 		break;
 	}
@@ -125,7 +130,7 @@ void HexGrid::UpdateTile(HexOffsetCoord hexCoord, const json& tilePrefab) noexce
 			TileData::Get(hexTile.type)[hexTile.variant].name == (string)tilePrefab["HexVariant"])
 		{
 			hexTile.object->Rotate(glm::radians(-60.0f), vec3(0, 1, 0));
-			return;
+			return returnInfo;
 		}
 		if ((char)hexTile.type >= 0)
 		{
@@ -138,7 +143,6 @@ void HexGrid::UpdateTile(HexOffsetCoord hexCoord, const json& tilePrefab) noexce
 	vec3 position = hexTile.object->GetPosition();
 	unsigned long long guid = hexTile.object->GetGUID();
 	hexTile.object->UpdateFrom(tilePrefab, GuidGeneration::Keep);
-	//if (hexTile.object == GameObject::Destroyed) hexTile.object = (GameObject3D*)gameObjectManager->Find(guid);
 	hexTile.object->SetPosition(position);
 	hexTile.object->Rotate(glm::radians(Random::Int32(0, 5) * 60.0f), vec3(0, 1, 0));
 
@@ -153,17 +157,15 @@ void HexGrid::UpdateTile(HexOffsetCoord hexCoord, const json& tilePrefab) noexce
 	Habitat habitat = Habitat::AttemptToFormHabitat(this, hexCoord);
 	if (habitat.object != nullptr)
 	{
-		radiusExpanded = true;
-
-		HexAudio::PlayMiscSFX(HexAudio::SoundEffect::FormHabitat);
+		returnInfo.value |= UpdateTileReturnInfo::NewHabitat;
+		returnInfo.habitatID = habitat.habitatID;
 
 		habitat.object->SetParent(this);
 		habitats.push_back(habitat);
 		const HexProgression::Milestone* milestone = HexProgression::IncreaseLife(HexProgression::habitatLifeBonus);
 		if (milestone != nullptr)
 		{
-			// TODO: Play MilestoneReached SFX
-
+			returnInfo.value |= UpdateTileReturnInfo::MilestoneReached;
 		}
 	}
 	else
@@ -178,10 +180,12 @@ void HexGrid::UpdateTile(HexOffsetCoord hexCoord, const json& tilePrefab) noexce
 		}
 	}
 
-	if (radiusExpanded)
+	if (returnInfo.value & UpdateTileReturnInfo::NewHabitat)
 	{
 		ValidatePerimeterPlaceability(oldRadius + 1);
 	}
+
+	return returnInfo;
 }
 
 void HexGrid::InitialiseCentre() noexcept
