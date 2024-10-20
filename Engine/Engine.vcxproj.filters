@@ -232,14 +232,14 @@
     <ClCompile Include="HexCameraData.cpp">
       <Filter>HexGame</Filter>
     </ClCompile>
-    <ClCompile Include="SpiritData.cpp">
-      <Filter>HexGame</Filter>
-    </ClCompile>
     <ClCompile Include="Easing.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
     <ClCompile Include="MycCoroutine.cpp">
       <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="SpiritData.cpp">
+      <Filter>HexGame</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
