@@ -229,6 +229,7 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshManager.cpp" />
     <ClCompile Include="MeshRenderer.cpp" />
+    <ClCompile Include="MycCoroutine.cpp" />
     <ClCompile Include="OrbitalCamera.cpp" />
     <ClCompile Include="ParticleEmitter.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
@@ -238,8 +239,6 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
-    <ClCompile Include="SpiritData.cpp" />
-    <ClCompile Include="MycCoroutine.cpp" />
     <ClCompile Include="StackTimer.cpp" />
     <ClCompile Include="StringBuilder.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -303,7 +302,6 @@
     <ClInclude Include="AppInfo.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="AudioManager.h" />
-    <ClInclude Include="MycCoroutine.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Colour.h" />
     <ClInclude Include="ComputeShader.h" />
@@ -350,6 +348,7 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshManager.h" />
     <ClInclude Include="MeshRenderer.h" />
+    <ClInclude Include="MycCoroutine.h" />
     <ClInclude Include="OrbitalCamera.h" />
     <ClInclude Include="GLIncludes.h" />
     <ClInclude Include="ParticleEmitter.h" />
