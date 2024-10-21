@@ -132,6 +132,7 @@ void MeshRenderer::Draw(intptr_t lastUsedMaterial)
 		bool rmaoMapBound = false;
 		bool emissionColourBound = false;
 		bool emissionIntensityBound = false;
+		bool alphaThresholdBound = false;
 		for (int i = 0; i < material->uniforms.size(); i++)
 		{
 			if (material->uniforms[i].name == "ColourMap")
@@ -196,6 +197,14 @@ void MeshRenderer::Draw(intptr_t lastUsedMaterial)
 				emissionIntensityBound = true;
 				continue;
 			}
+			else if (material->uniforms[i].name == "AlphaCutoff")
+			{
+				float alphaThreshold;
+				material->uniforms[i].Get(&alphaThreshold);
+				sp.BindUniform("AlphaThreshold", alphaThreshold);
+				alphaThresholdBound = true;
+				continue;
+			}
 		}
 
 		if (!colourMapBound)
@@ -216,6 +225,7 @@ void MeshRenderer::Draw(intptr_t lastUsedMaterial)
 		}
 		if (!emissionColourBound) sp.BindUniform("EmissionColour", vec3(1.0f, 1.0f, 1.0f));
 		if (!emissionIntensityBound) sp.BindUniform("EmissionIntensity", 0.0f);
+		if (!alphaThresholdBound) sp.BindUniform("AlphaCutoff", 0.0f);
 	}
 
 	if (AppInfo::CompareState(AppState::Editor)) sp.BindUniform("Selected", (int)selected);
