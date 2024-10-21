@@ -154,6 +154,80 @@ void HexGame::SetState(HexGame::State newState) noexcept
 	}
 }
 
+static void RefreshOutline(
+	vector<ShaderProgram*>& programs,
+	vector<uint*>& framebuffers,
+	vector<uint*>& textures) noexcept
+{
+	if (textures[3] == nullptr) return; // Return if just rendering to the backbuffer
+
+	const ShaderProgram& outlineProgram = *programs[0];
+
+	uint& outlineFBO = *framebuffers[0];
+
+	const uint& colourTexture = *textures[0];
+	const uint& positionTexture = *textures[1];
+	const uint& idTexture = *textures[2];
+	uint& outlinedTexture = *textures[3];
+
+	if (outlineFBO == 0)
+	{
+		glGenFramebuffers(1, &outlineFBO);
+		glGenTextures(1, &outlinedTexture);
+	}
+	glBindFramebuffer(GL_FRAMEBUFFER, outlineFBO);
+
+	glBindTexture(GL_TEXTURE_2D, outlinedTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, AppInfo::screenWidth, AppInfo::screenHeight, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, outlinedTexture, 0);
+}
+static void DrawOutline(
+	vector<ShaderProgram*>& programs,
+	vector<uint*>& framebuffers,
+	vector<uint*>& textures) noexcept
+{
+	ShaderProgram& outlineProgram = *programs[0];
+
+	uint& outlineFBO = *framebuffers[0];
+
+	const uint& colourTexture = *textures[0];
+	const uint& positionTexture = *textures[1];
+	const uint& idTexture = *textures[2];
+	uint& outlinedTexture = *textures[3];
+
+	glViewport(0, 0, AppInfo::screenWidth, AppInfo::screenHeight);
+
+	// If not intentionally targetting the back buffer initialise a new one
+	if (textures[3] != nullptr && outlineFBO == 0)
+	{
+		glGenFramebuffers(1, &outlineFBO);
+		glGenTextures(1, &outlinedTexture);
+	}
+	glBindFramebuffer(GL_FRAMEBUFFER, outlineFBO);
+
+	glClearColor(0.8f, 0.75f, 0.85f, 1);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glDisable(GL_DEPTH_TEST);
+
+	outlineProgram.Bind();
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, colourTexture);
+	outlineProgram.BindUniform("ColourMap", 0);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, positionTexture);
+	outlineProgram.BindUniform("PositionMap", 1);
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, idTexture);
+	outlineProgram.BindUniform("IDMap", 2);
+
+	PostProcess::Defaults::screenQuad->Draw();
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 void HexGame::Initialise(uint* renderTargetInit)
 {
 	AppInfo::name = "Cosy Hex Game";
@@ -163,14 +237,14 @@ void HexGame::Initialise(uint* renderTargetInit)
 
 	PostProcess::Defaults::Initialise();
 
-	const string boxBlurShader = StringBuilder(defaultPath, "BoxBlur.frag").value;
+	const string outlineShader = "Assets\\Shaders\\Outline.frag";
 	postProcessStack.Add(
 		PostProcess(
-			PostProcess::Defaults::DrawBloom, PostProcess::Defaults::RefreshBloom,
-			{ new ShaderProgram(fullScreenQuadShader.c_str(), boxBlurShader.c_str()) },
-			{ &handles.bloomFBOs[0], &handles.bloomFBOs[1] },
-			{ &handles.brightTexture, &handles.bloomTextures[0], &handles.bloomTextures[1] },
-			"Bloom Blur"
+			DrawOutline, RefreshOutline,
+			{ new ShaderProgram(fullScreenQuadShader.c_str(), outlineShader.c_str()) },
+			{ &handles.outlineFBO },
+			{ &handles.hdrTexture, &handles.positionTexture, &handles.idTexture, &handles.outlinedTexture },
+			"Outline"
 		)
 	);
 
@@ -180,7 +254,7 @@ void HexGame::Initialise(uint* renderTargetInit)
 			PostProcess::Defaults::DrawHDRToLDR, PostProcess::Defaults::RefreshHDRToLDR,
 			{ new ShaderProgram(fullScreenQuadShader.c_str(), hdrToLDRShader.c_str()) },
 			{ &handles.hdrToLDRFBO },
-			{ &handles.hdrTexture, &handles.bloomTextures[PostProcess::Defaults::bloomPasses % 2], &handles.gizmosTexture, &handles.uiTexture, &handles.ldrTexture },
+			{ &handles.outlinedTexture, &handles.gizmosTexture, &handles.uiTexture, &handles.ldrTexture },
 			"HDR To LDR"
 		)
 	);
@@ -519,7 +593,8 @@ void HexGame::Draw()
 		handles.hdrFBO,
 		handles.hdrTexture,
 		handles.hdrDepth,
-		handles.brightTexture,
+		handles.positionTexture,
+		handles.idTexture,
 		handles.gizmosTexture,
 		transformsDrawFunc);
 

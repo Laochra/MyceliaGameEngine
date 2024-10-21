@@ -13,12 +13,10 @@ public:
 	{
 		uint hdrFBO = 0;
 		uint hdrTexture = 0;
-		uint brightTexture = 0;
+		uint positionTexture = 0;
+		uint idTexture = 0;
 		uint hdrDepth = 0;
 		uint gizmosTexture = 0;
-
-		uint bloomFBOs[2] = {0, 0};
-		uint bloomTextures[2] = {0, 0};
 
 		uint hdrToLDRFBO = 0;
 		uint ldrTexture = 0;

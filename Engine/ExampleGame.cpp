@@ -17,16 +17,6 @@ void ExampleGame::Initialise(uint* renderTargetInit)
 	const string defaultPath = "Engine\\DefaultAssets\\";
 	const string fullScreenQuadShader = StringBuilder(defaultPath, "FullScreenQuad.vert").value;
 
-	const string boxBlurShader = StringBuilder(defaultPath, "BoxBlur.frag").value;
-	postProcessStack.Add(
-		PostProcess(
-			PostProcess::Defaults::DrawBloom, PostProcess::Defaults::RefreshBloom,
-			{ new ShaderProgram(fullScreenQuadShader.c_str(), boxBlurShader.c_str()) },
-			{ &handles.bloomFBOs[0], &handles.bloomFBOs[1] },
-			{ &handles.brightTexture, &handles.bloomTextures[0], &handles.bloomTextures[1] },
-			"Bloom Blur"
-		)
-	);
 
 	const string hdrToLDRShader = StringBuilder(defaultPath, "HDR.frag").value;
 	postProcessStack.Add(
@@ -34,7 +24,7 @@ void ExampleGame::Initialise(uint* renderTargetInit)
 			PostProcess::Defaults::DrawHDRToLDR, PostProcess::Defaults::RefreshHDRToLDR,
 			{ new ShaderProgram(fullScreenQuadShader.c_str(), hdrToLDRShader.c_str())},
 			{ &handles.hdrToLDRFBO },
-			{ &handles.hdrTexture, &handles.bloomTextures[PostProcess::Defaults::bloomPasses % 2], &handles.gizmosTexture, &handles.ldrTexture },
+			{ &handles.hdrTexture, &handles.gizmosTexture, &handles.ldrTexture },
 			"HDR To LDR"
 		)
 	);
@@ -83,7 +73,8 @@ void ExampleGame::Draw()
 		handles.hdrFBO,
 		handles.hdrTexture,
 		handles.hdrDepth,
-		handles.brightTexture,
+		handles.positionTexture,
+		handles.idTexture,
 		handles.gizmosTexture,
 		transformsDrawFunc);
 

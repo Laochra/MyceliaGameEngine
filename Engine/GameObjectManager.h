@@ -37,7 +37,7 @@ public:
 
 	typedef void(*DrawFunc)() noexcept;
 	static void DrawGUIDs(uint& framebuffer, uint& texture, uint& depth, DrawFunc drawTransformIDsFunction = nullptr) noexcept;
-	static void DrawScene(uint& framebuffer, uint& texture, uint& depth, uint& bloomTexture, uint& gizmosTexture, DrawFunc drawTransformsFunction = nullptr) noexcept;
+	static void DrawScene(uint& framebuffer, uint& texture, uint& depth, uint& positionTexture, uint& idTexture, uint& gizmosTexture, DrawFunc drawTransformsFunction = nullptr) noexcept;
 
 private:
 	vector<GameObject*> graveyard = vector<GameObject*>();

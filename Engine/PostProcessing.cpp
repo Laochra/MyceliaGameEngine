@@ -150,17 +150,16 @@ void PostProcess::Defaults::RefreshHDRToLDR(
 	vector<uint*>& framebuffers,
 	vector<uint*>& textures) noexcept
 {
-	if (textures[4] == nullptr) return; // Return if just rendering to the backbuffer
+	if (textures[3] == nullptr) return; // Return if just rendering to the backbuffer
 
 	const ShaderProgram& hdrToLDRProgram = *programs[0];
 
 	uint& hdrToLDRFBO = *framebuffers[0];
 
 	const uint& hdrTexture = *textures[0];
-	const uint& bloomTexture = *textures[1];
-	const uint& gizmosTexture = *textures[2];
-	const uint& uiTexture = *textures[3];
-	uint& ldrTexture = *textures[4];
+	const uint& gizmosTexture = *textures[1];
+	const uint& uiTexture = *textures[2];
+	uint& ldrTexture = *textures[3];
 
 	if (hdrToLDRFBO == 0)
 	{
@@ -186,15 +185,14 @@ void PostProcess::Defaults::DrawHDRToLDR(
 	uint& hdrToLDRFBO = *framebuffers[0];
 
 	const uint& hdrTexture = *textures[0];
-	const uint& bloomTexture = *textures[1];
-	const uint& gizmosTexture = *textures[2];
-	const uint& uiTexture = *textures[3];
-	uint& ldrTexture = *textures[4];
+	const uint& gizmosTexture = *textures[1];
+	const uint& uiTexture = *textures[2];
+	uint& ldrTexture = *textures[3];
 
 	glViewport(0, 0, AppInfo::screenWidth, AppInfo::screenHeight);
 
 	// If not intentionally targetting the back buffer initialise a new one
-	if (textures[4] != nullptr && hdrToLDRFBO == 0)
+	if (textures[3] != nullptr && hdrToLDRFBO == 0)
 	{
 		glGenFramebuffers(1, &hdrToLDRFBO);
 		glGenTextures(1, &ldrTexture);
@@ -210,17 +208,14 @@ void PostProcess::Defaults::DrawHDRToLDR(
 	glBindTexture(GL_TEXTURE_2D, hdrTexture);
 	hdrToLDRProgram.BindUniform("HDRTexture", 0);
 	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, bloomTexture);
-	hdrToLDRProgram.BindUniform("BloomTexture", 1);
-	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, gizmosTexture);
-	hdrToLDRProgram.BindUniform("GizmosTexture", 2);
-	glActiveTexture(GL_TEXTURE3);
+	hdrToLDRProgram.BindUniform("GizmosTexture", 1);
+	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, uiTexture);
-	hdrToLDRProgram.BindUniform("UITexture", 3);
-	glActiveTexture(GL_TEXTURE4);
+	hdrToLDRProgram.BindUniform("UITexture", 2);
+	glActiveTexture(GL_TEXTURE3);
 	glBindTexture(GL_TEXTURE_2D, ldrTexture);
-	hdrToLDRProgram.BindUniform("CurrentColourBuffer", 4);
+	hdrToLDRProgram.BindUniform("CurrentColourBuffer", 3);
 	hdrToLDRProgram.BindUniform("Exposure", exposure);
 	hdrToLDRProgram.BindUniform("DisplayUI", (int)displayUI);
 

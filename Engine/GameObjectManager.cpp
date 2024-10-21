@@ -242,7 +242,8 @@ void GameObjectManager::DrawScene(
 	uint& framebuffer,
 	uint& texture,
 	uint& depth, 
-	uint& brightTexture, 
+	uint& positionTexture, 
+	uint& idTexture, 
 	uint& gizmosTexture,
 	DrawFunc drawTransformsFunction) noexcept
 {
@@ -251,7 +252,8 @@ void GameObjectManager::DrawScene(
 		glGenFramebuffers(1, &framebuffer);
 		glGenRenderbuffers(1, &depth);
 		glGenTextures(1, &texture);
-		glGenTextures(1, &brightTexture);
+		glGenTextures(1, &positionTexture);
+		glGenTextures(1, &idTexture);
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 
@@ -262,9 +264,14 @@ void GameObjectManager::DrawScene(
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depth);
 
-		for (uint texId = 0; texId < 2; texId++)
+		for (uint texId = 0; texId < 3; texId++)
 		{
-			glBindTexture(GL_TEXTURE_2D, texId == 0 ? texture : brightTexture);
+			switch (texId)
+			{
+			case 0: glBindTexture(GL_TEXTURE_2D, texture); break;
+			case 1: glBindTexture(GL_TEXTURE_2D, positionTexture); break;
+			case 2: glBindTexture(GL_TEXTURE_2D, idTexture); break;
+			}
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, AppInfo::screenWidth, AppInfo::screenHeight, 0, GL_RGBA, GL_FLOAT, NULL);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -274,9 +281,10 @@ void GameObjectManager::DrawScene(
 		}
 	}
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, brightTexture, 0);
-	uint attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
-	glDrawBuffers(2, attachments);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, positionTexture, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, idTexture, 0);
+	uint attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
+	glDrawBuffers(3, attachments);
 
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
