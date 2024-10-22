@@ -164,4 +164,18 @@ void TileData::PopulateDefaultPrefab(int index) noexcept
 		assert(false && "Critical game asset was corrupt. Check log file for details.");
 		return;
 	}
+
+	switch (index)
+	{
+	case 1:
+		prefab["HexType"] = -2;
+		prefab["HexVariant"] = "Perimeter";
+		break;
+	case 2:
+		prefab["HexType"] = -3;
+		prefab["HexVariant"] = "MotherTree";
+		break;
+	default:
+		break;
+	}
 }

@@ -142,7 +142,8 @@ HexGrid::UpdateTileReturnInfo HexGrid::UpdateTile(HexOffsetCoord hexCoord, const
 	
 	vec3 position = hexTile.object->GetPosition();
 	unsigned long long guid = hexTile.object->GetGUID();
-	hexTile.object->UpdateFrom(tilePrefab, GuidGeneration::Keep);
+	GameObject::Destroy(hexTile.object);
+	hexTile.object = (GameObject3D*)GameObject::InstantiateFrom(tilePrefab, GuidGeneration::New);
 	hexTile.object->SetPosition(position);
 	hexTile.object->Rotate(glm::radians(Random::Int32(0, 5) * 60.0f), vec3(0, 1, 0));
 
