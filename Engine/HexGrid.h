@@ -52,12 +52,14 @@ public:
 		char value = None;
 		char habitatID = 0;
 
-		typedef enum : char
+		typedef enum : unsigned char
 		{
-			None = 0,
-			NewHabitat = 1,
-			MilestoneReached = 2,
-			HabitatPickedUp = 4
+			None					= 0b00000000,
+			TilePlaced			= 0b00000001,
+			NewTile				= 0b00000010,
+			NewHabitat			= 0b00000100,
+			MilestoneReached	= 0b00001000,
+			HabitatPickedUp	= 0b00010000,
 		} bitmask;
 	};
 	UpdateTileReturnInfo UpdateTile(vec3 position, const json& tilePrefab) noexcept;

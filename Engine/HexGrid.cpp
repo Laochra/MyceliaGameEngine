@@ -122,6 +122,8 @@ HexGrid::UpdateTileReturnInfo HexGrid::UpdateTile(HexOffsetCoord hexCoord, const
 		{
 			returnInfo.value |= UpdateTileReturnInfo::MilestoneReached;
 		}
+
+		returnInfo.value |= UpdateTileReturnInfo::TilePlaced | UpdateTileReturnInfo::NewTile;
 		break;
 	}
 	default: // tile already exists
@@ -136,15 +138,17 @@ HexGrid::UpdateTileReturnInfo HexGrid::UpdateTile(HexOffsetCoord hexCoord, const
 		{
 			TileData::Get(hexTile.type)[hexTile.variant].countPlaced--;
 		}
+
+		returnInfo.value |= UpdateTileReturnInfo::TilePlaced;
 		break;
 	}
 	}
 	
-	vec3 position = hexTile.object->GetPosition();
+	vec2 position = vec2(hexTile.object->GetPosition().x, hexTile.object->GetPosition().z);
 	unsigned long long guid = hexTile.object->GetGUID();
 	GameObject::Destroy(hexTile.object);
 	hexTile.object = (GameObject3D*)GameObject::InstantiateFrom(tilePrefab, GuidGeneration::New);
-	hexTile.object->SetPosition(position);
+	hexTile.object->SetPosition(vec3(position.x, hexTile.object->GetPosition().y, position.y));
 	hexTile.object->Rotate(glm::radians(Random::Int32(0, 5) * 60.0f), vec3(0, 1, 0));
 
 	hexTile.type = tilePrefab["HexType"];
