@@ -23,6 +23,8 @@ public:
 	ShaderProgram* GetProgram(const char* filepath);
 	void ReloadProgram(const char* filepath);
 
+	void ReloadAll() noexcept;
+
 private:
 	map<string, ShaderProgram*> loadedPrograms;
 

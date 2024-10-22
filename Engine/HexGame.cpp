@@ -5,6 +5,7 @@
 #include "GameObjectManager.h"
 #include "AudioManager.h"
 #include "UIManager.h"
+#include "ShaderManager.h"
 
 #include "Shader.h"
 #include "Camera.h"
@@ -290,7 +291,7 @@ void HexGame::Initialise(uint* renderTargetInit)
 	postProcessStack.Add(
 		PostProcess(
 			DrawOutline, RefreshOutline,
-			{ new ShaderProgram(fullScreenQuadShader.c_str(), outlineShader.c_str()) },
+			{ shaderManager->GetProgram("Assets\\Shaders\\Outline.gpu")},
 			{ &handles.outlineFBO },
 			{ &handles.hdrTexture, &handles.positionTexture, &handles.idTexture, &handles.outlinedTexture },
 			"Outline"

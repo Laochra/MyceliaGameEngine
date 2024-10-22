@@ -313,6 +313,15 @@ namespace EditorGUI
 				}
 				ImGui::EndMenu();
 			}
+			GUI::Spacing(4);
+			if (ImGui::BeginMenu("Resources"))
+			{
+				if (ImGui::MenuItem("Reload Shaders"))
+				{
+					shaderManager->ReloadAll();
+				}
+				ImGui::EndMenu();
+			}
 			ImGui::EndMainMenuBar();
 		}
 	}

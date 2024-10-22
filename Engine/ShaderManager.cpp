@@ -75,6 +75,24 @@ void ShaderManager::ReloadProgram(const char* filepath)
    }
 }
 
+void ShaderManager::ReloadAll() noexcept
+{
+   for (auto& programPair : loadedPrograms)
+   {
+      if (
+         programPair.first == "PBRLit" ||
+         programPair.first == "Unlit" ||
+         programPair.first == "DepthOnly" ||
+         programPair.first == "DrawGUID"
+      )
+      {
+         continue;
+      }
+
+      programPair.second->LoadAndLinkFromJSON(programPair.first.c_str());
+   }
+}
+
 ShaderProgram* ShaderManager::AddProgram(const char* filepath)
 {
    ShaderProgram* newProgram = new ShaderProgram;
