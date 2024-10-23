@@ -24,6 +24,8 @@ public:
 	const Material* GetMaterial() const;
 	void SetMaterial(const char* filepath);
 
+	vec4 highlightColour;
+
 private:
 	Mesh* mesh = nullptr;
 	Material* material = nullptr;

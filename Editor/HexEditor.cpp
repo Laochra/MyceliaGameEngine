@@ -4,6 +4,7 @@
 #include "HabitatData.h"
 #include "SpiritData.h"
 
+#include "HexGameInfo.h"
 #include "HexRadial.h"
 #include "HexScrapbook.h"
 #include "HexProgression.h"
@@ -57,7 +58,11 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 
 	GUI::Spacing(3);
 
-	if (ImGui::CollapsingHeader("Required Tiles"))
+	if (ImGui::CollapsingHeader("Tiles"))
+	{
+		GUI::Spacing(3);
+		ImGui::Indent();
+		if (ImGui::CollapsingHeader("Required"))
 	{
 		if (!AppInfo::CompareState(AppState::Editor)) ImGui::BeginDisabled();
 
@@ -77,9 +82,9 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 		if (!AppInfo::CompareState(AppState::Editor)) ImGui::EndDisabled();
 	}
 
-	GUI::Spacing(3);
+		GUI::Spacing(3);
 
-	if (ImGui::CollapsingHeader("Tile Variants"))
+		if (ImGui::CollapsingHeader("Variants"))
 	{
 		GUI::Spacing(3);
 
@@ -142,6 +147,9 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 		GUI::Spacing(3);
 
 		if (!AppInfo::CompareState(AppState::Editor)) ImGui::EndDisabled();
+	}
+		ImGui::Unindent();
+		GUI::Spacing(3);
 	}
 
 	GUI::Spacing(3);
@@ -738,6 +746,17 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 			ImGui::EndTabItem();
 		}
 		ImGui::EndTabBar();
+
+		GUI::Spacing(3);
+	}
+
+	GUI::Spacing(3);
+
+	if (ImGui::CollapsingHeader("Misc Colours"))
+	{
+		GUI::Spacing(3);
+
+		ImGui::DragFloat4("Highlight", (float*)&HexGameInfo::highlightColour, 0.01f, 0.0f, FLT_MAX);
 
 		GUI::Spacing(3);
 	}

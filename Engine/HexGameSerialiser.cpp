@@ -2,6 +2,7 @@
 
 #include "UIManager.h"
 
+#include "HexGameInfo.h"
 #include "TileData.h"
 #include "HabitatData.h"
 #include "SpiritData.h"
@@ -210,6 +211,17 @@ void HexGameSerialiser::LoadDataFrom(json& dataFile) noexcept
 		json audioData = dataFile["Audio"];
 		HexAudio::LoadFrom(audioData);
 	}
+
+	if (dataFile.contains("Misc Colours"))
+	{
+		json miscColours = dataFile["Misc Colours"];
+
+		if (miscColours.contains("Highlight"))
+		{
+			vector<float> highlightColour = miscColours["Highlight"];
+			HexGameInfo::highlightColour = *(vec4*)&highlightColour.data()[0];
+		}
+	}
 }
 
 void HexGameSerialiser::SaveDataTo(json& dataFile) noexcept
@@ -392,5 +404,18 @@ void HexGameSerialiser::SaveDataTo(json& dataFile) noexcept
 	{
 		HexAudio::SaveTo(audioJSON);
 		dataFile["Audio"] = audioJSON;
+	}
+
+	json miscColours;
+	{
+		vec4 highlightColour = HexGameInfo::highlightColour;
+		miscColours["Highlight"] = vector<float>({
+			highlightColour.r,
+			highlightColour.g,
+			highlightColour.b,
+			highlightColour.a
+		});
+
+		dataFile["Misc Colours"] = miscColours;
 	}
 }

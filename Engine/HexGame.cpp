@@ -7,6 +7,7 @@
 #include "UIManager.h"
 #include "ShaderManager.h"
 
+#include "MeshRenderer.h"
 #include "Shader.h"
 #include "Camera.h"
 
@@ -229,6 +230,18 @@ static void DrawOutline(
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+static void RecursiveSetHighlightColour(GameObject3D* gameObject, vec4 colour)
+{
+	if (gameObject->GetClassID() == MeshRenderer::classID)
+	{
+		((MeshRenderer*)gameObject)->highlightColour = colour;
+	}
+
+	for (GameObject3D* child : *gameObject->GetChildren())
+	{
+		RecursiveSetHighlightColour(child, colour);
+	}
+}
 const float tileRaiseAmount = 0.1f;
 static void RaiseTile(vec2 hoveredPosition, GameObject3D*& selectedGameObject, HexGrid* hexGrid)
 {
@@ -238,6 +251,7 @@ static void RaiseTile(vec2 hoveredPosition, GameObject3D*& selectedGameObject, H
 		if (selectedGameObject != nullptr)
 		{
 			selectedGameObject->Translate(vec3(0, -tileRaiseAmount, 0));
+			RecursiveSetHighlightColour(selectedGameObject, vec4());
 			selectedGameObject = nullptr;
 		}
 	}
@@ -267,10 +281,12 @@ static void RaiseTile(vec2 hoveredPosition, GameObject3D*& selectedGameObject, H
 			if (selectedGameObject != nullptr)
 			{
 				selectedGameObject->Translate(vec3(0, -tileRaiseAmount, 0));
+				RecursiveSetHighlightColour(selectedGameObject, vec4());
 			}
 			if (hoveredGameObject != nullptr)
 			{
 				hoveredGameObject->Translate(vec3(0, tileRaiseAmount, 0));
+				RecursiveSetHighlightColour(hoveredGameObject, HexGameInfo::highlightColour);
 			}
 
 			selectedGameObject = hoveredGameObject;
@@ -640,7 +656,7 @@ void HexGame::Draw()
 
 		DrawUI(
 			currentRadialMenu,
-			{crosshair},
+			{/*crosshair*/},
 			handles.uiFBO,
 			handles.uiTexture);
 	}

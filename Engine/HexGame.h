@@ -5,6 +5,8 @@
 
 #include "PostProcessing.h"
 
+#include "HexGameInfo.h"
+
 #include "RadialMenu.h"
 #include "UISprite.h"
 

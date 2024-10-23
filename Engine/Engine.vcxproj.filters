@@ -241,6 +241,9 @@
     <ClCompile Include="SpiritData.cpp">
       <Filter>HexGame</Filter>
     </ClCompile>
+    <ClCompile Include="HexGameInfo.cpp">
+      <Filter>HexGame</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -602,6 +605,9 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="Spirit.h">
+      <Filter>HexGame</Filter>
+    </ClInclude>
+    <ClInclude Include="HexGameInfo.h">
       <Filter>HexGame</Filter>
     </ClInclude>
   </ItemGroup>

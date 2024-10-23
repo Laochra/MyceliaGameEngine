@@ -237,6 +237,8 @@ void MeshRenderer::Draw(intptr_t lastUsedMaterial)
 	if (AppInfo::CompareState(AppState::Editor)) sp.BindUniform("Selected", (int)selected);
 	else sp.BindUniform("Selected", (int)false);
 
+	sp.BindUniform("HighlightColour", highlightColour);
+
 	mesh->Draw();
 }
 
