@@ -174,8 +174,11 @@ HexGrid::UpdateTileReturnInfo HexGrid::UpdateTile(HexOffsetCoord hexCoord, const
 			returnInfo.value |= UpdateTileReturnInfo::MilestoneReached;
 		}
 
-		GameObject3D* spirit = (GameObject3D*)GameObject::InstantiateFrom(*SpiritData::GetPrefab(habitat.habitatID));
-		spirit->SetParent(habitat.object);
+		Spirit spirit;
+		spirit.habitatID = habitat.habitatID;
+		spirit.object = (GameObject3D*)GameObject::InstantiateFrom(*SpiritData::GetPrefab(habitat.habitatID));
+		spirit.object->SetParent(habitat.object);
+		spirits.push_back(spirit);
 	}
 	else
 	{

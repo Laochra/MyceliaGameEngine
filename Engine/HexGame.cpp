@@ -434,6 +434,21 @@ void HexGame::OnUnpause() { }
 void HexGame::FixedUpdate() { }
 void HexGame::Update()
 {
+	for (Spirit spirit : hexGrid->spirits)
+	{
+		if (spirit.object == nullptr) continue;
+
+		vec3 pos = spirit.object->GetPosition();
+
+		const float speed = 0.75f;
+		const float amount = 0.1f;
+		pos.y = 0.5f * amount + sin(Time::time * speed) * amount;
+
+		if (spirit.habitatID == 2) pos.y *= 100.0f; // Temporary to account for the frog habitat being scaled
+		
+		spirit.object->SetPosition(pos);
+	}
+
 	RadialMenu* currentRadialMenu;
 	vector<TileData>* currentRadialTileType;
 	switch (currentRadialPage)

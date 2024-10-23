@@ -361,6 +361,7 @@
     <ClInclude Include="InspectableObject.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderManager.h" />
+    <ClInclude Include="Spirit.h" />
     <ClInclude Include="SpiritData.h" />
     <ClInclude Include="TileData.h" />
     <ClInclude Include="UIManager.h" />

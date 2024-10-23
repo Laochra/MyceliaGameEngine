@@ -601,6 +601,9 @@
     <ClInclude Include="MycCoroutine.h">
       <Filter>Utility</Filter>
     </ClInclude>
+    <ClInclude Include="Spirit.h">
+      <Filter>HexGame</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">

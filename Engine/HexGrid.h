@@ -3,6 +3,7 @@
 #include "HexCoords.h"
 #include "HexTile.h"
 #include "Habitat.h"
+#include "Spirit.h"
 
 #include "MathIncludes.h"
 
@@ -41,6 +42,7 @@ public:
 	const HexTile& operator[](HexOffsetCoord hexCoord) const noexcept;
 
 	vector<Habitat> habitats;
+	vector<Spirit> spirits;
 
 	virtual void Initialise() noexcept override;
 
