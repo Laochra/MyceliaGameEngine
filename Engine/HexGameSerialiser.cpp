@@ -75,7 +75,8 @@ void HexGameSerialiser::LoadDataFrom(json& dataFile) noexcept
 		for (json spiritJSON : spiritsJSON)
 		{
 			SpiritData spirit;
-
+			spirit.name = spiritJSON["Name"];
+			spirit.prefabFilepath = spiritJSON["Prefab"];
 			SpiritData::spiritsData.push_back(spirit);
 		}
 	}
@@ -280,8 +281,12 @@ void HexGameSerialiser::SaveDataTo(json& dataFile) noexcept
 	{
 		for (SpiritData spirit : SpiritData::spiritsData)
 		{
-			spiritsJSON.push_back(spirit.prefabFilepath);
+			json spiritJSON;
+			spiritJSON["Name"] = spirit.name;
+			spiritJSON["Prefab"] = spirit.prefabFilepath;
+			spiritsJSON.push_back(spiritJSON);
 		}
+		dataFile["Spirits"] = spiritsJSON;
 	}
 
 	json radialSpritesJSON;

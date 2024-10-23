@@ -1,6 +1,7 @@
 #include "HexGrid.h"
 
 #include "TileData.h"
+#include "SpiritData.h"
 
 #include "HexProgression.h"
 #include "HexAudio.h"
@@ -172,6 +173,9 @@ HexGrid::UpdateTileReturnInfo HexGrid::UpdateTile(HexOffsetCoord hexCoord, const
 		{
 			returnInfo.value |= UpdateTileReturnInfo::MilestoneReached;
 		}
+
+		GameObject3D* spirit = (GameObject3D*)GameObject::InstantiateFrom(*SpiritData::GetPrefab(habitat.habitatID));
+		spirit->SetParent(habitat.object);
 	}
 	else
 	{
