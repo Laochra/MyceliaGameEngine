@@ -90,11 +90,23 @@ vec2 HexCubeCoord::ToPos(HexCubeCoord hexCubeCoord) noexcept
 
 HexCubeCoord HexCubeCoord::GetFromPos(vec2 position) noexcept
 {
+	vec2 qr = GetFromPosPartial(position);
+	float s = -qr.x - qr.y;
+
+	return GetRounded(vec3(qr.x, qr.y, s));
+}
+
+float HexCubeCoord::GetMagnitudePartial(vec2 partialCubeCoord) noexcept
+{
+	const float& q = partialCubeCoord.x;
+	const float& r = partialCubeCoord.y;
+	return std::max(std::max(abs(q), abs(r)), std::max(abs(r), abs(-q - r)));
+}
+vec2 HexCubeCoord::GetFromPosPartial(vec2 position) noexcept
+{
 	float q = 2.0f / 3.0f * position.x * (float)sqrt3;
 	float r = position.y - q / 2;
-	float s = -q - r;
-
-	return GetRounded(vec3(q, r, s));
+	return vec2(q, r);
 }
 
 HexCubeCoord HexCubeCoord::operator+=(HexCubeCoord other) noexcept

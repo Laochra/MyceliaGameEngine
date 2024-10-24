@@ -41,6 +41,9 @@ struct HexCubeCoord
 	static vec2 ToPos(HexCubeCoord hexCubeCoord) noexcept;
 	static HexCubeCoord GetFromPos(vec2 position) noexcept;
 
+	static float GetMagnitudePartial(vec2 partialCubeCoord) noexcept;
+	static vec2 GetFromPosPartial(vec2 position) noexcept;
+
 	HexCubeCoord operator+=(HexCubeCoord other) noexcept;
 };
 HexCubeCoord operator+(HexCubeCoord a, HexCubeCoord b) noexcept;

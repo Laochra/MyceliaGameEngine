@@ -27,6 +27,9 @@
 #include "Application.h"
 #include "Debug.h"
 
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
+
 void static RadialInteractionHandler(int selection)
 {
 	if (selection >= 0)
@@ -292,6 +295,27 @@ static void RaiseTile(vec2 hoveredPosition, GameObject3D*& selectedGameObject, H
 			selectedGameObject = hoveredGameObject;
 		}
 	}
+}
+
+static void MakeHexagonalDistanceField() noexcept
+{
+	constexpr const ushort sideLength = 1024;
+	constexpr const ubyte components = 1;
+	ubyte* image = new ubyte[sideLength * sideLength];
+	for (ushort x = 0; x < sideLength; x++)
+	{
+		for (ushort y = 0; y < sideLength; y++)
+		{
+			vec2 position = vec2(x, y) / (sideLength * 0.5f) - 1.0f;
+			vec2 partialCubeCoord = HexCubeCoord::GetFromPosPartial(position);
+			float signedDistance = HexCubeCoord::GetMagnitudePartial(partialCubeCoord) - 0.5f;
+			ubyte colour = 255U - ubyte(std::clamp(signedDistance * 2, 0.0f, 1.0f) * 255);
+
+			image[x * sideLength + y] = colour;
+		}
+	}
+	stbi_write_png("Assets\\HexDF.png", sideLength, sideLength, components, image, sideLength * components * (ushort)sizeof(ubyte));
+	delete image;
 }
 
 void HexGame::Initialise(uint* renderTargetInit)
