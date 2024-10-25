@@ -6,6 +6,7 @@ constexpr double invSqrt3 = 1 / 1.7320508075689;
 #include "HexDirection.h"
 
 #include "MathIncludes.h"
+#include <vector>
 
 struct HexOffsetCoord
 {
@@ -45,6 +46,11 @@ struct HexCubeCoord
 	static vec2 GetFromPosPartial(vec2 position) noexcept;
 
 	HexCubeCoord operator+=(HexCubeCoord other) noexcept;
+
+	bool operator==(const HexCubeCoord& other) const noexcept = default;
+	auto operator<=>(const HexCubeCoord& other) const noexcept = default;
+
+	static std::vector<HexCubeCoord> GetCoordsWithRange(short range) noexcept;
 };
 HexCubeCoord operator+(HexCubeCoord a, HexCubeCoord b) noexcept;
 HexCubeCoord operator-(HexCubeCoord a, HexCubeCoord b) noexcept;

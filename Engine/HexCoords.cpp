@@ -117,6 +117,33 @@ HexCubeCoord HexCubeCoord::operator+=(HexCubeCoord other) noexcept
 	return *this;
 }
 
+static void AddCoordsOnEdge(std::vector<HexCubeCoord>* coords, short range, HexCubeCoord offsetDir, HexCubeCoord moveDir) noexcept
+{
+	HexCubeCoord tileCoord(offsetDir.q * range, offsetDir.r * range);
+
+	for (short i = 0; i < range; i++)
+	{
+		if (std::find(coords->begin(), coords->end(), tileCoord) == coords->end())
+		{
+			coords->push_back(tileCoord);
+		}
+		tileCoord += moveDir;
+	}
+}
+std::vector<HexCubeCoord> HexCubeCoord::GetCoordsWithRange(short range) noexcept
+{
+	std::vector<HexCubeCoord> coords;
+	
+	AddCoordsOnEdge(&coords, range, {  0, -1 }, { +1,  0 }); // From North to NorthEast
+	AddCoordsOnEdge(&coords, range, { +1, -1 }, {  0, +1 }); // From NorthEast to SouthEast
+	AddCoordsOnEdge(&coords, range, { +1,  0 }, { -1, +1 }); // From SouthEast to South
+	AddCoordsOnEdge(&coords, range, {  0, +1 }, { -1,  0 }); // From South to SouthWest
+	AddCoordsOnEdge(&coords, range, { -1, +1 }, {  0, -1 }); // From SouthWest to NorthWest
+	AddCoordsOnEdge(&coords, range, { -1,  0 }, { +1, -1 }); // From NorthWest to North
+
+	return coords;
+}
+
 
 HexCubeCoord operator+(HexCubeCoord a, HexCubeCoord b) noexcept
 {
