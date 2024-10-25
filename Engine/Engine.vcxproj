@@ -209,6 +209,7 @@
     <ClCompile Include="HabitatData.cpp" />
     <ClCompile Include="HexAudio.cpp" />
     <ClCompile Include="HexCameraData.cpp" />
+    <ClCompile Include="HexFog.cpp" />
     <ClCompile Include="HexGame.cpp" />
     <ClCompile Include="HexCoords.cpp" />
     <ClCompile Include="HexGameInfo.cpp" />
@@ -328,6 +329,7 @@
     <ClInclude Include="HeirarchicalDefinitions.h" />
     <ClInclude Include="HexAudio.h" />
     <ClInclude Include="HexCoords.h" />
+    <ClInclude Include="HexFog.h" />
     <ClInclude Include="HexGame.h" />
     <ClInclude Include="HexGameInfo.h" />
     <ClInclude Include="HexGameSerialiser.h" />

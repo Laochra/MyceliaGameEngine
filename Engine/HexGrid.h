@@ -12,7 +12,7 @@
 typedef unsigned int uint;
 typedef unsigned long long ulong;
 
-#define HEX_GRID_RADIUS 18
+#define HEX_GRID_RADIUS 14
 
 struct HexColumn
 {
@@ -70,5 +70,3 @@ public:
 private:
 	void ValidatePerimeterPlaceability(short perimeterRadius) noexcept;
 };
-
-#undef HEX_GRID_RADIUS

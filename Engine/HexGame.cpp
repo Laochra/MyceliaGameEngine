@@ -17,6 +17,7 @@
 #include "HexAudio.h"
 #include "HexRadial.h"
 #include "HexScrapbook.h"
+#include "HexFog.h"
 
 #include "HabitatData.h"
 
@@ -26,9 +27,6 @@
 
 #include "Application.h"
 #include "Debug.h"
-
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image_write.h"
 
 void static RadialInteractionHandler(int selection)
 {
@@ -297,26 +295,6 @@ static void RaiseTile(vec2 hoveredPosition, GameObject3D*& selectedGameObject, H
 	}
 }
 
-static void MakeHexagonalDistanceField() noexcept
-{
-	constexpr const ushort sideLength = 1024;
-	constexpr const ubyte components = 1;
-	ubyte* image = new ubyte[sideLength * sideLength];
-	for (ushort x = 0; x < sideLength; x++)
-	{
-		for (ushort y = 0; y < sideLength; y++)
-		{
-			vec2 position = vec2(x, y) / (sideLength * 0.5f) - 1.0f;
-			vec2 partialCubeCoord = HexCubeCoord::GetFromPosPartial(position);
-			float signedDistance = HexCubeCoord::GetMagnitudePartial(partialCubeCoord) - 0.5f;
-			ubyte colour = 255U - ubyte(std::clamp(signedDistance * 2, 0.0f, 1.0f) * 255);
-
-			image[x * sideLength + y] = colour;
-		}
-	}
-	stbi_write_png("Assets\\HexDF.png", sideLength, sideLength, components, image, sideLength * components * (ushort)sizeof(ubyte));
-	delete image;
-}
 
 void HexGame::Initialise(uint* renderTargetInit)
 {
@@ -378,6 +356,9 @@ void HexGame::Initialise(uint* renderTargetInit)
 	AppInfo::gameCamera->SetPosition(vec3(0, HexCameraData::offsetDirection.x, HexCameraData::offsetDirection.y) * HexCameraData::startZoom);
 	AppInfo::gameCamera->LookAt(vec3(0, 0, 0));
 	AppInfo::gameCamera->fov = glm::radians(50.0f);
+
+	//HexFog::MakeHexagonalDistanceField();
+	HexFog::Load(HexFog::GetFilter());
 }
 void HexGame::OnClose()
 {
@@ -411,6 +392,11 @@ void HexGame::OnStart()
 	currentTileVariant = 0U;
 
 	crosshair = new UISprite("Assets\\UI\\Crosshair\\Crosshair.png", vec2(0.0f, 0.0f), vec2(0.0f, 0.0f), -10, 0.035f);
+
+	if (!HexGameInfo::backgroundPrefab.empty())
+	{
+		HexGameInfo::background = (GameObject3D*)GameObject::InstantiateFrom(HexGameInfo::backgroundPrefab, GuidGeneration::New);
+	}
 
 	HexProgression::Initialise();
 
@@ -457,6 +443,8 @@ void HexGame::OnStop()
 	del(landRadial);
 
 	del(crosshair);
+
+	GameObject::Destroy(HexGameInfo::background);
 
 	TileData::ClearAndReset();
 	HabitatData::ClearAndReset();

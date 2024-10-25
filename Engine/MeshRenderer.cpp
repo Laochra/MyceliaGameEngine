@@ -12,6 +12,8 @@
 
 #include <string>
 
+#include "HexFog.h"
+
 void MeshRenderer::SerialiseTo(json& jsonObj) const
 {
 	GameObject3D::SerialiseTo(jsonObj);
@@ -232,6 +234,12 @@ void MeshRenderer::Draw(intptr_t lastUsedMaterial)
 		if (!emissionColourBound) sp.BindUniform("EmissionColour", vec3(1.0f, 1.0f, 1.0f));
 		if (!emissionIntensityBound) sp.BindUniform("EmissionIntensity", 0.0f);
 		if (!alphaThresholdBound) sp.BindUniform("AlphaCutoff", 0.0f);
+
+		HexFog::Bind(4);
+		sp.BindUniform("FogMap", 4);
+		sp.BindUniform("FogColour", vec3(0.9f, 0.9f, 0.9f));
+		sp.BindUniform("FogRadius", HexFog::currentRadius + 1);
+		sp.BindUniform("FogGradientRange", HexFog::gradientRange);
 	}
 
 	if (AppInfo::CompareState(AppState::Editor)) sp.BindUniform("Selected", (int)selected);
