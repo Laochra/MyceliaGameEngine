@@ -10,6 +10,7 @@
 #include "HexProgression.h"
 #include "HexCameraData.h"
 #include "HexAudio.h"
+#include "HexFog.h"
 
 #include "UIManager.h"
 
@@ -322,6 +323,11 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 		}
 		if (!AppInfo::CompareState(AppState::Editor)) ImGui::EndDisabled();
 		ImGui::EndTabBar();
+
+		GUI::Spacing(3);
+
+		ImGui::DragFloat("Fog Radius", &HexFog::currentRadius, 0.01f, -0.5f, 3.0f);
+		ImGui::DragFloat("Fog Range", &HexFog::gradientRange, 0.01f, 0.01f, 0.5f);
 
 		GUI::Spacing(3);
 	}

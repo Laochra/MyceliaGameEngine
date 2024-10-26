@@ -3,12 +3,21 @@
 #include "HexCoords.h"
 #include "HexGrid.h"
 
+#include "GLIncludes.h"
+
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
+#include "stb_image.h"
 #include <algorithm>
 
 typedef unsigned char ubyte;
 typedef unsigned short ushort;
+
+float HexFog::currentRadius = 3.0f;
+float HexFog::gradientRange = 0.25f;
+
+uint HexFog::fogDistanceField;
+Texture::Filter HexFog::filter;
 
 static mat2 RadToMat2(float radians) noexcept
 {
@@ -18,15 +27,76 @@ static mat2 RadToMat2(float radians) noexcept
 	);
 }
 
+void HexFog::Load(const char* filepath, Texture::Filter filterInit) noexcept
+{
+	if (fogDistanceField != 0) glDeleteTextures(1, &fogDistanceField);
+
+	int w, h, components;
+	float* loadedPixels = stbi_loadf(filepath, &w, &h, &components, 3);
+	
+	if (loadedPixels != nullptr)
+	{
+		filter = filterInit;
+	
+		glGenTextures(1, &fogDistanceField);
+		glBindTexture(GL_TEXTURE_2D, fogDistanceField);
+	
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, w, h, 0, GL_RGB, GL_FLOAT, loadedPixels);
+
+		switch (filterInit)
+		{
+		case Texture::Filter::None:
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			break;
+		}
+		case Texture::Filter::Bilinear:
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			break;
+		}
+		case Texture::Filter::Trilinear:
+		{
+			glGenerateMipmap(GL_TEXTURE_2D);
+			float anisotropy = 0.0f;
+			glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY, &anisotropy);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY, anisotropy);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			break;
+		}
+		}
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		stbi_image_free(loadedPixels);
+	}
+}
+
+void HexFog::Bind(int slot) noexcept
+{
+	if (fogDistanceField == 0) return;
+	glActiveTexture(GL_TEXTURE0 + slot);
+	glBindTexture(GL_TEXTURE_2D, fogDistanceField);
+}
+
+const Texture::Filter HexFog::GetFilter() noexcept
+{
+	return filter;
+}
+
 const float rad[8]{
-				glm::radians(-300.0f), // This just exists to avoid a branch protecting rad[i-1]
-				glm::radians(-0.0f),
-				glm::radians(-60.0f),
-				glm::radians(-120.0f),
-				glm::radians(-180.0f),
-				glm::radians(-240.0f),
-				glm::radians(-300.0f),
-				glm::radians(-0.0f), // This just exists to avoid a branch protecting rad[i+1]
+	glm::radians(-300.0f), // This just exists to avoid a branch protecting rad[i-1]
+	glm::radians(-0.0f),
+	glm::radians(-60.0f),
+	glm::radians(-120.0f),
+	glm::radians(-180.0f),
+	glm::radians(-240.0f),
+	glm::radians(-300.0f),
+	glm::radians(-0.0f), // This just exists to avoid a branch protecting rad[i+1]
 };
 const mat2 rot[8]{
 	RadToMat2(rad[0]), // This just exists to avoid a branch protecting rot[i-1]
@@ -39,9 +109,8 @@ const mat2 rot[8]{
 	RadToMat2(rad[7]), // This just exists to avoid a branch protecting rot[i+1]
 };
 constexpr const ushort sideLength = 4096;
-constexpr const float hexSize = (float)sideLength / HEX_GRID_RADIUS;
+constexpr const float invHexSize = 1.0f / sideLength / HEX_GRID_RADIUS;
 constexpr const ubyte components = 3;
-
 void HexFog::MakeHexagonalDistanceField() noexcept
 {
 	float* image = new float[sideLength * sideLength * components];
@@ -49,7 +118,7 @@ void HexFog::MakeHexagonalDistanceField() noexcept
 	{
 		for (ushort y = 0; y < sideLength; y++)
 		{
-			vec2 position = (vec2(x, y) - vec2(sideLength * 0.5f)) / hexSize;
+			vec2 position = (vec2(x, y) - vec2(sideLength * 0.5f)) * invHexSize;
 			HexCubeCoord cubeCoord = HexCubeCoord::GetFromPos(position);
 			vec2 hexPos = HexCubeCoord::ToPos(cubeCoord);
 			vec2 relativePos = hexPos - position;
