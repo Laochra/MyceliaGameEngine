@@ -357,7 +357,7 @@ void HexGame::Initialise(uint* renderTargetInit)
 	AppInfo::gameCamera->LookAt(vec3(0, 0, 0));
 	AppInfo::gameCamera->fov = glm::radians(50.0f);
 
-	HexFog::MakeHexagonalDistanceField();
+	//HexFog::MakeHexagonalDistanceField();
 }
 void HexGame::OnClose()
 {

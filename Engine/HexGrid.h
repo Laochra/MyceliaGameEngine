@@ -70,5 +70,3 @@ public:
 private:
 	void ValidatePerimeterPlaceability(short perimeterRadius) noexcept;
 };
-
-#undef HEX_GRID_RADIUS

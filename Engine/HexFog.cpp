@@ -1,6 +1,7 @@
 #include "HexFog.h"
 
 #include "HexCoords.h"
+#include "HexGrid.h"
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
@@ -17,23 +18,7 @@ static mat2 RadToMat2(float radians) noexcept
 	);
 }
 
-void HexFog::MakeHexagonalDistanceField() noexcept
-{
-	constexpr const ushort sideLength = 4096;
-	constexpr const ubyte components = 3;
-	float* image = new float[sideLength * sideLength * components];
-	for (ushort x = 0; x < sideLength; x++)
-	{
-		for (ushort y = 0; y < sideLength; y++)
-		{
-			vec2 position = (vec2(x, y) - vec2(sideLength * 0.5f)) / 256.0f;
-			HexCubeCoord cubeCoord = HexCubeCoord::GetFromPos(position);
-			vec2 hexPos = HexCubeCoord::ToPos(cubeCoord);
-			vec2 relativePos = hexPos - position;
-
-			vec3 colour = vec3();
-
-			const float rad[8] {
+const float rad[8]{
 				glm::radians(-300.0f), // This just exists to avoid a branch protecting rad[i-1]
 				glm::radians(-0.0f),
 				glm::radians(-60.0f),
@@ -42,17 +27,35 @@ void HexFog::MakeHexagonalDistanceField() noexcept
 				glm::radians(-240.0f),
 				glm::radians(-300.0f),
 				glm::radians(-0.0f), // This just exists to avoid a branch protecting rad[i+1]
-			};
-			const mat2 rot[8] {
-				RadToMat2(rad[0]), // This just exists to avoid a branch protecting rot[i-1]
-				RadToMat2(rad[1]),
-				RadToMat2(rad[2]),
-				RadToMat2(rad[3]),
-				RadToMat2(rad[4]),
-				RadToMat2(rad[5]),
-				RadToMat2(rad[6]),
-				RadToMat2(rad[7]), // This just exists to avoid a branch protecting rot[i+1]
-			};
+};
+const mat2 rot[8]{
+	RadToMat2(rad[0]), // This just exists to avoid a branch protecting rot[i-1]
+	RadToMat2(rad[1]),
+	RadToMat2(rad[2]),
+	RadToMat2(rad[3]),
+	RadToMat2(rad[4]),
+	RadToMat2(rad[5]),
+	RadToMat2(rad[6]),
+	RadToMat2(rad[7]), // This just exists to avoid a branch protecting rot[i+1]
+};
+constexpr const ushort sideLength = 4096;
+constexpr const float hexSize = (float)sideLength / HEX_GRID_RADIUS;
+constexpr const ubyte components = 3;
+
+void HexFog::MakeHexagonalDistanceField() noexcept
+{
+	float* image = new float[sideLength * sideLength * components];
+	for (ushort x = 0; x < sideLength; x++)
+	{
+		for (ushort y = 0; y < sideLength; y++)
+		{
+			vec2 position = (vec2(x, y) - vec2(sideLength * 0.5f)) / hexSize;
+			HexCubeCoord cubeCoord = HexCubeCoord::GetFromPos(position);
+			vec2 hexPos = HexCubeCoord::ToPos(cubeCoord);
+			vec2 relativePos = hexPos - position;
+
+			vec3 colour = vec3();
+
 			int index;
 			bool onAxis;
 
@@ -101,11 +104,14 @@ void HexFog::MakeHexagonalDistanceField() noexcept
 				colour.r = maxY + 0.5f + cubeCoord.GetMagnitude();
 			}
 
-			if (cubeCoord == HexCubeCoord(0, 0)) colour.r = 0.0f;
+			if (cubeCoord == HexCubeCoord(0, 0))
+			{
+				colour.r = 0.5f + HexCubeCoord::GetMagnitudePartial(HexCubeCoord::GetFromPosPartial(vec2(position.y, position.x)));
+			}
 
 			image[y * sideLength * components + x * components] = colour.r;
-			image[y * sideLength * components + x * components + 1] = colour.g;
-			image[y * sideLength * components + x * components + 2] = colour.b;
+			//image[y * sideLength * components + x * components + 1] = colour.g;
+			//image[y * sideLength * components + x * components + 2] = colour.b;
 		}
 	}
 	stbi_write_hdr("Assets\\HexDF.hdr", sideLength, sideLength, components, image);
