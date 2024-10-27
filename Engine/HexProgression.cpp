@@ -2,6 +2,7 @@
 
 #include "TileData.h"
 #include "HexScrapbook.h"
+#include "HexFog.h"
 
 #include "Easing.h"
 #include "TimeManager.h"
@@ -75,6 +76,7 @@ void HexProgression::ResetProgression() noexcept
 	currentMilestone = 0U;
 	currentLife = 0U;
 	currentRadius = startingRadius;
+	HexFog::currentRadius = startingRadius;
 }
 
 void HexProgression::SaveTo(json& jsonObj)
@@ -236,9 +238,10 @@ class HabitatStickerEvent : public Coroutine::Function<HabitatStickerEventData>
 		}
 		case Data::Stage::ExpandBorder:
 		{
-			// ExpandBorder Animation
+			HexFog::AnimateFogTo(HexProgression::currentRadius);
 			data.stage = Data::Stage::WaitingToEnd;
-			CoroutineYieldFor(HexProgression::stickerEvent.endDelay);
+			float increaseAmount = HexProgression::currentRadius - HexFog::currentRadius;
+			CoroutineYieldFor(increaseAmount * (1.0f / HexFog::animationSpeed) + HexProgression::stickerEvent.endDelay);
 			break;
 		}
 		case Data::Stage::WaitingToEnd:

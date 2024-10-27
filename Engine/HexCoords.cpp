@@ -80,6 +80,24 @@ HexCubeCoord HexCubeCoord::GetRounded(vec3 unrounded) noexcept
 
 	return HexCubeCoord(rounded.x, rounded.y);
 }
+HexCubeCoord HexCubeCoord::GetRoundedD(glm::dvec3 unrounded) noexcept
+{
+	glm::ivec3 rounded(
+		std::nearbyint(unrounded.x),
+		std::nearbyint(unrounded.y),
+		std::nearbyint(unrounded.z)
+	);
+	glm::dvec3 diff(
+		abs(rounded.x - unrounded.x),
+		abs(rounded.y - unrounded.y),
+		abs(rounded.z - unrounded.z)
+	);
+
+	if (diff.x > diff.y && diff.x > diff.z) rounded.x = -rounded.y - rounded.z;
+	else if (diff.y > diff.z) rounded.y = -rounded.x - rounded.z;
+
+	return HexCubeCoord(rounded.x, rounded.y);
+}
 
 vec2 HexCubeCoord::ToPos(HexCubeCoord hexCubeCoord) noexcept
 {
@@ -87,11 +105,24 @@ vec2 HexCubeCoord::ToPos(HexCubeCoord hexCubeCoord) noexcept
 	float y = 1.0f / 2.0f * hexCubeCoord.q + hexCubeCoord.r;
 	return vec2(x, y);
 }
+glm::dvec2 HexCubeCoord::ToPosD(HexCubeCoord hexCubeCoord) noexcept
+{
+	double x = 3.0f / 2.0f * hexCubeCoord.q * invSqrt3;
+	double y = 1.0f / 2.0f * hexCubeCoord.q + hexCubeCoord.r;
+	return glm::dvec2(x, y);
+}
 
 HexCubeCoord HexCubeCoord::GetFromPos(vec2 position) noexcept
 {
 	vec2 qr = GetFromPosPartial(position);
 	float s = -qr.x - qr.y;
+
+	return GetRounded(vec3(qr.x, qr.y, s));
+}
+HexCubeCoord HexCubeCoord::GetFromPosD(glm::dvec2 position) noexcept
+{
+	glm::dvec2 qr = GetFromPosPartial(position);
+	double s = -qr.x - qr.y;
 
 	return GetRounded(vec3(qr.x, qr.y, s));
 }
@@ -102,11 +133,23 @@ float HexCubeCoord::GetMagnitudePartial(vec2 partialCubeCoord) noexcept
 	const float& r = partialCubeCoord.y;
 	return std::max(std::max(abs(q), abs(r)), std::max(abs(r), abs(-q - r)));
 }
+double HexCubeCoord::GetMagnitudePartialD(glm::dvec2 partialCubeCoord) noexcept
+{
+	const double& q = partialCubeCoord.x;
+	const double& r = partialCubeCoord.y;
+	return std::max(std::max(abs(q), abs(r)), std::max(abs(r), abs(-q - r)));
+}
 vec2 HexCubeCoord::GetFromPosPartial(vec2 position) noexcept
 {
 	float q = 2.0f / 3.0f * position.x * (float)sqrt3;
 	float r = position.y - q / 2;
 	return vec2(q, r);
+}
+glm::dvec2 HexCubeCoord::GetFromPosPartialD(glm::dvec2 position) noexcept
+{
+	double q = 2.0f / 3.0f * position.x * sqrt3;
+	double r = position.y - q / 2;
+	return glm::dvec2(q, r);
 }
 
 HexCubeCoord HexCubeCoord::operator+=(HexCubeCoord other) noexcept

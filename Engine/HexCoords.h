@@ -38,12 +38,17 @@ struct HexCubeCoord
 	short GetMagnitude() const noexcept;
 
 	static HexCubeCoord GetRounded(vec3 unrounded) noexcept;
+	static HexCubeCoord GetRoundedD(glm::dvec3 unrounded) noexcept;
 
 	static vec2 ToPos(HexCubeCoord hexCubeCoord) noexcept;
+	static glm::dvec2 ToPosD(HexCubeCoord hexCubeCoord) noexcept;
 	static HexCubeCoord GetFromPos(vec2 position) noexcept;
+	static HexCubeCoord GetFromPosD(glm::dvec2 position) noexcept;
 
 	static float GetMagnitudePartial(vec2 partialCubeCoord) noexcept;
+	static double GetMagnitudePartialD(glm::dvec2 partialCubeCoord) noexcept;
 	static vec2 GetFromPosPartial(vec2 position) noexcept;
+	static glm::dvec2 GetFromPosPartialD(glm::dvec2 position) noexcept;
 
 	HexCubeCoord operator+=(HexCubeCoord other) noexcept;
 

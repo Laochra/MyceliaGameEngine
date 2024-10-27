@@ -11,6 +11,9 @@
 #include "HexProgression.h"
 #include "HexCameraData.h"
 #include "HexAudio.h"
+#include "HexFog.h"
+
+#include "Debug.h"
 
 void HexGameSerialiser::LoadDataFrom(json& dataFile) noexcept
 {
@@ -194,6 +197,17 @@ void HexGameSerialiser::LoadDataFrom(json& dataFile) noexcept
 		HexProgression::LoadFrom(progressionData);
 	}
 
+	if (dataFile.contains("Fog"))
+	{
+		json fogJSON = dataFile["Fog"];
+
+		HexFog::gradientRange = fogJSON["Range"];
+		HexFog::animationSpeed = fogJSON["Speed"];
+
+		HexFog::fogTextureFilepath = fogJSON["Texture"];
+		HexFog::filter = fogJSON["TextureFilter"];
+	}
+
 	if (dataFile.contains("Camera"))
 	{
 		json cameraJSON = dataFile["Camera"];
@@ -221,6 +235,12 @@ void HexGameSerialiser::LoadDataFrom(json& dataFile) noexcept
 			vector<float> highlightColour = miscColours["Highlight"];
 			HexGameInfo::highlightColour = *(vec4*)&highlightColour.data()[0];
 		}
+	}
+
+	if (dataFile.contains("BackgroundPrefab"))
+	{
+		HexGameInfo::backgroundFilepath = dataFile["BackgroundPrefab"];
+		HexGameInfo::LoadBackgroundPrefab(HexGameInfo::backgroundFilepath);
 	}
 }
 
@@ -388,6 +408,17 @@ void HexGameSerialiser::SaveDataTo(json& dataFile) noexcept
 		dataFile["Progression"] = progressionJSON;
 	}
 
+	json fogJSON;
+	{
+		fogJSON["Range"] = HexFog::gradientRange;
+		fogJSON["Speed"] = HexFog::animationSpeed;
+
+		fogJSON["Texture"] = HexFog::fogTextureFilepath;
+		fogJSON["TextureFilter"] = HexFog::filter;
+
+		dataFile["Fog"] = fogJSON;
+	}
+
 	json cameraJSON;
 	{
 		cameraJSON["OffsetY"] = HexCameraData::offsetDirection.x;
@@ -418,4 +449,6 @@ void HexGameSerialiser::SaveDataTo(json& dataFile) noexcept
 
 		dataFile["Misc Colours"] = miscColours;
 	}
+
+	dataFile["BackgroundPrefab"] = HexGameInfo::backgroundFilepath;
 }

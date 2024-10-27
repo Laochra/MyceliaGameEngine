@@ -325,11 +325,70 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 		ImGui::EndTabBar();
 
 		GUI::Spacing(3);
+	}
 
-		ImGui::DragFloat("Fog Radius", &HexFog::currentRadius, 0.01f, -0.5f, 3.0f);
-		ImGui::DragFloat("Fog Range", &HexFog::gradientRange, 0.01f, 0.01f, 0.5f);
+	GUI::Spacing(3);
+
+	if (ImGui::CollapsingHeader("Fog"))
+	{
+		if (AppInfo::CompareState(AppState::Playing)) ImGui::BeginDisabled();
 
 		GUI::Spacing(3);
+
+		ImGui::DragFloat("Radius", &HexFog::currentRadius, 0.01f, -0.5f, FLT_MAX, "%.3f", ImGuiSliderFlags_AlwaysClamp);
+		GUI::Spacing();
+		ImGui::DragFloat("Range", &HexFog::gradientRange, 0.001f, 0.001f, FLT_MAX, "%.3f", ImGuiSliderFlags_AlwaysClamp);
+		ImGui::DragFloat("Speed", &HexFog::animationSpeed, 0.001f, 0.001f, FLT_MAX, "%.3f", ImGuiSliderFlags_AlwaysClamp);
+
+		GUI::Spacing(3);
+
+		if (DrawHDRTextureInput("Texture", HexFog::fogTextureFilepath))
+		{
+			HexFog::Load(HexFog::GetFilter());
+		}
+
+		const char* filterName;
+		switch (HexFog::GetFilter())
+		{
+		default:
+			filterName = "None";
+			break;
+		case Texture::Filter::Bilinear:
+			filterName = "Bilinear";
+			break;
+		case Texture::Filter::Trilinear:
+			filterName = "Trilinear";
+			break;
+		}
+		if (ImGui::BeginCombo("Texture Filter", filterName))
+		{
+			if (ImGui::Selectable("None", HexFog::GetFilter() == Texture::Filter::None))
+			{
+				HexFog::Load(Texture::Filter::None);
+			}
+			if (ImGui::Selectable("Bilinear", HexFog::GetFilter() == Texture::Filter::Bilinear))
+			{
+				HexFog::Load(Texture::Filter::Bilinear);
+			}
+			if (ImGui::Selectable("Trilinear", HexFog::GetFilter() == Texture::Filter::Trilinear))
+			{
+				HexFog::Load(Texture::Filter::Trilinear);
+			}
+
+			ImGui::EndCombo();
+		}
+
+		GUI::Spacing(3);
+
+		string cachedBackgroundPath = HexGameInfo::backgroundFilepath;
+		if (DrawPrefabInput("Background", cachedBackgroundPath))
+		{
+			HexGameInfo::LoadBackgroundPrefab(cachedBackgroundPath);
+		}
+
+		GUI::Spacing(3);
+
+		if (AppInfo::CompareState(AppState::Playing)) ImGui::EndDisabled();
 	}
 
 	GUI::Spacing(3);
@@ -569,10 +628,8 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 			ImGui::DragFloat("Open Sheet", &stickerEvent.startDelay);
 			ImGui::DragFloat("Place Sticker", &stickerEvent.stickerPlaceDelay);
 			ImGui::DragFloat("Close Sheet", &stickerEvent.closeDelay);
-			ImGui::BeginDisabled();
 			ImGui::DragFloat("Expand Border", &stickerEvent.expandBorderDelay);
 			ImGui::DragFloat("End", &stickerEvent.endDelay);
-			ImGui::EndDisabled();
 		}
 
 		ImGui::Unindent();
@@ -798,16 +855,19 @@ void HexEditor::DrawType(vector<TileData>& type) noexcept
 	}
 }
 
-void HexEditor::DrawPrefabInput(const char* const name, string& prefabFilepath) noexcept
+bool HexEditor::DrawPrefabInput(const char* const name, string& prefabFilepath) noexcept
 {
+	bool modified = 0;
+
 	if (ImGui::Button(StringBuilder("Load##", name).CStr()))
 	{
 		using namespace FileDialogue;
 
-		string path = GetLoadPath(PathDetails("Tile Prefab", "Assets\\", { "*.prefab" }), LimitToAssetFolder::True);
+		string path = GetLoadPath(PathDetails("Prefab", "Assets\\", { "*.prefab" }), LimitToAssetFolder::True);
 		if (path.size() > 0)
 		{
 			prefabFilepath = path;
+			modified = true;
 		}
 	}
 
@@ -816,6 +876,8 @@ void HexEditor::DrawPrefabInput(const char* const name, string& prefabFilepath) 
 	ImGui::BeginDisabled();
 	ImGui::InputText(name, &prefabFilepath, ImGuiInputTextFlags_ReadOnly);
 	ImGui::EndDisabled();
+
+	return modified;
 }
 
 void HexEditor::DrawSpriteInput(const char* const name, string& spriteFilepath) noexcept
@@ -824,7 +886,7 @@ void HexEditor::DrawSpriteInput(const char* const name, string& spriteFilepath) 
 	{
 		using namespace FileDialogue;
 
-		string path = GetLoadPath(PathDetails("Radial Sprite", "Assets\\", { "*.png", "*.tga", "*.jpg" }), LimitToAssetFolder::True);
+		string path = GetLoadPath(PathDetails("Sprite", "Assets\\", { "*.png", "*.tga", "*.jpg" }), LimitToAssetFolder::True);
 		if (path.size() > 0)
 		{
 			spriteFilepath = path;
@@ -836,6 +898,31 @@ void HexEditor::DrawSpriteInput(const char* const name, string& spriteFilepath) 
 	ImGui::BeginDisabled();
 	ImGui::InputText(name, &spriteFilepath, ImGuiInputTextFlags_ReadOnly);
 	ImGui::EndDisabled();
+}
+
+bool HexEditor::DrawHDRTextureInput(const char* const name, string& hdrTextureFilepath) noexcept
+{
+	bool modified = false;
+
+	if (ImGui::Button(StringBuilder("Load##", name).CStr()))
+	{
+		using namespace FileDialogue;
+
+		string path = GetLoadPath(PathDetails("HDR Texture", "Assets\\", { "*.hdr" }), LimitToAssetFolder::True);
+		if (path.size() > 0)
+		{
+			hdrTextureFilepath = path;
+			modified = true;
+		}
+	}
+
+	ImGui::SameLine();
+
+	ImGui::BeginDisabled();
+	ImGui::InputText(name, &hdrTextureFilepath, ImGuiInputTextFlags_ReadOnly);
+	ImGui::EndDisabled();
+
+	return modified;
 }
 
 void HexEditor::DrawAudioInput(const char* const name, string& audioFilepath) noexcept

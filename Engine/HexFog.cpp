@@ -10,11 +10,16 @@
 #include "stb_image.h"
 #include <algorithm>
 
+#include "MycCoroutine.h"
+
 typedef unsigned char ubyte;
 typedef unsigned short ushort;
 
 float HexFog::currentRadius = 3.0f;
 float HexFog::gradientRange = 0.25f;
+float HexFog::animationSpeed = 1.0f;
+
+std::string HexFog::fogTextureFilepath = "None";
 
 uint HexFog::fogDistanceField;
 Texture::Filter HexFog::filter;
@@ -27,12 +32,51 @@ static mat2 RadToMat2(float radians) noexcept
 	);
 }
 
-void HexFog::Load(const char* filepath, Texture::Filter filterInit) noexcept
+
+struct FogAnimationData
 {
+	float newRadius = 0.0f;
+	float speed = 0.0f;
+};
+class FogAnimation : public Coroutine::Function<FogAnimationData>
+{
+	using Data = FogAnimationData;
+	void operator()(Coroutine::Package& package)
+	{
+		Data& data = GetData(package);
+
+		signed char signBefore = signed char(HexFog::currentRadius > data.newRadius) * 2 - 1;
+
+		HexFog::currentRadius += -signBefore * data.speed * Time::delta;
+
+		signed char signAfter = signed char(HexFog::currentRadius > data.newRadius) * 2 - 1;
+
+		// If the sign changes it means the target has been reached or surpassed
+		if (signBefore != signAfter)
+		{
+			HexFog::currentRadius = data.newRadius;
+			CoroutineFinalise();
+		}
+		CoroutineYield();
+	}
+};
+void HexFog::AnimateFogTo(float newRadius) noexcept
+{
+	if (newRadius == currentRadius) return;
+
+	FogAnimationData* data = new FogAnimationData;
+	data->newRadius = newRadius;
+	data->speed = animationSpeed;
+	Coroutine::Start<FogAnimation>(data, true);
+}
+
+void HexFog::Load(Texture::Filter filterInit) noexcept
+{
+	if (fogTextureFilepath == "None") return;
 	if (fogDistanceField != 0) glDeleteTextures(1, &fogDistanceField);
 
 	int w, h, components;
-	float* loadedPixels = stbi_loadf(filepath, &w, &h, &components, 3);
+	float* loadedPixels = stbi_loadf(fogTextureFilepath.c_str(), &w, &h, &components, 3);
 	
 	if (loadedPixels != nullptr)
 	{
@@ -109,19 +153,20 @@ const mat2 rot[8]{
 	RadToMat2(rad[7]), // This just exists to avoid a branch protecting rot[i+1]
 };
 constexpr const ushort sideLength = 4096;
-constexpr const float invHexSize = 1.0f / sideLength / HEX_GRID_RADIUS;
+constexpr const double invHexSize = 1.0f / sideLength * (HEX_GRID_RADIUS * 2 + 1);
 constexpr const ubyte components = 3;
 void HexFog::MakeHexagonalDistanceField() noexcept
 {
+	using glm::dvec2;
 	float* image = new float[sideLength * sideLength * components];
 	for (ushort x = 0; x < sideLength; x++)
 	{
 		for (ushort y = 0; y < sideLength; y++)
 		{
-			vec2 position = (vec2(x, y) - vec2(sideLength * 0.5f)) * invHexSize;
-			HexCubeCoord cubeCoord = HexCubeCoord::GetFromPos(position);
-			vec2 hexPos = HexCubeCoord::ToPos(cubeCoord);
-			vec2 relativePos = hexPos - position;
+			dvec2 position = (dvec2(x, y) - dvec2(sideLength * 0.5)) * invHexSize;
+			HexCubeCoord cubeCoord = HexCubeCoord::GetFromPosD(position);
+			dvec2 hexPos = HexCubeCoord::ToPosD(cubeCoord);
+			dvec2 relativePos = hexPos - position;
 
 			vec3 colour = vec3();
 
@@ -157,29 +202,31 @@ void HexFog::MakeHexagonalDistanceField() noexcept
 
 			if (onAxis)
 			{
-				float sDist1 = (relativePos * rot[index - 1]).y;
-				float sDist2 = (relativePos * rot[index]).y;
-				float sDist3 = (relativePos * rot[index + 1]).y;
-				float maxY = (sDist1 > sDist2 ? (sDist1 > sDist3 ? sDist1 : sDist3) : (sDist2 > sDist3 ? sDist2 : sDist3));
+				double sDist1 = (relativePos * rot[index - 1]).y;
+				double sDist2 = (relativePos * rot[index]).y;
+				double sDist3 = (relativePos * rot[index + 1]).y;
+				double maxY = (sDist1 > sDist2 ? (sDist1 > sDist3 ? sDist1 : sDist3) : (sDist2 > sDist3 ? sDist2 : sDist3));
 				
-				colour.r = maxY + 0.5f + cubeCoord.GetMagnitude();
+				colour.g = 0.5 + maxY;
 			}
 			else
 			{
-				float sDist1 = (relativePos * rot[index]).y;
-				float sDist2 = (relativePos * rot[index + 1]).y;
-				float maxY = (sDist1 > sDist2 ? sDist1 : sDist2);
+				double sDist1 = (relativePos * rot[index]).y;
+				double sDist2 = (relativePos * rot[index + 1]).y;
+				double maxY = (sDist1 > sDist2 ? sDist1 : sDist2);
 
-				colour.r = maxY + 0.5f + cubeCoord.GetMagnitude();
+				colour.g = 0.5 + maxY;
 			}
 
 			if (cubeCoord == HexCubeCoord(0, 0))
 			{
-				colour.r = 0.5f + HexCubeCoord::GetMagnitudePartial(HexCubeCoord::GetFromPosPartial(vec2(position.y, position.x)));
+				colour.g = 0.5 + HexCubeCoord::GetMagnitudePartialD(HexCubeCoord::GetFromPosPartialD(glm::dvec2(position.y, position.x)));
 			}
 
+			colour.r = (double)cubeCoord.GetMagnitude() * 0.1;
+
 			image[y * sideLength * components + x * components] = colour.r;
-			//image[y * sideLength * components + x * components + 1] = colour.g;
+			image[y * sideLength * components + x * components + 1] = colour.g;
 			//image[y * sideLength * components + x * components + 2] = colour.b;
 		}
 	}

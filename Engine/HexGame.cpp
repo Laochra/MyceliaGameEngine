@@ -358,7 +358,7 @@ void HexGame::Initialise(uint* renderTargetInit)
 	AppInfo::gameCamera->fov = glm::radians(50.0f);
 
 	//HexFog::MakeHexagonalDistanceField();
-	HexFog::Load("Assets\\Tiles\\Fog\\HexDF.hdr", Texture::Filter::None);
+	HexFog::Load(HexFog::GetFilter());
 }
 void HexGame::OnClose()
 {
@@ -392,6 +392,11 @@ void HexGame::OnStart()
 	currentTileVariant = 0U;
 
 	crosshair = new UISprite("Assets\\UI\\Crosshair\\Crosshair.png", vec2(0.0f, 0.0f), vec2(0.0f, 0.0f), -10, 0.035f);
+
+	if (!HexGameInfo::backgroundPrefab.empty())
+	{
+		HexGameInfo::background = (GameObject3D*)GameObject::InstantiateFrom(HexGameInfo::backgroundPrefab, GuidGeneration::New);
+	}
 
 	HexProgression::Initialise();
 
@@ -438,6 +443,8 @@ void HexGame::OnStop()
 	del(landRadial);
 
 	del(crosshair);
+
+	GameObject::Destroy(HexGameInfo::background);
 
 	TileData::ClearAndReset();
 	HabitatData::ClearAndReset();
