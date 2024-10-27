@@ -4,7 +4,7 @@
 
 /* Algorithms sourced from https://easings.net/ */
 
-constexpr float pi = 3.14159265359;
+constexpr float pi = (float)3.14159265359;
 
 static inline constexpr float sqr(float x) noexcept
 {

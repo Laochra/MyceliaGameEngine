@@ -76,7 +76,7 @@ void HexProgression::ResetProgression() noexcept
 	currentMilestone = 0U;
 	currentLife = 0U;
 	currentRadius = startingRadius;
-	HexFog::currentRadius = startingRadius;
+	HexFog::currentRadius = (float)startingRadius;
 }
 
 void HexProgression::SaveTo(json& jsonObj)
@@ -238,7 +238,7 @@ class HabitatStickerEvent : public Coroutine::Function<HabitatStickerEventData>
 		}
 		case Data::Stage::ExpandBorder:
 		{
-			HexFog::AnimateFogTo(HexProgression::currentRadius);
+			HexFog::AnimateFogTo((float)HexProgression::currentRadius);
 			data.stage = Data::Stage::WaitingToEnd;
 			float increaseAmount = HexProgression::currentRadius - HexFog::currentRadius;
 			CoroutineYieldFor(increaseAmount * (1.0f / HexFog::animationSpeed) + HexProgression::stickerEvent.endDelay);

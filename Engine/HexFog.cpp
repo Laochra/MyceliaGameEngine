@@ -207,7 +207,7 @@ void HexFog::MakeHexagonalDistanceField() noexcept
 				double sDist3 = (relativePos * rot[index + 1]).y;
 				double maxY = (sDist1 > sDist2 ? (sDist1 > sDist3 ? sDist1 : sDist3) : (sDist2 > sDist3 ? sDist2 : sDist3));
 				
-				colour.g = 0.5 + maxY;
+				colour.g = float(0.5 + maxY);
 			}
 			else
 			{
@@ -215,15 +215,15 @@ void HexFog::MakeHexagonalDistanceField() noexcept
 				double sDist2 = (relativePos * rot[index + 1]).y;
 				double maxY = (sDist1 > sDist2 ? sDist1 : sDist2);
 
-				colour.g = 0.5 + maxY;
+				colour.g = float(0.5 + maxY);
 			}
 
 			if (cubeCoord == HexCubeCoord(0, 0))
 			{
-				colour.g = 0.5 + HexCubeCoord::GetMagnitudePartialD(HexCubeCoord::GetFromPosPartialD(glm::dvec2(position.y, position.x)));
+				colour.g = float(0.5 + HexCubeCoord::GetMagnitudePartialD(HexCubeCoord::GetFromPosPartialD(glm::dvec2(position.y, position.x))));
 			}
 
-			colour.r = (double)cubeCoord.GetMagnitude() * 0.1;
+			colour.r = float((double)cubeCoord.GetMagnitude() * 0.1);
 
 			image[y * sideLength * components + x * components] = colour.r;
 			image[y * sideLength * components + x * components + 1] = colour.g;
