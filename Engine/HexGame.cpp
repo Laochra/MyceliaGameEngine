@@ -244,9 +244,20 @@ static void RecursiveSetHighlightColour(GameObject3D* gameObject, vec4 colour)
 	}
 }
 const float tileRaiseAmount = 0.1f;
-static void RaiseTile(vec2 hoveredPosition, GameObject3D*& selectedGameObject, HexGrid* hexGrid)
+static void RaiseTile(vec2& hoveredPosition, GameObject3D*& selectedGameObject, HexGrid* hexGrid)
 {
-	HexOffsetCoord hoveredHexCoord = HexOffsetCoord::GetFromPos(hoveredPosition, hexGrid->centre);
+	HexCubeCoord hoveredCubeCoord = HexCubeCoord::GetFromPos(hoveredPosition);
+	vec2 partialCubeCoord = HexCubeCoord::GetFromPosPartial(hoveredPosition);
+	float magnitude = HexCubeCoord::GetMagnitudePartial(partialCubeCoord);
+
+	if (magnitude > (float)HexProgression::currentRadius)
+	{
+		partialCubeCoord = (partialCubeCoord / magnitude) * (float)HexProgression::currentRadius;
+		hoveredPosition = HexCubeCoord::ToPosPartial(partialCubeCoord);
+		hoveredCubeCoord = HexCubeCoord::GetFromPos(hoveredPosition);
+	}
+
+	HexOffsetCoord hoveredHexCoord = HexCubeToOffset(hoveredCubeCoord, hexGrid->centre);
 	if (hoveredHexCoord == hexGrid->centre)
 	{
 		if (selectedGameObject != nullptr)

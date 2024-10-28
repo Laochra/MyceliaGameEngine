@@ -93,10 +93,6 @@ HexGrid::UpdateTileReturnInfo HexGrid::UpdateTile(HexOffsetCoord hexCoord, const
 	{
 	case HexType::Unreached:
 	{
-		Debug::LogWarning(
-			"Attempted to update a tile that hasn't been reached ",
-			"(", hexCoord.x, ",", hexCoord.y, ")"
-		);
 		return returnInfo;
 	}
 	case HexType::Perimeter:

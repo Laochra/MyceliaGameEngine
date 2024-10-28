@@ -41,7 +41,9 @@ struct HexCubeCoord
 	static HexCubeCoord GetRoundedD(glm::dvec3 unrounded) noexcept;
 
 	static vec2 ToPos(HexCubeCoord hexCubeCoord) noexcept;
+	static vec2 ToPosPartial(vec2 partialCubeCoord) noexcept;
 	static glm::dvec2 ToPosD(HexCubeCoord hexCubeCoord) noexcept;
+	static glm::dvec2 ToPosDPartial(glm::dvec2 partialCubeCoord) noexcept;
 	static HexCubeCoord GetFromPos(vec2 position) noexcept;
 	static HexCubeCoord GetFromPosD(glm::dvec2 position) noexcept;
 

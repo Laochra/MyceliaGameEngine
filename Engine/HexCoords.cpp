@@ -105,10 +105,23 @@ vec2 HexCubeCoord::ToPos(HexCubeCoord hexCubeCoord) noexcept
 	float y = 1.0f / 2.0f * hexCubeCoord.q + hexCubeCoord.r;
 	return vec2(x, y);
 }
+vec2 HexCubeCoord::ToPosPartial(vec2 partialCubeCoord) noexcept
+{
+	float x = 3.0f / 2.0f * partialCubeCoord.x * (float)invSqrt3;
+	float y = 1.0f / 2.0f * partialCubeCoord.x + partialCubeCoord.y;
+	return vec2(x, y);
+}
 glm::dvec2 HexCubeCoord::ToPosD(HexCubeCoord hexCubeCoord) noexcept
 {
 	double x = 3.0f / 2.0f * hexCubeCoord.q * invSqrt3;
 	double y = 1.0f / 2.0f * hexCubeCoord.q + hexCubeCoord.r;
+	return glm::dvec2(x, y);
+}
+
+glm::dvec2 HexCubeCoord::ToPosDPartial(glm::dvec2 partialCubeCoord) noexcept
+{
+	double x = 3.0f / 2.0f * partialCubeCoord.x * invSqrt3;
+	double y = 1.0f / 2.0f * partialCubeCoord.x + partialCubeCoord.y;
 	return glm::dvec2(x, y);
 }
 
