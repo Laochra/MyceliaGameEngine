@@ -278,7 +278,7 @@ void GameObjectManager::DrawScene(
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		}
 		glBindTexture(GL_TEXTURE_2D, idTexture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RG, AppInfo::screenWidth, AppInfo::screenHeight, 0, GL_RG, GL_UNSIGNED_INT, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RG32UI, AppInfo::screenWidth, AppInfo::screenHeight, 0, GL_RG, GL_UNSIGNED_INT, NULL);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
