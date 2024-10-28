@@ -16,6 +16,7 @@ class TileData
 public:
 	string name = "New Variant";
 	string prefabFilepath = "None";
+	string spriteFilepath = "None";
 	uint countPlaced = 0U;
 	bool unlocked = false;
 	bool prefabLoaded = false;

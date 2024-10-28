@@ -63,92 +63,97 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 	{
 		GUI::Spacing(3);
 		ImGui::Indent();
+
 		if (ImGui::CollapsingHeader("Required"))
-	{
-		if (!AppInfo::CompareState(AppState::Editor)) ImGui::BeginDisabled();
+		{
+			if (!AppInfo::CompareState(AppState::Editor)) ImGui::BeginDisabled();
 
-		GUI::Spacing(3);
+			GUI::Spacing(3);
 
-		DrawPrefabInput("Default", TileData::defaultTilePaths[0]);
-		ImGui::TextWrapped("Left behind when moving a habitat");
-		GUI::Spacing(3);
-		DrawPrefabInput("Perimeter  ", TileData::defaultTilePaths[1]);
-		ImGui::TextWrapped("Empty tile that can be placed on");
-		GUI::Spacing(3);
-		DrawPrefabInput("Mother Tree  ", TileData::defaultTilePaths[2]);
-		ImGui::TextWrapped("Starting Tile");
+			DrawPrefabInput("Default", TileData::defaultTilePaths[0]);
+			ImGui::TextWrapped("Left behind when moving a habitat");
+			GUI::Spacing(3);
+			DrawPrefabInput("Perimeter  ", TileData::defaultTilePaths[1]);
+			ImGui::TextWrapped("Empty tile that can be placed on");
+			GUI::Spacing(3);
+			DrawPrefabInput("Mother Tree  ", TileData::defaultTilePaths[2]);
+			ImGui::TextWrapped("Starting Tile");
 
-		GUI::Spacing(3);
+			GUI::Spacing(3);
 
-		if (!AppInfo::CompareState(AppState::Editor)) ImGui::EndDisabled();
-	}
+			if (!AppInfo::CompareState(AppState::Editor)) ImGui::EndDisabled();
+		}
 
 		GUI::Spacing(3);
 
 		if (ImGui::CollapsingHeader("Variants"))
-	{
-		GUI::Spacing(3);
-
-		ImGui::BeginTabBar("Types##Tile Variants");
-		if (ImGui::BeginTabItem("Tree"))
-		{
-			DrawType(TileData::Get(HexType::Tree));
-			ImGui::EndTabItem();
-		}
-		if (ImGui::BeginTabItem("Flower"))
-		{
-			DrawType(TileData::Get(HexType::Flower));
-			ImGui::EndTabItem();
-		}
-		if (ImGui::BeginTabItem("Water"))
-		{
-			DrawType(TileData::Get(HexType::Water));
-			ImGui::EndTabItem();
-		}
-		if (ImGui::BeginTabItem("Land"))
-		{
-			DrawType(TileData::Get(HexType::Land));
-			ImGui::EndTabItem();
-		}
-		ImGui::EndTabBar();
-
-		if (!AppInfo::CompareState(AppState::Editor)) ImGui::BeginDisabled();
-
-		GUI::Spacing(3);
-
-		if (selectedType != nullptr && selectedVariant < selectedType->size())
 		{
 			GUI::Spacing(3);
-			ImGui::SeparatorText("Selected Variant");
 
-			ImGui::InputText("Name", &(*selectedType)[selectedVariant].name);
-			ImGui::SameLine();
-			GUI::HSpacing(3);
-			ImGui::SameLine();
-			if (ImGui::Button("Delete"))
+			ImGui::BeginTabBar("Types##Tile Variants");
+			if (ImGui::BeginTabItem("Tree"))
 			{
-				selectedType->erase(selectedType->begin() + selectedVariant);
-				selectedVariant = 0U;
-				if (selectedType->size() == 0)
-				{
-					ImGui::End();
-					if (!AppInfo::CompareState(AppState::Editor)) ImGui::EndDisabled();
-					return;
-				}
+				DrawType(TileData::Get(HexType::Tree));
+				ImGui::EndTabItem();
 			}
-			ImGui::SameLine();
-			ImGui::Text(StringBuilder((*selectedType)[selectedVariant].countPlaced).CStr());
+			if (ImGui::BeginTabItem("Flower"))
+			{
+				DrawType(TileData::Get(HexType::Flower));
+				ImGui::EndTabItem();
+			}
+			if (ImGui::BeginTabItem("Water"))
+			{
+				DrawType(TileData::Get(HexType::Water));
+				ImGui::EndTabItem();
+			}
+			if (ImGui::BeginTabItem("Land"))
+			{
+				DrawType(TileData::Get(HexType::Land));
+				ImGui::EndTabItem();
+			}
+			ImGui::EndTabBar();
+
+			if (!AppInfo::CompareState(AppState::Editor)) ImGui::BeginDisabled();
 
 			GUI::Spacing(3);
 
-			ImGui::Text("Tile Prefabs by Density");
-			DrawPrefabInput("Prefab", (*selectedType)[selectedVariant].prefabFilepath);
+			if (selectedType != nullptr && selectedVariant < selectedType->size())
+			{
+				GUI::Spacing(3);
+				ImGui::SeparatorText("Selected Variant");
+
+				ImGui::InputText("Name", &(*selectedType)[selectedVariant].name);
+				ImGui::SameLine();
+				GUI::HSpacing(3);
+				ImGui::SameLine();
+				if (ImGui::Button("Delete"))
+				{
+					selectedType->erase(selectedType->begin() + selectedVariant);
+					selectedVariant = 0U;
+					if (selectedType->size() == 0)
+					{
+						ImGui::End();
+						if (!AppInfo::CompareState(AppState::Editor)) ImGui::EndDisabled();
+						return;
+					}
+				}
+				ImGui::SameLine();
+				ImGui::Text(StringBuilder((*selectedType)[selectedVariant].countPlaced).CStr());
+
+				GUI::Spacing(3);
+
+				DrawPrefabInput("Prefab", (*selectedType)[selectedVariant].prefabFilepath);
+
+				GUI::Spacing(3);
+
+				DrawSpriteInput("Sprite", (*selectedType)[selectedVariant].spriteFilepath);
+			}
+
+			GUI::Spacing(3);
+
+			if (!AppInfo::CompareState(AppState::Editor)) ImGui::EndDisabled();
 		}
 
-		GUI::Spacing(3);
-
-		if (!AppInfo::CompareState(AppState::Editor)) ImGui::EndDisabled();
-	}
 		ImGui::Unindent();
 		GUI::Spacing(3);
 	}

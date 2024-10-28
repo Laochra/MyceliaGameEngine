@@ -29,24 +29,40 @@ void HexGameSerialiser::LoadDataFrom(json& dataFile) noexcept
 		{
 			TileData variant(((string)variantJSON["Name"]).c_str());
 			variant.prefabFilepath = variantJSON["Prefab"];
+			if (variantJSON.contains("Sprite"))
+			{
+				variant.spriteFilepath = variantJSON["Sprite"];
+			}
 			TileData::Get(HexType::Tree).push_back(variant);
 		}
 		for (const json& variantJSON : tilesJSON["Flowers"])
 		{
 			TileData variant(((string)variantJSON["Name"]).c_str());
 			variant.prefabFilepath = variantJSON["Prefab"];
+			if (variantJSON.contains("Sprite"))
+			{
+				variant.spriteFilepath = variantJSON["Sprite"];
+			}
 			TileData::Get(HexType::Flower).push_back(variant);
 		}
 		for (const json& variantJSON : tilesJSON["Waters"])
 		{
 			TileData variant(((string)variantJSON["Name"]).c_str());
 			variant.prefabFilepath = variantJSON["Prefab"];
+			if (variantJSON.contains("Sprite"))
+			{
+				variant.spriteFilepath = variantJSON["Sprite"];
+			}
 			TileData::Get(HexType::Water).push_back(variant);
 		}
 		for (const json& variantJSON : tilesJSON["Lands"])
 		{
 			TileData variant(((string)variantJSON["Name"]).c_str());
 			variant.prefabFilepath = variantJSON["Prefab"];
+			if (variantJSON.contains("Sprite"))
+			{
+				variant.spriteFilepath = variantJSON["Sprite"];
+			}
 			TileData::Get(HexType::Land).push_back(variant);
 		}
 	}
@@ -258,6 +274,7 @@ void HexGameSerialiser::SaveDataTo(json& dataFile) noexcept
 			json treeJSON;
 			treeJSON["Name"] = tree.name;
 			treeJSON["Prefab"] = tree.prefabFilepath;
+			treeJSON["Sprite"] = tree.spriteFilepath;
 			treesJSON.push_back(treeJSON);
 		}
 		for (const TileData& flower : TileData::Get(HexType::Flower))
@@ -265,6 +282,7 @@ void HexGameSerialiser::SaveDataTo(json& dataFile) noexcept
 			json flowerJSON;
 			flowerJSON["Name"] = flower.name;
 			flowerJSON["Prefab"] = flower.prefabFilepath;
+			flowerJSON["Sprite"] = flower.spriteFilepath;
 			flowersJSON.push_back(flowerJSON);
 		}
 		for (const TileData& water : TileData::Get(HexType::Water))
@@ -272,6 +290,7 @@ void HexGameSerialiser::SaveDataTo(json& dataFile) noexcept
 			json waterJSON;
 			waterJSON["Name"] = water.name;
 			waterJSON["Prefab"] = water.prefabFilepath;
+			waterJSON["Sprite"] = water.spriteFilepath;
 			watersJSON.push_back(waterJSON);
 		}
 		for (const TileData& land : TileData::Get(HexType::Land))
@@ -279,6 +298,7 @@ void HexGameSerialiser::SaveDataTo(json& dataFile) noexcept
 			json landJSON;
 			landJSON["Name"] = land.name;
 			landJSON["Prefab"] = land.prefabFilepath;
+			landJSON["Sprite"] = land.spriteFilepath;
 			landsJSON.push_back(landJSON);
 		}
 		tilesJSON["Trees"] = treesJSON;
