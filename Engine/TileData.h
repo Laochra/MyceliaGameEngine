@@ -11,6 +11,8 @@ using std::vector;
 
 typedef unsigned int uint;
 
+class UISprite;
+
 class TileData
 {
 public:
@@ -37,6 +39,8 @@ public:
 	static const json* GetPerimeterPrefab() noexcept;
 	static const json* GetMotherTreePrefab() noexcept;
 	static const json* GetPrefab(string name) noexcept;
+
+	static UISprite* selectedTile;
 
 	static void ClearAndReset() noexcept;
 

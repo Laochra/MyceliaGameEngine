@@ -111,6 +111,7 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 				DrawType(TileData::Get(HexType::Land));
 				ImGui::EndTabItem();
 			}
+
 			ImGui::EndTabBar();
 
 			if (!AppInfo::CompareState(AppState::Editor)) ImGui::BeginDisabled();
@@ -151,6 +152,9 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 
 			GUI::Spacing(3);
 
+			DrawUISpriteDropdown("Selected Tile", TileData::selectedTile);
+
+			GUI::Spacing(3);
 			if (!AppInfo::CompareState(AppState::Editor)) ImGui::EndDisabled();
 		}
 

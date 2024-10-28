@@ -17,6 +17,17 @@
 
 void HexGameSerialiser::LoadDataFrom(json& dataFile) noexcept
 {
+	if (dataFile.contains("UISprites"))
+	{
+		vector<json> uiSpritesJSON = dataFile["UISprites"];
+		for (json uiSpriteJSON : uiSpritesJSON)
+		{
+			UISprite* uiSprite = new UISprite;
+			uiSprite->DeserialiseFrom(uiSpriteJSON);
+			UIManager::sprites.push_back(uiSprite);
+		}
+	}
+
 	if (dataFile.contains("Tiles"))
 	{
 		json tilesJSON = dataFile["Tiles"];
@@ -64,6 +75,20 @@ void HexGameSerialiser::LoadDataFrom(json& dataFile) noexcept
 				variant.spriteFilepath = variantJSON["Sprite"];
 			}
 			TileData::Get(HexType::Land).push_back(variant);
+		}
+
+		TileData::selectedTile = nullptr;
+		string selectedTileName = tilesJSON["Selected"];
+		if (selectedTileName != "None")
+		{
+			for (UISprite*& uiSprite : UIManager::sprites)
+			{
+				if (uiSprite->GetName() == selectedTileName)
+				{
+					TileData::selectedTile = uiSprite;
+					break;
+				}
+			}
 		}
 	}
 
@@ -125,14 +150,6 @@ void HexGameSerialiser::LoadDataFrom(json& dataFile) noexcept
 	if (dataFile.contains("ScrapbookSprites"))
 	{
 		json scrapbookJSON = dataFile["ScrapbookSprites"];
-
-		vector<json> uiSpritesJSON = scrapbookJSON["UISprites"];
-		for (json uiSpriteJSON : uiSpritesJSON)
-		{
-			UISprite* uiSprite = new UISprite;
-			uiSprite->DeserialiseFrom(uiSpriteJSON);
-			UIManager::sprites.push_back(uiSprite);
-		}
 
 		string baseName = scrapbookJSON["Base"];
 		HexScrapbook::base = nullptr;
@@ -262,6 +279,20 @@ void HexGameSerialiser::LoadDataFrom(json& dataFile) noexcept
 
 void HexGameSerialiser::SaveDataTo(json& dataFile) noexcept
 {
+	vector<json> uiSpritesJSON;
+	{
+		for (UISprite* uiSprite : UIManager::sprites)
+		{
+			if (uiSprite != nullptr)
+			{
+				json uiSpriteJSON;
+				uiSprite->SerialiseTo(uiSpriteJSON);
+				uiSpritesJSON.push_back(uiSpriteJSON);
+			}
+		}
+		dataFile["UISprites"] = uiSpritesJSON;
+	}
+
 	json tilesJSON;
 	{
 		tilesJSON["Required"]["Default"] = TileData::defaultTilePaths[0];
@@ -305,6 +336,9 @@ void HexGameSerialiser::SaveDataTo(json& dataFile) noexcept
 		tilesJSON["Flowers"] = flowersJSON;
 		tilesJSON["Waters"] = watersJSON;
 		tilesJSON["Lands"] = landsJSON;
+
+		if (TileData::selectedTile == nullptr) tilesJSON["Selected"] = "None";
+		else tilesJSON["Selected"] = TileData::selectedTile->name;
 
 		dataFile["Tiles"] = tilesJSON;
 	}
@@ -364,19 +398,6 @@ void HexGameSerialiser::SaveDataTo(json& dataFile) noexcept
 
 	json scrapbookJSON;
 	{
-		vector<json> uiSpritesJSON;
-		for (UISprite* uiSprite : UIManager::sprites)
-		{
-			if (uiSprite != nullptr)
-			{
-				json uiSpriteJSON;
-				uiSprite->SerialiseTo(uiSpriteJSON);
-				uiSpritesJSON.push_back(uiSpriteJSON);
-			}
-		}
-		scrapbookJSON["UISprites"] = uiSpritesJSON;
-
-
 		if (HexScrapbook::base == nullptr) scrapbookJSON["Base"] = "None";
 		else scrapbookJSON["Base"] = HexScrapbook::base->name;
 

@@ -1,10 +1,13 @@
 #include "TileData.h"
+#include "UISprite.h"
 
 #include "Debug.h"
 
 std::array<vector<TileData>, 4> TileData::tilesData;
 std::array<string, 3> TileData::defaultTilePaths;
 std::array<json, 3> TileData::defaultTilePrefabs;
+
+UISprite* TileData::selectedTile = nullptr;
 
 TileData::TileData(const char* const nameInit) noexcept :
 	name(nameInit) {}

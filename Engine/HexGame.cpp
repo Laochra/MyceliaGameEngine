@@ -34,6 +34,15 @@ void static RadialInteractionHandler(int selection)
 	{
 		currentTileType = &TileData::Get(HexType(currentRadialPage));
 		currentTileVariant = selection;
+
+		if (TileData::selectedTile != nullptr)
+		{
+			string& spriteFilepath = TileData::Get(HexType(currentRadialPage), currentTileVariant).spriteFilepath;
+			if (spriteFilepath != "None")
+			{
+				TileData::selectedTile->Load(spriteFilepath.c_str());
+			}
+		}
 	}
 	
 	((HexGame*)AppInfo::application->game)->SetState(HexGame::State::Place);
