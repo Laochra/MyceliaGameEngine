@@ -144,7 +144,7 @@ void PostProcess::Defaults::DrawBloom(
 }
 
 bool PostProcess::Defaults::displayUI = false;
-float PostProcess::Defaults::exposure = 3.0f;
+float PostProcess::Defaults::exposure = 5.0f;
 void PostProcess::Defaults::RefreshHDRToLDR(
 	vector<ShaderProgram*>& programs,
 	vector<uint*>& framebuffers,
