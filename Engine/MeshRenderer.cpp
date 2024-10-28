@@ -127,8 +127,8 @@ void MeshRenderer::Draw(intptr_t lastUsedMaterial)
 
 	// Cursed Temporary Way to Get IDs, Will be Swapped With IDMaps
 	unsigned long long guid = GetGUID();
-	short* idColourChannels = (short*)&guid;
-	vec4 idColour = vec4(idColourChannels[0], idColourChannels[1], idColourChannels[2], idColourChannels[3]);
+	int* idColourChannels = (int*)&guid;
+	glm::ivec2 idColour = glm::ivec2(idColourChannels[0], idColourChannels[1]);
 	sp.BindUniform("ID", idColour);
 	
 	if ((intptr_t)material != lastUsedMaterial)

@@ -225,6 +225,7 @@ static void DrawOutline(
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, idTexture);
 	outlineProgram.BindUniform("IDMap", 2);
+	outlineProgram.BindUniform("PixelSize", 1.0f / vec2(AppInfo::screenWidth, AppInfo::screenHeight));
 
 	PostProcess::Defaults::screenQuad->Draw();
 
