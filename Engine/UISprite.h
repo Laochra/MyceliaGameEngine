@@ -34,7 +34,7 @@ public:
 	const std::string& GetSpritePath() const noexcept;
 
 private:
-	Texture texture;
+	Texture* texture = nullptr;
 	static ShaderProgram* shaderProgram;
 	static Mesh* spriteMesh;
 };

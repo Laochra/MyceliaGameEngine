@@ -58,7 +58,7 @@ Texture* TextureManager::GetTexture(const char* filepath, bool isNonlinear, bool
 {
    if (filepath == nullptr) return nullptr;
 
-   return GetTexture(string(filepath), isNonlinear, true, Texture::Filter::Trilinear);
+   return GetTexture(string(filepath), isNonlinear, wrap, filter);
 }
 Texture* TextureManager::GetTexture(const string& filepath, bool isNonlinear, bool wrap, Texture::Filter filter)
 {

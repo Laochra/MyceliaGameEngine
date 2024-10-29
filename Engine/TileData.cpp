@@ -86,6 +86,15 @@ void TileData::ClearAndReset() noexcept
 			tileVariant.prefab.clear();
 		}
 	}
+
+	if (TileData::selectedTile != nullptr)
+	{
+		string& spriteFilepath = TileData::Get(HexType(0), 0).spriteFilepath;
+		if (spriteFilepath != "None")
+		{
+			TileData::selectedTile->Load(spriteFilepath.c_str());
+		}
+	}
 }
 
 #include "MaterialManager.h"

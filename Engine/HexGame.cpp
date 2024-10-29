@@ -254,20 +254,10 @@ static void RecursiveSetHighlightColour(GameObject3D* gameObject, vec4 colour)
 	}
 }
 const float tileRaiseAmount = 0.1f;
-static void RaiseTile(vec2& hoveredPosition, GameObject3D*& selectedGameObject, HexGrid* hexGrid)
+static void RaiseTile(vec2 hoveredPosition, GameObject3D*& selectedGameObject, HexGrid* hexGrid)
 {
-	HexCubeCoord hoveredCubeCoord = HexCubeCoord::GetFromPos(hoveredPosition);
-	vec2 partialCubeCoord = HexCubeCoord::GetFromPosPartial(hoveredPosition);
-	float magnitude = HexCubeCoord::GetMagnitudePartial(partialCubeCoord);
+	HexOffsetCoord hoveredHexCoord = HexOffsetCoord::GetFromPos(hoveredPosition, hexGrid->centre);
 
-	if (magnitude > (float)HexProgression::currentRadius)
-	{
-		partialCubeCoord = (partialCubeCoord / magnitude) * (float)HexProgression::currentRadius;
-		hoveredPosition = HexCubeCoord::ToPosPartial(partialCubeCoord);
-		hoveredCubeCoord = HexCubeCoord::GetFromPos(hoveredPosition);
-	}
-
-	HexOffsetCoord hoveredHexCoord = HexCubeToOffset(hoveredCubeCoord, hexGrid->centre);
 	if (hoveredHexCoord == hexGrid->centre)
 	{
 		if (selectedGameObject != nullptr)
@@ -422,6 +412,15 @@ void HexGame::OnStart()
 	HexProgression::Initialise();
 
 	HexScrapbook::ConcealSprites();
+
+	if (TileData::selectedTile != nullptr)
+	{
+		string& spriteFilepath = TileData::Get(HexType(0), 0).spriteFilepath;
+		if (spriteFilepath != "None")
+		{
+			TileData::selectedTile->Load(spriteFilepath.c_str());
+		}
+	}
 
 	HexAudio::BeginMusic();
 	HexAudio::BeginAmbience();
@@ -644,6 +643,16 @@ void HexGame::Update()
 	}
 
 	selectedPosition += moveDir * moveSpeed * Time::delta;
+
+	vec2 partialCubeCoord = HexCubeCoord::GetFromPosPartial(selectedPosition);
+	float magnitude = HexCubeCoord::GetMagnitudePartial(partialCubeCoord);
+
+	if (magnitude > (float)HexProgression::currentRadius)
+	{
+		partialCubeCoord = (partialCubeCoord / magnitude) * (float)HexProgression::currentRadius;
+		selectedPosition = HexCubeCoord::ToPosPartial(partialCubeCoord);
+	}
+
 	vec3 offset3D = vec3(0, HexCameraData::offsetDirection) * HexCameraData::currentZoom;
 	AppInfo::gameCamera->SetPosition(vec3(selectedPosition.x, 0, selectedPosition.y) + offset3D);
 

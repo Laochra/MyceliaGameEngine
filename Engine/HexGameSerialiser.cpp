@@ -1,6 +1,7 @@
 #include "HexGameSerialiser.h"
 
 #include "UIManager.h"
+#include "TextureManager.h"
 
 #include "HexGameInfo.h"
 #include "TileData.h"
@@ -43,6 +44,10 @@ void HexGameSerialiser::LoadDataFrom(json& dataFile) noexcept
 			if (variantJSON.contains("Sprite"))
 			{
 				variant.spriteFilepath = variantJSON["Sprite"];
+				if (variant.spriteFilepath != "None")
+				{
+					textureManager->GetTexture(variant.spriteFilepath, false, false, Texture::Filter::None);
+				}
 			}
 			TileData::Get(HexType::Tree).push_back(variant);
 		}
@@ -53,6 +58,10 @@ void HexGameSerialiser::LoadDataFrom(json& dataFile) noexcept
 			if (variantJSON.contains("Sprite"))
 			{
 				variant.spriteFilepath = variantJSON["Sprite"];
+				if (variant.spriteFilepath != "None")
+				{
+					textureManager->GetTexture(variant.spriteFilepath, false, false, Texture::Filter::None);
+				}
 			}
 			TileData::Get(HexType::Flower).push_back(variant);
 		}
@@ -63,6 +72,10 @@ void HexGameSerialiser::LoadDataFrom(json& dataFile) noexcept
 			if (variantJSON.contains("Sprite"))
 			{
 				variant.spriteFilepath = variantJSON["Sprite"];
+				if (variant.spriteFilepath != "None")
+				{
+					textureManager->GetTexture(variant.spriteFilepath, false, false, Texture::Filter::None);
+				}
 			}
 			TileData::Get(HexType::Water).push_back(variant);
 		}
@@ -73,6 +86,10 @@ void HexGameSerialiser::LoadDataFrom(json& dataFile) noexcept
 			if (variantJSON.contains("Sprite"))
 			{
 				variant.spriteFilepath = variantJSON["Sprite"];
+				if (variant.spriteFilepath != "None")
+				{
+					textureManager->GetTexture(variant.spriteFilepath, false, false, Texture::Filter::None);
+				}
 			}
 			TileData::Get(HexType::Land).push_back(variant);
 		}

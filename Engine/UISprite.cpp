@@ -2,6 +2,7 @@
 
 #include "Shader.h"
 #include "Mesh.h"
+#include "TextureManager.h"
 
 #include "AppInfo.h"
 
@@ -9,7 +10,7 @@ Mesh* UISprite::spriteMesh = nullptr;
 ShaderProgram* UISprite::shaderProgram = nullptr;
 
 UISprite::UISprite() noexcept :
-	texture(Texture()),
+	texture(nullptr),
 	anchor({0,0}),
 	offset({0,0}),
 	layer(0),
@@ -35,7 +36,7 @@ UISprite::UISprite(const char* spriteFile, vec2 anchorInit, vec2 offsetInit, int
 	enabled(true),
 	name("UISprite")
 {
-	texture.Load(spriteFile, false, false, Texture::Filter::None);
+	texture = textureManager->GetTexture(spriteFile, false, false, Texture::Filter::None);
 
 	if (spriteMesh == nullptr)
 	{
@@ -50,7 +51,7 @@ UISprite::UISprite(const char* spriteFile, vec2 anchorInit, vec2 offsetInit, int
 
 void UISprite::Load(const char* spriteFile) noexcept
 {
-	texture.Load(spriteFile, false, false, Texture::Filter::None);
+	texture = textureManager->GetTexture(spriteFile, false, false, Texture::Filter::None);
 }
 
 void UISprite::SerialiseTo(json& jsonObj) const noexcept
@@ -65,9 +66,18 @@ void UISprite::SerialiseTo(json& jsonObj) const noexcept
 	jsonObj["Layer"] = layer;
 	jsonObj["Scale"] = scale;
 
-	jsonObj["Texture"] = texture.GetFilepath();
-	jsonObj["TextureFilter"] = texture.GetFilter();
-	jsonObj["TextureWrap"] = texture.GetWrap();
+	if (texture == nullptr)
+	{
+		jsonObj["Texture"] = "None";
+		jsonObj["TextureFilter"] = Texture::Filter::None;
+		jsonObj["TextureWrap"] = false;
+	}
+	else
+	{
+		jsonObj["Texture"] = texture->GetFilepath();
+		jsonObj["TextureFilter"] = texture->GetFilter();
+		jsonObj["TextureWrap"] = texture->GetWrap();
+	}
 }
 void UISprite::DeserialiseFrom(const json& jsonObj) noexcept
 {
@@ -79,22 +89,25 @@ void UISprite::DeserialiseFrom(const json& jsonObj) noexcept
 	if (jsonObj.contains("Layer")) layer = jsonObj["Layer"];
 	scale = jsonObj["Scale"];
 
-	string filepath((string)jsonObj["Texture"]);
-	Texture::Filter filter(Texture::Filter::None);
-	bool wrap = false;
-	if (jsonObj.contains("TextureFilter")) filter = jsonObj["TextureFilter"];
-	if (jsonObj.contains("TextureWrap")) wrap = jsonObj["TextureWrap"];
+	string filepath = jsonObj["Texture"];
+	if (filepath != "None")
+	{
+		Texture::Filter filter(Texture::Filter::None);
+		bool wrap = false;
+		filter = jsonObj["TextureFilter"];
+		wrap = jsonObj["TextureWrap"];
 
-	texture.Load(filepath.c_str(), false, wrap, filter);
+		textureManager->GetTexture(filepath.c_str(), false, wrap, filter);
+	}
 }
 
 void UISprite::Draw() const noexcept
 {
-	if (!enabled || texture.GetFilepath() == "None") return;
+	if (!enabled || texture == nullptr) return;
 
 	shaderProgram->Bind();
 
-	float spriteAspect = (float)texture.GetWidth() / (float)texture.GetHeight();
+	float spriteAspect = (float)texture->GetWidth() / (float)texture->GetHeight();
 	float screenAspect = 1.0f / (AppInfo::screenHeight == 0 ? 0.0f : (AppInfo::screenWidth / (float)AppInfo::screenHeight));
 	vec2 spritePos = vec2(anchor.x + offset.x * screenAspect, anchor.y + offset.y);
 	
@@ -102,7 +115,7 @@ void UISprite::Draw() const noexcept
 	shaderProgram->BindUniform("Aspect", spriteAspect * screenAspect);
 	shaderProgram->BindUniform("Scale", scale);
 
-	texture.Bind(0);
+	texture->Bind(0);
 	shaderProgram->BindUniform("SpriteTexture", 0);
 
 	spriteMesh->Draw();
@@ -120,5 +133,6 @@ void UISprite::SetName(const char* newName) noexcept
 
 const std::string& UISprite::GetSpritePath() const noexcept
 {
-	return texture.GetFilepath();
+	if (texture == nullptr) return "None";
+	return texture->GetFilepath();
 }
