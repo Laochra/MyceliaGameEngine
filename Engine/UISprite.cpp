@@ -97,7 +97,7 @@ void UISprite::DeserialiseFrom(const json& jsonObj) noexcept
 		filter = jsonObj["TextureFilter"];
 		wrap = jsonObj["TextureWrap"];
 
-		textureManager->GetTexture(filepath.c_str(), false, wrap, filter);
+		texture = textureManager->GetTexture(filepath.c_str(), false, wrap, filter);
 	}
 }
 
