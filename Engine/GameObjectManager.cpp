@@ -116,6 +116,23 @@ void GameObjectManager::Delete(GameObject* gameObject)
 		GameObject::Destroy(gameObject);
 	}
 
+	for (int i = 0; i < graveyard.size(); i++)
+	{
+		if (gameObject == graveyard[i])
+		{
+			graveyard.erase(graveyard.begin() + i);
+			return;
+		}
+	}
+
+	if (dynamic_cast<GameObject3D*>(gameObject) != nullptr)
+	{
+		for (GameObject3D* child : *((GameObject3D*)gameObject)->GetChildren())
+		{
+			Delete((GameObject3D*)gameObject);
+		}
+	}
+
 	del(gameObject);
 }
 
@@ -148,7 +165,6 @@ void GameObjectManager::Clear() noexcept
 	while (graveyard.size() > 0)
 	{
 		Delete(graveyard[0]);
-		graveyard.erase(graveyard.begin() + 0);
 	}
 }
 

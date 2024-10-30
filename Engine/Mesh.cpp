@@ -63,7 +63,9 @@ void GenerateQuadTangBitang(Vertex& vert1, Vertex& vert2, Vertex& vert3, Vertex&
 
 void Mesh::Initialise(uint vertexCount, const Vertex* vertices, uint indexCount, uint* indices)
 {
-	assert(vao == 0); // Check this is the first initialisation
+	if (vao != 0) glDeleteVertexArrays(1, &vao);
+	if (vbo != 0) glDeleteBuffers(1, &vbo);
+	if (ibo != 0) glDeleteBuffers(1, &ibo);
 
 	// Generate Buffers
 	glGenBuffers(1, &vbo);
@@ -407,7 +409,6 @@ bool Mesh::LoadFromFile(const char* filepathInit)
 
 	if (!filestream.good())
 	{
-		Debug::LogWarning(LogID::WRN101, filepath, " ", locationinfo);
 		return false;
 	}
 

@@ -8,7 +8,7 @@ class MeshHeirarchy
 {
 public:
 	std::string name;
-	std::string filepath;
+	std::string filepath = "None";
 	mat4 localMatrix;
 	std::string materialPath;
 	std::vector<MeshHeirarchy*> children;

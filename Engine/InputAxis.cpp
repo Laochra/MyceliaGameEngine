@@ -34,9 +34,9 @@ float InputAxis::value() const noexcept
 			break;
 		}
 	}
-	for (int i = 0; i < positiveBinds->size(); i++)
+	for (int i = 0; i < negativeBinds->size(); i++)
 	{
-		if (AppInfo::input->GetInputDown((*positiveBinds)[i]))
+		if (AppInfo::input->GetInputDown((*negativeBinds)[i]))
 		{
 			negative = true;
 			break;
