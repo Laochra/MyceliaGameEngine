@@ -16,5 +16,5 @@ void main() // Fragment
 	vec4 remapped = vec4(vec3(1.0) - exp(-hdrColour.rgb * Exposure), hdrColour.a);
 	remapped.xyz = pow(remapped.rgb, vec3(0.45)); // Colour to the power of 1/2.2 to return to non-linear space
 	
-	FragColour = vec4(mix(currentColour.rgb, remapped.rgb, remapped.a), 1);
+	FragColour = remapped;
 }

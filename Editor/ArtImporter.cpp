@@ -157,7 +157,11 @@ namespace ArtImporter
 		sp.BindUniform("CurrentColourBuffer", 1);
 		sp.BindUniform("Exposure", PostProcess::Defaults::exposure);
 
+		glEnable(GL_BLEND);
+		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendEquation(GL_FUNC_ADD);
 		screenQuad.Draw();
+		glDisable(GL_BLEND);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
