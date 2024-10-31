@@ -1,7 +1,10 @@
 #include "ArtImporter.h"
 
 #include "MeshRenderer.h"
-
+#include "MeshManager.h"
+#include "Camera.h"
+#include "Shader.h"
+#include "PostProcessing.h"
 #include "MeshHeirarchy.h"
 
 #include <assimp/Importer.hpp>
@@ -20,8 +23,10 @@
 
 namespace ArtImporter
 {
+	bool initialised = false;
+
 	vector<string> fileQueue;
-	uint current;
+	int current;
 
 	bool compressHeirarchy = true;
 	bool applyTransforms = false;
@@ -32,15 +37,148 @@ namespace ArtImporter
 	Assimp::Importer importer;
 	const aiScene* currentFile;
 
-	static void SetCurrent(uint newIndex)
+	uint hdrFBO = 0;
+	uint hdrColour = 0;
+	uint hdrDepth = 0;
+	ShaderProgram sp;
+	uint previewFBO = 0;
+	uint previewColour = 0;
+	vec2 previewSize;
+	Camera* previewCamera = nullptr;
+	vec3 previewBg;
+
+	GameObject3D* previewObject = nullptr;
+	GameObject3D* selectedObject = nullptr;
+	void UpdateObjectPreview();
+
+	static void Initialise() noexcept
 	{
-		if (newIndex < fileQueue.size()) { current = newIndex; }
-		else { current = (uint)fileQueue.size() - 1; }
+		initialised = true;
+
+		previewCamera = GameObject::Instantiate<Camera>();
+		gameObjectManager->Remove(previewCamera);
+		previewCamera->fov = glm::radians(80.0f);
+		previewCamera->SetPosition(vec3(0, 0, 1));
+		previewCamera->LookAt(vec3());
+
+
+		sp.LoadShader(VertexStage, "Engine\\DefaultAssets\\FullScreenQuad.vert");
+		sp.LoadShader(FragmentStage, "Engine\\DefaultAssets\\BasicHDR.frag");
+		sp.Link();
+
+		// HDR Buffer Setup
+		glGenFramebuffers(1, &hdrFBO);
+		glGenRenderbuffers(1, &hdrDepth);
+		glGenTextures(1, &hdrColour);
+		glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+
+		glBindRenderbuffer(GL_RENDERBUFFER, hdrDepth);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, (int)previewSize.x, (int)previewSize.y);
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, hdrDepth);
+
+		glBindTexture(GL_TEXTURE_2D, hdrColour);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, (int)previewSize.x, (int)previewSize.y, 0, GL_RGBA, GL_FLOAT, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, hdrColour, 0);
+
+
+		// Preview Buffer Setup
+		glGenFramebuffers(1, &previewFBO);
+		glGenTextures(1, &previewColour);
+		glBindFramebuffer(GL_FRAMEBUFFER, previewFBO);
+
+		glBindTexture(GL_TEXTURE_2D, previewColour);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (int)previewSize.x, (int)previewSize.y, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, previewColour, 0);
+	}
+	static void RefreshPreviewSize() noexcept
+	{
+		glBindRenderbuffer(GL_RENDERBUFFER, hdrDepth);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, (int)previewSize.x, (int)previewSize.y);
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 		
+		glBindTexture(GL_TEXTURE_2D, hdrColour);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, (int)previewSize.x, (int)previewSize.y, 0, GL_RGBA, GL_FLOAT, NULL);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glBindTexture(GL_TEXTURE_2D, previewColour);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (int)previewSize.x, (int)previewSize.y, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+	static void DrawObjects(GameObject3D* object)
+	{
+		object->Draw();
+		for (GameObject3D* child : *object->GetChildren())
+		{
+			DrawObjects(child);
+		}
+	}
+	static void DrawPreview() noexcept
+	{
+		if (previewObject == nullptr) return;
+
+		Camera* dormantCamera = AppInfo::ActiveCamera();
+		AppInfo::ActiveCamera() = previewCamera;
+		glm::ivec2 dormantScreensize(AppInfo::screenWidth, AppInfo::screenHeight);
+		AppInfo::screenWidth = previewSize.x;
+		AppInfo::screenHeight = previewSize.y;
+		previewCamera->Update();
+		glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+		glViewport(0, 0, previewSize.x, previewSize.y);
+		glClearColor(0, 0, 0, 0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		DrawObjects(previewObject);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, previewFBO);
+		glViewport(0, 0, previewSize.x, previewSize.y);
+		glClearColor(previewBg.r, previewBg.g, previewBg.b, 1);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		Mesh screenQuad;
+		screenQuad.InitialiseQuad();
+
+		sp.Bind();
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, hdrColour);
+		sp.BindUniform("HDRTexture", 0);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, previewColour);
+		sp.BindUniform("CurrentColourBuffer", 1);
+		sp.BindUniform("Exposure", PostProcess::Defaults::exposure);
+
+		glEnable(GL_BLEND);
+		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendEquation(GL_FUNC_ADD);
+		screenQuad.Draw();
+		glDisable(GL_BLEND);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		AppInfo::ActiveCamera() = dormantCamera;
+		AppInfo::screenWidth = dormantScreensize.x;
+		AppInfo::screenHeight = dormantScreensize.y;
+	}
+
+	static void SetCurrent(int newIndex)
+	{
+		if (newIndex < fileQueue.size() || newIndex == 0) { current = newIndex; }
+		else { current = (int)fileQueue.size() - 1; }
+
 		if (fileQueue.size() > 0) { Preload(fileQueue[current].c_str()); }
 	}
 
-	static void DrawNode(MeshHeirarchy* tempMesh)
+	static void DrawNode(MeshHeirarchy* tempMesh, GameObject3D* object)
 	{
 		bool isSelected = tempMesh == selectedTempMesh;
 		bool isLeaf = tempMesh->children.size() == 0;
@@ -61,11 +199,14 @@ namespace ArtImporter
 				if (!AppInfo::input->enabled && ImGui::IsKeyReleased(ImGuiKey_MouseLeft))
 				{
 					selectedTempMesh = tempMesh;
+					if (selectedObject != nullptr) selectedObject->selected = false;
+					selectedObject = object;
+					selectedObject->selected = true;
 				}
 			}
 			for (int i = 0; i < tempMesh->children.size(); i++)
 			{
-				DrawNode(tempMesh->children[i]);
+				DrawNode(tempMesh->children[i], (*object->GetChildren())[i]);
 			}
 			ImGui::TreePop();
 		}
@@ -76,6 +217,7 @@ namespace ArtImporter
 				if (!AppInfo::input->enabled && ImGui::IsKeyReleased(ImGuiKey_MouseLeft))
 				{
 					selectedTempMesh = tempMesh;
+					selectedObject = object;
 				}
 			}
 		}
@@ -83,6 +225,8 @@ namespace ArtImporter
 
 	void ArtImporter::Draw(const char* const name, bool& open) noexcept
 	{
+		if (!ArtImporter::initialised) ArtImporter::Initialise();
+
 		ImGui::Begin(name, &open);
 
 		string currentString = fileQueue.size() > 0 ? fileQueue[current] : "No files open";
@@ -98,7 +242,7 @@ namespace ArtImporter
 		ImGui::SameLine();
 		{
 			ImGui::BeginDisabled(current == 0);
-			if (ImGui::Button(" < ")) { SetCurrent(current - 1); selectedTempMesh = nullptr; }
+			if (ImGui::Button(" < ")) { SetCurrent(current - 1); selectedTempMesh = nullptr; selectedObject = nullptr; }
 			ImGui::EndDisabled();
 		}
 		ImGui::SameLine();
@@ -106,17 +250,23 @@ namespace ArtImporter
 		ImGui::SameLine();
 		{
 			ImGui::BeginDisabled(fileQueue.size() == 0 || current >= fileQueue.size() - 1);
-			if (ImGui::Button(" > ")) { SetCurrent(current + 1); selectedTempMesh = nullptr; }
+			if (ImGui::Button(" > ")) { SetCurrent(current + 1); selectedTempMesh = nullptr; selectedObject = nullptr; }
 			ImGui::EndDisabled();
 		}
 
 		if (ImGui::Checkbox("Compress Heirarchy", &compressHeirarchy))
 		{
-			if (fileQueue.size() > 0) Preload(fileQueue[current].c_str());
+			if (fileQueue.size() > 0)
+			{
+				Preload(fileQueue[current].c_str());
+			}
 		}
 		if (ImGui::Checkbox("Respect Transform Data", &applyTransforms))
 		{
-			if (fileQueue.size() > 0) Preload(fileQueue[current].c_str());
+			if (fileQueue.size() > 0)
+			{
+				Preload(fileQueue[current].c_str());
+			}
 		}
 
 		if (ImGui::Button("Add Files"))
@@ -137,8 +287,10 @@ namespace ArtImporter
 			{
 				fileQueue.clear();
 				tempMeshes.Clear();
+				UpdateObjectPreview();
 				SetCurrent(0);
 				selectedTempMesh = nullptr;
+				selectedObject = nullptr;
 			}
 			ImGui::EndDisabled();
 		}
@@ -146,8 +298,6 @@ namespace ArtImporter
 		if (fileQueue.size() > 0)
 		{
 			if (current >= fileQueue.size()) SetCurrent((uint)fileQueue.size() - 1);
-
-			
 
 			if (ImGui::Button("Cook"))
 			{
@@ -161,6 +311,28 @@ namespace ArtImporter
 				if (savePath.size() != 0)
 				{
 					Cook(current, savePath);
+				}
+				selectedTempMesh = nullptr;
+				selectedObject = nullptr;
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Cook All"))
+			{
+				using namespace FileDialogue;
+				PathDetails savePathDetails(
+					"Choose Target Location",
+					"Assets\\"
+				);
+				string savePath = GetFolderPath(savePathDetails, LimitToAssetFolder::True);
+				
+				if (savePath.size() != 0)
+				{
+					CookAll(savePath);
+
+					fileQueue.clear();
+					tempMeshes.Clear();
+					SetCurrent(0);
+					selectedTempMesh = nullptr;
 				}
 			}
 			//ImGui::SameLine();
@@ -184,32 +356,112 @@ namespace ArtImporter
 			//	}
 			//}
 
-			ImGui::SeparatorText("Preview");
-			DrawNode(&tempMeshes);
+			GUI::Spacing(3);
 
-			if (selectedTempMesh != nullptr)
+			float windowWidth = ImGui::GetWindowWidth();
+			float windowHeight = ImGui::GetWindowHeight();
+			if (ImGui::CollapsingHeader("Camera Settings"))
 			{
-				ImGui::SeparatorText("Mesh Settings");
+				vec3 position = previewCamera->GetPosition();
+				ImGui::DragFloat3("Position", (float*)&position, 0.25f);
+				previewCamera->SetPosition(position);
 
-				if (ImGui::InputText("Name", &selectedTempMesh->name))
+				vec3 rotationEuler = glm::eulerAngles(previewCamera->GetRotationQuat());
+				vec3 rotationDegrees = vec3(glm::degrees(rotationEuler.x), glm::degrees(rotationEuler.y), glm::degrees(rotationEuler.z));
+				vec3 originalDegrees = rotationDegrees;
+				if (ImGui::DragFloat3("Rotation", (float*)&rotationDegrees))
 				{
-					if (selectedTempMesh->name.size() == 0) selectedTempMesh->name = "Empty";
+					rotationDegrees -= originalDegrees;
+					rotationEuler = vec3(glm::radians(rotationDegrees.x), glm::radians(rotationDegrees.y), glm::radians(rotationDegrees.z));
+
+					quat quatZ = glm::angleAxis(rotationEuler.z, vec3(0, 0, 1));
+					quat quatY = glm::angleAxis(rotationEuler.y, vec3(0, 1, 0));
+					quat quatX = glm::angleAxis(rotationEuler.x, vec3(1, 0, 0));
+
+					previewCamera->SetRotation(glm::normalize(quatZ * quatY * quatX) * previewCamera->GetRotationQuat());
 				}
-				
-				if (ImGui::BeginCombo("Material", selectedTempMesh->materialPath.c_str()))
-				{
-					if (ImGui::Selectable("Default", selectedTempMesh->materialPath == "Default"))
-					{
-						selectedTempMesh->materialPath = "Default";
-					}
-					if (ImGui::Selectable("Select from file"))
-					{
-						using namespace FileDialogue;
-						string newFilepath = GetLoadPath(PathDetails("Select Material", "Assets\\Materials\\", { "*.mat" }), LimitToAssetFolder::True);
 
-						if (newFilepath.size() != 0) selectedTempMesh->materialPath = newFilepath;
+				GUI::Spacing();
+
+				ImGui::PushItemWidth(ImGui::CalcItemWidth() / 3.025f);
+				if (ImGui::DragFloat("##Near", &previewCamera->nearClip, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp))
+				{
+					if (previewCamera->nearClip >= previewCamera->farClip) previewCamera->farClip = previewCamera->nearClip + FLT_MIN;
+				}
+				ImGui::SameLine();
+				if (ImGui::DragFloat("Near/Far Clip##Far", &previewCamera->farClip, 100.0f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp))
+				{
+					if (previewCamera->farClip <= previewCamera->nearClip) previewCamera->nearClip = previewCamera->farClip - 0.01f;
+				}
+
+				float fovDegrees = glm::degrees(previewCamera->fov);
+				if (ImGui::DragFloat("FOV", &fovDegrees, 0.25f, 0.25f, 179.75f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
+				{
+					previewCamera->fov = glm::radians(fovDegrees);
+				}
+				ImGui::PopItemWidth();
+
+				GUI::Spacing(3);
+			}
+			if (ImGui::CollapsingHeader("Preview", ImGuiTreeNodeFlags_DefaultOpen))
+			{
+				vec2 newSize = vec2(windowWidth * 0.95f, windowHeight * 0.25f);
+				if (previewSize != newSize)
+				{
+					previewSize = newSize;
+					RefreshPreviewSize();
+				}
+				DrawPreview();
+				uintptr_t image = (uintptr_t)previewColour;
+				ImGui::Image((ImTextureID)image, *(ImVec2*)&previewSize, ImVec2(0, 1), ImVec2(1, 0));
+				
+				GUI::Spacing(3);
+
+				ImGui::ColorEdit3("Background", (float*)&previewBg, ImGuiColorEditFlags_NoInputs);
+			}
+			if (ImGui::CollapsingHeader("Heirarchy", ImGuiTreeNodeFlags_DefaultOpen))
+			{
+				if (ImGui::BeginChild("HeirarchyBox", ImVec2(0, windowHeight * 0.25f)))
+				{
+					DrawNode(&tempMeshes, previewObject);
+				}
+				ImGui::EndChild();
+
+				ImGui::SeparatorText("Node Settings");
+				if (selectedTempMesh == nullptr)
+				{
+					ImGui::Text("Select a node to edit it");
+				}
+				else
+				{
+					if (ImGui::InputText("Name", &selectedTempMesh->name))
+					{
+						if (selectedTempMesh->name.size() == 0) selectedTempMesh->name = "Empty";
 					}
-					ImGui::EndCombo();
+
+					if (selectedTempMesh->filepath != "None")
+					{
+						if (ImGui::BeginCombo("Material", selectedTempMesh->materialPath.c_str()))
+						{
+							if (ImGui::Selectable("Default", selectedTempMesh->materialPath == "Default"))
+							{
+								selectedTempMesh->materialPath = "Default";
+								UpdateObjectPreview();
+							}
+							if (ImGui::Selectable("Select from file"))
+							{
+								using namespace FileDialogue;
+								string newFilepath = GetLoadPath(PathDetails("Select Material", "Assets\\Materials\\", { "*.mat" }), LimitToAssetFolder::True);
+
+								if (newFilepath.size() != 0)
+								{
+									selectedTempMesh->materialPath = newFilepath;
+									UpdateObjectPreview();
+								}
+							}
+							ImGui::EndCombo();
+						}
+					}
 				}
 			}
 		}
@@ -293,6 +545,40 @@ namespace ArtImporter
 		}
 	}
 
+	void UpdateObjectPreviewNode(const MeshHeirarchy* heirarchyNode, GameObject3D*& object)
+	{
+		if (heirarchyNode->filepath == "None")
+		{
+			object = GameObject3D::Instantiate<GameObject3D>(heirarchyNode->localMatrix);
+		}
+		else
+		{
+			object = GameObject3D::Instantiate<MeshRenderer>(heirarchyNode->localMatrix);
+			((MeshRenderer*)object)->SetMesh(heirarchyNode->filepath.c_str());
+			((MeshRenderer*)object)->SetMaterial(heirarchyNode->materialPath.c_str());
+			Updater::DrawRemove(object);
+		}
+
+		for (MeshHeirarchy* childNode : heirarchyNode->children)
+		{
+			GameObject3D* child = nullptr;
+			UpdateObjectPreviewNode(childNode, child);
+			child->SetParent(object);
+		}
+	}
+	void UpdateObjectPreview()
+	{
+		if (previewObject != nullptr)
+		{
+			gameObjectManager->Add(previewObject);
+			gameObjectManager->Delete(previewObject);
+		}
+
+		UpdateObjectPreviewNode(&tempMeshes, previewObject);
+		
+		gameObjectManager->Remove(previewObject);
+	}
+
 	void ArtImporter::Preload(const char* filepath) noexcept
 	{
 		currentFile = importer.ReadFile(filepath, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
@@ -312,7 +598,10 @@ namespace ArtImporter
 		}
 
 		tempMeshes.Clear();
+		selectedTempMesh = nullptr;
+		selectedObject = nullptr;
 		ProcessNode(currentFile->mRootNode, tempMeshes);
+		UpdateObjectPreview();
 	}
 
 	static json CookHeirarchy(MeshHeirarchy* meshNode, string saveLocation)
@@ -389,12 +678,16 @@ namespace ArtImporter
 
 		fileQueue.erase(fileQueue.begin() + index);
 		tempMeshes.Clear();
+		UpdateObjectPreview();
 		if (current > 0 && current >= fileQueue.size())
 		{
 			SetCurrent(current - 1);
 		}
 		selectedTempMesh = nullptr;
+		selectedObject = nullptr;
 		currentFile = nullptr;
+
+		meshManager->ReloadAll();
 	}
 
 	void ArtImporter::CookAll(string savePath) noexcept

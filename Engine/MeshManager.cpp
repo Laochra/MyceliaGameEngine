@@ -56,6 +56,26 @@ void MeshManager::ReloadMesh(const char* filepath)
       }
    }
 }
+void MeshManager::ReloadAll() noexcept
+{
+   for (auto it = loadedMeshes.begin(); it != loadedMeshes.end();)
+   {
+      if (std::find(defaultMeshes.begin(), defaultMeshes.end(), it->first) != defaultMeshes.end())
+      {
+         ++it;
+         continue;
+      }
+      
+      if (!it->second->LoadFromFile(it->first.c_str()))
+      {
+         it = loadedMeshes.erase(it);
+      }
+      else
+      {
+         ++it;
+      }
+   }
+}
 
 Mesh* MeshManager::AddMesh(const char* filepath)
 {

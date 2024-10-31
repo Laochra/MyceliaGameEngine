@@ -19,7 +19,7 @@ int			AppInfo::screenHeight = 0;
 bool			AppInfo::screenSizeJustChanged = true;
 Camera*     AppInfo::gameCamera = nullptr;
 Camera*     AppInfo::editorCamera = nullptr;
-Camera* AppInfo::ActiveCamera()
+Camera*& AppInfo::ActiveCamera()
 {
    switch (state)
    {

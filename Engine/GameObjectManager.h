@@ -25,6 +25,7 @@ public:
 	void Bury(GameObject* gameObject) noexcept;
 	void Unbury(GameObject* gameObject) noexcept;
 	void Move(GameObject* gameObject, int newIndex) noexcept;
+	void Delete(GameObject* gameObject);
 
 	GameObject* Find(unsigned long long guid) const noexcept;
 	GameObject* FindInGraveyard(unsigned long long guid) const noexcept;
@@ -42,7 +43,6 @@ public:
 private:
 	vector<GameObject*> graveyard = vector<GameObject*>();
 
-	void Delete(GameObject* gameObject);
 };
 
 extern GameObjectManager* gameObjectManager;

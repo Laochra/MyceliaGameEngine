@@ -26,6 +26,8 @@ public:
 	Mesh* GetMesh(const char* filepath);
 	void ReloadMesh(const char* filepath);
 
+	void ReloadAll() noexcept;
+
 private:
 	map<string, Mesh*> loadedMeshes;
 

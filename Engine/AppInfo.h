@@ -28,7 +28,7 @@ public:
 	static bool				screenSizeJustChanged;
 	static Camera*			gameCamera;
 	static Camera*			editorCamera;
-	static Camera*			ActiveCamera();
+	static Camera*&		ActiveCamera();
 
 	static Application* application;
 

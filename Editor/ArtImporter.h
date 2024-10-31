@@ -7,7 +7,7 @@ typedef unsigned int uint;
 namespace ArtImporter
 {
 	extern vector<string> fileQueue;
-	extern uint current;
+	extern int current;
 
 	extern void Draw(const char* const name, bool& open) noexcept;
 	extern void Add(const string filepath) noexcept;
