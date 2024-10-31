@@ -21,6 +21,8 @@
 
 #include "AppInfo.h"
 
+#include "HexFog.h"
+
 namespace ArtImporter
 {
 	bool initialised = false;
@@ -117,7 +119,7 @@ namespace ArtImporter
 	}
 	static void DrawObjects(GameObject3D* object)
 	{
-		object->Draw();
+		object->Draw(0);
 		for (GameObject3D* child : *object->GetChildren())
 		{
 			DrawObjects(child);
@@ -133,6 +135,9 @@ namespace ArtImporter
 		AppInfo::screenWidth = previewSize.x;
 		AppInfo::screenHeight = previewSize.y;
 		previewCamera->Update();
+		float dormantFogRadius = HexFog::currentRadius;
+		HexFog::currentRadius = 100000.0f;
+
 		glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
 		glViewport(0, 0, previewSize.x, previewSize.y);
 		glClearColor(0, 0, 0, 0);
@@ -168,6 +173,7 @@ namespace ArtImporter
 		AppInfo::ActiveCamera() = dormantCamera;
 		AppInfo::screenWidth = dormantScreensize.x;
 		AppInfo::screenHeight = dormantScreensize.y;
+		HexFog::currentRadius = dormantFogRadius;
 	}
 
 	static void SetCurrent(int newIndex)
