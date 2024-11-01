@@ -46,8 +46,12 @@ namespace ArtImporter
 	uint previewFBO = 0;
 	uint previewColour = 0;
 	vec2 previewSize;
-	Camera* previewCamera = nullptr;
 	vec3 previewBg;
+
+	Camera* previewCamera = nullptr;
+	float centreY = 0.0f;
+	float zoom = 1.0f;
+	vec2 angles = {-90.0f, 0.0f};
 
 	GameObject3D* previewObject = nullptr;
 	GameObject3D* selectedObject = nullptr;
@@ -125,6 +129,18 @@ namespace ArtImporter
 			DrawObjects(child);
 		}
 	}
+	static void UpdateCamera() noexcept
+	{
+		float theta = glm::radians(angles.x);
+		float phi = glm::radians(angles.y);
+
+		vec3 forward = glm::normalize(vec3(cos(phi) * cos(theta), sin(phi), cos(phi) * sin(theta)));
+		previewCamera->SetPosition(-forward * zoom + vec3(0, centreY, 0));
+
+		previewCamera->LookAt(vec3(0, centreY, 0));
+
+		previewCamera->Update();
+	}
 	static void DrawPreview() noexcept
 	{
 		if (previewObject == nullptr) return;
@@ -134,7 +150,9 @@ namespace ArtImporter
 		glm::ivec2 dormantScreensize(AppInfo::screenWidth, AppInfo::screenHeight);
 		AppInfo::screenWidth = previewSize.x;
 		AppInfo::screenHeight = previewSize.y;
-		previewCamera->Update();
+
+		UpdateCamera();
+
 		float dormantFogRadius = HexFog::currentRadius;
 		HexFog::currentRadius = 100000.0f;
 
@@ -368,24 +386,14 @@ namespace ArtImporter
 			float windowHeight = ImGui::GetWindowHeight();
 			if (ImGui::CollapsingHeader("Camera Settings"))
 			{
-				vec3 position = previewCamera->GetPosition();
-				ImGui::DragFloat3("Position", (float*)&position, 0.25f);
-				previewCamera->SetPosition(position);
+				ImGui::DragFloat("Height", &centreY, 0.01f, -FLT_MAX, FLT_MAX, "%.2f");
+				ImGui::DragFloat("Zoom", &zoom, 0.01f, 0.01f, FLT_MAX, "%.2f", ImGuiSliderFlags_AlwaysClamp);
 
-				vec3 rotationEuler = glm::eulerAngles(previewCamera->GetRotationQuat());
-				vec3 rotationDegrees = vec3(glm::degrees(rotationEuler.x), glm::degrees(rotationEuler.y), glm::degrees(rotationEuler.z));
-				vec3 originalDegrees = rotationDegrees;
-				if (ImGui::DragFloat3("Rotation", (float*)&rotationDegrees))
-				{
-					rotationDegrees -= originalDegrees;
-					rotationEuler = vec3(glm::radians(rotationDegrees.x), glm::radians(rotationDegrees.y), glm::radians(rotationDegrees.z));
-
-					quat quatZ = glm::angleAxis(rotationEuler.z, vec3(0, 0, 1));
-					quat quatY = glm::angleAxis(rotationEuler.y, vec3(0, 1, 0));
-					quat quatX = glm::angleAxis(rotationEuler.x, vec3(1, 0, 0));
-
-					previewCamera->SetRotation(glm::normalize(quatZ * quatY * quatX) * previewCamera->GetRotationQuat());
-				}
+				ImGui::PushItemWidth(ImGui::CalcItemWidth() / 2);
+				ImGui::DragFloat("##AnglesX", &angles.x, 1.0f, 0.0f, 0.0f, "%.1f");
+				ImGui::SameLine();
+				ImGui::DragFloat("Angles##Y", &angles.y, 1.0f, -89.0f, 89.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp);
+				ImGui::PopItemWidth();
 
 				GUI::Spacing();
 
