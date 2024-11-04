@@ -172,7 +172,6 @@ void GameObjectManager::ClearGraveyard() noexcept
 	while (graveyard.size() > 0)
 	{
 		Delete(graveyard[0]);
-		graveyard.erase(graveyard.begin() + 0);
 	}
 }
 

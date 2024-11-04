@@ -52,7 +52,6 @@ namespace LightingManager
 	}
 	void DrawToShadowMaps(uint& framebuffer, uint& shadowMaps, uint& mapCount, uint maxShadowMaps, uint shadowSideLength, vector<LightObject*>& lightObjects)
 	{
-		glCullFace(GL_FRONT);
 
 		if (framebuffer == 0)
 		{
@@ -114,6 +113,5 @@ namespace LightingManager
 			}
 		}
 
-		glCullFace(GL_BACK);
 	}
 }

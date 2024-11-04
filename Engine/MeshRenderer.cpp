@@ -209,7 +209,7 @@ void MeshRenderer::Draw(intptr_t lastUsedMaterial)
 			{
 				float alphaThreshold;
 				material->uniforms[i].Get(&alphaThreshold);
-				sp.BindUniform("AlphaThreshold", alphaThreshold);
+				sp.BindUniform("AlphaCutoff", alphaThreshold);
 				alphaThresholdBound = true;
 				continue;
 			}
@@ -258,6 +258,28 @@ void MeshRenderer::DrawDepth(mat4 PVMatrix)
 	depthProgram->Bind();
 
 	depthProgram->BindUniform("ProjectionViewModel", PVMatrix * GetMatrix());
+
+	for (int i = 0; i < material->uniforms.size(); i++)
+	{
+		if (material->uniforms[i].name == "ColourMap")
+		{
+			string filepath = material->uniforms[i].GetAsFilepath();
+			filepath.pop_back();
+
+			if (filepath == "None") filepath = "DefaultColour";
+
+			textureManager->GetTexture(filepath, true)->Bind(0);
+			depthProgram->BindUniform("ColourMap", 0);
+			continue;
+		}
+		else if (material->uniforms[i].name == "AlphaCutoff")
+		{
+			float alphaThreshold;
+			material->uniforms[i].Get(&alphaThreshold);
+			depthProgram->BindUniform("AlphaThreshold", alphaThreshold);
+			continue;
+		}
+	}
 
 	mesh->Draw();
 }
