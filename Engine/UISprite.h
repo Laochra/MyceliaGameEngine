@@ -31,7 +31,7 @@ public:
 	const char* GetName() const noexcept override;
 	void SetName(const char* newName) noexcept;
 	
-	const std::string& GetSpritePath() const noexcept;
+	const std::string* GetSpritePath() const noexcept;
 
 private:
 	Texture* texture = nullptr;

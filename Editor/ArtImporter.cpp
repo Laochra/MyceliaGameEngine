@@ -148,8 +148,8 @@ namespace ArtImporter
 		Camera* dormantCamera = AppInfo::ActiveCamera();
 		AppInfo::ActiveCamera() = previewCamera;
 		glm::ivec2 dormantScreensize(AppInfo::screenWidth, AppInfo::screenHeight);
-		AppInfo::screenWidth = previewSize.x;
-		AppInfo::screenHeight = previewSize.y;
+		AppInfo::screenWidth = (int)previewSize.x;
+		AppInfo::screenHeight = (int)previewSize.y;
 
 		UpdateCamera();
 
@@ -157,14 +157,14 @@ namespace ArtImporter
 		HexFog::currentRadius = 100000.0f;
 
 		glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
-		glViewport(0, 0, previewSize.x, previewSize.y);
+		glViewport(0, 0, (int)previewSize.x, (int)previewSize.y);
 		glClearColor(0, 0, 0, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		DrawObjects(previewObject);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, previewFBO);
-		glViewport(0, 0, previewSize.x, previewSize.y);
+		glViewport(0, 0, (int)previewSize.x, (int)previewSize.y);
 		glClearColor(previewBg.r, previewBg.g, previewBg.b, 1);
 		glClear(GL_COLOR_BUFFER_BIT);
 

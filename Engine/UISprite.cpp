@@ -131,8 +131,8 @@ void UISprite::SetName(const char* newName) noexcept
 	name = newName;
 }
 
-const std::string& UISprite::GetSpritePath() const noexcept
+const std::string* UISprite::GetSpritePath() const noexcept
 {
-	if (texture == nullptr) return "None";
-	return texture->GetFilepath();
+	if (texture == nullptr) return nullptr;
+	return &texture->GetFilepath();
 }
