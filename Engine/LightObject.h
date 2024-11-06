@@ -16,6 +16,8 @@ public:
 	ShadowMode shadowMode = NoShadows;
 	ubyte shadowMapCount = 0U;
 	uint shadowMaps[6]{ 0U, 0U, 0U, 0U, 0U, 0U };
+	float nearClip = 0.001f;
+	float farClip = 10.0f;
 
 	vector<mat4> GetLightPVMatrices() noexcept;
 

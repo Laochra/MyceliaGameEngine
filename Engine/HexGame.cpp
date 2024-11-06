@@ -408,6 +408,11 @@ void HexGame::OnStart()
 	{
 		HexGameInfo::background = (GameObject3D*)GameObject::InstantiateFrom(HexGameInfo::backgroundPrefab, GuidGeneration::New);
 	}
+	if (!HexGameInfo::lightingPrefab.empty())
+	{
+		HexGameInfo::lighting = (LightObject*)GameObject::InstantiateFrom(HexGameInfo::lightingPrefab, GuidGeneration::New);
+		gameObjectManager->Add(HexGameInfo::lighting);
+	}
 
 	HexProgression::Initialise();
 
@@ -465,6 +470,7 @@ void HexGame::OnStop()
 	del(crosshair);
 
 	GameObject::Destroy(HexGameInfo::background);
+	GameObject::Destroy(HexGameInfo::lighting);
 
 	TileData::ClearAndReset();
 	HabitatData::ClearAndReset();
@@ -491,8 +497,6 @@ void HexGame::Update()
 		const float speed = 0.75f;
 		const float amount = 0.1f;
 		pos.y = 0.5f * amount + sin(Time::time * speed) * amount;
-
-		if (spirit.habitatID == 2) pos.y *= 100.0f; // Temporary to account for the frog habitat being scaled
 		
 		spirit.object->SetPosition(pos);
 	}

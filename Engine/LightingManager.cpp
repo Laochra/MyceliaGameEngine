@@ -13,9 +13,9 @@ namespace LightingManager
 
 	uint shadowMapFBO = 0U;
 	uint shadowMaps = 0U;
-	uint shadowMapSideLength = 1024U;
+	uint shadowMapSideLength = 4096U;
 	uint shadowMapCount = 0U;
-	uint maxShadowMaps = 24U;
+	uint maxShadowMaps = 1U;
 
 	vector<LightObject*> GetClosestLightObjects(const vec3 position, const int count) noexcept
 	{

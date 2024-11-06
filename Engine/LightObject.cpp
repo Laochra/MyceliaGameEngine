@@ -16,6 +16,9 @@ void LightObject::SerialiseTo(json& jsonObj) const
 	memcpy(angleData.data(), &angle[0], 2 * sizeof(float));
 	jsonObj["Angle"] = angleData;
 
+	jsonObj["NearClip"] = nearClip;
+	jsonObj["FarClip"] = farClip;
+
 	vector<float> hdrColourData(4);
 	memcpy(hdrColourData.data(), &colour[0], 4 * sizeof(float));
 	jsonObj["HDRColour"] = hdrColourData;
@@ -31,6 +34,9 @@ void LightObject::DeserialiseFrom(const json& jsonObj, GuidGeneration guidOption
 	vector<float> angleData = jsonObj["Angle"];
 	memcpy(&angle[0], angleData.data(), 2 * sizeof(float));
 	
+	nearClip = jsonObj["NearClip"];
+	farClip = jsonObj["FarClip"];
+
 	vector<float> hdrColourData = jsonObj["HDRColour"];
 	memcpy(&colour[0], hdrColourData.data(), 4 * sizeof(float));
 
@@ -74,7 +80,7 @@ vector<mat4> LightObject::GetLightPVMatrices() noexcept
 	{
 		float fov = acos(angle[1]) * 2;
 		float aspect = 1;
-		mat4 projection = glm::perspective(fov, aspect, 10.000f, range * range * intensity);
+		mat4 projection = glm::perspective(fov, aspect, nearClip, farClip);
 
 		vec3 position = GetGlobalPosition();
 		vec3 up = glm::normalize((vec3)GetGlobalRotationMatrix()[1]);

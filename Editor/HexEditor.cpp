@@ -13,6 +13,7 @@
 #include "HexFog.h"
 
 #include "UIManager.h"
+#include "LightingManager.h"
 
 #include "HexGameSerialiser.h"
 
@@ -820,6 +821,20 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 		ImGui::EndTabBar();
 
 		GUI::Spacing(3);
+	}
+
+	GUI::Spacing(3);
+
+	if (ImGui::CollapsingHeader("Lighting"))
+	{
+		if (DrawPrefabInput("Light Object", HexGameInfo::lightingFilepath))
+		{
+			HexGameInfo::LoadLightingPrefab(HexGameInfo::lightingFilepath);
+		}
+
+		ImGui::SeparatorText("Ambient");
+		ImGui::ColorEdit3("Colour", (float*)&LightingManager::ambientLight.colour);
+		ImGui::DragFloat("Intensity", (float*)&LightingManager::ambientLight.intensity);
 	}
 
 	GUI::Spacing(3);

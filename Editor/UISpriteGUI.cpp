@@ -35,7 +35,7 @@ void UISpriteGUI::DrawUISpriteGUI(UISprite* uiSprite)
 			}
 		}
 		ImGui::SameLine();
-		std::string spritePath = uiSprite->GetSpritePath();
+		std::string spritePath = uiSprite->GetSpritePath() == nullptr ? nullptr : *uiSprite->GetSpritePath();
 		ImGui::InputText("Sprite", &spritePath, ImGuiInputTextFlags_ReadOnly);
 
 		GUI::Spacing(3);

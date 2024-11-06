@@ -107,6 +107,24 @@ void LightObjectGUI::DrawLightObjectGUI(LightObject* lightObject)
 		}
 		ImGui::EndDisabled();
 
+		if (lightObject->shadowMode != NoShadows)
+		{
+			if (ImGui::DragFloat("Near Clip", &lightObject->nearClip, 0.01f, 0.01f, FLT_MAX))
+			{
+				if (lightObject->nearClip >= lightObject->farClip)
+				{
+					lightObject->farClip = lightObject->nearClip + 0.01f;
+				}
+			}
+			if (ImGui::DragFloat("Far Clip", &lightObject->farClip, 1.0f, 1.0f, FLT_MAX))
+			{
+				if (lightObject->farClip <= lightObject->nearClip)
+				{
+					lightObject->nearClip = lightObject->farClip - 0.01f;
+				}
+			}
+		}
+
 		GUI::Spacing(1);
 
 		ImGui::SeparatorText("HDR Colour");

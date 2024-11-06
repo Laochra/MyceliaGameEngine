@@ -2,6 +2,7 @@
 
 #include "UIManager.h"
 #include "TextureManager.h"
+#include "LightingManager.h"
 
 #include "HexGameInfo.h"
 #include "TileData.h"
@@ -276,6 +277,20 @@ void HexGameSerialiser::LoadDataFrom(json& dataFile) noexcept
 		HexAudio::LoadFrom(audioData);
 	}
 
+	if (dataFile.contains("Lighting"))
+	{
+		json lightingJSON = dataFile["Lighting"];
+		HexGameInfo::lightingFilepath = lightingJSON["LightObject"];
+		if (HexGameInfo::lightingFilepath != "None")
+		{
+			HexGameInfo::LoadLightingPrefab(HexGameInfo::lightingFilepath);
+		}
+
+		vector<float> colour = lightingJSON["AmbientColour"];
+		LightingManager::ambientLight.colour = vec3(colour[0], colour[1], colour[2]);
+		LightingManager::ambientLight.intensity = lightingJSON["AmbientIntensity"];
+	}
+
 	if (dataFile.contains("Misc Colours"))
 	{
 		json miscColours = dataFile["Misc Colours"];
@@ -493,6 +508,21 @@ void HexGameSerialiser::SaveDataTo(json& dataFile) noexcept
 	{
 		HexAudio::SaveTo(audioJSON);
 		dataFile["Audio"] = audioJSON;
+	}
+
+	json lightingJSON;
+	{
+		lightingJSON["LightObject"] = HexGameInfo::lightingFilepath;
+
+		vector<float> colour {
+			LightingManager::ambientLight.colour.r,
+			LightingManager::ambientLight.colour.g,
+			LightingManager::ambientLight.colour.b
+		};
+		lightingJSON["AmbientColour"] = colour;
+		lightingJSON["AmbientIntensity"] = LightingManager::ambientLight.intensity;
+
+		dataFile["Lighting"] = lightingJSON;
 	}
 
 	json miscColours;
