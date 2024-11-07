@@ -24,6 +24,8 @@
 #include "HexGameSerialiser.h"
 
 #include "RandomGen.h"
+#include "UtilityFunctions.h"
+#include "Easing.h"
 
 #include "Application.h"
 #include "Debug.h"
@@ -486,6 +488,7 @@ void HexGame::OnPause() { }
 void HexGame::OnUnpause() { }
 
 void HexGame::FixedUpdate() { }
+
 void HexGame::Update()
 {
 	for (Spirit spirit : hexGrid->spirits)
@@ -499,6 +502,66 @@ void HexGame::Update()
 		pos.y = 0.5f * amount + sin(Time::time * speed) * amount;
 		
 		spirit.object->SetPosition(pos);
+	}
+
+	{
+		for (uint c = 0; c < hexGrid->columns; c++)
+		{
+			HexColumn& column = hexGrid->tiles[c];
+			for (uint r = 0; r < hexGrid->rows; r++)
+			{
+				HexTile& tile = column[r];
+				switch (tile.type)
+				{
+				case HexType::MotherTree:
+				{
+
+					break;
+				}
+				case HexType::Perimeter:
+				{
+					float t = 2.0f * ((Time::time * 0.4f) - std::floorf(Time::time * 0.4f));
+					t = t <= 1.0f ? Easing::QuadInOut(t) : 1.0f - Easing::QuadInOut(t - 1.0f);
+
+					tile.object->SetScale(Utility::Lerp(0.75f, 0.8f, t));
+
+					break;
+				}
+				case HexType::Tree:
+				{
+
+					break;
+				}
+				case HexType::Flower:
+				{
+
+					break;
+				}
+				case HexType::Water:
+				{
+					vec3 oldPos = tile.object->GetPosition();
+					bool isSelected = tile.object == selectedGameObject;
+					
+					float t = Utility::SimplexNoise(oldPos.x + Time::time * 0.1f, oldPos.z);
+					t = 2.0f * (t - std::floorf(t));
+					t = t <= 1.0f ? Easing::QuadInOut(t) : 1.0f - Easing::QuadInOut(t - 1.0f);
+
+					tile.object->SetPosition(vec3(oldPos.x, tileRaiseAmount * isSelected + Utility::Lerp(0.0f, 0.065f, t), oldPos.z));
+
+					break;
+				}
+				case HexType::Land:
+				{
+
+					break;
+				}
+				default:
+				{
+					break;
+				}
+				}
+			}
+		}
 	}
 
 	RadialMenu* currentRadialMenu;

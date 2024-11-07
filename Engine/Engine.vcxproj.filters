@@ -247,6 +247,12 @@
     <ClCompile Include="HexFog.cpp">
       <Filter>HexGame</Filter>
     </ClCompile>
+    <ClCompile Include="UtilityFunctions.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="SimplexNoise.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -615,6 +621,9 @@
     </ClInclude>
     <ClInclude Include="HexFog.h">
       <Filter>HexGame</Filter>
+    </ClInclude>
+    <ClInclude Include="UtilityFunctions.h">
+      <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

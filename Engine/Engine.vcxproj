@@ -241,6 +241,7 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
+    <ClCompile Include="SimplexNoise.cpp" />
     <ClCompile Include="SpiritData.cpp" />
     <ClCompile Include="StackTimer.cpp" />
     <ClCompile Include="StringBuilder.cpp" />
@@ -251,6 +252,7 @@
     <ClCompile Include="UIManager.cpp" />
     <ClCompile Include="UISprite.cpp" />
     <ClCompile Include="Updater.cpp" />
+    <ClCompile Include="UtilityFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\External\glad\glad.h" />
@@ -377,6 +379,7 @@
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="TimeManager.h" />
     <ClInclude Include="Updater.h" />
+    <ClInclude Include="UtilityFunctions.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
