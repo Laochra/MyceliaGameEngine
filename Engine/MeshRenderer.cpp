@@ -67,6 +67,8 @@ void MeshRenderer::Draw(intptr_t lastUsedMaterial)
 		// Bind Shader
 		sp.Bind();
 
+		sp.BindUniform("Time", Time::time);
+
 		// Bind Camera Posiiton
 		sp.BindUniform("CameraPosition", AppInfo::ActiveCamera()->GetGlobalPosition());
 	}
@@ -254,11 +256,24 @@ void MeshRenderer::DrawDepth(mat4 PVMatrix)
 {
 	if (mesh == nullptr) return;
 
-	ShaderProgram* depthProgram = shaderManager->GetProgram("DepthOnly");
+	ShaderProgram* depthProgram = nullptr;
+	if (memcmp(material->shaderProgram->GetFilepath(), "Assets\\Shaders\\Foliage.gpu", 27) == 0)
+	{
+		depthProgram = shaderManager->GetProgram("Assets\\Shaders\\DepthOnlyFoliage.gpu");
+	}
+	else if (false) // To be used for spirit vertex animation shader
+	{
+
+	}
+	else
+	{
+		depthProgram = shaderManager->GetProgram("DepthOnly");
+	}
 	depthProgram->Bind();
 
 	depthProgram->BindUniform("ProjectionViewModel", PVMatrix * GetMatrix());
-
+	depthProgram->BindUniform("ModelMatrix", GetMatrix());
+	depthProgram->BindUniform("Time", Time::time);
 	for (int i = 0; i < material->uniforms.size(); i++)
 	{
 		if (material->uniforms[i].name == "ColourMap")
