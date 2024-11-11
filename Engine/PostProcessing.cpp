@@ -171,7 +171,7 @@ void PostProcess::Defaults::RefreshHDRToLDR(
 	glBindFramebuffer(GL_FRAMEBUFFER, hdrToLDRFBO);
 
 	glBindTexture(GL_TEXTURE_2D, ldrTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, AppInfo::screenWidth, AppInfo::screenHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, AppInfo::screenWidth * RES_FACTOR, AppInfo::screenHeight * RES_FACTOR, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -191,7 +191,7 @@ void PostProcess::Defaults::DrawHDRToLDR(
 	const uint& uiTexture = *textures[2];
 	uint& ldrTexture = *textures[3];
 
-	glViewport(0, 0, AppInfo::screenWidth, AppInfo::screenHeight);
+	glViewport(0, 0, AppInfo::screenWidth * RES_FACTOR, AppInfo::screenHeight * RES_FACTOR);
 
 	// If not intentionally targetting the back buffer initialise a new one
 	if (textures[3] != nullptr && hdrToLDRFBO == 0)
@@ -249,7 +249,7 @@ void PostProcess::Defaults::RefreshFXAA(
 	glBindFramebuffer(GL_FRAMEBUFFER, fxaaFBO);
 
 	glBindTexture(GL_TEXTURE_2D, outputTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, AppInfo::screenWidth * RES_FACTOR, AppInfo::screenHeight * RES_FACTOR, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, AppInfo::screenWidth, AppInfo::screenHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -266,6 +266,8 @@ void PostProcess::Defaults::DrawFXAA(
 
 	const uint& inputTexture = *textures[0];
 	uint& outputTexture = *textures[1];
+
+	glViewport(0, 0, AppInfo::screenWidth, AppInfo::screenHeight);
 
 	// If not intentionally targetting the back buffer initialise a new one
 	if (textures[1] != nullptr && fxaaFBO == 0)
