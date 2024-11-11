@@ -61,7 +61,7 @@ static void RefreshUI(uint& uiFBO, uint& uiTexture)
 	glBindFramebuffer(GL_FRAMEBUFFER, uiFBO);
 
 	glBindTexture(GL_TEXTURE_2D, uiTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, AppInfo::screenWidth, AppInfo::screenHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, AppInfo::screenWidth * RES_FACTOR, AppInfo::screenHeight * RES_FACTOR, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -192,7 +192,7 @@ static void RefreshOutline(
 	glBindFramebuffer(GL_FRAMEBUFFER, outlineFBO);
 
 	glBindTexture(GL_TEXTURE_2D, outlinedTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, AppInfo::screenWidth, AppInfo::screenHeight, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, AppInfo::screenWidth * RES_FACTOR, AppInfo::screenHeight * RES_FACTOR, 0, GL_RGBA, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -212,7 +212,7 @@ static void DrawOutline(
 	const uint& idTexture = *textures[2];
 	uint& outlinedTexture = *textures[3];
 
-	glViewport(0, 0, AppInfo::screenWidth, AppInfo::screenHeight);
+	glViewport(0, 0, AppInfo::screenWidth * RES_FACTOR, AppInfo::screenHeight * RES_FACTOR);
 
 	// If not intentionally targetting the back buffer initialise a new one
 	if (textures[3] != nullptr && outlineFBO == 0)
@@ -236,7 +236,7 @@ static void DrawOutline(
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, idTexture);
 	outlineProgram.BindUniform("IDMap", 2);
-	outlineProgram.BindUniform("PixelSize", 1.0f / vec2(AppInfo::screenWidth, AppInfo::screenHeight));
+	outlineProgram.BindUniform("PixelSize", 1.0f / vec2(AppInfo::screenWidth * RES_FACTOR, AppInfo::screenHeight * RES_FACTOR));
 
 	PostProcess::Defaults::screenQuad->Draw();
 

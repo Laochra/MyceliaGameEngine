@@ -10,6 +10,8 @@
 
 #include "Debug.h"
 
+#include "HexGameInfo.h"
+
 GameObjectManager* gameObjectManager;
 
 GameObjectManager::~GameObjectManager() noexcept
@@ -227,7 +229,7 @@ static void DrawGizmos(uint& gizmosTexture, GameObjectManager::DrawFunc drawTran
 	if (AppInfo::screenSizeJustChanged)
 	{
 		glBindTexture(GL_TEXTURE_2D, gizmosTexture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, AppInfo::screenWidth, AppInfo::screenHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, AppInfo::screenWidth * RES_FACTOR, AppInfo::screenHeight * RES_FACTOR, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -275,7 +277,7 @@ void GameObjectManager::DrawScene(
 	if (AppInfo::screenSizeJustChanged)
 	{
 		glBindRenderbuffer(GL_RENDERBUFFER, depth);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, AppInfo::screenWidth, AppInfo::screenHeight);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, AppInfo::screenWidth * RES_FACTOR, AppInfo::screenHeight * RES_FACTOR);
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depth);
 
@@ -286,14 +288,14 @@ void GameObjectManager::DrawScene(
 			case 0: glBindTexture(GL_TEXTURE_2D, texture); break;
 			case 1: glBindTexture(GL_TEXTURE_2D, positionTexture); break;
 			}
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, AppInfo::screenWidth, AppInfo::screenHeight, 0, GL_RGBA, GL_FLOAT, NULL);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, AppInfo::screenWidth * RES_FACTOR, AppInfo::screenHeight * RES_FACTOR, 0, GL_RGBA, GL_FLOAT, NULL);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		}
 		glBindTexture(GL_TEXTURE_2D, idTexture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RG32UI, AppInfo::screenWidth, AppInfo::screenHeight, 0, GL_RG_INTEGER, GL_UNSIGNED_INT, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RG32UI, AppInfo::screenWidth * RES_FACTOR, AppInfo::screenHeight * RES_FACTOR, 0, GL_RG_INTEGER, GL_UNSIGNED_INT, NULL);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -310,7 +312,9 @@ void GameObjectManager::DrawScene(
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glViewport(0, 0, AppInfo::screenWidth, AppInfo::screenHeight);
+	glViewport(0, 0, AppInfo::screenWidth * RES_FACTOR, AppInfo::screenHeight * RES_FACTOR);
+
+	glDisable(GL_CULL_FACE);
 
 	Updater::CallDraw();
 

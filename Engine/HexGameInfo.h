@@ -9,6 +9,8 @@ using std::string;
 class GameObject3D;
 class LightObject;
 
+#define RES_FACTOR 1
+
 struct HexGameInfo
 {
 	static vec4 highlightColour;

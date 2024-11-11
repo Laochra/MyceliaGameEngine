@@ -5,6 +5,8 @@
 
 #include "MeshManager.h"
 
+#include "HexGameInfo.h"
+
 vector<PostProcess> PostProcessStack::postProcesses;
 
 PostProcess::PostProcess(
@@ -247,7 +249,7 @@ void PostProcess::Defaults::RefreshFXAA(
 	glBindFramebuffer(GL_FRAMEBUFFER, fxaaFBO);
 
 	glBindTexture(GL_TEXTURE_2D, outputTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, AppInfo::screenWidth, AppInfo::screenHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, AppInfo::screenWidth * RES_FACTOR, AppInfo::screenHeight * RES_FACTOR, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBindTexture(GL_TEXTURE_2D, 0);
