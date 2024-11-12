@@ -1,6 +1,10 @@
 #include "TileData.h"
 #include "UISprite.h"
 
+#include "MaterialManager.h"
+#include "MeshManager.h"
+#include "TextureManager.h"
+
 #include "Debug.h"
 
 std::array<vector<TileData>, 4> TileData::tilesData;
@@ -97,12 +101,25 @@ void TileData::ClearAndReset() noexcept
 	}
 }
 
-#include "MaterialManager.h"
 static void RecursiveLoadMaterial(json& jsonObj) noexcept
 {
 	if (jsonObj.contains("Material"))
 	{
-		materialManager->GetMaterial(string(jsonObj["Material"]).c_str());
+		Material* material = materialManager->GetMaterial(string(jsonObj["Material"]).c_str());
+		meshManager->GetMesh(string(jsonObj["Mesh"]).c_str());
+
+		for (MaterialInput& uniform : material->uniforms)
+		{
+			if (uniform.type == ShaderInputType::TextureGL)
+			{
+				string filepath = uniform.GetAsFilepath();
+				filepath.pop_back();
+				if (filepath != "None")
+				{
+					textureManager->GetTexture(filepath, uniform.name == "ColourMap");
+				}
+			}
+		}
 	}
 
 	vector<json> children = jsonObj["Children"];

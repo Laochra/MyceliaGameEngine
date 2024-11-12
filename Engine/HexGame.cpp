@@ -354,14 +354,18 @@ void HexGame::Initialise(uint* renderTargetInit)
 
 	LoadTileData();
 
-	// Preload
-	//for (std::vector<TileData>& tileType : TileData::tilesData)
-	//{
-	//	for (TileData& tileVariant : tileType)
-	//	{
-	//		TileData::GetPrefab(tileVariant.name);
-	//	}
-	//}
+	// Prefer quicker iteration in editor and no hitches in standalone
+	if (!AppInfo::CompareState(AppState::Editor))
+	{
+		// Preload
+		for (std::vector<TileData>& tileType : TileData::tilesData)
+		{
+			for (TileData& tileVariant : tileType)
+			{
+				TileData::GetPrefab(tileVariant.name);
+			}
+		}
+	}
 
 
 	hexGrid = GameObject::Instantiate<HexGrid>();

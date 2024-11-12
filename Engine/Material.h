@@ -102,4 +102,5 @@ protected:
 	map<string, uint> boundTextureHandles;
 
 	friend class MeshRenderer;
+	friend void RecursiveLoadMaterial(json& jsonObj) noexcept;
 };

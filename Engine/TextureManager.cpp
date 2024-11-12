@@ -62,10 +62,19 @@ Texture* TextureManager::GetTexture(const char* filepath, bool isNonlinear, bool
 }
 Texture* TextureManager::GetTexture(const string& filepath, bool isNonlinear, bool wrap, Texture::Filter filter)
 {
+   if (filepath == "None") return nullptr;
+
    auto it = loadedTextures.find(filepath);
 
-   if (it == loadedTextures.end()) return AddTexture(filepath, isNonlinear, wrap, filter);
-   else return it->second;
+   if (it == loadedTextures.end())
+   {
+      it = loadedTextures.find(filepath);
+      return AddTexture(filepath, isNonlinear, wrap, filter);
+   }
+   else
+   {
+      return it->second;
+   }
 }
 
 void TextureManager::ReloadTexture(const string& filepath)
