@@ -21,6 +21,7 @@ public:
 	ushort radialSlices = 3;
 	vector<bool> sliceEnabledFlags = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
 	bool enabled = false;
+	bool initialInputGiven = false;
 
 	RadialMenu(const char* regularSprite, const char* hoveredSprite, const char* disabledSprite) noexcept;
 	~RadialMenu() noexcept;

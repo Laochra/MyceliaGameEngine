@@ -49,41 +49,64 @@ RadialMenu::~RadialMenu() noexcept
 	glDeleteTextures(1, &spriteArray);
 }
 
+static uint GetSliceFromInput(vec2 input, ushort radialSlices)
+{
+	vec2 inputDirection = input / glm::length(input);
+
+	float increment = 360.0f / radialSlices;
+	vector<vec2> directions;
+	for (ushort i = 0; i < radialSlices; i++)
+	{
+		float rad = glm::radians(-increment * i);
+		vec2 dir(std::sin(rad), std::cos(rad));
+
+		directions.push_back(dir);
+	}
+	
+	ushort correctIndex = 0;
+	
+	for (ushort i = 1; i != (ushort)directions.size(); i++)
+	{
+		if (glm::dot(inputDirection, directions[i]) > glm::dot(inputDirection, directions[correctIndex]))
+		{
+			correctIndex = i;
+		}
+	}
+
+	return correctIndex;
+}
 void RadialMenu::Update(vec2 input, InputBind interactKey) noexcept
 {
 	if (!enabled) return;
-	lastInput = input;
+
+	float inputMagSqr = glm::length2(input);
+	bool noInput = inputMagSqr < deadzoneMagnitudeSqr;
+	
+	if (noInput)
+	{
+		if (!initialInputGiven) lastInput = vec2(0.0f, 1.0f);
+		input = lastInput;
+		inputMagSqr = glm::length2(input);
+	}
+
+	ushort correctIndex = GetSliceFromInput(input, radialSlices);
+	if (!sliceEnabledFlags[correctIndex])
+	{
+		correctIndex = GetSliceFromInput(lastInput, radialSlices);
+		input = lastInput;
+	}
 
 	if (interactKey.pressed())
 	{
-		float inputMagSqr = glm::length2(input);
-		vec2 inputDirection = input / sqrt(inputMagSqr);
+		interactionHandler(correctIndex);
+		lastInput = vec2();
+		initialInputGiven = false;
+	}
 
-		if (inputMagSqr < deadzoneMagnitudeSqr) return;
-
-		float increment = 360.0f / radialSlices;
-		vector<vec2> directions;
-		for (ushort i = 0; i < radialSlices; i++)
-		{
-			float rad = glm::radians(-increment * i);
-			vec2 dir(std::sin(rad), std::cos(rad));
-
-			directions.push_back(dir);
-		}
-
-		ushort correctIndex = 0;
-		for (ushort i = 1; i != (ushort)directions.size(); i++)
-		{
-			if (glm::dot(inputDirection, directions[i]) > glm::dot(inputDirection, directions[correctIndex]))
-			{
-				correctIndex = i;
-			}
-		}
-
-		if (sliceEnabledFlags[correctIndex])
-		{
-			interactionHandler(correctIndex);
-		}
+	if (!noInput)
+	{
+		initialInputGiven = true;
+		lastInput = input;
 	}
 }
 

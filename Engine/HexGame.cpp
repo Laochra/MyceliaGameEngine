@@ -110,13 +110,18 @@ void HexGame::SetState(HexGame::State newState) noexcept
 	}
 	case HexGame::State::Radial:
 	{
+		RadialMenu* currentRadial;
 		switch (currentRadialPage)
 		{
-		default: treeRadial->enabled = false;		break;
-		case 1U: flowerRadial->enabled = false;	break;
-		case 2U: waterRadial->enabled = false;		break;
-		case 3U: landRadial->enabled = false;		break;
+		default: currentRadial = treeRadial;	break;
+		case 1U: currentRadial = flowerRadial;	break;
+		case 2U: currentRadial = waterRadial;	break;
+		case 3U: currentRadial = landRadial;	break;
 		}
+		currentRadial->enabled = false;
+		currentRadial->lastInput = vec2();
+		currentRadial->initialInputGiven = false;
+
 		HexAudio::PlayMiscSFX(HexAudio::SoundEffect::RadialClose);
 		break;
 	}
@@ -144,13 +149,15 @@ void HexGame::SetState(HexGame::State newState) noexcept
 	}
 	case HexGame::State::Radial:
 	{
+		RadialMenu* currentRadial;
 		switch (currentRadialPage)
 		{
-		default: treeRadial->enabled = true;		break;
-		case 1U: flowerRadial->enabled = true;		break;
-		case 2U: waterRadial->enabled = true;		break;
-		case 3U: landRadial->enabled = true;		break;
+		default: currentRadial = treeRadial;	break;
+		case 1U: currentRadial = flowerRadial;	break;
+		case 2U: currentRadial = waterRadial;	break;
+		case 3U: currentRadial = landRadial;	break;
 		}
+		currentRadial->enabled = true;
 		HexAudio::PlayMiscSFX(HexAudio::SoundEffect::RadialOpen);
 		break;
 	}
@@ -631,6 +638,8 @@ void HexGame::Update()
 		{
 			HexAudio::PlayMiscSFX(HexAudio::SoundEffect::RadialCyclePage);
 			currentRadialMenu->enabled = false;
+			currentRadialMenu->lastInput = vec2();
+			currentRadialMenu->initialInputGiven = false;
 
 			if (currentRadialPage == 0) currentRadialPage = 3U;
 			else currentRadialPage = currentRadialPage - 1U;
@@ -649,6 +658,8 @@ void HexGame::Update()
 		{
 			HexAudio::PlayMiscSFX(HexAudio::SoundEffect::RadialCyclePage);
 			currentRadialMenu->enabled = false;
+			currentRadialMenu->lastInput = vec2();
+			currentRadialMenu->initialInputGiven = false;
 
 			if (currentRadialPage == 3U) currentRadialPage = 0U;
 			else currentRadialPage = currentRadialPage + 1U;
