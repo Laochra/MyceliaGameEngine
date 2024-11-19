@@ -145,7 +145,7 @@ void main() // Fragment
 	float NdotL = dot(lightDirection, oNormal);
 	
 	float lightIntensity = smoothstep(0.0, 0.01, NdotL);
-	float toonShadow = smoothstep(0.2, 0.205, shadow);
+	float toonShadow = Remap(clamp(shadow, 0.4, 0.5), 0.4, 0.5, 0.0, 1.0);
 	lightIntensity *= toonShadow;
 	
 	vec3 light = lightIntensity * LightObjects[0].colour;
@@ -235,16 +235,16 @@ float ShadowCalculation(int lightObjectIndex, vec3 lightDirection)
 	else // Soft Shadows
 	{
 		vec2 texelSize = vec2(1.0 / textureSize(ShadowMaps, 0));
-		for (float x = -1.5; x <= 1.5; x += 1.0)
+		for (float x = -3.5; x <= 3.5; x += 1.0)
 		{
-			for (float y = -1.5; y <= 1.5; y += 1.0)
+			for (float y = -3.5; y <= 3.5; y += 1.0)
 			{
 				float pcfDepth = texture(ShadowMaps, vec3(coords.xy + vec2(x,y) * texelSize, mapIndex)).r;
 				shadow += currentDepth - shadowBias > pcfDepth ? 1.0 : 0.0; // 1 means no light, 0 means light
 			}
 		}
 		
-		shadow /= 16.0;
+		shadow /= 64.0;
 	}
 	
 	return shadow;

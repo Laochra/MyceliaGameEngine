@@ -506,11 +506,13 @@ void HexGame::Update()
 	{
 		if (spirit.object == nullptr) continue;
 
+		bool isSelected = hexGrid->habitats[spirit.habitatID].object == selectedGameObject;
+
 		vec3 pos = spirit.object->GetPosition();
 
 		const float speed = 0.75f;
 		const float amount = 0.1f;
-		pos.y = 0.5f * amount + sin(Time::time * speed) * amount;
+		pos.y = (isSelected * tileRaiseAmount * 3) + 0.5f * amount + sin(Time::time * speed) * amount;
 		
 		spirit.object->SetPosition(pos);
 	}
