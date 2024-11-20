@@ -9,7 +9,8 @@ using std::string;
 class GameObject3D;
 class LightObject;
 
-#define RES_FACTOR 1
+#define RES_FACTOR 2
+#define SHADOW_RES_FACTOR 4
 
 struct HexGameInfo
 {

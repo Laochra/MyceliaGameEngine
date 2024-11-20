@@ -15,7 +15,7 @@ namespace LightingManager
 
 	uint shadowMapFBO = 0U;
 	uint shadowMaps = 0U;
-	uint shadowMapSideLength = 4096U * RES_FACTOR;
+	uint shadowMapSideLength = 1024U * SHADOW_RES_FACTOR;
 	uint shadowMapCount = 0U;
 	uint maxShadowMaps = 1U;
 
