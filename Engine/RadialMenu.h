@@ -17,7 +17,9 @@ public:
 	float scale = 0.75f;
 	float deadzoneMagnitudeSqr = 0.15f * 0.15f;
 	vec2 lastInput;
+	int lastHovered = 0;
 	InteractFunc interactionHandler;
+	InteractFunc hoverChangeHandler;
 	ushort radialSlices = 3;
 	vector<bool> sliceEnabledFlags = { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
 	bool enabled = false;

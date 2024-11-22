@@ -15,10 +15,12 @@ using SoundEffect = HexAudio::SoundEffect;
 map<SoundEffect, string> HexAudio::soundEffectNames {
 	{ SoundEffect::PlaceTree, "PlaceTree" }, { SoundEffect::PlaceFlower, "PlaceFlower" }, { SoundEffect::PlaceWater, "PlaceWater" }, { SoundEffect::PlaceLand, "PlaceLand" },
 	{ SoundEffect::FormHabitat, "FormHabitat" },
-	{ SoundEffect::RadialOpen, "RadialOpen" }, { SoundEffect::RadialClose, "RadialClose" }, { SoundEffect::RadialCyclePage, "RadialCyclePage" }, { SoundEffect::RadialCycleDensity, "RadialCycleDensity" },
-	{ SoundEffect::ScrapbookOpen, "ScrapbookOpen" }, { SoundEffect::ScrapbookClose, "ScrapbookClose" }, { SoundEffect::ScrapbookTurnPage, "ScrapbookTurnPage" }, { SoundEffect::ScrapbookNotification, "ScrapbookNotification" }, { SoundEffect::ScrapbookNewHabitatPage, "ScrapbookNewHabitatPage" },
+	{ SoundEffect::VariantUnlock, "VariantUnlock" }, { SoundEffect::FogMove, "FogMove" },
+	{ SoundEffect::RadialOpen, "RadialOpen" }, { SoundEffect::RadialClose, "RadialClose" }, { SoundEffect::RadialSelect, "RadialSelect" }, { SoundEffect::RadialHover, "RadialHover" }, { SoundEffect::RadialCyclePage, "RadialCyclePage" },
+	{ SoundEffect::ScrapbookOpen, "ScrapbookOpen" }, { SoundEffect::ScrapbookClose, "ScrapbookClose" }, { SoundEffect::ScrapbookStickerPlace, "ScrapbookStickerPlace" },
+	{ SoundEffect::MenuSelect, "MenuSelect" },
 };
-string HexAudio::soundEffects[SoundEffect_Count] { "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None" };
+string HexAudio::soundEffects[SoundEffect_Count] { "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None" };
 float HexAudio::sfxVolume = 1.0f;
 
 void HexAudio::BeginMusic() noexcept
@@ -116,7 +118,11 @@ void HexAudio::LoadFrom(const json& jsonObj) noexcept
 	{
 		for (int s = 0; s < SoundEffect_Count; s++)
 		{
-			soundEffects[s] = (*soundEffectsJSONIt)[soundEffectNames[SoundEffect(s)]];
+			string& name = soundEffectNames[SoundEffect(s)];
+			if (soundEffectsJSONIt->contains(name))
+			{
+				soundEffects[s] = (*soundEffectsJSONIt)[name];
+			}
 		}
 		sfxVolume = jsonObj["SoundEffectsVolume"];
 	}

@@ -3,9 +3,14 @@
 #include "TileData.h"
 #include "HexScrapbook.h"
 #include "HexFog.h"
+#include "HexAudio.h"
 
 #include "Easing.h"
 #include "TimeManager.h"
+
+#include "AppInfo.h"
+#include "Application.h"
+#include "HexGame.h"
 
 std::vector<HexProgression::Milestone> HexProgression::lifeMilestones;
 
@@ -221,6 +226,7 @@ class HabitatStickerEvent : public Coroutine::Function<HabitatStickerEventData>
 			if (finished)
 			{
 				data.stage = Data::Stage::CloseScrapbook;
+				HexAudio::PlayMiscSFX(HexAudio::ScrapbookStickerPlace);
 				CoroutineYieldFor(HexProgression::stickerEvent.closeDelay);
 			}
 			else
@@ -241,6 +247,9 @@ class HabitatStickerEvent : public Coroutine::Function<HabitatStickerEventData>
 			HexFog::AnimateFogTo((float)HexProgression::currentRadius);
 			data.stage = Data::Stage::WaitingToEnd;
 			float increaseAmount = HexProgression::currentRadius - HexFog::currentRadius;
+			HexAudio::PlayMiscSFX(HexAudio::FogMove);
+			((HexGame*)AppInfo::application->game)->SetState(HexGame::State::Place);
+
 			CoroutineYieldFor(increaseAmount * (1.0f / HexFog::animationSpeed) + HexProgression::stickerEvent.endDelay);
 			break;
 		}

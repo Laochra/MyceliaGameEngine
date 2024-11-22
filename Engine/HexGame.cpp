@@ -43,11 +43,16 @@ void static RadialInteractionHandler(int selection)
 			if (spriteFilepath != "None")
 			{
 				TileData::selectedTile->Load(spriteFilepath.c_str());
+				HexAudio::PlayMiscSFX(HexAudio::RadialSelect);
 			}
 		}
 	}
 	
 	((HexGame*)AppInfo::application->game)->SetState(HexGame::State::Place);
+}
+void static RadialHoverHandler(int selection)
+{
+	HexAudio::PlayMiscSFX(HexAudio::RadialHover);
 }
 
 static void RefreshUI(uint& uiFBO, uint& uiTexture)
@@ -120,9 +125,9 @@ void HexGame::SetState(HexGame::State newState) noexcept
 		}
 		currentRadial->enabled = false;
 		currentRadial->lastInput = vec2();
+		currentRadial->lastHovered = 0;
 		currentRadial->initialInputGiven = false;
 
-		HexAudio::PlayMiscSFX(HexAudio::SoundEffect::RadialClose);
 		break;
 	}
 	case HexGame::State::Scrapbook:
@@ -403,13 +408,17 @@ void HexGame::OnStart()
 	hexGrid->InitialiseCentre();
 
 	treeRadial = new RadialMenu(HexRadial::treeRadialSprites[0].c_str(), HexRadial::treeRadialSprites[1].c_str(), HexRadial::treeRadialSprites[2].c_str());
-	treeRadial->interactionHandler = { (RadialMenu::InteractFunc)RadialInteractionHandler };
+	treeRadial->interactionHandler = (RadialMenu::InteractFunc)RadialInteractionHandler;
+	treeRadial->hoverChangeHandler = (RadialMenu::InteractFunc)RadialHoverHandler;
 	flowerRadial = new RadialMenu(HexRadial::flowerRadialSprites[0].c_str(), HexRadial::flowerRadialSprites[1].c_str(), HexRadial::flowerRadialSprites[2].c_str());
-	flowerRadial->interactionHandler = { (RadialMenu::InteractFunc)RadialInteractionHandler };
+	flowerRadial->interactionHandler = (RadialMenu::InteractFunc)RadialInteractionHandler;
+	flowerRadial->hoverChangeHandler = (RadialMenu::InteractFunc)RadialHoverHandler;
 	waterRadial = new RadialMenu(HexRadial::waterRadialSprites[0].c_str(), HexRadial::waterRadialSprites[1].c_str(), HexRadial::waterRadialSprites[2].c_str());
-	waterRadial->interactionHandler = { (RadialMenu::InteractFunc)RadialInteractionHandler };
+	waterRadial->interactionHandler = (RadialMenu::InteractFunc)RadialInteractionHandler;
+	waterRadial->hoverChangeHandler = (RadialMenu::InteractFunc)RadialHoverHandler;
 	landRadial = new RadialMenu(HexRadial::landRadialSprites[0].c_str(), HexRadial::landRadialSprites[1].c_str(), HexRadial::landRadialSprites[2].c_str());
-	landRadial->interactionHandler = { (RadialMenu::InteractFunc)RadialInteractionHandler };
+	landRadial->interactionHandler = (RadialMenu::InteractFunc)RadialInteractionHandler;
+	landRadial->hoverChangeHandler = (RadialMenu::InteractFunc)RadialHoverHandler;
 
 	currentRadialPage = 0U;
 	currentTileType = &TileData::Get(HexType::Tree);
@@ -623,8 +632,7 @@ void HexGame::Update()
 
 					if (returnInfo.value & HexGrid::UpdateTileReturnInfo::MilestoneReached)
 					{
-						//HexAudio::PlayMiscSFX(HexAudio::SoundEffect::MilestoneReached);
-						// TODO: Play MilestoneReached SFX
+						HexAudio::PlayMiscSFX(HexAudio::SoundEffect::VariantUnlock);
 					}
 				}
 			}
@@ -676,7 +684,11 @@ void HexGame::Update()
 			currentRadialTileType = &TileData::Get(HexType(currentRadialPage));
 			currentRadialMenu->enabled = true;
 		}
-		if (gameInputs.radialClose.pressed()) SetState(HexGame::State::Place);
+		if (gameInputs.radialClose.pressed())
+		{
+			SetState(HexGame::State::Place);
+			HexAudio::PlayMiscSFX(HexAudio::SoundEffect::RadialClose);
+		}
 
 		for (ushort i = 0; i < (ushort)currentTileType->size(); i++)
 		{
@@ -691,10 +703,7 @@ void HexGame::Update()
 	}
 	case HexGame::State::StickerEvent:
 	{
-		if (currentEvent->function == nullptr)
-		{
-			SetState(State::Place);
-		}
+		break;
 	}
 	}
 

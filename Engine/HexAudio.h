@@ -30,19 +30,23 @@ public:
 
 		FormHabitat,
 
+		VariantUnlock,
+		FogMove,
+
 		RadialOpen,
 		RadialClose,
+		RadialSelect,
+		RadialHover,
 		RadialCyclePage,
-		RadialCycleDensity,
 
 		ScrapbookOpen,
 		ScrapbookClose,
-		ScrapbookTurnPage,
-		ScrapbookNotification,
-		ScrapbookNewHabitatPage,
+		ScrapbookStickerPlace,
+
+		MenuSelect,
 
 		SoundEffect_First = PlaceTree,
-		SoundEffect_Last = ScrapbookNewHabitatPage,
+		SoundEffect_Last = MenuSelect,
 		SoundEffect_Count = SoundEffect_Last + 1
 	};
 	static string soundEffects[SoundEffect_Count];

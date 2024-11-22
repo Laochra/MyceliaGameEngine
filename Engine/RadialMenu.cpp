@@ -49,7 +49,7 @@ RadialMenu::~RadialMenu() noexcept
 	glDeleteTextures(1, &spriteArray);
 }
 
-static uint GetSliceFromInput(vec2 input, ushort radialSlices)
+static int GetSliceFromInput(vec2 input, ushort radialSlices)
 {
 	vec2 inputDirection = input / glm::length(input);
 
@@ -63,7 +63,7 @@ static uint GetSliceFromInput(vec2 input, ushort radialSlices)
 		directions.push_back(dir);
 	}
 	
-	ushort correctIndex = 0;
+	int correctIndex = 0;
 	
 	for (ushort i = 1; i != (ushort)directions.size(); i++)
 	{
@@ -89,10 +89,10 @@ void RadialMenu::Update(vec2 input, InputBind interactKey) noexcept
 		inputMagSqr = glm::length2(input);
 	}
 
-	ushort correctIndex = GetSliceFromInput(input, radialSlices);
+	int correctIndex = GetSliceFromInput(input, radialSlices);
 	if (!sliceEnabledFlags[correctIndex])
 	{
-		correctIndex = GetSliceFromInput(lastInput, radialSlices);
+		correctIndex = lastHovered;
 		input = lastInput;
 	}
 
@@ -100,7 +100,13 @@ void RadialMenu::Update(vec2 input, InputBind interactKey) noexcept
 	{
 		interactionHandler(correctIndex);
 		lastInput = vec2();
+		lastHovered = 0;
 		initialInputGiven = false;
+	}
+	else if (lastHovered != correctIndex)
+	{
+		hoverChangeHandler(correctIndex);
+		lastHovered = correctIndex;
 	}
 
 	if (!noInput)

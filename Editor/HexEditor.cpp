@@ -796,12 +796,21 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 
 			GUI::Spacing(3);
 
+			ImGui::PushID("Progression");
+			ImGui::Text("Progression");
+			DrawAudioInput("VariantUnlock", HexAudio::soundEffects[SoundEffect::VariantUnlock]);
+			DrawAudioInput("FogMove", HexAudio::soundEffects[SoundEffect::FogMove]);
+			ImGui::PopID();
+
+			GUI::Spacing(3);
+
 			ImGui::PushID("RadialMenu");
 			ImGui::Text("Radial Menu");
 			DrawAudioInput("Open", HexAudio::soundEffects[SoundEffect::RadialOpen]);
 			DrawAudioInput("Close", HexAudio::soundEffects[SoundEffect::RadialClose]);
+			DrawAudioInput("Select", HexAudio::soundEffects[SoundEffect::RadialSelect]);
+			DrawAudioInput("Hover", HexAudio::soundEffects[SoundEffect::RadialHover]);
 			DrawAudioInput("Cycle Page", HexAudio::soundEffects[SoundEffect::RadialCyclePage]);
-			DrawAudioInput("Cycle Density", HexAudio::soundEffects[SoundEffect::RadialCycleDensity]);
 			ImGui::PopID();
 
 			GUI::Spacing(3);
@@ -810,10 +819,12 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 			ImGui::Text("Scrapbook");
 			DrawAudioInput("Open", HexAudio::soundEffects[SoundEffect::ScrapbookOpen]);
 			DrawAudioInput("Close", HexAudio::soundEffects[SoundEffect::ScrapbookClose]);
-			DrawAudioInput("Page Turn", HexAudio::soundEffects[SoundEffect::ScrapbookTurnPage]);
-			DrawAudioInput("Notification", HexAudio::soundEffects[SoundEffect::ScrapbookNotification]);
-			DrawAudioInput("New Habitat", HexAudio::soundEffects[SoundEffect::ScrapbookNewHabitatPage]);
+			DrawAudioInput("Sticker", HexAudio::soundEffects[SoundEffect::ScrapbookStickerPlace]);
 			ImGui::PopID();
+
+			GUI::Spacing(3);
+
+			DrawAudioInput("MenuSelect", HexAudio::soundEffects[SoundEffect::MenuSelect]);
 
 			if (!AppInfo::CompareState(AppState::Editor)) ImGui::EndDisabled();
 			ImGui::EndTabItem();
