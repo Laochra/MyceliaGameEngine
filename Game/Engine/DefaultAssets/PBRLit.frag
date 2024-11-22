@@ -51,6 +51,8 @@ uniform int Selected;
 
 uniform vec4 HighlightColour;
 
+uniform float Time;
+
 #define HEX_GRID_RADIUS 14
 uniform sampler2D FogMap;
 uniform vec3 FogColour;
@@ -80,7 +82,7 @@ void main() // Fragment
 	
 	float fogSideLength = textureSize(FogMap, 0).x;
 	float hexSize = fogSideLength / (HEX_GRID_RADIUS * 2 + 1);
-	vec2 fogCoord = (vec2(fogSideLength * 0.5) + FragPos.xz * vec2(hexSize)) / fogSideLength;
+	vec2 fogCoord = (vec2(fogSideLength * 0.5) + FragPos.xz * vec2(hexSize)) / fogSideLength + (Simplex2D(5 * vec2(FragPos.x + 0.05 * Time, FragPos.y + 0.025 * Time)) * 2 / fogSideLength);
 	vec2 fogData = texture(FogMap, fogCoord, 0).rg;
 	double fogValue = fogData.r * 10.0 + fogData.g;
 	
@@ -160,6 +162,12 @@ void main() // Fragment
 	double inner = FogRadius - FogGradientRange;
 	double outer = FogRadius;
 	double fogFactor = RemapD(clamp(fogValue, inner, outer), inner, outer, 0, 1);
+	
+	if (fogFactor > 0)
+	{
+		IDColour = uvec2(0, 0);
+		fogFactor = 1;
+	}
 	
 	FragColour.rgb = vec3(mix(FragColour.rgb, FogColour, fogFactor));
 }
