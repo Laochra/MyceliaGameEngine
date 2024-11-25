@@ -58,6 +58,16 @@ void Editor::Update()
 	if (AppInfo::CompareState(AppState::Playing))
 	{
 		game->Update();
+		
+		if (gameStatus != GameStatus::Running)
+		{
+			AppInfo::SetState(AppState::Editor);
+			if (gameStatus == GameStatus::Restarting)
+			{
+				AppInfo::SetState(AppState::Playing);
+			}
+			gameStatus = GameStatus::Running;
+		}
 	}
 }
 void Editor::Draw()

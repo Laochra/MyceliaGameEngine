@@ -53,6 +53,7 @@ int Application::Run()
 		}
 	}
 
+	gameStatus = GameStatus::Running;
 	GameLoop();
 
 	Debug::LogSubtle("Terminating application...");

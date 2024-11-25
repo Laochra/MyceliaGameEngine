@@ -18,6 +18,7 @@
 #include "HexRadial.h"
 #include "HexScrapbook.h"
 #include "HexFog.h"
+#include "HexMenus.h"
 
 #include "HabitatData.h"
 
@@ -141,6 +142,24 @@ void HexGame::SetState(HexGame::State newState) noexcept
 		currentEvent = nullptr;
 		break;
 	}
+	case HexGame::State::MainMenu:
+	{
+		if (HexMenus::mainMenu != nullptr) HexMenus::mainMenu->enabled = false;
+		break;
+	}
+	case HexGame::State::Pause:
+	{
+		if (HexMenus::pauseMenu != nullptr) HexMenus::pauseMenu->enabled = false;
+		break;
+	}
+	case HexGame::State::MenuCredits:
+	{
+		break;
+	}
+	case HexGame::State::PauseCredits:
+	{
+		break;
+	}
 	default: Debug::LogWarning("Unaccounted for game state", locationinfo); break;
 	}
 
@@ -173,6 +192,24 @@ void HexGame::SetState(HexGame::State newState) noexcept
 		break;
 	}
 	case HexGame::State::StickerEvent:
+	{
+		break;
+	}
+	case HexGame::State::MainMenu:
+	{
+		if (HexMenus::mainMenu != nullptr) HexMenus::mainMenu->enabled = true;
+		break;
+	}
+	case HexGame::State::Pause:
+	{
+		if (HexMenus::pauseMenu != nullptr) HexMenus::pauseMenu->enabled = true;
+		break;
+	}
+	case HexGame::State::MenuCredits:
+	{
+		break;
+	}
+	case HexGame::State::PauseCredits:
 	{
 		break;
 	}
@@ -396,6 +433,9 @@ void HexGame::OnClose()
 
 void HexGame::OnStart()
 {
+	gameState = State::MainMenu;
+	if (HexMenus::mainMenu != nullptr) HexMenus::mainMenu->enabled = true;
+
 	HexScrapbook::CacheEnabledStatus();
 
 	HexScrapbook::Close();
@@ -481,6 +521,7 @@ void HexGame::OnStop()
 		GameObject::Destroy(habitat.object);
 	}
 	hexGrid->habitats.clear();
+	hexGrid->spirits.clear();
 
 	HexProgression::ResetProgression();
 
@@ -511,11 +552,13 @@ void HexGame::FixedUpdate() { }
 
 void HexGame::Update()
 {
-	for (Spirit spirit : hexGrid->spirits)
+	for (int h = 0; h < (int)std::min(hexGrid->habitats.size(), hexGrid->spirits.size()); h++)
 	{
+		Habitat& habitat = hexGrid->habitats[h];
+		Spirit& spirit = hexGrid->spirits[h];
 		if (spirit.object == nullptr) continue;
 
-		bool isSelected = hexGrid->habitats[spirit.habitatID].object == selectedGameObject;
+		bool isSelected = habitat.object == selectedGameObject;
 
 		vec3 pos = spirit.object->GetPosition();
 
@@ -601,6 +644,12 @@ void HexGame::Update()
 	{
 	case HexGame::State::Place:
 	{
+		if (gameInputs.pause.pressed())
+		{
+			SetState(State::Pause);
+			break;
+		}
+
 		if (gameInputs.place.pressed())
 		{
 			const json* prefab = TileData::GetPrefab((*currentTileType)[currentTileVariant].name);
@@ -703,6 +752,69 @@ void HexGame::Update()
 	}
 	case HexGame::State::StickerEvent:
 	{
+		break;
+	}
+	case HexGame::State::MainMenu:
+	{
+		if (gameInputs.menuPlay.pressed())
+		{
+			SetState(State::Place);
+			break;
+		}
+		if (gameInputs.menuQuit.pressed())
+		{
+			AppInfo::application->gameStatus = GameStatus::Quitting;
+			return;
+		}
+		if (gameInputs.menuCredits.pressed())
+		{
+			SetState(State::MenuCredits);
+			break;
+		}
+		
+		break;
+	}
+	case HexGame::State::Pause:
+	{
+		if (gameInputs.menuPlay.pressed())
+		{
+			SetState(State::Place);
+			break;
+		}
+		if (gameInputs.menuQuit.pressed())
+		{
+			AppInfo::application->gameStatus = GameStatus::Quitting;
+			return;
+		}
+		if (gameInputs.restart.pressed())
+		{
+			AppInfo::application->gameStatus = GameStatus::Restarting;
+			break;
+		}
+		if (gameInputs.menuCredits.pressed())
+		{
+			SetState(State::PauseCredits);
+			break;
+		}
+
+		break;
+	}
+	case HexGame::State::MenuCredits:
+	{
+		if (gameInputs.creditsClose.pressed())
+		{
+			SetState(State::MainMenu);
+			break;
+		}
+		break;
+	}
+	case HexGame::State::PauseCredits:
+	{
+		if (gameInputs.creditsClose.pressed())
+		{
+			SetState(State::Pause);
+			break;
+		}
 		break;
 	}
 	}

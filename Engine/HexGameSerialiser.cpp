@@ -14,6 +14,7 @@
 #include "HexCameraData.h"
 #include "HexAudio.h"
 #include "HexFog.h"
+#include "HexMenus.h"
 
 #include "Debug.h"
 
@@ -27,6 +28,33 @@ void HexGameSerialiser::LoadDataFrom(json& dataFile) noexcept
 			UISprite* uiSprite = new UISprite;
 			uiSprite->DeserialiseFrom(uiSpriteJSON);
 			UIManager::sprites.push_back(uiSprite);
+		}
+	}
+
+	if (dataFile.contains("MenuSprites"))
+	{
+		json menuSprites = dataFile["MenuSprites"];
+
+		string mainMenuName = menuSprites["MainMenu"];
+		string pauseMenuName = menuSprites["PauseMenu"];
+		string continueScreenName = menuSprites["ContinueScreen"];
+		for (UISprite*& uiSprite : UIManager::sprites)
+		{
+			if (uiSprite->GetName() == mainMenuName)
+			{
+				HexMenus::mainMenu = uiSprite;
+				continue;
+			}
+			else if (uiSprite->GetName() == pauseMenuName)
+			{
+				HexMenus::pauseMenu = uiSprite;
+				continue;
+			}
+			else if (uiSprite->GetName() == continueScreenName)
+			{
+				HexMenus::continueScreen = uiSprite;
+				continue;
+			}
 		}
 	}
 
@@ -323,6 +351,15 @@ void HexGameSerialiser::SaveDataTo(json& dataFile) noexcept
 			}
 		}
 		dataFile["UISprites"] = uiSpritesJSON;
+	}
+
+	json menuSprites;
+	{
+		menuSprites["MainMenu"] = HexMenus::mainMenu == nullptr ? "None" : HexMenus::mainMenu->name;
+		menuSprites["PauseMenu"] = HexMenus::pauseMenu == nullptr ? "None" : HexMenus::pauseMenu->name;
+		menuSprites["ContinueScreen"] = HexMenus::continueScreen == nullptr ? "None" : HexMenus::continueScreen->name;
+
+		dataFile["MenuSprites"] = menuSprites;
 	}
 
 	json tilesJSON;

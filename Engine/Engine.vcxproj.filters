@@ -253,6 +253,9 @@
     <ClCompile Include="SimplexNoise.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
+    <ClCompile Include="HexMenus.cpp">
+      <Filter>HexGame</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -624,6 +627,9 @@
     </ClInclude>
     <ClInclude Include="UtilityFunctions.h">
       <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="HexMenus.h">
+      <Filter>HexGame</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

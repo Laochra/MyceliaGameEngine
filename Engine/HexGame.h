@@ -46,6 +46,15 @@ public:
 		InputAxis radialY = InputAxis(InputCode::W, InputCode::S, InputCode::GamepadLSY);
 
 		InputBind scrapbookClose = InputBind({ InputCode::Esc, InputCode::F, InputCode::GamepadB, InputCode::GamepadY });
+		
+		InputBind menuPlay = InputBind({ InputCode::Space, InputCode::GamepadA });
+		InputBind menuCredits = InputBind({ InputCode::R, InputCode::GamepadX });
+		InputBind menuQuit = InputBind({ InputCode::Esc, InputCode::GamepadB });
+
+		InputBind pause = InputBind({ InputCode::Esc, InputCode::GamepadRM });
+		InputBind restart = InputBind({ InputCode::F, InputCode::GamepadY });
+
+		InputBind creditsClose = InputBind({ InputCode::Esc, InputCode::GamepadB });
 	};
 	HexGame::Inputs gameInputs;
 
@@ -53,7 +62,7 @@ public:
 	GameObject3D* selectedGameObject = nullptr;
 	float moveSpeed = 3.0f;
 
-	enum class State : unsigned char { Place, Radial, Scrapbook, StickerEvent };
+	enum class State : unsigned char { Place, Radial, Scrapbook, StickerEvent, MainMenu, MenuCredits, Pause, PauseCredits };
 	HexGame::State gameState;
 	const Coroutine::Pair* currentEvent = nullptr;
 	void SetState(HexGame::State newState) noexcept;

@@ -11,6 +11,7 @@
 #include "HexCameraData.h"
 #include "HexAudio.h"
 #include "HexFog.h"
+#include "HexMenus.h"
 
 #include "UIManager.h"
 #include "LightingManager.h"
@@ -57,6 +58,19 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 	}
 
 	if (!AppInfo::CompareState(AppState::Editor)) ImGui::EndDisabled();
+
+	GUI::Spacing(3);
+
+	if (ImGui::CollapsingHeader("Menu Sprites"))
+	{
+		if (!AppInfo::CompareState(AppState::Editor)) ImGui::BeginDisabled();
+
+		DrawUISpriteDropdown("MainMenu", HexMenus::mainMenu);
+		DrawUISpriteDropdown("PauseMenu", HexMenus::pauseMenu);
+		DrawUISpriteDropdown("Continue", HexMenus::continueScreen);
+
+		if (!AppInfo::CompareState(AppState::Editor)) ImGui::EndDisabled();
+	}
 
 	GUI::Spacing(3);
 

@@ -23,13 +23,7 @@
       "VariantUnlock": "Assets\\UI\\Scrapbook\\Scrapbook_NewHabitat.wav"
     },
     "SoundEffectsVolume": 1.0,
-    "SpiritSounds": {
-      "Bee": "None",
-      "Frog": "None",
-      "Platypus": "None",
-      "Slug": "None",
-      "Tassie Tiger": "None"
-    },
+    "SpiritSounds": null,
     "SpiritSoundsVolume": 1.0
   },
   "BackgroundPrefab": "Assets\\Tiles\\Fog\\Background.prefab",
@@ -101,6 +95,11 @@
     ],
     "AmbientIntensity": 1.0,
     "LightObject": "Assets\\Lighting.prefab"
+  },
+  "MenuSprites": {
+    "ContinueScreen": "None",
+    "MainMenu": "MainMenu",
+    "PauseMenu": "PauseMenu"
   },
   "Misc Colours": {
     "Highlight": [
@@ -742,6 +741,32 @@
       "OffsetY": 0.44600000977516174,
       "Scale": 0.09200000017881393,
       "Texture": "Assets\\UI\\Control Icons\\RadialMenuButton.png",
+      "TextureFilter": 0,
+      "TextureWrap": false
+    },
+    {
+      "AnchorX": -1.0,
+      "AnchorY": 0.0,
+      "Enabled": false,
+      "Layer": -1,
+      "Name": "MainMenu",
+      "OffsetX": 1.7769999504089355,
+      "OffsetY": 0.0,
+      "Scale": 1.0,
+      "Texture": "Assets\\UI\\Menus\\MainMenu.png",
+      "TextureFilter": 0,
+      "TextureWrap": false
+    },
+    {
+      "AnchorX": -1.0,
+      "AnchorY": 0.0,
+      "Enabled": false,
+      "Layer": -1,
+      "Name": "PauseMenu",
+      "OffsetX": 1.7769999504089355,
+      "OffsetY": 0.0,
+      "Scale": 1.0,
+      "Texture": "Assets\\UI\\Menus\\PauseMenu.png",
       "TextureFilter": 0,
       "TextureWrap": false
     }

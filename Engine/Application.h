@@ -5,11 +5,20 @@
 
 #include "Game.h"
 
+enum class GameStatus
+{
+	Initialising,
+	Running,
+	Restarting,
+	Quitting
+};
+
 class Application
 {
 public:
 	bool isRunning = false;
 	Game* game = nullptr;
+	GameStatus gameStatus = GameStatus::Initialising;
 
 	int Run();
 	virtual void OnStateChange(AppState newState);

@@ -214,6 +214,7 @@
     <ClCompile Include="HexCoords.cpp" />
     <ClCompile Include="HexGameInfo.cpp" />
     <ClCompile Include="HexGameSerialiser.cpp" />
+    <ClCompile Include="HexMenus.cpp" />
     <ClCompile Include="HexProgression.cpp" />
     <ClCompile Include="HexRadial.cpp" />
     <ClCompile Include="HexScrapbook.cpp" />
@@ -335,6 +336,7 @@
     <ClInclude Include="HexGame.h" />
     <ClInclude Include="HexGameInfo.h" />
     <ClInclude Include="HexGameSerialiser.h" />
+    <ClInclude Include="HexMenus.h" />
     <ClInclude Include="HexProgression.h" />
     <ClInclude Include="HexRadial.h" />
     <ClInclude Include="HexScrapbook.h" />

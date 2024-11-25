@@ -42,6 +42,17 @@ void Standalone::Update()
 	AppInfo::input->screenCursorPos = vec2(AppInfo::input->cursorPos.x, AppInfo::screenHeight - AppInfo::input->cursorPos.y);
 	Updater::CallUpdate();
 	game->Update();
+
+	if (gameStatus == GameStatus::Restarting)
+	{
+		game->OnStop();
+		game->OnStart();
+		gameStatus = GameStatus::Running;
+	}
+	else if (gameStatus == GameStatus::Quitting)
+	{
+		isRunning = false;
+	}
 }
 
 void Standalone::Draw()
