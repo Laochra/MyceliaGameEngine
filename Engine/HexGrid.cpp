@@ -148,7 +148,7 @@ HexGrid::UpdateTileReturnInfo HexGrid::UpdateTile(HexOffsetCoord hexCoord, const
 	gameObjectManager->Add(hexTile.object);
 	hexTile.object->SetParent(this);
 	hexTile.object->SetPosition(vec3(position.x, hexTile.object->GetPosition().y, position.y));
-	hexTile.object->Rotate(glm::radians(Random::Int32(0, 5) * 60.0f), vec3(0, 1, 0));
+	if (hexCoord != centre) hexTile.object->Rotate(glm::radians(Random::Int32(0, 5) * 60.0f), vec3(0, 1, 0));
 
 	hexTile.type = tilePrefab["HexType"];
 	if ((char)hexTile.type >= 0)

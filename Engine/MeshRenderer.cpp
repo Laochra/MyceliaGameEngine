@@ -239,9 +239,10 @@ void MeshRenderer::Draw(intptr_t lastUsedMaterial)
 
 		HexFog::Bind(4);
 		sp.BindUniform("FogMap", 4);
-		sp.BindUniform("FogColour", vec3(0.9f, 0.9f, 0.9f));
+		sp.BindUniform("FogColour", glm::pow(vec3(0.7f, 0.7f, 1.0f), vec3(2.2f)));
 		sp.BindUniform("FogRadius", HexFog::currentRadius + 1);
 		sp.BindUniform("FogGradientRange", HexFog::gradientRange);
+
 	}
 
 	if (AppInfo::CompareState(AppState::Editor)) sp.BindUniform("Selected", (int)selected);
@@ -261,9 +262,9 @@ void MeshRenderer::DrawDepth(mat4 PVMatrix)
 	{
 		depthProgram = shaderManager->GetProgram("Assets\\Shaders\\DepthOnlyFoliage.gpu");
 	}
-	else if (false) // To be used for spirit vertex animation shader
+	else if (memcmp(material->shaderProgram->GetFilepath(), "Assets\\Shaders\\Spirit.gpu", 26) == 0)
 	{
-
+		depthProgram = shaderManager->GetProgram("Assets\\Shaders\\DepthOnlySpirit.gpu");
 	}
 	else
 	{
