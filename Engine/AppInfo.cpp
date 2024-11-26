@@ -12,6 +12,7 @@ Input*		AppInfo::input = nullptr;
 Debug*		AppInfo::debug = nullptr;
 
 GLFWwindow* AppInfo::window = nullptr;
+bool			AppInfo::fullscreen = false;
 const char* AppInfo::name = "Game Made in Mycelia Game Engine";
 
 int			AppInfo::screenWidth = 0;

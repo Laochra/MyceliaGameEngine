@@ -21,6 +21,7 @@ public:
 	static Debug*			debug;
 
 	static GLFWwindow*	window;
+	static bool				fullscreen;
 	static const char*	name;
 
 	static int				screenWidth;
