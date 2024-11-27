@@ -422,6 +422,7 @@ void HexGame::Initialise(uint* renderTargetInit)
 	AppInfo::gameCamera->SetPosition(vec3(0, HexCameraData::offsetDirection.x, HexCameraData::offsetDirection.y) * HexCameraData::startZoom);
 	AppInfo::gameCamera->LookAt(vec3(0, 0, 0));
 	AppInfo::gameCamera->fov = glm::radians(50.0f);
+	AppInfo::gameCamera->nearClip = 1.0f;
 
 	//HexFog::MakeHexagonalDistanceField();
 	HexFog::Load(HexFog::GetFilter());
