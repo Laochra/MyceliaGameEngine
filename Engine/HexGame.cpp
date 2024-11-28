@@ -106,6 +106,27 @@ static void DrawUI(RadialMenu* radialMenu, vector<UISprite*> sprites, uint& uiFB
 	glDisable(GL_BLEND);
 }
 
+vector<UISprite*> hiddenUISprites;
+static void HideUISprites() noexcept
+{
+	for (UISprite*& uiSprite : UIManager::sprites)
+	{
+		if (uiSprite->enabled)
+		{
+			uiSprite->enabled = false;
+			hiddenUISprites.push_back(uiSprite);
+		}
+	}
+}
+static void UnhideUISprites() noexcept
+{
+	for (UISprite*& uiSprite : hiddenUISprites)
+	{
+		uiSprite->enabled = true;
+	}
+	hiddenUISprites.clear();
+}
+
 void HexGame::SetState(HexGame::State newState) noexcept
 {
 	switch (gameState) // Clean up old state
@@ -144,26 +165,31 @@ void HexGame::SetState(HexGame::State newState) noexcept
 	}
 	case HexGame::State::MainMenu:
 	{
+		UnhideUISprites();
 		if (HexMenus::mainMenu != nullptr) HexMenus::mainMenu->enabled = false;
 		break;
 	}
 	case HexGame::State::Pause:
 	{
+		UnhideUISprites();
 		if (HexMenus::pauseMenu != nullptr) HexMenus::pauseMenu->enabled = false;
 		break;
 	}
 	case HexGame::State::MenuCredits:
 	{
+		UnhideUISprites();
 		if (HexMenus::creditsScreen != nullptr) HexMenus::creditsScreen->enabled = false;
 		break;
 	}
 	case HexGame::State::PauseCredits:
 	{
+		UnhideUISprites();
 		if (HexMenus::creditsScreen != nullptr) HexMenus::creditsScreen->enabled = false;
 		break;
 	}
 	case HexGame::State::ContinueScreen:
 	{
+		UnhideUISprites();
 		if (HexMenus::continueScreen != nullptr) HexMenus::continueScreen->enabled = false;
 		break;
 	}
@@ -204,26 +230,31 @@ void HexGame::SetState(HexGame::State newState) noexcept
 	}
 	case HexGame::State::MainMenu:
 	{
+		HideUISprites();
 		if (HexMenus::mainMenu != nullptr) HexMenus::mainMenu->enabled = true;
 		break;
 	}
 	case HexGame::State::Pause:
 	{
+		HideUISprites();
 		if (HexMenus::pauseMenu != nullptr) HexMenus::pauseMenu->enabled = true;
 		break;
 	}
 	case HexGame::State::MenuCredits:
 	{
+		HideUISprites();
 		if (HexMenus::creditsScreen != nullptr) HexMenus::creditsScreen->enabled = true;
 		break;
 	}
 	case HexGame::State::PauseCredits:
 	{
+		HideUISprites();
 		if (HexMenus::creditsScreen != nullptr) HexMenus::creditsScreen->enabled = true;
 		break;
 	}
 	case HexGame::State::ContinueScreen:
 	{
+		HideUISprites();
 		if (HexMenus::continueScreen != nullptr) HexMenus::continueScreen->enabled = true;
 		break;
 	}
@@ -448,12 +479,13 @@ void HexGame::OnClose()
 
 void HexGame::OnStart()
 {
+	HexScrapbook::CacheEnabledStatus();
+	HexScrapbook::Close();
+
+	HideUISprites();
+
 	gameState = State::MainMenu;
 	if (HexMenus::mainMenu != nullptr) HexMenus::mainMenu->enabled = true;
-
-	HexScrapbook::CacheEnabledStatus();
-
-	HexScrapbook::Close();
 
 	selectedPosition = vec2(0, 0);
 	selectedGameObject = nullptr;
@@ -509,9 +541,10 @@ void HexGame::OnStart()
 }
 void HexGame::OnStop()
 {
+	SetState(HexGame::State::Place);
+
 	HexScrapbook::RestoreEnabledStatus();
 
-	SetState(HexGame::State::Place);
 
 	short min = hexGrid->centre.x - HexProgression::currentRadius;
 	short max = hexGrid->centre.x + HexProgression::currentRadius;
