@@ -2,6 +2,8 @@
 
 #include "AudioManager.h"
 
+#include "HabitatData.h"
+
 string HexAudio::music = "None";
 float HexAudio::musicVolume = 1.0f;
 
@@ -106,9 +108,10 @@ void HexAudio::LoadFrom(const json& jsonObj) noexcept
 	json::const_iterator spiritSoundsJSONIt = jsonObj.find("SpiritSounds");
 	if (spiritSoundsJSONIt != jsonObj.end())
 	{
-		for (map<string, string>::iterator it = spiritSounds.begin(); it != spiritSounds.end(); it++)
+		const json& spiritSoundsJSON = *spiritSoundsJSONIt;
+		for (HabitatData habitatData : HabitatData::habitatsData)
 		{
-			it->second = (*spiritSoundsJSONIt)[it->first];
+			spiritSounds.insert(std::pair<string, string>(habitatData.name, spiritSoundsJSON[habitatData.name]));
 		}
 		spiritSFXVolume = jsonObj["SpiritSoundsVolume"];
 	}

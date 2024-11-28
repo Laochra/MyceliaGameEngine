@@ -378,6 +378,10 @@ static void RaiseTile(vec2 hoveredPosition, GameObject3D*& selectedGameObject, H
 			{
 				if (habitat.habitatID == hoveredHex.habitat)
 				{
+					if (selectedGameObject != habitat.object)
+					{
+						HexAudio::PlaySpiritSFX(HabitatData::Get(habitat.habitatID).name);
+					}
 					hoveredGameObject = habitat.object;
 					break;
 				}
