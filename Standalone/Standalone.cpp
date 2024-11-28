@@ -29,6 +29,7 @@ void Standalone::Initialise()
 	game->OnStart();
 
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+	glfwSetInputMode(AppInfo::window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetWindowMonitor(AppInfo::window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
 	AppInfo::fullscreen = true;
 }
@@ -61,11 +62,13 @@ void Standalone::Update()
 		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		if (AppInfo::fullscreen)
 		{
+			glfwSetInputMode(AppInfo::window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 			glfwSetWindowMonitor(AppInfo::window, nullptr, 0, 0, mode->width, mode->height, mode->refreshRate);
 			glfwMaximizeWindow(AppInfo::window);
 		}
 		else
 		{
+			glfwSetInputMode(AppInfo::window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 			glfwSetWindowMonitor(AppInfo::window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
 		}
 
