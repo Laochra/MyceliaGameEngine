@@ -38,6 +38,7 @@ void HexGameSerialiser::LoadDataFrom(json& dataFile) noexcept
 		string mainMenuName = menuSprites["MainMenu"];
 		string pauseMenuName = menuSprites["PauseMenu"];
 		string continueScreenName = menuSprites["ContinueScreen"];
+		string creditsScreenName = menuSprites.contains("CreditsScreen") ? menuSprites["CreditsScreen"] : "None";
 		for (UISprite*& uiSprite : UIManager::sprites)
 		{
 			if (uiSprite->GetName() == mainMenuName)
@@ -53,6 +54,11 @@ void HexGameSerialiser::LoadDataFrom(json& dataFile) noexcept
 			else if (uiSprite->GetName() == continueScreenName)
 			{
 				HexMenus::continueScreen = uiSprite;
+				continue;
+			}
+			else if (uiSprite->GetName() == creditsScreenName)
+			{
+				HexMenus::creditsScreen = uiSprite;
 				continue;
 			}
 		}
@@ -358,6 +364,7 @@ void HexGameSerialiser::SaveDataTo(json& dataFile) noexcept
 		menuSprites["MainMenu"] = HexMenus::mainMenu == nullptr ? "None" : HexMenus::mainMenu->name;
 		menuSprites["PauseMenu"] = HexMenus::pauseMenu == nullptr ? "None" : HexMenus::pauseMenu->name;
 		menuSprites["ContinueScreen"] = HexMenus::continueScreen == nullptr ? "None" : HexMenus::continueScreen->name;
+		menuSprites["CreditsScreen"] = HexMenus::creditsScreen == nullptr ? "None" : HexMenus::creditsScreen->name;
 
 		dataFile["MenuSprites"] = menuSprites;
 	}

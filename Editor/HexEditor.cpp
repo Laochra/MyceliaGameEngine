@@ -68,6 +68,7 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 		DrawUISpriteDropdown("MainMenu", HexMenus::mainMenu);
 		DrawUISpriteDropdown("PauseMenu", HexMenus::pauseMenu);
 		DrawUISpriteDropdown("Continue", HexMenus::continueScreen);
+		DrawUISpriteDropdown("Credits", HexMenus::creditsScreen);
 
 		if (!AppInfo::CompareState(AppState::Editor)) ImGui::EndDisabled();
 	}

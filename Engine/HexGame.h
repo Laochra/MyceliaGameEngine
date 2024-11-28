@@ -55,6 +55,9 @@ public:
 		InputBind restart = InputBind({ InputCode::F, InputCode::GamepadY });
 
 		InputBind creditsClose = InputBind({ InputCode::Esc, InputCode::GamepadB });
+
+		InputBind continueYes = InputBind({ InputCode::Space, InputCode::GamepadA });
+		InputBind continueNo = InputBind({ InputCode::Esc, InputCode::GamepadB });
 	};
 	HexGame::Inputs gameInputs;
 
@@ -62,7 +65,18 @@ public:
 	GameObject3D* selectedGameObject = nullptr;
 	float moveSpeed = 3.0f;
 
-	enum class State : unsigned char { Place, Radial, Scrapbook, StickerEvent, MainMenu, MenuCredits, Pause, PauseCredits };
+	enum class State : unsigned char
+	{
+		Place,
+		Radial,
+		Scrapbook,
+		StickerEvent,
+		MainMenu,
+		MenuCredits,
+		Pause,
+		PauseCredits,
+		ContinueScreen
+	};
 	HexGame::State gameState;
 	const Coroutine::Pair* currentEvent = nullptr;
 	void SetState(HexGame::State newState) noexcept;

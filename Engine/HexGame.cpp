@@ -154,10 +154,17 @@ void HexGame::SetState(HexGame::State newState) noexcept
 	}
 	case HexGame::State::MenuCredits:
 	{
+		if (HexMenus::creditsScreen != nullptr) HexMenus::creditsScreen->enabled = false;
 		break;
 	}
 	case HexGame::State::PauseCredits:
 	{
+		if (HexMenus::creditsScreen != nullptr) HexMenus::creditsScreen->enabled = false;
+		break;
+	}
+	case HexGame::State::ContinueScreen:
+	{
+		if (HexMenus::continueScreen != nullptr) HexMenus::continueScreen->enabled = false;
 		break;
 	}
 	default: Debug::LogWarning("Unaccounted for game state", locationinfo); break;
@@ -207,10 +214,17 @@ void HexGame::SetState(HexGame::State newState) noexcept
 	}
 	case HexGame::State::MenuCredits:
 	{
+		if (HexMenus::creditsScreen != nullptr) HexMenus::creditsScreen->enabled = true;
 		break;
 	}
 	case HexGame::State::PauseCredits:
 	{
+		if (HexMenus::creditsScreen != nullptr) HexMenus::creditsScreen->enabled = true;
+		break;
+	}
+	case HexGame::State::ContinueScreen:
+	{
+		if (HexMenus::continueScreen != nullptr) HexMenus::continueScreen->enabled = true;
 		break;
 	}
 	default: Debug::LogWarning("Unaccounted for game state", locationinfo); break;
@@ -814,6 +828,20 @@ void HexGame::Update()
 		if (gameInputs.creditsClose.pressed())
 		{
 			SetState(State::Pause);
+			break;
+		}
+		break;
+	}
+	case HexGame::State::ContinueScreen:
+	{
+		if (gameInputs.continueYes.pressed())
+		{
+			SetState(State::Place);
+			break;
+		}
+		else if (gameInputs.continueNo.pressed())
+		{
+			AppInfo::application->gameStatus = GameStatus::Restarting;
 			break;
 		}
 		break;

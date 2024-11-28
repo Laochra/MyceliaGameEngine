@@ -248,7 +248,13 @@ class HabitatStickerEvent : public Coroutine::Function<HabitatStickerEventData>
 			data.stage = Data::Stage::WaitingToEnd;
 			float increaseAmount = HexProgression::currentRadius - HexFog::currentRadius;
 			HexAudio::PlayMiscSFX(HexAudio::FogMove);
-			((HexGame*)AppInfo::application->game)->SetState(HexGame::State::Place);
+
+			HexGame* game = (HexGame*)AppInfo::application->game;
+			game->SetState(HexGame::State::Place);
+			if (game->hexGrid->habitats.size() >= 5)
+			{
+				game->SetState(HexGame::State::ContinueScreen);
+			}
 
 			CoroutineYieldFor(increaseAmount * (1.0f / HexFog::animationSpeed) + HexProgression::stickerEvent.endDelay);
 			break;

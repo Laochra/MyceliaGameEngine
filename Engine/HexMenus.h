@@ -10,4 +10,5 @@ public:
 	static UISprite* mainMenu;
 	static UISprite* pauseMenu;
 	static UISprite* continueScreen;
+	static UISprite* creditsScreen;
 };

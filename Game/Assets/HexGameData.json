@@ -99,7 +99,8 @@
     "LightObject": "Assets\\Lighting.prefab"
   },
   "MenuSprites": {
-    "ContinueScreen": "None",
+    "ContinueScreen": "ContinueScreen",
+    "CreditsScreen": "CreditsScreen",
     "MainMenu": "MainMenu",
     "PauseMenu": "PauseMenu"
   },
@@ -769,6 +770,32 @@
       "OffsetY": 0.0,
       "Scale": 1.0,
       "Texture": "Assets\\UI\\Menus\\PauseMenu.png",
+      "TextureFilter": 0,
+      "TextureWrap": false
+    },
+    {
+      "AnchorX": 0.0,
+      "AnchorY": 0.0,
+      "Enabled": false,
+      "Layer": -1,
+      "Name": "ContinueScreen",
+      "OffsetX": 0.0,
+      "OffsetY": 0.0,
+      "Scale": 1.0,
+      "Texture": "Assets\\UI\\Menus\\ContinueScreen.png",
+      "TextureFilter": 0,
+      "TextureWrap": false
+    },
+    {
+      "AnchorX": 0.0,
+      "AnchorY": 0.0,
+      "Enabled": false,
+      "Layer": -1,
+      "Name": "CreditsScreen",
+      "OffsetX": 0.0,
+      "OffsetY": 0.0,
+      "Scale": 1.0,
+      "Texture": "Assets\\UI\\Menus\\CreditsScreen.png",
       "TextureFilter": 0,
       "TextureWrap": false
     }
