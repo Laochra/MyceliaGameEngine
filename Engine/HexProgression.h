@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 
+#include "UISprite.h"
 
 #include "MycCoroutine.h"
 
@@ -32,6 +33,8 @@ public:
 
 	static uint tileLifeBonus;
 	static uint habitatLifeBonus;
+
+	static UISprite* newVariantsIcon;
 
 	struct StickerEventData
 	{

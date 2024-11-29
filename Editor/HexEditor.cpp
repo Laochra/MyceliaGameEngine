@@ -190,6 +190,10 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 
 		GUI::Spacing(3);
 
+		DrawUISpriteDropdown("Notification Icon", HexProgression::newVariantsIcon);
+
+		GUI::Spacing(3);
+
 		ImGui::PushItemWidth(ImGui::CalcItemWidth() / 5.0f);
 		if (ImGui::DragInt("Starting Radius", (int*)&HexProgression::startingRadius, 0.25f, 0, 100, "%d", ImGuiSliderFlags_AlwaysClamp))
 		{

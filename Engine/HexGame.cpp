@@ -215,6 +215,7 @@ void HexGame::SetState(HexGame::State newState) noexcept
 		case 3U: currentRadial = landRadial;	break;
 		}
 		currentRadial->enabled = true;
+		if (HexProgression::newVariantsIcon != nullptr) HexProgression::newVariantsIcon->enabled = false;
 		HexAudio::PlayMiscSFX(HexAudio::SoundEffect::RadialOpen);
 		break;
 	}

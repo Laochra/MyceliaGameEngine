@@ -7,6 +7,7 @@
 
 #include "Easing.h"
 #include "TimeManager.h"
+#include "UIManager.h"
 
 #include "AppInfo.h"
 #include "Application.h"
@@ -21,6 +22,8 @@ uint HexProgression::currentRadius = startingRadius;
 
 uint HexProgression::tileLifeBonus = 1U;
 uint HexProgression::habitatLifeBonus = 3U;
+
+UISprite* HexProgression::newVariantsIcon = nullptr;
 
 HexProgression::StickerEventData HexProgression::stickerEvent;
 
@@ -105,6 +108,8 @@ void HexProgression::SaveTo(json& jsonObj)
 
 	jsonObj["TileLifeBonus"] = tileLifeBonus;
 	jsonObj["HabitatLifeBonus"] = habitatLifeBonus;
+
+	jsonObj["NewVariantsIcon"] = HexProgression::newVariantsIcon != nullptr ? HexProgression::newVariantsIcon->name : "None";
 }
 
 void HexProgression::LoadFrom(const json& jsonObj)
@@ -143,15 +148,27 @@ void HexProgression::LoadFrom(const json& jsonObj)
 	{
 		habitatLifeBonus = jsonObj["HabitatLifeBonus"];
 	}
+
+	if (jsonObj.contains("NewVariantsIcon"))
+	{
+		string newVariantsIconName = jsonObj["NewVariantsIcon"];
+		for (UISprite*& uiSprite : UIManager::sprites)
+		{
+			if (uiSprite->name == newVariantsIconName)
+			{
+				HexProgression::newVariantsIcon = uiSprite;
+				break;
+			}
+		}
+	}
 }
 
 void HexProgression::CompleteMilestone(const Milestone& milestone)
 {
-	//currentRadius += milestone.radiusIncrease;
-
 	if (milestone.type == Milestone::VariantUnlock)
 	{
 		std::vector<std::string> variantsToUnlock = milestone.names;
+		if (newVariantsIcon != nullptr) newVariantsIcon->enabled = true;
 
 		for (vector<TileData>& tileType : TileData::tilesData)
 		{
