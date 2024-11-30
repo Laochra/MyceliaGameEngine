@@ -13,6 +13,19 @@ typedef unsigned int uint;
 
 class UISprite;
 
+struct TileID
+{
+	HexType type;
+	unsigned char variant;
+	
+	TileID(HexType typeInit = HexType::Tree, unsigned char variantInit = 0) noexcept :
+		type(typeInit),
+		variant(variantInit) {}
+
+	bool operator==(const TileID& other) const noexcept = default;
+	auto operator<=>(const TileID& other) const noexcept = default;
+};
+
 class TileData
 {
 public:
@@ -32,6 +45,7 @@ public:
 
 	static vector<TileData>& Get(HexType hexType) noexcept;
 	static TileData& Get(HexType hexType, char variant) noexcept;
+	static TileData& Get(TileID id) noexcept;
 
 	static char GetVariantIndex(HexType hexType, string name) noexcept;
 

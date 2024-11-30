@@ -15,7 +15,7 @@
 
 std::vector<HexProgression::Milestone> HexProgression::lifeMilestones;
 
-std::vector<std::string> HexProgression::startingVariants;
+std::vector<TileID> HexProgression::startingVariants;
 
 uint HexProgression::startingRadius = 3U;
 uint HexProgression::currentRadius = startingRadius;
@@ -60,25 +60,16 @@ const HexProgression::Milestone* HexProgression::IncreaseLife(uint lifeToAdd) no
 
 void HexProgression::ResetProgression() noexcept
 {
-	std::vector<std::string> variantsToUnlock = HexProgression::startingVariants;
-
 	for (vector<TileData>& tileType : TileData::tilesData)
 	{
 		for (TileData& tileVariant : tileType)
 		{
-			auto variantIt = std::find(variantsToUnlock.begin(), variantsToUnlock.end(), tileVariant.name);
-			if (variantIt != variantsToUnlock.end())
-			{
-				tileVariant.unlocked = true;
-				variantsToUnlock.erase(variantIt);
-				if (variantsToUnlock.size() == 0) break;
-			}
-			else
-			{
-				tileVariant.unlocked = false;
-			}
+			tileVariant.unlocked = false;
 		}
-		if (variantsToUnlock.size() == 0) break;
+	}
+	for (TileID tileID : HexProgression::startingVariants)
+	{
+		TileData::Get(tileID).unlocked = true;
 	}
 	
 	currentMilestone = 0U;
@@ -94,8 +85,15 @@ void HexProgression::SaveTo(json& jsonObj)
 	{
 		json lifeMilestoneJSON;
 
-		lifeMilestoneJSON["Type"] = lifeMilestone.type;
-		lifeMilestoneJSON["Names"] = lifeMilestone.names;
+		vector<json> variantUnlocksJSON;
+		for (const TileID& tileID : lifeMilestone.variantUnlocks)
+		{
+			json idJSON;
+			idJSON["Type"] = (int)tileID.type;
+			idJSON["Variant"] = (int)tileID.variant;
+			variantUnlocksJSON.push_back(idJSON);
+		}
+		lifeMilestoneJSON["VariantUnlocks"] = variantUnlocksJSON;
 		lifeMilestoneJSON["LifeRequirement"] = lifeMilestone.lifeRequirement;
 		lifeMilestoneJSON["RadiusIncrease"] = lifeMilestone.radiusIncrease;
 
@@ -103,7 +101,15 @@ void HexProgression::SaveTo(json& jsonObj)
 	}
 	jsonObj["LifeMilestones"] = lifeMilestonesJSON;
 
-	jsonObj["StartingVariants"] = startingVariants;
+	vector<json> startingVariantsJSON;
+	for (const TileID& tileID : startingVariants)
+	{
+		json idJSON;
+		idJSON["Type"] = (int)tileID.type;
+		idJSON["Variant"] = (int)tileID.variant;
+		startingVariantsJSON.push_back(idJSON);
+	}
+	jsonObj["StartingVariants"] = startingVariantsJSON;
 	jsonObj["StartingRadius"] = startingRadius;
 
 	jsonObj["TileLifeBonus"] = tileLifeBonus;
@@ -121,8 +127,19 @@ void HexProgression::LoadFrom(const json& jsonObj)
 		{
 			HexProgression::Milestone lifeMilestone;
 
-			lifeMilestone.type = lifeMilestoneJSON["Type"];
-			lifeMilestone.names = lifeMilestoneJSON["Names"];
+			if (lifeMilestoneJSON.contains("VariantUnlocks"))
+			{
+				vector<json> variantUnlocksJSON = lifeMilestoneJSON["VariantUnlocks"];
+				for (const json& tileIDJSON : variantUnlocksJSON)
+				{
+					lifeMilestone.variantUnlocks.push_back(
+						TileID(
+							(HexType)(int)tileIDJSON["Type"],
+							(char)(int)tileIDJSON["Variant"]
+						)
+					);
+				}
+			}
 			lifeMilestone.lifeRequirement = lifeMilestoneJSON["LifeRequirement"];
 			lifeMilestone.radiusIncrease = lifeMilestoneJSON["RadiusIncrease"];
 
@@ -132,7 +149,16 @@ void HexProgression::LoadFrom(const json& jsonObj)
 
 	if (jsonObj.contains("StartingVariants"))
 	{
-		startingVariants = jsonObj["StartingVariants"];
+		vector<json> startingVariantsJSON = jsonObj["StartingVariants"];
+		for (const json& tileIDJSON : startingVariantsJSON)
+		{
+			startingVariants.push_back(
+				TileID(
+					(HexType)(int)tileIDJSON["Type"],
+					(char)(int)tileIDJSON["Variant"]
+				)
+			);
+		}
 	}
 	if (jsonObj.contains("StartingRadius"))
 	{
@@ -165,25 +191,11 @@ void HexProgression::LoadFrom(const json& jsonObj)
 
 void HexProgression::CompleteMilestone(const Milestone& milestone)
 {
-	if (milestone.type == Milestone::VariantUnlock)
-	{
-		std::vector<std::string> variantsToUnlock = milestone.names;
-		if (newVariantsIcon != nullptr) newVariantsIcon->enabled = true;
+	if (newVariantsIcon != nullptr) newVariantsIcon->enabled = true;
 
-		for (vector<TileData>& tileType : TileData::tilesData)
-		{
-			for (TileData& tileVariant : tileType)
-			{
-				auto variantIt = std::find(variantsToUnlock.begin(), variantsToUnlock.end(), tileVariant.name);
-				if (variantIt != variantsToUnlock.end())
-				{
-					tileVariant.unlocked = true;
-					variantsToUnlock.erase(variantIt);
-					if (variantsToUnlock.size() == 0) break;
-				}
-			}
-			if (variantsToUnlock.size() == 0) break;
-		}
+	for (TileID tileID : milestone.variantUnlocks)
+	{
+		TileData::Get(tileID).unlocked = true;
 	}
 }
 

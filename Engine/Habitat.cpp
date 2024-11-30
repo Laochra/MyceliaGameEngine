@@ -39,15 +39,15 @@ Habitat Habitat::AttemptToFormHabitat(HexGrid* hexGrid, HexOffsetCoord newHexCoo
 		{
 			if (habitatData.hasBeenPlaced) continue;
 
-			vector<string> variantsToCheckFor {
+			vector<TileID> variantsToCheckFor {
 				habitatData.requiredTiles[0],
 				habitatData.requiredTiles[1],
 				habitatData.requiredTiles[2]
 			};
 
-			for (vector<string>::iterator it = variantsToCheckFor.begin(); it != variantsToCheckFor.end();)
+			for (vector<TileID>::iterator it = variantsToCheckFor.begin(); it != variantsToCheckFor.end();)
 			{
-				if (TileData::Get(newHexTile.type, newHexTile.variant).name == *it)
+				if (TileID(newHexTile.type, newHexTile.variant) == *it)
 				{
 					it = variantsToCheckFor.erase(it);
 					break;
@@ -57,9 +57,9 @@ Habitat Habitat::AttemptToFormHabitat(HexGrid* hexGrid, HexOffsetCoord newHexCoo
 					it++;
 				}
 			}
-			for (vector<string>::iterator it = variantsToCheckFor.begin(); it != variantsToCheckFor.end();)
+			for (vector<TileID>::iterator it = variantsToCheckFor.begin(); it != variantsToCheckFor.end();)
 			{
-				if (TileData::Get(neighbour1.type, neighbour1.variant).name == *it)
+				if (TileID(neighbour1.type, neighbour1.variant) == *it)
 				{
 					it = variantsToCheckFor.erase(it);
 					break;
@@ -69,9 +69,9 @@ Habitat Habitat::AttemptToFormHabitat(HexGrid* hexGrid, HexOffsetCoord newHexCoo
 					it++;
 				}
 			}
-			for (vector<string>::iterator it = variantsToCheckFor.begin(); it != variantsToCheckFor.end();)
+			for (vector<TileID>::iterator it = variantsToCheckFor.begin(); it != variantsToCheckFor.end();)
 			{
-				if (TileData::Get(neighbour2.type, neighbour2.variant).name == *it)
+				if (TileID(neighbour2.type, neighbour2.variant) == *it)
 				{
 					it = variantsToCheckFor.erase(it);
 					break;
@@ -103,7 +103,7 @@ void Habitat::FormHabitat(HexGrid* hexGrid, int habitatIndex, HexOffsetCoord hex
 	habitatID = habitatIndex;
 
 	HabitatData& habitatData = HabitatData::Get(habitatIndex);
-	HexScrapbook::RevealHabitat(habitatIndex);
+	HexScrapbook::SetHabitatState(habitatIndex, HabitatCollectionState::Recieved);
 	HexProgression::currentRadius += 2;
 
 	HexTile& hex1 = hexGrid->Get(hexCoord1);

@@ -464,6 +464,18 @@ void HexGame::Initialise(uint* renderTargetInit)
 				TileData::GetPrefab(tileVariant.name);
 			}
 		}
+		for (HexScrapbook::HabitatCollection habitatCollection : HexScrapbook::habitats)
+		{
+			UISprite dummyUISprite;
+			for (const string& texture : habitatCollection.habitatTextures)
+			{
+				dummyUISprite.Load(texture.c_str());
+			}
+			for (const string& texture : habitatCollection.tileTextures)
+			{
+				dummyUISprite.Load(texture.c_str());
+			}
+		}
 	}
 
 
@@ -734,6 +746,22 @@ void HexGame::Update()
 
 					if (returnInfo.value & HexGrid::UpdateTileReturnInfo::MilestoneReached)
 					{
+						for (char habitatID = 0; habitatID < (char)HabitatData::habitatsData.size(); habitatID++)
+						{
+							const HabitatData& habitatData = HabitatData::habitatsData[habitatID];
+							if (!habitatData.hasBeenPlaced)
+							{
+								bool shouldUnlock = true;
+								for (const TileID& tileID : habitatData.requiredTiles)
+								{
+									if (!TileData::Get(tileID).unlocked) shouldUnlock = false;
+								}
+								if (shouldUnlock)
+								{
+									HexScrapbook::SetHabitatState((int)habitatID, HabitatCollectionState::Unlocked);
+								}
+							}
+						}
 						HexAudio::PlayMiscSFX(HexAudio::SoundEffect::VariantUnlock);
 					}
 				}

@@ -208,16 +208,16 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 		GUI::Spacing();
 		
 		ImGui::Text("Starting Variants");
-		std::vector<std::string>& startingVariants = HexProgression::startingVariants;
+		std::vector<TileID>& startingVariants = HexProgression::startingVariants;
 		ImGui::SameLine();
 		GUI::HSpacing(3);
 		ImGui::SameLine();
 		if (ImGui::Button("Add"))
 		{
-			startingVariants.push_back("Undefined");
+			startingVariants.push_back(TileID());
 		}
 
-		for (std::vector<std::string>::iterator it = startingVariants.begin(); it < startingVariants.end();)
+		for (std::vector<TileID>::iterator it = startingVariants.begin(); it < startingVariants.end();)
 		{
 			uint id = uint(it - startingVariants.begin());
 			ImGui::PushID(id);
@@ -266,29 +266,7 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 			if (ImGui::BeginTabItem(StringBuilder("  ", i+1, "  ").CStr()))
 			{
 				if (!AppInfo::CompareState(AppState::Editor)) ImGui::BeginDisabled();
-				const char* typeName;
-				switch (lifeMilestone.type)
-				{
-				default:
-				case HexProgression::Milestone::VariantUnlock: typeName = "Variant Unlock"; break;
-				case HexProgression::Milestone::AddedEffects: typeName = "Added Effects"; break;
-				}
-				if (ImGui::BeginCombo("Type", typeName))
-				{
-					if (ImGui::Selectable("Variant Unlock", lifeMilestone.type == HexProgression::Milestone::VariantUnlock))
-					{
-						lifeMilestone.type = HexProgression::Milestone::VariantUnlock;
-					}
-					if (ImGui::Selectable("Added Effects", lifeMilestone.type == HexProgression::Milestone::AddedEffects))
-					{
-						lifeMilestone.type = HexProgression::Milestone::AddedEffects;
-					}
-					ImGui::EndCombo();
-				}
 
-				ImGui::SameLine();
-				GUI::HSpacing(3);
-				ImGui::SameLine();
 				if ((ImGui::Button("Delete")))
 				{
 					HexProgression::lifeMilestones.erase(HexProgression::lifeMilestones.begin() + i);
@@ -312,35 +290,34 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 
 				GUI::Spacing();
 
-				if (lifeMilestone.type == HexProgression::Milestone::VariantUnlock)
+				
+				ImGui::Text("Unlocked Variants");
+				std::vector<TileID>& unlockedVariants = lifeMilestone.variantUnlocks;
+				ImGui::SameLine();
+				GUI::HSpacing(3);
+				ImGui::SameLine();
+				if (ImGui::Button("Add"))
 				{
-					ImGui::Text("Unlocked Variants");
-					std::vector<std::string>& unlockedVariants = lifeMilestone.names;
+					unlockedVariants.push_back(TileID());
+				}
+
+				for (std::vector<TileID>::iterator it = unlockedVariants.begin(); it < unlockedVariants.end();)
+				{
+					DrawTileDropdown(StringBuilder("##", uint(it - unlockedVariants.begin())).CStr(), *it);
 					ImGui::SameLine();
 					GUI::HSpacing(3);
 					ImGui::SameLine();
-					if (ImGui::Button("Add"))
+					if (ImGui::Button("Remove"))
 					{
-						unlockedVariants.push_back("Undefined");
+						it = unlockedVariants.erase(it);
+						if (it == unlockedVariants.end()) break;
 					}
-
-					for (std::vector<std::string>::iterator it = unlockedVariants.begin(); it < unlockedVariants.end();)
+					else
 					{
-						DrawTileDropdown(StringBuilder("##", uint(it - unlockedVariants.begin())).CStr(), *it);
-						ImGui::SameLine();
-						GUI::HSpacing(3);
-						ImGui::SameLine();
-						if (ImGui::Button("Remove"))
-						{
-							it = unlockedVariants.erase(it);
-							if (it == unlockedVariants.end()) break;
-						}
-						else
-						{
-							it++;
-						}
+						it++;
 					}
 				}
+
 				if (!AppInfo::CompareState(AppState::Editor)) ImGui::EndDisabled();
 				ImGui::EndTabItem();
 			}
@@ -601,34 +578,38 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 					ImGui::Text("Habitat");
 					DrawUISpriteDropdown("UI Reference", HexScrapbook::habitats[i].habitat);
 					GUI::Spacing();
-					DrawSpriteInput("Hidden", HexScrapbook::habitats[i].habitatTextures[0]);
-					DrawSpriteInput("Revealed", HexScrapbook::habitats[i].habitatTextures[1]);
+					DrawSpriteInput("Locked", HexScrapbook::habitats[i].habitatTextures[0]);
+					DrawSpriteInput("Unlocked", HexScrapbook::habitats[i].habitatTextures[1]);
+					DrawSpriteInput("Recieved", HexScrapbook::habitats[i].habitatTextures[2]);
 					ImGui::PopID();
 
 					GUI::Spacing(3);
 
 					ImGui::PushID("Tile 0");
-					ImGui::Text(StringBuilder("Tile 0: ", HabitatData::habitatsData[i].requiredTiles[0]).CStr());
+					ImGui::Text(StringBuilder("Tile 0: ", TileData::Get(HabitatData::habitatsData[i].requiredTiles[0]).name).CStr());
 					DrawUISpriteDropdown("UI Reference", HexScrapbook::habitats[i].tiles[0]);
 					GUI::Spacing();
-					DrawSpriteInput("Hidden", HexScrapbook::habitats[i].tileTextures[0]);
-					DrawSpriteInput("Revealed", HexScrapbook::habitats[i].tileTextures[1]);
+					DrawSpriteInput("Locked", HexScrapbook::habitats[i].tileTextures[0]);
+					DrawSpriteInput("Unlocked", HexScrapbook::habitats[i].tileTextures[1]);
+					DrawSpriteInput("Recieved", HexScrapbook::habitats[i].tileTextures[2]);
 					ImGui::PopID();
 					GUI::Spacing(3);
 					ImGui::PushID("Tile 1");
-					ImGui::Text(StringBuilder("Tile 1: ", HabitatData::habitatsData[i].requiredTiles[1]).CStr());
+					ImGui::Text(StringBuilder("Tile 1: ", TileData::Get(HabitatData::habitatsData[i].requiredTiles[1]).name).CStr());
 					DrawUISpriteDropdown("UI Reference", HexScrapbook::habitats[i].tiles[1]);
 					GUI::Spacing();
-					DrawSpriteInput("Hidden", HexScrapbook::habitats[i].tileTextures[2]);
-					DrawSpriteInput("Revealed", HexScrapbook::habitats[i].tileTextures[3]);
+					DrawSpriteInput("Locked", HexScrapbook::habitats[i].tileTextures[3]);
+					DrawSpriteInput("Unlocked", HexScrapbook::habitats[i].tileTextures[4]);
+					DrawSpriteInput("Recieved", HexScrapbook::habitats[i].tileTextures[5]);
 					ImGui::PopID();
 					GUI::Spacing(3);
 					ImGui::PushID("Tile 2");
-					ImGui::Text(StringBuilder("Tile 2: ", HabitatData::habitatsData[i].requiredTiles[2]).CStr());
+					ImGui::Text(StringBuilder("Tile 2: ", TileData::Get(HabitatData::habitatsData[i].requiredTiles[2]).name).CStr());
 					DrawUISpriteDropdown("UI Reference", HexScrapbook::habitats[i].tiles[2]);
 					GUI::Spacing();
-					DrawSpriteInput("Hidden", HexScrapbook::habitats[i].tileTextures[4]);
-					DrawSpriteInput("Revealed", HexScrapbook::habitats[i].tileTextures[5]);
+					DrawSpriteInput("Locked", HexScrapbook::habitats[i].tileTextures[6]);
+					DrawSpriteInput("Unlocked", HexScrapbook::habitats[i].tileTextures[7]);
+					DrawSpriteInput("Recieved", HexScrapbook::habitats[i].tileTextures[8]);
 					ImGui::PopID();
 
 					GUI::Spacing(3);
@@ -999,50 +980,60 @@ void HexEditor::DrawAudioInput(const char* const name, string& audioFilepath) no
 	ImGui::EndDisabled();
 }
 
-void HexEditor::DrawTileDropdown(const char* label, string& tileName) noexcept
+void HexEditor::DrawTileDropdown(const char* label, TileID& tileID) noexcept
 {
-	if (ImGui::BeginCombo(label, tileName.c_str()))
+	TileData& tileData = TileData::Get(tileID);
+
+	if (ImGui::BeginCombo(label, tileData.name.c_str()))
 	{
 		if (ImGui::BeginMenu("Trees"))
 		{
-			for (TileData tile : TileData::Get(HexType::Tree))
+			vector<TileData>& trees = TileData::Get(HexType::Tree);
+			for (char t = 0; t < trees.size(); t++)
 			{
-				if (ImGui::Selectable(tile.name.c_str(), tile.name == tileName))
+				TileID id = TileID(HexType::Tree, t);
+				if (ImGui::Selectable(trees[t].name.c_str(), id == tileID))
 				{
-					tileName = tile.name;
+					tileID = id;
 				}
 			}
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Flowers"))
 		{
-			for (TileData tile : TileData::Get(HexType::Flower))
+			vector<TileData>& flowers = TileData::Get(HexType::Flower);
+			for (char t = 0; t < flowers.size(); t++)
 			{
-				if (ImGui::Selectable(tile.name.c_str(), tile.name == tileName))
+				TileID id = TileID(HexType::Flower, t);
+				if (ImGui::Selectable(flowers[t].name.c_str(), id == tileID))
 				{
-					tileName = tile.name;
+					tileID = id;
 				}
 			}
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Waters"))
 		{
-			for (TileData tile : TileData::Get(HexType::Water))
+			vector<TileData>& waters = TileData::Get(HexType::Water);
+			for (char t = 0; t < waters.size(); t++)
 			{
-				if (ImGui::Selectable(tile.name.c_str(), tile.name == tileName))
+				TileID id = TileID(HexType::Water, t);
+				if (ImGui::Selectable(waters[t].name.c_str(), id == tileID))
 				{
-					tileName = tile.name;
+					tileID = id;
 				}
 			}
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Land"))
 		{
-			for (TileData tile : TileData::Get(HexType::Land))
+			vector<TileData>& lands = TileData::Get(HexType::Land);
+			for (char t = 0; t < lands.size(); t++)
 			{
-				if (ImGui::Selectable(tile.name.c_str(), tile.name == tileName))
+				TileID id = TileID(HexType::Land, t);
+				if (ImGui::Selectable(lands[t].name.c_str(), id == tileID))
 				{
-					tileName = tile.name;
+					tileID = id;
 				}
 			}
 			ImGui::EndMenu();

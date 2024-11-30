@@ -18,11 +18,16 @@ TileData::TileData(const char* const nameInit) noexcept :
 
 vector<TileData>& TileData::Get(HexType hexType) noexcept
 {
-	return tilesData[(size_t)hexType >= 0 ? (size_t)hexType : 0];
+	return tilesData[(int)hexType >= 0 ? (size_t)hexType : 0];
 }
 TileData& TileData::Get(HexType hexType, char variant) noexcept
 {
 	return Get(hexType)[variant];
+}
+
+TileData& TileData::Get(TileID id) noexcept
+{
+	return Get(id.type)[id.variant];
 }
 
 char TileData::GetVariantIndex(HexType hexType, string name) noexcept

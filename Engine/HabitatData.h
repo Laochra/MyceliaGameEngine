@@ -2,6 +2,8 @@
 
 #include "JsonIncludes.h"
 
+#include "TileData.h"
+
 #include <string>
 using std::string;
 #include <vector>
@@ -10,7 +12,7 @@ using std::vector;
 struct HabitatData
 {
 	string name = "New Habitat";
-	string requiredTiles[3] = { "Undefined", "Undefined", "Undefined" };
+	TileID requiredTiles[3] = { TileID(), TileID(), TileID() };
 	string prefabFilepath = "None";
 	bool hasBeenPlaced = false;
 	bool prefabLoaded = false;

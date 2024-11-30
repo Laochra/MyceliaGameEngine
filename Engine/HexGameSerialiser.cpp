@@ -156,10 +156,22 @@ void HexGameSerialiser::LoadDataFrom(json& dataFile) noexcept
 
 			habitat.prefabFilepath = habitatJSON["PrefabFilepath"];
 
-			vector<json> requiredTiles = habitatJSON["RequiredTiles"];
-			habitat.requiredTiles[0] = requiredTiles[0];
-			habitat.requiredTiles[1] = requiredTiles[1];
-			habitat.requiredTiles[2] = requiredTiles[2];
+			if (habitatJSON.contains("RequiredTiles"))
+			{
+				vector<json> requiredTiles = habitatJSON["RequiredTiles"];
+				habitat.requiredTiles[0] = TileID(
+					(HexType)(int)requiredTiles[0]["Type"],
+					(char)(int)requiredTiles[0]["Variant"]
+				);
+				habitat.requiredTiles[1] = TileID(
+					(HexType)(int)requiredTiles[1]["Type"],
+					(char)(int)requiredTiles[1]["Variant"]
+				);
+				habitat.requiredTiles[2] = TileID(
+					(HexType)(int)requiredTiles[2]["Type"],
+					(char)(int)requiredTiles[2]["Variant"]
+				);
+			}
 
 			HabitatData::habitatsData.push_back(habitat);
 		}
@@ -237,8 +249,15 @@ void HexGameSerialiser::LoadDataFrom(json& dataFile) noexcept
 					}
 				}
 			}
-			habitat.habitatTextures[0] = habitatJSON["HabitatTextures"][0];
-			habitat.habitatTextures[1] = habitatJSON["HabitatTextures"][1];
+			const vector<string>& habitatTextures = habitatJSON["HabitatTextures"];
+			int count = (int)std::min(
+				habitatTextures.size(),
+				std::size(habitat.habitatTextures)
+			);
+			for (int i = 0; i < count; i++)
+			{
+				habitat.habitatTextures[i] = habitatJSON["HabitatTextures"][i];
+			}
 
 			vector<json> habitatTilesJSON = habitatJSON["Tiles"];
 			string tileNames[std::size(habitat.tiles)] = { habitatTilesJSON[0], habitatTilesJSON[1], habitatTilesJSON[2] };
@@ -429,9 +448,13 @@ void HexGameSerialiser::SaveDataTo(json& dataFile) noexcept
 			habitatJSON["PrefabFilepath"] = habitat.prefabFilepath;
 
 			vector<json> requiredTiles;
-			requiredTiles.push_back(habitat.requiredTiles[0]);
-			requiredTiles.push_back(habitat.requiredTiles[1]);
-			requiredTiles.push_back(habitat.requiredTiles[2]);
+			for (int t = 0; t < 3; t++)
+			{
+				json tileID;
+				tileID["Type"] = (int)habitat.requiredTiles[t].type;
+				tileID["Variant"] = (int)habitat.requiredTiles[t].variant;
+				requiredTiles.push_back(tileID);
+			}
 			habitatJSON["RequiredTiles"] = requiredTiles;
 
 			habitatsJSON.push_back(habitatJSON);

@@ -4,6 +4,9 @@
 #include "MycCoroutine.h"
 #include "Easing.h"
 
+int operator+(int a, HabitatCollectionState b) noexcept { return a + int(b); }
+int operator+(HabitatCollectionState a, int b) noexcept { return int(a) + b; }
+
 UISprite* HexScrapbook::base;
 std::string HexScrapbook::baseTexture;
 
@@ -186,37 +189,35 @@ void HexScrapbook::ConcealSprites() noexcept
 {
 	for (HabitatCollection& habitat : habitats)
 	{
-		habitat.habitat->Load(habitat.habitatTextures[0].c_str());
-		habitat.tiles[0]->Load(habitat.tileTextures[0].c_str());
-		habitat.tiles[1]->Load(habitat.tileTextures[2].c_str());
-		habitat.tiles[2]->Load(habitat.tileTextures[4].c_str());
+		SetHabitatState(habitat, HabitatCollectionState::Locked);
 	}
-	HexScrapbook::habitats[0].habitat->enabled = HexScrapbook::habitats[0].habitat->enabled;
 }
-
 void HexScrapbook::RevealSprites() noexcept
 {
 	for (HabitatCollection& habitat : habitats)
 	{
-		habitat.habitat->Load(habitat.habitatTextures[1].c_str());
-		habitat.tiles[0]->Load(habitat.tileTextures[1].c_str());
-		habitat.tiles[1]->Load(habitat.tileTextures[3].c_str());
-		habitat.tiles[2]->Load(habitat.tileTextures[5].c_str());
+		SetHabitatState(habitat, HabitatCollectionState::Recieved);
 	}
 }
 
-void HexScrapbook::RevealHabitat(int index) noexcept
-{
-	HabitatCollection& habitat = habitats[index];
 
-	habitat.habitat->Load(habitat.habitatTextures[1].c_str());
-	habitat.tiles[0]->Load(habitat.tileTextures[1].c_str());
-	habitat.tiles[1]->Load(habitat.tileTextures[3].c_str());
-	habitat.tiles[2]->Load(habitat.tileTextures[5].c_str());
+void HexScrapbook::SetHabitatState(int index, HabitatCollectionState state) noexcept
+{
+	SetHabitatState(habitats[index], state);
 }
-void HexScrapbook::RevealHabitatTile(int habitatIndex, int tileIndex) noexcept
+void HexScrapbook::SetHabitatTileState(int habitatIndex, int tileIndex, HabitatCollectionState state) noexcept
 {
-	HabitatCollection& habitat = habitats[habitatIndex];
+	SetHabitatTileState(habitats[habitatIndex], tileIndex, state);
+}
 
-	habitat.tiles[tileIndex]->Load(habitat.tileTextures[tileIndex * 2 + 1].c_str());
+void HexScrapbook::SetHabitatState(HabitatCollection& habitat, HabitatCollectionState state) noexcept
+{
+	habitat.habitat->Load(habitat.habitatTextures[0 + state].c_str());
+	habitat.tiles[0]->Load(habitat.tileTextures[0 + state].c_str());
+	habitat.tiles[1]->Load(habitat.tileTextures[3 + state].c_str());
+	habitat.tiles[2]->Load(habitat.tileTextures[6 + state].c_str());
+}
+void HexScrapbook::SetHabitatTileState(HabitatCollection& habitat, int tileIndex, HabitatCollectionState state) noexcept
+{
+	habitat.tiles[tileIndex]->Load(habitat.tileTextures[tileIndex * 3 + state].c_str());
 }

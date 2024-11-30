@@ -7,6 +7,10 @@
 
 #include "MycCoroutine.h"
 
+enum class HabitatCollectionState : int { Locked, Unlocked, Recieved };
+extern int operator+(int a, HabitatCollectionState b) noexcept;
+extern int operator+(HabitatCollectionState a, int b) noexcept;
+
 class HexScrapbook
 {
 public:
@@ -14,9 +18,9 @@ public:
 	struct HabitatCollection
 	{
 		UISprite* habitat;
-		std::string habitatTextures[2];
+		std::string habitatTextures[3] { "None", "None", "None" };
 		UISprite* tiles[3];
-		std::string tileTextures[6];
+		std::string tileTextures[9] { "None", "None", "None", "None", "None", "None", "None", "None", "None" };
 	};
 
 	static float animationSpeed;
@@ -38,8 +42,10 @@ public:
 	static void ConcealSprites() noexcept;
 	static void RevealSprites() noexcept;
 
-	static void RevealHabitat(int index) noexcept;
-	static void RevealHabitatTile(int habitatIndex, int tileIndex) noexcept;
+	static void SetHabitatState(int index, HabitatCollectionState state) noexcept;
+	static void SetHabitatTileState(int habitatIndex, int tileIndex, HabitatCollectionState state) noexcept;
+	static void SetHabitatState(HabitatCollection& habitat, HabitatCollectionState state) noexcept;
+	static void SetHabitatTileState(HabitatCollection& habitat, int tileIndex, HabitatCollectionState state) noexcept;
 
 	friend struct ScrapbookAnimationData;
 	friend class ScrapbookAnimation;

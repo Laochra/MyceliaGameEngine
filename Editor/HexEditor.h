@@ -22,6 +22,6 @@ private:
 	static void DrawSpriteInput(const char* const name, string& spriteFilepath) noexcept;
 	static bool DrawHDRTextureInput(const char* const name, string& hdrTextureFilepath) noexcept;
 	static void DrawAudioInput(const char* const name, string& audioFilepath) noexcept;
-	static void DrawTileDropdown(const char* label, string& tileName) noexcept;
+	static void DrawTileDropdown(const char* label, TileID& tileID) noexcept;
 	static void DrawUISpriteDropdown(const char* label, UISprite*& uiSprite) noexcept;
 };

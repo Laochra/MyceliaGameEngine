@@ -9,6 +9,8 @@
 
 #include "JsonIncludes.h"
 
+#include "TileData.h"
+
 typedef unsigned int uint;
 
 class HexProgression
@@ -16,9 +18,7 @@ class HexProgression
 public:
 	struct Milestone
 	{
-		enum MilestoneType { VariantUnlock, AddedEffects };
-		MilestoneType type = VariantUnlock;
-		std::vector<std::string> names;
+		std::vector<TileID> variantUnlocks;
 
 		uint lifeRequirement = 100U;
 		uint radiusIncrease = 1U;
@@ -26,7 +26,7 @@ public:
 
 	static std::vector<Milestone> lifeMilestones;
 
-	static std::vector<std::string> startingVariants;
+	static std::vector<TileID> startingVariants;
 
 	static uint startingRadius;
 	static uint currentRadius;
