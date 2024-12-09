@@ -42,6 +42,11 @@
     "OffsetZ": 0.7332121133804321,
     "StartZoom": 8.0
   },
+  "Clouds": [
+    "Assets\\Effects\\cloud1.prefab",
+    "Assets\\Effects\\cloud2.prefab",
+    "Assets\\Effects\\cloud3.prefab"
+  ],
   "Fog": {
     "Range": 0.25,
     "Speed": 1.0,
@@ -212,7 +217,7 @@
       }
     ],
     "NewVariantsIcon": "NewVariantsIcon",
-    "StartingRadius": 3,
+    "StartingRadius": 13,
     "StartingVariants": [
       {
         "Type": -4,

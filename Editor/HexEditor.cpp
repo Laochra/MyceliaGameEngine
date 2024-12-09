@@ -11,6 +11,7 @@
 #include "HexCameraData.h"
 #include "HexAudio.h"
 #include "HexFog.h"
+#include "HexClouds.h"
 #include "HexMenus.h"
 
 #include "UIManager.h"
@@ -390,6 +391,42 @@ void HexEditor::Draw(const char* const name, bool& open) noexcept
 		if (DrawPrefabInput("Background", cachedBackgroundPath))
 		{
 			HexGameInfo::LoadBackgroundPrefab(cachedBackgroundPath);
+		}
+
+		GUI::Spacing(3);
+
+		if (AppInfo::CompareState(AppState::Playing)) ImGui::EndDisabled();
+	}
+
+	GUI::Spacing(3);
+
+	if (ImGui::CollapsingHeader("Clouds"))
+	{
+		if (AppInfo::CompareState(AppState::Playing)) ImGui::BeginDisabled();
+
+		GUI::Spacing(3);
+
+		if (ImGui::Button("Add"))
+		{
+			HexClouds::prefabFilepaths.push_back(string("None"));
+			HexClouds::prefabs.push_back(json());
+		}
+
+		for (int i = 0; i < (int)HexClouds::prefabFilepaths.size(); i++)
+		{
+			string cachedPrefabPath = HexClouds::prefabFilepaths[i];
+			if (DrawPrefabInput(StringBuilder("##", i).CStr(), cachedPrefabPath))
+			{
+				HexClouds::LoadPrefab(i, cachedPrefabPath);
+			}
+			ImGui::SameLine();
+			if (ImGui::Button(StringBuilder("Delete##", i).CStr()))
+			{
+				HexClouds::prefabFilepaths.erase(HexClouds::prefabFilepaths.begin() + i);
+				HexClouds::prefabs.erase(HexClouds::prefabs.begin() + i);
+				i--;
+				continue;
+			}
 		}
 
 		GUI::Spacing(3);

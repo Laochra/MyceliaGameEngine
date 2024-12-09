@@ -19,6 +19,7 @@
 #include "HexScrapbook.h"
 #include "HexFog.h"
 #include "HexMenus.h"
+#include "HexClouds.h"
 
 #include "HabitatData.h"
 
@@ -553,6 +554,8 @@ void HexGame::OnStart()
 		}
 	}
 
+	HexClouds::Initialise();
+
 	HexAudio::BeginMusic();
 	HexAudio::BeginAmbience();
 }
@@ -606,6 +609,8 @@ void HexGame::OnStop()
 	AudioManager::ClearLoadedAssets();
 	HexScrapbook::RevealSprites();
 	HexScrapbook::Reset();
+
+	HexClouds::CleanUp();
 
 	gameObjectManager->ClearGraveyard();
 }
@@ -693,6 +698,8 @@ void HexGame::Update()
 			}
 		}
 	}
+
+	HexClouds::Update();
 
 	RadialMenu* currentRadialMenu;
 	vector<TileData>* currentRadialTileType;

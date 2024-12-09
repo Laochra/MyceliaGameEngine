@@ -15,6 +15,7 @@
 #include "HexAudio.h"
 #include "HexFog.h"
 #include "HexMenus.h"
+#include "HexClouds.h"
 
 #include "Debug.h"
 
@@ -312,6 +313,17 @@ void HexGameSerialiser::LoadDataFrom(json& dataFile) noexcept
 		HexFog::filter = fogJSON["TextureFilter"];
 	}
 
+	if (dataFile.contains("Clouds"))
+	{
+		vector<json> cloudsJSON = dataFile["Clouds"];
+
+		for (int i = 0; i < (int)cloudsJSON.size(); i++)
+		{
+			string filepath = cloudsJSON[i];
+			HexClouds::LoadPrefab(i, filepath);
+		}
+	}
+
 	if (dataFile.contains("Camera"))
 	{
 		json cameraJSON = dataFile["Camera"];
@@ -557,6 +569,18 @@ void HexGameSerialiser::SaveDataTo(json& dataFile) noexcept
 		fogJSON["TextureFilter"] = HexFog::filter;
 
 		dataFile["Fog"] = fogJSON;
+	}
+
+	vector<json> cloudsJSON;
+	{
+		vector<json> cloudsJSON;
+
+		for (int i = 0; i < (int)HexClouds::prefabFilepaths.size(); i++)
+		{
+			cloudsJSON.push_back(HexClouds::prefabFilepaths[i]);
+		}
+
+		dataFile["Clouds"] = cloudsJSON;
 	}
 
 	json cameraJSON;
