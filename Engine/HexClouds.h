@@ -7,13 +7,15 @@
 
 struct HexCloudData
 {
-	float minDistance = 0.3f;
+	unsigned int maxClouds = 100;
+
+	float minDistance = 1.5f;
 	float cloudHeight = 3.0f;
 
-	float sizeRange[2] = { 0.7f, 1.3f };
+	float sizeRange[2] = { 1.0f, 2.0f };
 
-	float moveSpeed = 1.0f;
-	float moveDir[2] = { 1.0f, 1.0f };
+	float moveSpeed = 0.1f;
+	float moveDir[2] = { 1.0f, 0.25f };
 };
 
 class HexClouds

@@ -16,7 +16,7 @@ void HexClouds::Initialise() noexcept
 {
 	float minDistanceSqr = data.minDistance * data.minDistance;
 
-	for (int i = 0; i < 1000; i++)
+	for (int i = 0; i < data.maxClouds; i++)
 	{
 		vec3 newSpawnPos = vec3(
 			Random::Float(-HEX_GRID_RADIUS * 2, HEX_GRID_RADIUS * 2),
@@ -39,10 +39,21 @@ void HexClouds::Initialise() noexcept
 		}
 		if (isAbleToSpawn)
 		{
-			MeshRenderer* cloud = GameObject::Instantiate<MeshRenderer>();
+			MeshRenderer* cloud;
+
+			if (prefabs.size() > 0)
+			{
+				cloud = (MeshRenderer*)GameObject::InstantiateFrom(prefabs[Random::Int32(0, prefabs.size() - 1)], GuidGeneration::New);
+			}
+			else
+			{
+				cloud = GameObject::Instantiate<MeshRenderer>();
+				cloud->SetMesh("Hexagon");
+			}
 			cloud->SetPosition(newSpawnPos);
 			cloud->SetScale(Random::Float(data.sizeRange[0], data.sizeRange[1]));
-			cloud->SetMesh("Hexagon");
+			cloud->Rotate(glm::radians(Random::Float(0, 359.99f)), vec3(0, 1, 0));
+
 			clouds.push_back(cloud);
 		}
 	}
@@ -62,11 +73,11 @@ void HexClouds::Update() noexcept
 
 void HexClouds::LoadPrefab(int index, std::string filepath) noexcept
 {
-	while (prefabFilepaths.size() < index)
+	while (prefabFilepaths.size() <= index)
 	{
 		prefabFilepaths.push_back(std::string());
 	}
-	while (prefabs.size() < index)
+	while (prefabs.size() <= index)
 	{
 		prefabs.push_back(json());
 	}

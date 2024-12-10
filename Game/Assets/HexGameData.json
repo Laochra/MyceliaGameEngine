@@ -217,7 +217,7 @@
       }
     ],
     "NewVariantsIcon": "NewVariantsIcon",
-    "StartingRadius": 13,
+    "StartingRadius": 3,
     "StartingVariants": [
       {
         "Type": -4,

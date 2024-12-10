@@ -554,7 +554,7 @@ void HexGame::OnStart()
 		}
 	}
 
-	HexClouds::Initialise();
+	//HexClouds::Initialise();
 
 	HexAudio::BeginMusic();
 	HexAudio::BeginAmbience();
@@ -610,7 +610,7 @@ void HexGame::OnStop()
 	HexScrapbook::RevealSprites();
 	HexScrapbook::Reset();
 
-	HexClouds::CleanUp();
+	//HexClouds::CleanUp();
 
 	gameObjectManager->ClearGraveyard();
 }
@@ -699,7 +699,7 @@ void HexGame::Update()
 		}
 	}
 
-	HexClouds::Update();
+	//HexClouds::Update();
 
 	RadialMenu* currentRadialMenu;
 	vector<TileData>* currentRadialTileType;
