@@ -180,12 +180,50 @@ HexGrid::UpdateTileReturnInfo HexGrid::UpdateTile(HexOffsetCoord hexCoord, const
 	}
 	else
 	{
+		int randomSoundIndex = Random::Int32(1, 3);
+
 		switch (hexTile.type)
 		{
-		case HexType::Tree: HexAudio::PlayMiscSFX(HexAudio::SoundEffect::PlaceTree); break;
-		case HexType::Flower: HexAudio::PlayMiscSFX(HexAudio::SoundEffect::PlaceFlower); break;
-		case HexType::Water: HexAudio::PlayMiscSFX(HexAudio::SoundEffect::PlaceWater); break;
-		case HexType::Land: HexAudio::PlayMiscSFX(HexAudio::SoundEffect::PlaceLand); break;
+		case HexType::Tree:
+		{
+			switch (randomSoundIndex)
+			{
+			case 1: HexAudio::PlayMiscSFX(HexAudio::SoundEffect::PlaceTree); break;
+			case 2: HexAudio::PlayMiscSFX(HexAudio::SoundEffect::PlaceTree2); break;
+			case 3: HexAudio::PlayMiscSFX(HexAudio::SoundEffect::PlaceTree3); break;
+			}
+			break;
+		}
+		case HexType::Flower:
+		{
+			switch (randomSoundIndex)
+			{
+			case 1: HexAudio::PlayMiscSFX(HexAudio::SoundEffect::PlaceFlower); break;
+			case 2: HexAudio::PlayMiscSFX(HexAudio::SoundEffect::PlaceFlower2); break;
+			case 3: HexAudio::PlayMiscSFX(HexAudio::SoundEffect::PlaceFlower3); break;
+			}
+			break;
+		}
+		case HexType::Water:
+		{
+			switch (randomSoundIndex)
+			{
+			case 1: HexAudio::PlayMiscSFX(HexAudio::SoundEffect::PlaceWater); break;
+			case 2: HexAudio::PlayMiscSFX(HexAudio::SoundEffect::PlaceWater2); break;
+			case 3: HexAudio::PlayMiscSFX(HexAudio::SoundEffect::PlaceWater3); break;
+			}
+			break;
+		}
+		case HexType::Land:
+		{
+			switch (randomSoundIndex)
+			{
+			case 1: HexAudio::PlayMiscSFX(HexAudio::SoundEffect::PlaceLand); break;
+			case 2: HexAudio::PlayMiscSFX(HexAudio::SoundEffect::PlaceLand2); break;
+			case 3: HexAudio::PlayMiscSFX(HexAudio::SoundEffect::PlaceLand3); break;
+			}
+			break;
+		}
 		default: break;
 		}
 	}

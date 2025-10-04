@@ -45,8 +45,17 @@ public:
 
 		MenuSelect,
 
+		PlaceTree2,
+		PlaceTree3,
+		PlaceFlower2,
+		PlaceFlower3,
+		PlaceWater2,
+		PlaceWater3,
+		PlaceLand2,
+		PlaceLand3,
+
 		SoundEffect_First = PlaceTree,
-		SoundEffect_Last = MenuSelect,
+		SoundEffect_Last = PlaceLand3,
 		SoundEffect_Count = SoundEffect_Last + 1
 	};
 	static string soundEffects[SoundEffect_Count];

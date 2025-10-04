@@ -846,16 +846,19 @@ void HexGame::Update()
 	{
 		if (gameInputs.menuPlay.pressed())
 		{
+			HexAudio::PlayMiscSFX(HexAudio::SoundEffect::MenuSelect);
 			SetState(State::Place);
 			break;
 		}
 		if (gameInputs.menuQuit.pressed())
 		{
+			HexAudio::PlayMiscSFX(HexAudio::SoundEffect::MenuSelect);
 			AppInfo::application->gameStatus = GameStatus::Quitting;
 			return;
 		}
 		if (gameInputs.menuCredits.pressed())
 		{
+			HexAudio::PlayMiscSFX(HexAudio::SoundEffect::MenuSelect);
 			SetState(State::MenuCredits);
 			break;
 		}
@@ -866,6 +869,7 @@ void HexGame::Update()
 	{
 		if (gameInputs.menuPlay.pressed())
 		{
+			HexAudio::PlayMiscSFX(HexAudio::SoundEffect::MenuSelect);
 			SetState(State::Place);
 			break;
 		}
@@ -881,6 +885,7 @@ void HexGame::Update()
 		}
 		if (gameInputs.menuCredits.pressed())
 		{
+			HexAudio::PlayMiscSFX(HexAudio::SoundEffect::MenuSelect);
 			SetState(State::PauseCredits);
 			break;
 		}
@@ -909,6 +914,7 @@ void HexGame::Update()
 	{
 		if (gameInputs.continueYes.pressed())
 		{
+			HexAudio::PlayMiscSFX(HexAudio::SoundEffect::MenuSelect);
 			SetState(State::Place);
 			break;
 		}

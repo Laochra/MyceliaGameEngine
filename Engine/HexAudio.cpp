@@ -15,14 +15,17 @@ float HexAudio::spiritSFXVolume = 1.0f;
 
 using SoundEffect = HexAudio::SoundEffect;
 map<SoundEffect, string> HexAudio::soundEffectNames {
-	{ SoundEffect::PlaceTree, "PlaceTree" }, { SoundEffect::PlaceFlower, "PlaceFlower" }, { SoundEffect::PlaceWater, "PlaceWater" }, { SoundEffect::PlaceLand, "PlaceLand" },
+	{ SoundEffect::PlaceTree, "PlaceTree" }, { SoundEffect::PlaceTree2, "PlaceTree2" }, { SoundEffect::PlaceTree3, "PlaceTree3" },
+	{ SoundEffect::PlaceFlower, "PlaceFlower" }, { SoundEffect::PlaceFlower2, "PlaceFlower2" }, { SoundEffect::PlaceFlower3, "PlaceFlower3" },
+	{ SoundEffect::PlaceWater, "PlaceWater" }, { SoundEffect::PlaceWater2, "PlaceWater2" }, { SoundEffect::PlaceWater3, "PlaceWater3" },
+	{ SoundEffect::PlaceLand, "PlaceLand" }, { SoundEffect::PlaceLand2, "PlaceLand2" }, { SoundEffect::PlaceLand3, "PlaceLand3" },
 	{ SoundEffect::FormHabitat, "FormHabitat" },
 	{ SoundEffect::VariantUnlock, "VariantUnlock" }, { SoundEffect::FogMove, "FogMove" },
 	{ SoundEffect::RadialOpen, "RadialOpen" }, { SoundEffect::RadialClose, "RadialClose" }, { SoundEffect::RadialSelect, "RadialSelect" }, { SoundEffect::RadialHover, "RadialHover" }, { SoundEffect::RadialCyclePage, "RadialCyclePage" },
 	{ SoundEffect::ScrapbookOpen, "ScrapbookOpen" }, { SoundEffect::ScrapbookClose, "ScrapbookClose" }, { SoundEffect::ScrapbookStickerPlace, "ScrapbookStickerPlace" },
 	{ SoundEffect::MenuSelect, "MenuSelect" },
 };
-string HexAudio::soundEffects[SoundEffect_Count] { "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None" };
+string HexAudio::soundEffects[SoundEffect_Count] { "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None", "None" };
 float HexAudio::sfxVolume = 1.0f;
 
 void HexAudio::BeginMusic() noexcept
